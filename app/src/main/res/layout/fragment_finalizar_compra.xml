@@ -25,7 +25,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_baseline_menu_24" />
+            app:srcCompat="@drawable/ic_menu_hamburguer_24" />
 
         <ImageView
             android:layout_width="42dp"
@@ -63,7 +63,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
-        android:src="@drawable/temp_qr_code"
+        android:src="@drawable/img_temp_qr_code"
         app:layout_constraintBottom_toTopOf="@+id/tv_destinatario"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

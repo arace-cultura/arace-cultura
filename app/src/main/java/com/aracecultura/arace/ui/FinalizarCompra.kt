@@ -6,6 +6,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.aracecultura.arace.R
+
+/**
+ * TODO: Adicionar navegação futuramente, quando houver as outras telas.
+ */
 class FinalizarCompra : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
