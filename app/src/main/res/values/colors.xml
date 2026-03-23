@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="black">#FF000000</color>
+    <!-- Cores padrão -->
     <color name="white">#FFFFFFFF</color>
+    <color name="black">#000000</color>
+
+    <!-- Cores utilizadas na tela de finalizar compra. -->
+    <color name="strange_purple">#91789F</color>
+    <color name="strange_gray">#C1C1C1</color>
 </resources>
