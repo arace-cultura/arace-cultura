@@ -18,7 +18,7 @@
             android:textSize="30sp"
             android:gravity="center"
             />
-
+        <!-- Pedido 1 -->
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -30,6 +30,7 @@
                 android:layout_width="110dp"
                 android:layout_height="110dp"
                 android:padding="5dp"
+                android:src="@drawable/escultura_preguisa"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
@@ -83,7 +84,7 @@
             </LinearLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
-
+        <!-- Pedido 2 -->
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -95,6 +96,7 @@
                 android:layout_width="110dp"
                 android:layout_height="110dp"
                 android:padding="5dp"
+                android:src="@drawable/panelas_de_barro"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
@@ -148,7 +150,7 @@
             </LinearLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
-
+        <!-- Pedido 3 -->
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -160,6 +162,7 @@
                 android:layout_width="110dp"
                 android:layout_height="110dp"
                 android:padding="5dp"
+                android:src="@drawable/passaros_escultura"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
@@ -213,7 +216,7 @@
             </LinearLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
-
+        <!-- Pedido 4 -->
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -225,6 +228,7 @@
                 android:layout_width="110dp"
                 android:layout_height="110dp"
                 android:padding="5dp"
+                android:src="@drawable/panelas_de_barro"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintTop_toTopOf="parent"

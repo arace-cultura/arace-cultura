@@ -6,11 +6,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.aracecultura.arace.R
+import com.aracecultura.arace.databinding.FragmentEnvioStatusBinding
 
 
 class Envio_Status : Fragment() {
-
-
+    private var _biding: FragmentEnvioStatusBinding? = null
+    private val binding get() = _biding!!
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
@@ -20,7 +21,12 @@ class Envio_Status : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_envio__status, container, false)
+        _biding = FragmentEnvioStatusBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _biding= null
+    }
 }
