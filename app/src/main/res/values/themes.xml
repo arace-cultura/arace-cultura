@@ -3,7 +3,9 @@
     <style name="Base.Theme.Arace" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your light theme here. -->
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <item name="android:background">@color/default_color</item>
     </style>
 
     <style name="Theme.Arace" parent="Base.Theme.Arace" />
+
 </resources>
