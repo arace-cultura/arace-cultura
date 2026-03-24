@@ -54,6 +54,11 @@ class ProdutoFragment : Fragment(R.layout.fragment_produto) {
                 updateIndicator(position)
             }
         })
+         val setaVoltar = view.findViewById<ImageView>(R.id.setaVoltarMenu)
+
+        setaVoltar.setOnClickListener {
+            parentFragmentManager.popBackStack()
+        }
     }
 
     private fun createDotIndictor(count: Int) {

@@ -35,6 +35,14 @@
         android:id="@+id/homePage"
         android:name="com.aracecultura.arace.ui.HomePage"
         android:label="fragment_home_page"
-        tools:layout="@layout/fragment_home_page" />
+        tools:layout="@layout/fragment_home_page" >
+        <action
+            android:id="@+id/action_homePage_to_produtoFragment"
+            app:destination="@id/produtoFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/produtoFragment"
+        android:name="com.aracecultura.arace.ui.ProdutoFragment"
+        android:label="ProdutoFragment" />
 
 </navigation>

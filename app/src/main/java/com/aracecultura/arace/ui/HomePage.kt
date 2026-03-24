@@ -7,11 +7,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.fragment.findNavController
 import androidx.viewpager2.widget.ViewPager2
 import com.aracecultura.arace.R
 import com.aracecultura.arace.ui.adapter.MyPagerAdapterHome // Certifique-se que o adapter está neste caminho
 
 class HomePage : Fragment() {
+
 
     private lateinit var viewPager: ViewPager2
     private lateinit var dotIndicator: LinearLayout
@@ -49,8 +52,16 @@ class HomePage : Fragment() {
             }
         })
 
-        viewPager.setOnClickListener {
-            // TODO
+        // Dentro do onCreateView ou onViewCreated
+        val textDescubra = view.findViewById<View>(R.id.textViewDescubra)
+
+        textDescubra.setOnClickListener {
+            val fragmentoProduto = ProdutoFragment()
+
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.frameLayout, fragmentoProduto) // Agora o ID frameLayout existe!
+                .addToBackStack(null) // Para o botão 'Voltar' funcionar e não fechar o app
+                .commit()
         }
         return view
     }

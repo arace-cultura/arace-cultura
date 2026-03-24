@@ -524,6 +524,7 @@
         </GridLayout>
 
         <TextView
+            android:id="@+id/textViewDescubra"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="32dp"
@@ -531,12 +532,12 @@
             android:text="Descubra produtos"
             android:textSize="24sp" />
 
-        <androidx.viewpager2.widget.ViewPager2
-            android:id="@+id/viewPagerProdutos"
-            android:layout_width="match_parent"
-            android:layout_height="350dp"
-            android:layout_marginTop="16dp" />
-
+            <androidx.viewpager2.widget.ViewPager2
+                android:id="@+id/viewPagerProdutos"
+                android:layout_width="match_parent"
+                android:layout_height="350dp"
+                android:layout_marginTop="16dp" />
+c
         <LinearLayout
             android:id="@+id/dotIndicator"
             android:layout_width="wrap_content"
