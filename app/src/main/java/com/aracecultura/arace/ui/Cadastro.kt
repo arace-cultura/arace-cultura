@@ -1,5 +1,6 @@
 package com.aracecultura.arace.ui
 
+import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -8,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.navigation.fragment.findNavController
+import com.aracecultura.arace.MainActivity
 import com.aracecultura.arace.R
 import com.aracecultura.arace.databinding.FragmentCadastroBinding
 import com.google.android.material.snackbar.Snackbar
@@ -72,9 +74,8 @@ class Cadastro : Fragment() {
                             binding.cadastroInput.setText("")
                             binding.cadastroSenha.setText("")
                             binding.cadastroConfirmarSenha.setText("")
-                            // manda o cara pra tela principal TODO mandar para tela principal
-                            findNavController().popBackStack()
-
+                            // manda o cara pra tela principal
+                            navegarTelaPrincipal()
                         }
                         // para futuro tratamento de erros (proxima aula do curso xd)
                     }.addOnFailureListener { exception ->
@@ -97,6 +98,16 @@ class Cadastro : Fragment() {
                 }
             }
         }
+    }
+
+    private fun navegarTelaPrincipal() {
+        val intent = Intent(requireContext(), MainActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        startActivity(intent)
+        val snackbar = Snackbar.make(binding.root, "Cadastro Efetuado!", Snackbar.LENGTH_LONG)
+        snackbar.setBackgroundTint(Color.GREEN)
+        snackbar.show()
+        requireActivity().finish()
     }
 
     override fun onDestroyView() {

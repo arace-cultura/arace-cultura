@@ -42,22 +42,6 @@ class Entrada : Fragment() {
         }
     }
 
-    private fun navegarTelaPrincipal() {
-        // dirigir-se para tela inicial
-        // val intent = Intent(this, HomePage::class.java)
-        // startActivity(intent)
-    }
-    // toda vez que a activity iniciar
-    override fun onStart() {
-        super.onStart()
-        // current user é o usuario atual que esta logado no sistema
-        val usuarioAtual = FirebaseAuth.getInstance().currentUser
-        // se for nulo, nao tem ninguem logado
-        if (usuarioAtual != null) {
-            // tem usuario logado no sistema
-            navegarTelaPrincipal()
-        }
-    }
 
     override fun onDestroyView() {
         super.onDestroyView()

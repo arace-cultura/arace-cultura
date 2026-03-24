@@ -1,5 +1,6 @@
 package com.aracecultura.arace.ui
 
+import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -7,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
+import com.aracecultura.arace.MainActivity
 import com.aracecultura.arace.R
 import com.aracecultura.arace.databinding.FragmentLoginBinding
 import com.google.android.material.snackbar.Snackbar
@@ -70,14 +72,13 @@ class Login : Fragment() {
     }
 
     private fun navegarTelaPrincipal() {
-        // ir para tela principal
-        // TODO
-        // val intent = Intent(this, HomePage::class.java)
-        //  startActivity(intent)
-
-        val snackbar = Snackbar.make(binding.root, "DEBUG: LOGIN", Snackbar.LENGTH_LONG)
+        val intent = Intent(requireContext(), MainActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        startActivity(intent)
+        val snackbar = Snackbar.make(binding.root, "Login Efetuado", Snackbar.LENGTH_LONG)
         snackbar.setBackgroundTint(Color.GREEN)
         snackbar.show()
+        requireActivity().finish()
     }
     override fun onDestroyView() {
         super.onDestroyView()
