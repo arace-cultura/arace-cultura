@@ -49,6 +49,9 @@ class HomePage : Fragment() {
             }
         })
 
+        viewPager.setOnClickListener {
+            // TODO
+        }
         return view
     }
 
