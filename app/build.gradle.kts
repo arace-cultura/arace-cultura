@@ -54,4 +54,8 @@ dependencies {
     androidTestImplementation(libs.androidx.espresso.core)
     implementation(platform("com.google.firebase:firebase-bom:34.11.0"))
     implementation("com.google.firebase:firebase-auth")
+    implementation(libs.blurview)
+    implementation("com.github.Dimezis:BlurView:version-3.2.0")
+    implementation("com.github.Dimezis:BlurView:version-3.2.0")
+
 }
