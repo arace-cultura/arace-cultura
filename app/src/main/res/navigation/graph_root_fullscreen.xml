@@ -42,5 +42,9 @@
         android:name="com.aracecultura.arace.ui.main.NavegacaoPrincipal"
         android:label="fragment_navegacao_principal"
         tools:layout="@layout/fragment_navegacao_principal" />
+    <fragment
+        android:id="@+id/produto"
+        android:name="com.aracecultura.arace.ui.Produto"
+        android:label="Produto" />
 
 </navigation>

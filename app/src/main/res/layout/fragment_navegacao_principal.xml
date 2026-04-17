@@ -35,9 +35,11 @@
         android:id="@+id/bnvMenuInferiorNavegacao"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:menu="@menu/bottom_nav"
-        app:layout_constraintTop_toBottomOf="@id/fcvNavegacaoPrincipal"
-        app:layout_constraintLeft_toLeftOf="parent"
+        app:itemGravity="center"
         app:layout_constraintBottom_toBottomOf="parent"
-        />
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/fcvNavegacaoPrincipal"
+        app:itemPaddingBottom="12dp"
+        app:itemPaddingTop="12dp"
+        app:menu="@menu/bottom_nav" />
 </androidx.constraintlayout.widget.ConstraintLayout>

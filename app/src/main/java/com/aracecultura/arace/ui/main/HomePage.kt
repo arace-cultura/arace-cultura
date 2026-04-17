@@ -7,10 +7,12 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
 import androidx.fragment.app.Fragment
+import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import androidx.viewpager2.widget.ViewPager2
 import com.aracecultura.arace.R
 import com.aracecultura.arace.databinding.FragmentHomePageBinding
-import com.aracecultura.arace.ui.adapter.MyPagerAdapterHome
+import com.aracecultura.arace.ui.adapter.HomepageProdutosPagerAdapter
 
 class HomePage : Fragment() {
 
@@ -61,7 +63,9 @@ class HomePage : Fragment() {
         )
 
         // 4. Configura o Adapter (Importado do novo pacote)
-        val adapter = MyPagerAdapterHome(images)
+        val adapter = HomepageProdutosPagerAdapter(images) { position ->
+            requireActivity().findNavController(R.id.main).navigate(R.id.produto)
+        }
         vpProdutosSlider.adapter = adapter
 
         // 5. Configura os Dots Indicadores
