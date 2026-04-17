@@ -3,14 +3,15 @@
     <item
         android:id="@+id/explorar"
         android:icon="@drawable/ic_location_pin"
-        android:title="Explorar"
-        />
+        android:title="Explorar" />
 
-    <item android:title="Início"
-        android:id="@+id/home"
-        android:icon="@drawable/ic_home"/>
+    <item
+        android:id="@+id/homePage"
+        android:icon="@drawable/ic_home"
+        android:title="Início" />
 
-    <item android:title="Favoritos"
-        android:id="@+id/fav"
-        android:icon="@drawable/ic_heart"/>
+    <item
+        android:id="@+id/favoritos"
+        android:icon="@drawable/ic_heart"
+        android:title="Favoritos" />
 </menu>

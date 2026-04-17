@@ -1,25 +1,22 @@
-package com.aracecultura.arace.ui
+package com.aracecultura.arace.ui.auth
 
-import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import com.aracecultura.arace.MainActivity
-import com.aracecultura.arace.R
 import com.aracecultura.arace.databinding.FragmentLoginBinding
 import com.google.android.material.snackbar.Snackbar
-import com.google.firebase.auth.FirebaseAuth
+import com.aracecultura.arace.R
 
 
 class Login : Fragment() {
     private var _binding: FragmentLoginBinding? = null
     private val binding get() = _binding!!
 
-    private val dbAuth by lazy { FirebaseAuth.getInstance() }
+    // private val dbAuth by lazy { FirebaseAuth.getInstance() }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -37,21 +34,24 @@ class Login : Fragment() {
 
     private fun initListeners() {
         binding.loginBack.setOnClickListener {
+            // Utilizado para voltar para a última fragment do backstack
             findNavController().popBackStack()
         }
+
         binding.loginBtn.setOnClickListener {
+            this.tentarRealizarLogin()
+        }
+    }
 
-            val email = binding.loginInput.text.toString().trim()
-            val senha = binding.loginSenha.text.toString().trim()
+    private fun tentarRealizarLogin() {
+        // Captura as credenciais dos inputs ao clicar no botão de login
+        val email = binding.loginInput.text.toString().trim()
+        val senha = binding.loginSenha.text.toString().trim()
 
-            // se vazio
-            if (email.isEmpty() || senha.isEmpty()) {
-                val snackbar = Snackbar.make(binding.root, "Preencha todos os campos!", Snackbar.LENGTH_LONG)
-                snackbar.setBackgroundTint(Color.RED)
-                snackbar.show()
-            } else {
-                // autenticar usuario
-                dbAuth.signInWithEmailAndPassword(email, senha).addOnCompleteListener { autenticacao ->
+        if (validarCredenciais(email, senha)) {
+            // autenticar usuario
+            /*dbAuth.signInWithEmailAndPassword(email, senha)
+                .addOnCompleteListener { autenticacao ->
                     if (autenticacao.isSuccessful) {
                         // manda usuario pra tela principal - funcao la em baixo
                         navegarTelaPrincipal()
@@ -63,25 +63,32 @@ class Login : Fragment() {
                      * parecido com a tela de cadastro
                      *
                      */
-                    val snackbar = Snackbar.make(binding.root, "Erro ao fazer Login do usuário", Snackbar.LENGTH_LONG)
+                    val snackbar = Snackbar.make(
+                        binding.root,
+                        "Erro ao fazer Login do usuário",
+                        Snackbar.LENGTH_LONG
+                    )
                     snackbar.setBackgroundTint(Color.RED)
                     snackbar.show()
-                }
-            }
+                }*/
+            /**
+             * Assumiremos que a pessoa realizou o login corretamente
+             * com o Firebase por enquanto, pois só estou tentando organizar
+             * o código da maneira como aprendi durante as aulas.*/
+            findNavController().navigate(R.id.action_global_navegacaoPrincipalFragment)
+        } else {
+            // Caso as credenciais não sejam válidas.
+            val snackbar =
+                Snackbar.make(binding.root, "Preencha todos os campos!", Snackbar.LENGTH_LONG)
+            snackbar.setBackgroundTint(Color.RED)
+            snackbar.show()
         }
     }
 
-    private fun navegarTelaPrincipal() {
-        val intent = Intent(requireContext(), MainActivity::class.java)
-        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-        startActivity(intent)
-        val snackbar = Snackbar.make(binding.root, "Login Efetuado", Snackbar.LENGTH_LONG)
-        snackbar.setBackgroundTint(Color.GREEN)
-        snackbar.show()
-        requireActivity().finish()
-    }
+    private fun validarCredenciais(email: String, senha: String): Boolean = !email.isEmpty() && !senha.isEmpty()
+
     override fun onDestroyView() {
         super.onDestroyView()
-        _binding = null
+        this._binding = null
     }
 }

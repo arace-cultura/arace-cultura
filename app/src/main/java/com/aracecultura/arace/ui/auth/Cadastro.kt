@@ -1,4 +1,4 @@
-package com.aracecultura.arace.ui
+package com.aracecultura.arace.ui.auth
 
 import android.content.Intent
 import android.graphics.Color
@@ -10,7 +10,6 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.navigation.fragment.findNavController
 import com.aracecultura.arace.MainActivity
-import com.aracecultura.arace.R
 import com.aracecultura.arace.databinding.FragmentCadastroBinding
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.FirebaseNetworkException

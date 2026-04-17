@@ -1,31 +1,57 @@
-package com.aracecultura.arace.ui
+package com.aracecultura.arace.ui.main
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
+import androidx.fragment.app.Fragment
 import androidx.viewpager2.widget.ViewPager2
 import com.aracecultura.arace.R
-import com.aracecultura.arace.ui.adapter.MyPagerAdapterHome // Certifique-se que o adapter está neste caminho
+import com.aracecultura.arace.databinding.FragmentHomePageBinding
+import com.aracecultura.arace.ui.adapter.MyPagerAdapterHome
 
 class HomePage : Fragment() {
 
-    private lateinit var viewPager: ViewPager2
+    private var _binding: FragmentHomePageBinding? = null
+    private val binding get() = this._binding!!
+
+    private lateinit var vpProdutosSlider: ViewPager2
     private lateinit var dotIndicator: LinearLayout
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        this._binding = FragmentHomePageBinding.inflate(inflater, container, false)
+
+        return this.binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        setupViewPagerProdutos()
+    }
+
+    private fun setupViewPagerProdutos() {
+        /**
+         * Todo código abaixo precisa de refatoração e explicação.
+         *
+         * Ao invés de utilizar todo esse boilerplate, não seria melhor
+         * utilizar um tablayout? Ele já possui integração nativa com o
+         * ViewPager.
+         *
+         * Vi que o fragment_produto_home está com uma meia implementação disso.
+         * O responsável: por favor, limpe se não for utilizar ou integre
+         * adequadamente.
+         **/
         // 1. Infla o layout do projeto Arace
-        val view = inflater.inflate(R.layout.fragment_home_page, container, false)
 
         // 2. Inicializa os componentes
-        viewPager = view.findViewById(R.id.viewPagerProdutos)
-        dotIndicator = view.findViewById(R.id.dotIndicator)
+        this.vpProdutosSlider = this.binding.viewPagerProdutos
+        dotIndicator = this.binding.dotIndicator
 
         // 3. Lista de imagens (Certifique-se que estas imagens existem no seu drawable)
         val images = listOf(
@@ -36,20 +62,18 @@ class HomePage : Fragment() {
 
         // 4. Configura o Adapter (Importado do novo pacote)
         val adapter = MyPagerAdapterHome(images)
-        viewPager.adapter = adapter
+        vpProdutosSlider.adapter = adapter
 
         // 5. Configura os Dots Indicadores
         setupDotIndicator(images.size)
 
         // 6. Listener de mudança de página
-        viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+        vpProdutosSlider.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
                 super.onPageSelected(position)
                 updateIndicator(position)
             }
         })
-
-        return view
     }
 
     private fun setupDotIndicator(count: Int) {
@@ -79,6 +103,12 @@ class HomePage : Fragment() {
         }
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        this._binding = null
+    }
+
+    // Preciso de explicação sobre isso.
     // Mantive o Companion Object caso você precise criar instâncias com parâmetros no futuro
     companion object {
         @JvmStatic

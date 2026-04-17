@@ -1,14 +1,13 @@
-package com.aracecultura.arace
+package com.aracecultura.arace.ui.auth
 
-import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.aracecultura.arace.R
 import androidx.navigation.fragment.findNavController
 import com.aracecultura.arace.databinding.FragmentEntradaBinding
-import com.google.firebase.auth.FirebaseAuth
 
 class Entrada : Fragment() {
 
