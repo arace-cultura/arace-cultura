@@ -8,11 +8,25 @@ import android.view.ViewGroup
 import com.aracecultura.arace.R
 import androidx.navigation.fragment.findNavController
 import com.aracecultura.arace.databinding.FragmentEntradaBinding
+import com.google.firebase.auth.FirebaseAuth
 
 class Entrada : Fragment() {
 
     private var _binding: FragmentEntradaBinding? = null
     private val binding get() = _binding!!
+
+    private var _auth: FirebaseAuth? = null
+    private val auth get() = this._auth!!
+
+    override fun onStart() {
+        super.onStart()
+
+        this._auth = FirebaseAuth.getInstance()
+
+        if (this.auth.currentUser != null) {
+            findNavController().navigate(R.id.action_global_navegacaoPrincipalFragment)
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
