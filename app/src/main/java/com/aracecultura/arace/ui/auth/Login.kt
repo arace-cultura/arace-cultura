@@ -1,22 +1,30 @@
 package com.aracecultura.arace.ui.auth
 
-import android.graphics.Color
 import android.os.Bundle
+import android.util.Patterns
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import com.aracecultura.arace.databinding.FragmentLoginBinding
-import com.google.android.material.snackbar.Snackbar
 import com.aracecultura.arace.R
+import com.aracecultura.arace.databinding.FragmentLoginBinding
+import com.google.firebase.auth.FirebaseAuth
 
 
 class Login : Fragment() {
     private var _binding: FragmentLoginBinding? = null
-    private val binding get() = _binding!!
+    private val binding get() = this._binding!!
 
-    // private val dbAuth by lazy { FirebaseAuth.getInstance() }
+    private var _auth: FirebaseAuth? = null
+    private val auth get() = this._auth!!
+
+    override fun onStart() {
+        super.onStart()
+
+        this._auth = FirebaseAuth.getInstance()
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -34,58 +42,53 @@ class Login : Fragment() {
 
     private fun initListeners() {
         binding.loginBack.setOnClickListener {
-            // Utilizado para voltar para a última fragment do backstack
             findNavController().popBackStack()
         }
 
         binding.loginBtn.setOnClickListener {
-            this.tentarRealizarLogin()
+            this.login()
         }
     }
 
-    private fun tentarRealizarLogin() {
-        // Captura as credenciais dos inputs ao clicar no botão de login
+    private fun login() {
         val email = binding.loginInput.text.toString().trim()
         val senha = binding.loginSenha.text.toString().trim()
 
-        if (validarCredenciais(email, senha)) {
-            // autenticar usuario
-            /*dbAuth.signInWithEmailAndPassword(email, senha)
-                .addOnCompleteListener { autenticacao ->
-                    if (autenticacao.isSuccessful) {
-                        // manda usuario pra tela principal - funcao la em baixo
-                        navegarTelaPrincipal()
-                    }
-                    // listener para quando der errado
-                }.addOnFailureListener {
-                    /**
-                     * TODO: Tratamento de erros utilizando os metodos de exception,
-                     * parecido com a tela de cadastro
-                     *
-                     */
-                    val snackbar = Snackbar.make(
-                        binding.root,
-                        "Erro ao fazer Login do usuário",
-                        Snackbar.LENGTH_LONG
-                    )
-                    snackbar.setBackgroundTint(Color.RED)
-                    snackbar.show()
-                }*/
-            /**
-             * Assumiremos que a pessoa realizou o login corretamente
-             * com o Firebase por enquanto, pois só estou tentando organizar
-             * o código da maneira como aprendi durante as aulas.*/
-            findNavController().navigate(R.id.action_global_navegacaoPrincipalFragment)
-        } else {
-            // Caso as credenciais não sejam válidas.
-            val snackbar =
-                Snackbar.make(binding.root, "Preencha todos os campos!", Snackbar.LENGTH_LONG)
-            snackbar.setBackgroundTint(Color.RED)
-            snackbar.show()
+        /**
+         * Por enquanto, não avisa quanto a aspectos pontuais,
+         * apenas se há erro.
+         **/
+
+        if (!validarCredenciais(email, senha)) {
+            Toast.makeText(
+                requireContext(),
+                "Há erro nos dados.",
+                Toast.LENGTH_SHORT
+            ).show()
+            return
         }
+
+        this.auth.signInWithEmailAndPassword(email, senha)
+            .addOnCompleteListener { it ->
+                if (it.isSuccessful) {
+                    findNavController().navigate(R.id.action_global_navegacaoPrincipalFragment)
+                }
+            }.addOnFailureListener {
+                Toast.makeText(
+                    requireContext(),
+                    "Falha no login, tente novamente.",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
     }
 
-    private fun validarCredenciais(email: String, senha: String): Boolean = !email.isEmpty() && !senha.isEmpty()
+    private fun validarCredenciais(email: String, senha: String): Boolean {
+        // Patterns para e-mail e senha com mínimo de 8 caracteres para segurança.
+        val emailValido = email.isNotEmpty() && Patterns.EMAIL_ADDRESS.matcher(email).matches()
+        val senhaValida = senha.length >= 6
+
+        return emailValido && senhaValida
+    }
 
     override fun onDestroyView() {
         super.onDestroyView()
