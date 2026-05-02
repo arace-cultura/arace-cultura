@@ -27,7 +27,7 @@ body{
 }
 
 .bg_page{
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   width: 100%;
@@ -60,3 +60,65 @@ button{
 .container-btn:hover {
   background-color: darkblue; 
 }
+
+.forms-blur{
+  width: 350px;
+  padding: 30px;
+  background: rgba(255, 255, 255, 0.2); /* Cor branca com transparência */
+  backdrop-filter: blur(10px);        /* O segredo do borrão */
+  -webkit-backdrop-filter: blur(10px); /* Suporte para Safari */
+  border-radius: 15px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  margin: 100px auto;
+  color: white;
+}
+
+.input-style-perfil {
+  background-color: transparent;
+  border: 2px solid white;
+  color: white;
+  padding: 12px 12px 12px 40px;
+  border-radius: 8px; 
+  outline: none;
+  width: 250px;
+  margin-bottom: 20px;
+
+  background-image: url("/web/views/scr/assets/icons/icon_perfil.svg");
+  background-repeat: no-repeat;
+  background-size: 18px; 
+  background-position: 12px center;
+}
+
+.input-style-senha {
+  background-color: transparent;
+  border: 2px solid white;
+  color: white;
+  padding: 12px 12px 12px 40px;
+  border-radius: 8px; 
+  outline: none;
+  width: 250px;
+  margin-bottom: 20px;
+  background-image: url("/web/views/scr/assets/icons/icon_locker.svg");
+  background-repeat: no-repeat;
+  background-size: 18px; 
+  background-position: 12px center;
+  
+}
+ 
+.input-style-perfil:focus {
+  background-image: url("/web/views/scr/assets/icons/icon_perfil.svg");
+  outline: none;
+  border-color: #000000;
+}
+
+.input-style-senha:focus {
+  background-image: url("/web/views/scr/assets/icons/icon_locker.svg");
+  outline: none;
+  border-color: #000000;
+}
+
+input::placeholder {
+  color: rgba(43, 43, 43, 0.7);
+  stroke: rgba(43, 43, 43, 0.7);
+}
+
