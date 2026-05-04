@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     id("com.google.gms.google-services")
+    alias(libs.plugins.kotlin.compose)
 
 }
 
@@ -43,6 +44,10 @@ android {
     viewBinding {
         enable = true
     }
+
+    buildFeatures {
+        compose = true
+    }
 }
 
 dependencies {
@@ -55,10 +60,19 @@ dependencies {
     implementation(libs.androidx.navigation.fragment)
     implementation(libs.androidx.fragment)
     implementation(libs.androidx.navigation.ui.ktx)
+    implementation(libs.androidx.ui)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.auth)
     implementation(libs.blurview)
+    androidTestImplementation(libs.androidx.compose.ui.test.junit4)
+    debugImplementation(libs.androidx.compose.ui.tooling)
+    debugImplementation(libs.androidx.compose.ui.test.manifest)
+    implementation(libs.androidx.compose.animation) // Use a versão compatível com seu Compose
+
+    // Geralmente, o bundle padrão de Compose já resolve isso:
+    implementation(libs.ui)
+    implementation(libs.androidx.compose.material3)
 }

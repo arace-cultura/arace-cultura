@@ -1,5 +1,6 @@
 [versions]
 agp = "8.13.2"
+animation = "1.11.0"
 blurview = "version-3.2.0"
 firebaseBom = "34.12.0"
 kotlin = "2.3.20"
@@ -14,8 +15,12 @@ constraintlayout = "2.2.1"
 navigationFragment = "2.9.7"
 fragment = "1.8.9"
 navigationUiKtx = "2.9.7"
+ui = "1.11.0"
+compose = "1.6.0"
 
 [libraries]
+androidx-compose-animation = { module = "androidx.compose.animation:animation", version.ref = "animation" }
+androidx-compose-material3 = { module = "androidx.compose.material3:material3" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-navigation-ui-ktx = { module = "androidx.navigation:navigation-ui-ktx", version.ref = "navigationUiKtx" }
 blurview = { module = "com.github.Dimezis:BlurView", version.ref = "blurview" }
@@ -30,8 +35,17 @@ androidx-activity = { group = "androidx.activity", name = "activity", version.re
 androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
 androidx-navigation-fragment = { group = "androidx.navigation", name = "navigation-fragment", version.ref = "navigationFragment" }
 androidx-fragment = { group = "androidx.fragment", name = "fragment", version.ref = "fragment" }
+androidx-ui = { group = "androidx.compose.ui", name = "ui", version.ref = "ui" }
+androidx-compose-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4", version.ref = "compose" }
+androidx-compose-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling", version.ref = "compose" }
+androidx-compose-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest", version.ref = "compose" }
+androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
+androidx-animation = { group = "androidx.compose.animation", name = "animation" }
+ui = { module = "androidx.compose.ui:ui" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+
 
