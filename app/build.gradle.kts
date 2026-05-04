@@ -71,6 +71,7 @@ dependencies {
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
     implementation(libs.androidx.compose.animation) // Use a versão compatível com seu Compose
+    implementation("androidx.compose.material3:material3:1.3.0")
 
     // Geralmente, o bundle padrão de Compose já resolve isso:
     implementation(libs.ui)
