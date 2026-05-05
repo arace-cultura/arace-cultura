@@ -10,6 +10,7 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.aracecultura.arace.R
 import com.aracecultura.arace.databinding.FragmentNavegacaoPrincipalBinding
+import com.aracecultura.arace.ui.main.jetpack.SeletorModoBottomSheet
 
 
 class NavegacaoPrincipal : Fragment() {
@@ -35,6 +36,14 @@ class NavegacaoPrincipal : Fragment() {
         this.binding.bnvMenuInferiorNavegacao.setupWithNavController(
             this.binding.fcvNavegacaoPrincipal.getFragment<NavHostFragment>().navController
         )
+
+        this.binding.btnMenuModo.setOnClickListener {
+            val bottomSheet = SeletorModoBottomSheet { modoSelecionado ->
+                quandoModoMudar(modoSelecionado)
+            }
+            bottomSheet.show(childFragmentManager, "SeletorModo")
+        }
+
     }
 
 
