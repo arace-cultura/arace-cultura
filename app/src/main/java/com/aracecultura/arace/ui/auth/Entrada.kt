@@ -15,31 +15,22 @@ class Entrada : Fragment() {
     private var _binding: FragmentEntradaBinding? = null
     private val binding get() = _binding!!
 
-    private var _auth: FirebaseAuth? = null
-    private val auth get() = this._auth!!
-
-    override fun onStart() {
-        super.onStart()
-
-        this._auth = FirebaseAuth.getInstance()
-
-        if (this.auth.currentUser != null) {
-            findNavController().navigate(R.id.action_global_navegacaoPrincipalFragment)
-        }
-    }
+    private val auth by lazy { FirebaseAuth.getInstance() }
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        this.checkAuth()
+
         _binding = FragmentEntradaBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initListeners()
+        this.initListeners()
     }
 
 
@@ -55,6 +46,11 @@ class Entrada : Fragment() {
         }
     }
 
+    private fun checkAuth() {
+        if (this.auth.currentUser != null) {
+            findNavController().navigate(R.id.action_global_to_main)
+        }
+    }
 
     override fun onDestroyView() {
         super.onDestroyView()

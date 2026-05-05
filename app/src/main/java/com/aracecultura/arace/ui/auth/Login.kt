@@ -17,14 +17,9 @@ class Login : Fragment() {
     private var _binding: FragmentLoginBinding? = null
     private val binding get() = this._binding!!
 
-    private var _auth: FirebaseAuth? = null
-    private val auth get() = this._auth!!
 
-    override fun onStart() {
-        super.onStart()
+    private val auth by lazy { FirebaseAuth.getInstance() }
 
-        this._auth = FirebaseAuth.getInstance()
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -37,7 +32,7 @@ class Login : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initListeners()
+        this.initListeners()
     }
 
     private fun initListeners() {
@@ -71,7 +66,7 @@ class Login : Fragment() {
         this.auth.signInWithEmailAndPassword(email, senha)
             .addOnCompleteListener { it ->
                 if (it.isSuccessful) {
-                    findNavController().navigate(R.id.action_global_navegacaoPrincipalFragment)
+                    findNavController().navigate(R.id.action_global_to_main)
                 }
             }.addOnFailureListener {
                 Toast.makeText(
