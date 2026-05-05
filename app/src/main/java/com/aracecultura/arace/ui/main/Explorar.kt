@@ -30,9 +30,12 @@ class Explorar : Fragment() {
         return this.binding.root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+    override fun onStart() {
+        super.onStart()
+        loadProdutos()
+    }
 
+    private fun loadProdutos() {
         this.db.collection("Produtos")
             .get()
             .addOnSuccessListener { querySnapshot ->
@@ -56,6 +59,7 @@ class Explorar : Fragment() {
     fun loadRVProdutos(
         produtos: List<Produto>
     ) {
+        this.binding.loadingProdutosProgressBar.visibility = View.GONE
         val adapter = ExplorarProdutosAdapter(produtos)
 
         this.binding.rvProdutos.apply {
