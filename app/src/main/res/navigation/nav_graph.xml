@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/auth_graph">
+
+    <include app:graph="@navigation/auth_graph" />
+    <include app:graph="@navigation/main_graph" />
+
+    <action
+        android:id="@+id/action_global_to_main"
+        app:destination="@id/main_graph"
+        app:popUpTo="@id/auth_graph"
+        app:launchSingleTop="true"
+        app:popUpToInclusive="true"/>
+</navigation>

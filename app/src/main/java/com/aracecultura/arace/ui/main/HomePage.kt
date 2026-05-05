@@ -27,51 +27,32 @@ class HomePage : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         this._binding = FragmentHomePageBinding.inflate(inflater, container, false)
-
         return this.binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        setupViewPagerProdutos()
+        this.setupViewPagerProdutos()
     }
 
     private fun setupViewPagerProdutos() {
-        /**
-         * Todo código abaixo precisa de refatoração e explicação.
-         *
-         * Ao invés de utilizar todo esse boilerplate, não seria melhor
-         * utilizar um tablayout? Ele já possui integração nativa com o
-         * ViewPager.
-         *
-         * Vi que o fragment_produto_home está com uma meia implementação disso.
-         * O responsável: por favor, limpe se não for utilizar ou integre
-         * adequadamente.
-         **/
-        // 1. Infla o layout do projeto Arace
-
-        // 2. Inicializa os componentes
         this.vpProdutosSlider = this.binding.viewPagerProdutos
         dotIndicator = this.binding.dotIndicator
 
-        // 3. Lista de imagens (Certifique-se que estas imagens existem no seu drawable)
         val images = listOf(
             R.drawable.panela_home,
             R.drawable.passaro_croche,
             R.drawable.escultura_preguica
         )
 
-        // 4. Configura o Adapter (Importado do novo pacote)
         val adapter = HomepageProdutosPagerAdapter(images) { position ->
-            requireActivity().findNavController(R.id.main).navigate(R.id.produto)
+            findNavController().navigate(R.id.produto)
         }
         vpProdutosSlider.adapter = adapter
 
-        // 5. Configura os Dots Indicadores
         setupDotIndicator(images.size)
 
-        // 6. Listener de mudança de página
         vpProdutosSlider.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
                 super.onPageSelected(position)
@@ -84,7 +65,6 @@ class HomePage : Fragment() {
         dotIndicator.removeAllViews()
         for (i in 0 until count) {
             val dot = ImageView(requireContext())
-            // Verifique se o drawable 'dot_selector' foi copiado para o novo projeto
             dot.setImageResource(R.drawable.dot_selector)
 
             val params = LinearLayout.LayoutParams(
@@ -112,10 +92,4 @@ class HomePage : Fragment() {
         this._binding = null
     }
 
-    // Preciso de explicação sobre isso.
-    // Mantive o Companion Object caso você precise criar instâncias com parâmetros no futuro
-    companion object {
-        @JvmStatic
-        fun newInstance() = HomePage()
-    }
 }

@@ -20,4 +20,9 @@
     <color name="laranja">#D45D22</color>
     <color name="bg_descubra">#F5F5F5</color>
 
+    <color
+        name="splash_background">
+        #011C40
+    </color>
+
 </resources>

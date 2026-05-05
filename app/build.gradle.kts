@@ -64,4 +64,5 @@ dependencies {
     implementation(libs.blurview)
     implementation(libs.firebase.firestore)
 
+    implementation(libs.androidx.core.splashscreen)
 }

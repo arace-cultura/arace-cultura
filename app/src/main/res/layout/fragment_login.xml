@@ -1,105 +1,100 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/f_login"
     tools:context=".ui.auth.Login">
 
-    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/main"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@drawable/f_login">
+    <LinearLayout
+        android:layout_width="350dp"
+        android:layout_height="600dp"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:padding="10dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:layout_marginBottom="32dp"
+            android:fontFamily="@font/librecaslondisplay_regular"
+            android:text="Login"
+            android:textColor="@color/white"
+            android:textSize="55sp" />
+
+        <EditText
+            android:id="@+id/login_input"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/w_rectangle"
+            android:hint="Email"
+            android:inputType="textEmailAddress"
+            android:padding="16dp"
+            android:textColor="@color/gray"
+            android:textColorHint="@color/gray"
+            android:textSize="16sp" />
+
+        <EditText
+            android:id="@+id/login_senha"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/w_rectangle"
+            android:hint="Senha"
+            android:inputType="textPassword"
+            android:padding="16dp"
+            android:textColor="@color/gray"
+            android:textColorHint="@color/gray"
+            android:textSize="16sp" />
+
+        <Button
+            android:id="@+id/login_btn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:backgroundTint="@color/white"
+            android:text="Entrar"
+            android:textColor="@color/placeholder1"
+            android:textSize="20sp" />
 
         <LinearLayout
-            android:layout_width="350dp"
-            android:layout_height="600dp"
-            android:orientation="vertical"
-            android:gravity="center_horizontal"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:orientation="horizontal"
             android:padding="10dp">
 
             <TextView
-                android:layout_width="match_parent"
+                android:id="@+id/login_recuperar"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Login"
-                android:fontFamily="@font/librecaslondisplay_regular"
+                android:layout_weight="1"
+                android:text="Recuperar senha"
+                android:textAlignment="textStart"
                 android:textColor="@color/white"
-                android:textSize="55sp"
-                android:layout_marginTop="32dp"
-                android:layout_marginBottom="32dp"/>
-
-            <EditText
-                android:id="@+id/login_input"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:background="@drawable/w_rectangle"
-                android:hint="Email"
-                android:inputType="textEmailAddress"
-                android:padding="16dp"
-                android:textColor="@color/gray"
-                android:textColorHint="@color/gray"
                 android:textSize="16sp" />
 
-            <EditText
-                android:id="@+id/login_senha"
-                android:layout_width="match_parent"
+            <TextView
+                android:id="@+id/login_back"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:background="@drawable/w_rectangle"
-                android:hint="Senha"
-                android:inputType="textPassword"
-                android:padding="16dp"
-                android:textColor="@color/gray"
-                android:textColorHint="@color/gray"
+                android:layout_weight="1"
+                android:text="Voltar"
+                android:textAlignment="textEnd"
+                android:textColor="@color/white"
                 android:textSize="16sp" />
-
-            <Button
-                android:id="@+id/login_btn"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Entrar"
-                android:backgroundTint="@color/white"
-                android:textColor="@color/placeholder1"
-                android:layout_marginTop="32dp"
-                android:textSize="20sp" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:padding="10dp"
-                android:layout_marginTop="20dp">
-
-                <TextView
-                    android:id="@+id/login_recuperar"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Recuperar senha"
-                    android:textColor="@color/white"
-                    android:textSize="16sp"
-                    android:layout_weight="1"
-                    android:textAlignment="textStart" />
-
-                <TextView
-                    android:id="@+id/login_back"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Voltar"
-                    android:textColor="@color/white"
-                    android:textSize="16sp"
-                    android:layout_weight="1"
-                    android:textAlignment="textEnd" />
-
-            </LinearLayout>
 
         </LinearLayout>
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </LinearLayout>
 
-</FrameLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
+

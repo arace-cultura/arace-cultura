@@ -10,6 +10,7 @@ import android.widget.Toast
 import androidx.navigation.fragment.findNavController
 import com.aracecultura.arace.R
 import com.aracecultura.arace.databinding.FragmentCadastroBinding
+import com.google.firebase.Firebase
 import com.google.firebase.FirebaseNetworkException
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
@@ -21,14 +22,7 @@ class Cadastro : Fragment() {
     private var _binding: FragmentCadastroBinding? = null
     private val binding get() = _binding!!
 
-    private var _auth: FirebaseAuth? = null
-    private val auth get() = this._auth!!
-
-    override fun onStart() {
-        super.onStart()
-
-        this._auth = FirebaseAuth.getInstance()
-    }
+    private val auth by lazy { FirebaseAuth.getInstance() }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -70,7 +64,7 @@ class Cadastro : Fragment() {
         this.auth.createUserWithEmailAndPassword(email, senha).addOnCompleteListener { cadastro ->
 
             if (cadastro.isSuccessful) {
-                findNavController().navigate(R.id.action_global_navegacaoPrincipalFragment)
+                findNavController().navigate(R.id.action_global_to_main)
             }
         }.addOnFailureListener { exception ->
             val mensagemErro = when(exception) {
