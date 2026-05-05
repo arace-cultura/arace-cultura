@@ -37,6 +37,27 @@
             app:popUpTo="@id/navigationLogin"
             app:popUpToInclusive="true"/>
     </navigation>
+
+    <!-- Navegação de cadastro do produtor -->
+
+    <action
+        android:id="@+id/action_global_cadastroProdutorFragment"
+        app:destination="@id/fluxo_cadastro_produtor" />
+
+    <navigation
+        android:id="@+id/fluxo_cadastro_produtor"
+        app:startDestination="@id/cadastroProdutorTela1">
+
+        <fragment
+            android:id="@+id/cadastroProdutorTela1"
+            android:name="com.aracecultura.arace.ui.auth.CadastroProdutorTela1"
+            android:label="CadastroProdutor"
+            tools:layout="@layout/fragment_cadastro_produtor_tela1" />
+
+    </navigation>
+
+
+
     <fragment
         android:id="@+id/navegacaoPrincipalFragment"
         android:name="com.aracecultura.arace.ui.main.NavegacaoPrincipal"

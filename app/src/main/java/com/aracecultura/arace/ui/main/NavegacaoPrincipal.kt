@@ -1,5 +1,6 @@
 package com.aracecultura.arace.ui.main
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -13,6 +14,8 @@ import com.aracecultura.arace.databinding.FragmentNavegacaoPrincipalBinding
 import com.aracecultura.arace.ui.main.jetpack.Modo
 import com.aracecultura.arace.ui.main.jetpack.SeletorModoBottomSheet
 import android.util.Log
+import androidx.fragment.app.setFragmentResultListener
+import androidx.navigation.fragment.findNavController
 
 
 class NavegacaoPrincipal : Fragment() {
@@ -49,6 +52,19 @@ class NavegacaoPrincipal : Fragment() {
             bottomSheet.show(childFragmentManager, "SeletorModo")
         }
 
+        // Verificação do cadastro de produtor bem sucedido!
+
+        setFragmentResultListener("cadastro_produtor_request") { _, bundle ->
+            val cadastroConcluido = bundle.getBoolean("sucesso", false)
+
+            if (cadastroConcluido) {
+                // Se o cadastro deu certo, troca o footer para o modo produtor automaticamente
+                Log.d("ModoArace", "Ouvinte disparado: Cadastro concluído. Trocando footer.")
+                configurarMenuProdutor()
+            }
+        }
+
+
     }
 
     // Função de verificar a mudança no Logcat
@@ -58,9 +74,32 @@ class NavegacaoPrincipal : Fragment() {
 
         when (modo) {
             Modo.CLIENTE -> configurarMenuCliente()
-            Modo.PRODUTOR -> configurarMenuProdutor()
+            Modo.PRODUTOR -> verificarEEntrarModoProdutor()
         }
     }
+
+    private fun iniciarFluxoCadastroProdutor(){
+
+        findNavController().navigate(R.id.action_global_cadastroProdutorFragment)
+    }
+
+    private fun verificarEEntrarModoProdutor() {
+        val sharedPref = requireActivity().getSharedPreferences("AracePrefs", android.content.Context.MODE_PRIVATE)
+
+        val isProdutorCadastrado = sharedPref.getBoolean("STATUS_PRODUTOR", false)
+
+        if (isProdutorCadastrado) {
+            Log.d("ModoArace", "Trocando footer para Produtor.")
+            configurarMenuProdutor()
+        } else {
+            Log.d("ModoArace", "Redirecionando para Cadastro.")
+            iniciarFluxoCadastroProdutor()
+        }
+
+    }
+
+
+
 
 
     override fun onDestroyView() {
