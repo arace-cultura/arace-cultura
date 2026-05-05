@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="12dp">
+
+    <ImageView
+        android:id="@+id/imageView4"
+        android:layout_width="180dp"
+        android:layout_height="180dp"
+        android:src="@android:color/black"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/nome"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:text="Nome do produto"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toEndOf="@+id/imageView4"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/descricao"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:ellipsize="end"
+        android:maxLines="3"
+        android:text="Esta é uma descrição extensa do produto &quot;Nome do Produto&quot; para testar seu design no RecyclerView. asdkgh eoiefh qoreh goerh goier goier goie oierh goierh gierh goihgh erigh oier goierh goierh groie goierh goierh gioehr g"
+        app:layout_constraintStart_toStartOf="@+id/nome"
+        app:layout_constraintTop_toBottomOf="@+id/nome"
+        app:layout_constraintWidth_max="180dp" />
+
+    <RatingBar
+        android:id="@+id/avaliacao"
+        style="@android:style/Widget.Material.RatingBar.Small"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:max="5"
+        android:numStars="5"
+        android:progressTint="#FF9800"
+        android:rating="3"
+        android:stepSize="1"
+        app:layout_constraintStart_toStartOf="@+id/descricao"
+        app:layout_constraintTop_toBottomOf="@+id/descricao" />
+
+    <TextView
+        android:id="@+id/preco"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:text="100"
+        app:layout_constraintStart_toEndOf="@+id/unidadeMonetariaReal"
+        app:layout_constraintTop_toTopOf="@+id/unidadeMonetariaReal" />
+
+    <TextView
+        android:id="@+id/unidadeMonetariaReal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="R$"
+        app:layout_constraintStart_toStartOf="@+id/avaliacao"
+        app:layout_constraintTop_toBottomOf="@+id/avaliacao" />
+
+    <Button
+        android:id="@+id/btnAdicionarAoCarrinho"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        android:backgroundTint="#FF5722"
+        android:insetTop="0dp"
+        android:insetBottom="0dp"
+        android:text="Adicionar ao carrinho"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/unidadeMonetariaReal"
+        app:layout_constraintTop_toBottomOf="@+id/unidadeMonetariaReal"
+        app:layout_constraintVertical_bias="1.0" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

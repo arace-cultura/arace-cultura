@@ -34,4 +34,9 @@
         android:name="showBottomNav"
         android:defaultValue="true"
         app:argType="boolean"/>
+    <fragment
+        android:id="@+id/explorar"
+        android:name="com.aracecultura.arace.ui.main.Explorar"
+        android:label="fragment_explorar"
+        tools:layout="@layout/fragment_explorar" />
 </navigation>
