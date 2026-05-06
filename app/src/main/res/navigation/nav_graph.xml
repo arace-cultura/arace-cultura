@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/auth_graph">
+
+    <include app:graph="@navigation/auth_graph" />
+    <include app:graph="@navigation/main_graph" />
+
+    <fragment
+        android:id="@+id/navegacaoPrincipalFragment"
+        android:name="com.aracecultura.arace.ui.main.NavegacaoPrincipal"
+        tools:layout="@layout/fragment_navegacao_principal" />
+
+    <fragment
+        android:id="@+id/produto"
+        android:name="com.aracecultura.arace.ui.Produto"
+        tools:layout="@layout/fragment_produto" />
+
+    <navigation
+        android:id="@+id/fluxo_cadastro_produtor"
+        app:startDestination="@id/cadastroProdutorTela1">
+        <fragment
+            android:id="@+id/cadastroProdutorTela1"
+            android:name="com.aracecultura.arace.ui.auth.CadastroProdutorTela1" />
+    </navigation>
+
+    <action
+        android:id="@+id/action_global_to_main"
+        app:destination="@id/navegacaoPrincipalFragment"
+        app:popUpTo="@id/auth_graph"
+        app:popUpToInclusive="true"/>
+
+    <action
+        android:id="@+id/action_global_cadastroProdutorFragment"
+        app:destination="@id/fluxo_cadastro_produtor" />
+
+    <action
+        android:id="@+id/action_global_to_produto"
+        app:destination="@id/produto" />
+</navigation>

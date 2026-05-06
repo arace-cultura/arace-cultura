@@ -59,7 +59,7 @@
         app:layout_constraintTop_toBottomOf="@+id/appBarLayout"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintBottom_toTopOf="@id/bnvMenuInferiorNavegacao"
-        app:navGraph="@navigation/graph_main"
+        app:navGraph="@navigation/main_graph"
         android:name="androidx.navigation.fragment.NavHostFragment"
         app:defaultNavHost="true"
         />

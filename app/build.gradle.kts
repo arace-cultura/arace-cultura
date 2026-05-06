@@ -3,7 +3,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     id("com.google.gms.google-services")
     alias(libs.plugins.kotlin.compose)
-
+    id("kotlin-parcelize") // Vem da app-dev
 }
 
 android {
@@ -47,11 +47,12 @@ android {
 
     buildFeatures {
         compose = true
+        viewBinding = true
     }
 }
 
 dependencies {
-
+    
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
@@ -72,6 +73,9 @@ dependencies {
     debugImplementation(libs.androidx.compose.ui.test.manifest)
     implementation(libs.androidx.compose.animation) // Use a versão compatível com seu Compose
     implementation("androidx.compose.material3:material3:1.3.0")
+    implementation(libs.androidx.core.splashscreen)
+    implementation(libs.firebase.firestore)
+    implementation(libs.androidx.recyclerview)
 
     // Geralmente, o bundle padrão de Compose já resolve isso:
     implementation(libs.ui)
