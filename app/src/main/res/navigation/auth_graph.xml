@@ -28,10 +28,6 @@
             android:id="@+id/action_entrada_to_cadastro"
             app:destination="@id/cadastro" />
     </fragment>
-    <argument
-        android:name="showBottomNav"
-        android:defaultValue="false"
-        app:argType="boolean"/>
 
 
 </navigation>
