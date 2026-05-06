@@ -29,20 +29,3 @@
     </application>
 
 </manifest>
-
-
-<resources>
-
-<style name="Base.Theme.Arace" parent="Theme.Material3.Light.NoActionBar">
-
-</style>
-
-<style name="Theme.Arace.Splash" parent="Theme.SplashScreen">
-    <item name="windowSplashScreenBackground">@color/splash_background</item>
-    <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_launcher</item>
-    <item name="postSplashScreenTheme">@style/Theme.Arace</item>
-</style>
-
-<style name="Theme.Arace" parent="Base.Theme.Arace" />
-</resources>
-
