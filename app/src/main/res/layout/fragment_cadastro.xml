@@ -1,99 +1,94 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.auth.Cadastro"
-    android:background="@drawable/f_login">
+    android:background="@drawable/f_login"
+    tools:context=".ui.auth.Cadastro">
 
-    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/main"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+    <LinearLayout
+        android:layout_width="350dp"
+        android:layout_height="600dp"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:padding="10dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-        <LinearLayout
-            android:layout_width="350dp"
-            android:layout_height="600dp"
-            android:orientation="vertical"
-            android:gravity="center_horizontal"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:padding="10dp">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:layout_marginBottom="32dp"
+            android:fontFamily="@font/librecaslondisplay_regular"
+            android:text="Criar conta"
+            android:textColor="@color/white"
+            android:textSize="55sp" />
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Criar conta"
-                android:fontFamily="@font/librecaslondisplay_regular"
-                android:textColor="@color/white"
-                android:textSize="55sp"
-                android:layout_marginTop="32dp"
-                android:layout_marginBottom="32dp"/>
+        <EditText
+            android:id="@+id/cadastro_input"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/w_rectangle"
+            android:hint="Email"
+            android:inputType="textEmailAddress"
+            android:padding="16dp"
+            android:textColor="@color/gray"
+            android:textColorHint="@color/gray"
+            android:textSize="16sp" />
 
-            <EditText
-                android:id="@+id/cadastro_input"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:background="@drawable/w_rectangle"
-                android:hint="Email"
-                android:inputType="textEmailAddress"
-                android:padding="16dp"
-                android:textColor="@color/gray"
-                android:textColorHint="@color/gray"
-                android:textSize="16sp" />
+        <EditText
+            android:id="@+id/cadastro_senha"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/w_rectangle"
+            android:hint="Senha"
+            android:inputType="textPassword"
+            android:padding="16dp"
+            android:textColor="@color/gray"
+            android:textColorHint="@color/gray"
+            android:textSize="16sp" />
 
-            <EditText
-                android:id="@+id/cadastro_senha"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:background="@drawable/w_rectangle"
-                android:hint="Senha"
-                android:inputType="textPassword"
-                android:padding="16dp"
-                android:textColor="@color/gray"
-                android:textColorHint="@color/gray"
-                android:textSize="16sp" />
+        <EditText
+            android:id="@+id/cadastro_confirmar_senha"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/w_rectangle"
+            android:hint="Confirme sua senha"
+            android:inputType="textPassword"
+            android:padding="16dp"
+            android:textColor="@color/gray"
+            android:textColorHint="@color/gray"
+            android:textSize="16sp" />
 
-            <EditText
-                android:id="@+id/cadastro_confirmar_senha"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:background="@drawable/w_rectangle"
-                android:hint="Confirme sua senha"
-                android:inputType="textPassword"
-                android:padding="16dp"
-                android:textColor="@color/gray"
-                android:textColorHint="@color/gray"
-                android:textSize="16sp" />
+        <Button
+            android:id="@+id/cadastro_btn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:backgroundTint="@color/white"
+            android:text="Concluir"
+            android:textColor="@color/placeholder1"
+            android:textSize="20sp" />
 
-            <Button
-                android:id="@+id/cadastro_btn"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Concluir"
-                android:backgroundTint="@color/white"
-                android:textColor="@color/placeholder1"
-                android:layout_marginTop="32dp"
-                android:textSize="20sp" />
+        <TextView
+            android:id="@+id/cadastro_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="Voltar"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:textSize="16sp" />
 
-            <TextView
-                android:id="@+id/cadastro_back"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:text="Voltar"
-                android:textAlignment="center"
-                android:textColor="@color/white"
-                android:textSize="16sp" />
+    </LinearLayout>
 
-        </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-</FrameLayout>
