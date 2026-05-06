@@ -3,28 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <title>Aracê - Cultura Capixaba</title>
-    <link rel="stylesheet" href="style.css">
-</head>
+    <link rel="stylesheet" href="style2.css"></head>
 <body>
+
+<!--Menu superior-->
 
     <header>
     <nav class="navbar">
         <div class="menu-icon">
-            <img src="icones\menu_ic.svg" alt="Menu">
+            <img src="scr/assets/icons/icones/menu_ic.svg" alt="Menu">
         </div>
 
         <div class="nav-right">
             <div class="cart-info">
-                <img src="icones\carrinho_ic.svg" alt="Carrinho"><br>
+                <img src="scr/assets/icons/icones/carrinho_ic.svg" alt="Carrinho"><br>
                 <div class="linha-vertical"></div>
                 <span>2 itens</span>
             </div>
             <div class="user-profile">
-                <img src="icones\perfil_ic.svg" alt="Perfil">
+                <img src="scr/assets/icons/icones/perfil_ic.svg" alt="Perfil">
             </div>
         </div>
     </nav>
 </header>
+
+<!--hero-->
 <section class="hero-banner">
     <div class="hero-content">
         <h1>aracê</h1>
@@ -35,34 +38,245 @@
     </div>
 </section>
 
+<!--Barra de pesquisa-->
+
 <div class="search-section">
     <form class="search-container" id="searchForm">
-        <span class="search-icon">🔍</span>
+        <span class="search-icon">
+            <img src="scr/assets/icons/icones/Search_ic.svg" alt="Lupa"></span>
         <input type="text" id="searchInput" placeholder="pesquise um produto...">
     </form>
 </div>
 
+    <!--Sessão de categorias-->
+
 <section class="categories-section">
     <h2 class="title-categories">categorias</h2>
+
     <div class="categories-grid">
+
+        <!--Verdes-->
+
         <a href="catalogo.html?cat=pinturas" class="cat-item">
-            <div class="icon-box bg-green">
-                <img src="icon-pintura.svg" alt="Pinturas">
-            </div>
-            <span>Pinturas</span>
-        </a>
-        <a href="catalogo.html?cat=roupas" class="cat-item">
-            <div class="icon-box bg-orange">
-                <img src="icon-roupas.svg" alt="Roupas">
-            </div>
-            <span>Roupas</span>
-        </a>
+    <div class="icon-box bg-green">
+        <img src="scr/assets/icons/icones/pallete.svg" alt="Pinturas">
+    </div>
+    <span>Pinturas</span>
+</a>
+
+<a href="catalogo.html?cat=casa-vida" class="cat-item">
+    <div class="icon-box bg-green">
+        <img src="scr/assets/icons/icones/image_2.svg" alt="Casa & Vida">
+    </div>
+    <span>Casa & Vida</span>
+</a>
+
+<a href="catalogo.html?cat=retro" class="cat-item">
+    <div class="icon-box bg-green">
+        <img src="scr/assets/icons/icones/cassette_ic.svg" alt="Retrô">
+    </div>
+    <span>Retrô</span>
+</a>
+
+<a href="catalogo.html?cat=ecodesign" class="cat-item">
+    <div class="icon-box bg-green">
+        <img src="scr/assets/icons/icones/eco-light_ic.svg" alt="Ecodesign">
+    </div>
+    <span>Ecodesign</span>
+</a>
+
+<!--Laranjas-->
+
+<a href="catalogo.html?cat=roupas" class="cat-item">
+    <div class="icon-box bg-orange">
+        <img src="scr/assets/icons/icones/tshirt 1.svg" alt="Roupas">
+    </div>
+    <span>Roupas</span>
+</a>
+
+<a href="catalogo.html?cat=acessorios" class="cat-item">
+    <div class="icon-box bg-orange">
+        <img src="scr/assets/icons/icones/necklace 1.svg" alt="Acessórios">
+    </div>
+    <span>Acessórios</span>
+</a>
+
+<a href="catalogo.html?cat=ceramica" class="cat-item">
+    <div class="icon-box bg-orange">
+        <img src="scr/assets/icons/icones/vase 1.svg" alt="Cerâmica">
+    </div>
+    <span>Cerâmica</span>
+</a>
+
+<a href="catalogo.html?cat=gastronomia" class="cat-item">
+    <div class="icon-box bg-orange">
+        <img src="scr/assets/icons/icones/cutlery_ic.svg" alt="Gastronomia">
+    </div>
+    <span>Gastronomia</span>
+</a>
+
         </div>
 </section>
 
+<!--Fim de categorias-->
+
+
+
         <section id="produtos">
+            <h2 class="title-products">produtos em destaque</h2>
             
             <!--Aqui adicionaremos os produtos-->
+
+            
+
+           <!-- Modelo do card do produto - Copie e use 
+                       <div class="product-card">
+                    <img src="/xxxx" class="product-img" alt="xxxx">
+                
+                <div class="product-name">
+                    <h3 class="product-title"> Nome nome </h3>
+                </div>
+                <div class="product-rating">
+                    <span>☆</span><span>☆</span><span>☆</span><span>☆</span><span>☆</span>
+                </div>
+
+                <div class="product-price">
+                    <span class="currency">R$</span>
+                    <span class="value">000</span>
+                    <span class="decimals">00</span>
+                </div>
+
+                <button class="add-cart">Adicionar ao carrinho</button>
+            </div>
+           -->
+
+           <div class="product-card">
+                    <img src="/imagens/produtos/panela_convento.png" class="product-img" alt="Panela de barro personalizada com o desenho do Convento da Penha">
+                
+                <div class="product-name">
+                    <h3 class="product-title"> Panela de barro personalizada</h3>
+                </div>
+                <div class="product-rating">
+                    <span>☆</span><span>☆</span><span>☆</span><span>☆</span><span>☆</span>
+                </div>
+
+                <!-- Essa parte precisaria do BD, por enquanto fica só o texto mesmo-->
+                <div class="product-price">
+                    <span class="currency">R$</span>
+                    <span class="value">125</span>
+                    <span class="decimals">00</span>
+                </div>
+
+                <button class="add-cart">Adicionar ao carrinho</button>
+            </div>
+
+            <div class="product-card">
+                    <img src="/imagens/produtos/panela_tres.png" class="product-img" alt="Kit com três panelas de barro de tamanhos variados">
+                
+                <div class="product-name">
+                    <h3 class="product-title"> Kit com três panelas de barro </h3>
+                </div>
+                <div class="product-rating">
+                    <span>☆</span><span>☆</span><span>☆</span><span>☆</span><span>☆</span>
+                </div>
+
+                <!-- Essa parte precisaria do BD, por enquanto fica só o texto mesmo-->
+                <div class="product-price">
+                    <span class="currency">R$</span>
+                    <span class="value">200</span>
+                    <span class="decimals">50</span>
+                </div>
+
+                <button class="add-cart">Adicionar ao carrinho</button>
+            </div>
+
+
+            <div class="product-card">
+                    <img src="/imagens/produtos/bracelete_joia.png" class="product-img" alt="Bracelete trançado com uma jóia brilhante">
+                
+                <div class="product-name">
+                    <h3 class="product-title"> Bracelete trançado</h3>
+                </div>
+                <div class="product-rating">
+                    <span>☆</span><span>☆</span><span>☆</span><span>☆</span><span>☆</span>
+                </div>
+
+                <!-- Essa parte precisaria do BD, por enquanto fica só o texto mesmo-->
+                <div class="product-price">
+                    <span class="currency">R$</span>
+                    <span class="value">50</span>
+                    <span class="decimals">00</span>
+                </div>
+
+                <button class="add-cart">Adicionar ao carrinho</button>
+            </div>
+
+
+            <div class="product-card">
+                    <img src="/imagens/produtos/bracelete_flor.png" class="product-img" alt="Braceletes de flor, um dourado e outro prata">
+                
+                <div class="product-name">
+                    <h3 class="product-title"> Braceletes de flor </h3>
+                </div>
+                <div class="product-rating">
+                    <span>☆</span><span>☆</span><span>☆</span><span>☆</span><span>☆</span>
+                </div>
+
+                <!-- Essa parte precisaria do BD, por enquanto fica só o texto mesmo-->
+                <div class="product-price">
+                    <span class="currency">R$</span>
+                    <span class="value">75</span>
+                    <span class="decimals">00</span>
+                </div>
+
+                <button class="add-cart">Adicionar ao carrinho</button>
+            </div>
+
+
+            <div class="product-card">
+                    <img src="/imagens/produtos/bolsa_beijaflor.png" class="product-img" alt="Bolsa azul com o bordado de um beija-flor">
+                
+                <div class="product-name">
+                    <h3 class="product-title"> Bolsa de Beija-Flor</h3>
+                </div>
+                <div class="product-rating">
+                    <span>☆</span><span>☆</span><span>☆</span><span>☆</span><span>☆</span>
+                </div>
+
+                <!-- Essa parte precisaria do BD, por enquanto fica só o texto mesmo-->
+                <div class="product-price">
+                    <span class="currency">R$</span>
+                    <span class="value">30</span>
+                    <span class="decimals">00</span>
+                </div>
+
+                <button class="add-cart">Adicionar ao carrinho</button>
+            </div>
+
+
+            <div class="product-card">
+                    <img src="/imagens/produtos/bolsa_convento.png" class="product-img" alt="Bolsa estampada com o desenho do Convento da Penha">
+                
+                <div class="product-name">
+                    <h3 class="product-title"> Bolsa Convento da Penha</h3>
+                </div>
+                <div class="product-rating">
+                    <span>☆</span><span>☆</span><span>☆</span><span>☆</span><span>☆</span>
+                </div>
+
+                <!-- Essa parte precisaria do BD, por enquanto fica só o texto mesmo-->
+                <div class="product-price">
+                    <span class="currency">R$</span>
+                    <span class="value">35</span>
+                    <span class="decimals">00</span>
+                </div>
+
+                <button class="add-cart">Adicionar ao carrinho</button>
+            </div>
+
+        </div>
+
+<!--Fechamento de exemplos-->
 
         </section>
 
