@@ -12,7 +12,12 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.aracecultura.arace.R
 import com.aracecultura.arace.databinding.FragmentLoginBinding
+import com.google.firebase.FirebaseNetworkException
+import com.google.firebase.FirebaseTooManyRequestsException
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseAuthException
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
+import com.google.firebase.auth.FirebaseAuthInvalidUserException
 
 
 class Login : Fragment() {
@@ -84,12 +89,22 @@ class Login : Fragment() {
                 if (it.isSuccessful) {
                     findNavController().navigate(R.id.action_global_to_main)
                 }
-            }.addOnFailureListener {
-                Toast.makeText(
-                    requireContext(),
-                    "Falha no login, tente novamente.",
-                    Toast.LENGTH_SHORT
-                ).show()
+            }.addOnFailureListener { exception ->
+                val mensagemErro = when(exception) {
+                    is FirebaseAuthInvalidUserException-> "Este e-mail não está cadastrado ou foi desativado."
+                    is FirebaseAuthInvalidCredentialsException -> "E-mail ou senha incorretos."
+                    is FirebaseNetworkException -> "Sem conexão com a rede. Verifique seu Wi-Fi ou dados móveis."
+                    is FirebaseTooManyRequestsException -> "Muitas tentativas inválidas. Tente novamente mais tarde."
+                    is FirebaseAuthException -> "Erro de autenticação: ${exception.errorCode}"
+                    else -> "Ocorreu um erro inesperado: ${exception.localizedMessage}"
+                }
+
+                Toast
+                    .makeText(
+                        requireContext(),
+                        mensagemErro,
+                        Toast.LENGTH_SHORT
+                    ).show()
             }
     }
 
