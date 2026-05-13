@@ -14,7 +14,9 @@ import com.aracecultura.arace.R
 import com.aracecultura.arace.databinding.FragmentCadastroBinding
 import com.google.firebase.Firebase
 import com.google.firebase.FirebaseNetworkException
+import com.google.firebase.FirebaseTooManyRequestsException
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseAuthException
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.auth.FirebaseAuthUserCollisionException
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException
@@ -94,13 +96,12 @@ class Cadastro : Fragment() {
             }
         }.addOnFailureListener { exception ->
             val mensagemErro = when(exception) {
-                // senha de menos 6 caracteres
-                is FirebaseAuthWeakPasswordException -> "Digite uma senha com no mínimo 6 caracteres"
-                is FirebaseAuthInvalidCredentialsException -> "Digite um e-mail válido"
-                is FirebaseAuthUserCollisionException -> "Conta já cadastrada. Faça login"
-                // para checar conexao com a internet, precisamos usar internet com o app, veja manifest
-                is FirebaseNetworkException -> "Verifique sua conexão com a internet e tente novamente!"
-                else -> "Erro ao cadastrar usuário"
+                is FirebaseAuthWeakPasswordException -> "A senha deve ter pelo menos 6 caracteres."
+                is FirebaseAuthInvalidCredentialsException -> "O formato do e-mail digitado é inválido."
+                is FirebaseAuthUserCollisionException -> "Este e-mail já está cadastrado. Tente fazer login."
+                is FirebaseTooManyRequestsException -> "Muitas solicitações em pouco tempo. Aguarde um pouco."
+                is FirebaseAuthException -> "Erro ao cadastrar: ${exception.errorCode}"
+                else -> "Ocorreu um erro inesperado: ${exception.localizedMessage}"
             }
 
             Toast
