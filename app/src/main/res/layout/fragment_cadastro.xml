@@ -64,7 +64,7 @@
             android:hint="Confirme sua senha"
             android:inputType="textPassword"
             android:padding="16dp"
-            android:textColor="@color/gray"
+            android:textColor="@color/black"
             android:textColorHint="@color/gray"
             android:textSize="16sp" />
 

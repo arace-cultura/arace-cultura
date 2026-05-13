@@ -10,5 +10,7 @@
         <item name="postSplashScreenTheme">@style/Theme.Arace</item>
     </style>
 
+
+
     <style name="Theme.Arace" parent="Base.Theme.Arace" />
 </resources>

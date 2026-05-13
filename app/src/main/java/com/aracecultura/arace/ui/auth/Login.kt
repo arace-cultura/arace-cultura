@@ -6,6 +6,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.content.ContextCompat
+import androidx.core.view.WindowInsetsControllerCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.aracecultura.arace.R
@@ -32,6 +34,16 @@ class Login : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val window = requireActivity().window
+        val view = binding.root
+        val controller = WindowInsetsControllerCompat(window, view)
+
+        // muda as cores das barras para se adequar a cor da tela
+        requireActivity().window.decorView.setBackgroundColor(
+            ContextCompat.getColor(requireContext(), R.color.black))
+
+        controller.isAppearanceLightStatusBars = false
+        controller.isAppearanceLightNavigationBars = false
         this.initListeners()
     }
 
@@ -87,6 +99,8 @@ class Login : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        requireActivity().window.decorView.setBackgroundColor(
+            ContextCompat.getColor(requireContext(), R.color.background))
         this._binding = null
     }
 }

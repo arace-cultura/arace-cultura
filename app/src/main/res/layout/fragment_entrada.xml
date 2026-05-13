@@ -6,7 +6,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.auth.Entrada"
-    android:background="@drawable/f_entrada">
+    android:background="@drawable/f_entrada"
+    >
 
     <LinearLayout
         android:layout_width="350dp"
