@@ -34,17 +34,21 @@ class Login : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        this.initListeners()
+    }
+
+    override fun onResume() {
+        super.onResume()
         val window = requireActivity().window
         val view = binding.root
         val controller = WindowInsetsControllerCompat(window, view)
 
         // muda as cores das barras para se adequar a cor da tela
         requireActivity().window.decorView.setBackgroundColor(
-            ContextCompat.getColor(requireContext(), R.color.black))
+            ContextCompat.getColor(requireContext(), R.color.placeholder1))
 
         controller.isAppearanceLightStatusBars = false
         controller.isAppearanceLightNavigationBars = false
-        this.initListeners()
     }
 
     private fun initListeners() {

@@ -32,6 +32,11 @@ class Entrada : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        this.initListeners()
+    }
+
+    override fun onResume() {
+        super.onResume()
         val window = requireActivity().window
         val view = binding.root
         val controller = WindowInsetsControllerCompat(window, view)
@@ -42,8 +47,6 @@ class Entrada : Fragment() {
 
         controller.isAppearanceLightStatusBars = false
         controller.isAppearanceLightNavigationBars = false
-
-        this.initListeners()
     }
 
 
