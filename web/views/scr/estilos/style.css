@@ -1,21 +1,10 @@
-/** 
-  Aplicar:
-   - Variáveis
-   - Herança
-   - DRY
-   - Comentários explicativos
-   - Comentários dividindo seções
-*/
-
-body {
+body{
   margin: 0;
   padding: 0;
   background-color: black;
-  min-width: 100vw;
-  min-height: 100vh;
 }
 
-.container-flex {
+.container-flex{
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -28,13 +17,16 @@ body {
   overflow: hidden;
 }
 
+
+
 .container-flex h1 {
-  margin: 0 0 20px 0;
+  margin: 0 0 20px 0; 
   padding: 0;
   display: block;
+
 }
 
-.bg_page {
+.bg_page{
   position: fixed;
   top: 0;
   left: 0;
@@ -44,13 +36,13 @@ body {
   z-index: -1;
 }
 
-button {
+button{
   display: flex;
   justify-content: center;
   align-items: center;
   min-width: 300px;
   min-height: 50px;
-  border-radius: 8px;
+  border-radius: 8px; 
   padding: 15px 30px;
   cursor: pointer;
   border: none;
@@ -66,45 +58,61 @@ button {
 }
 
 .container-btn:hover {
-  background-color: darkblue;
+  background-color: darkblue; 
 }
 
-.forms-blur {
+.forms-blur{
   width: 350px;
   padding: 30px;
-  background: rgba(255, 255, 255, 0.2);
-  backdrop-filter: blur(10px);
+  background: rgba(255, 255, 255, 0.2); /* Cor branca com transparência */
+  backdrop-filter: blur(10px);        /* O segredo do borrão */
+  -webkit-backdrop-filter: blur(10px); /* Suporte para Safari */
   border-radius: 15px;
   border: 1px solid rgba(255, 255, 255, 0.3);
   margin: 100px auto;
   color: white;
 }
 
-.input-style-perfil,
-.input-style-senha {
-  background-repeat: no-repeat;
-  background-size: 18px;
-  background-position: 12px center;
+.input-style-perfil {
   background-color: transparent;
   border: 2px solid white;
   color: white;
   padding: 12px 12px 12px 40px;
-  border-radius: 8px;
+  border-radius: 8px; 
   outline: none;
   width: 250px;
   margin-bottom: 20px;
-}
 
-.input-style-perfil { 
-  background-image: url("../icon/icon_perfil.svg");
+  background-image: url("/web/views/scr/assets/icons/icon_perfil.svg");
+  background-repeat: no-repeat;
+  background-size: 18px; 
+  background-position: 12px center;
 }
 
 .input-style-senha {
-  background-image: url("../icon/icon_locker.svg");
+  background-color: transparent;
+  border: 2px solid white;
+  color: white;
+  padding: 12px 12px 12px 40px;
+  border-radius: 8px; 
+  outline: none;
+  width: 250px;
+  margin-bottom: 20px;
+  background-image: url("/web/views/scr/assets/icons/icon_locker.svg");
+  background-repeat: no-repeat;
+  background-size: 18px; 
+  background-position: 12px center;
+  
+}
+ 
+.input-style-perfil:focus {
+  background-image: url("/web/views/scr/assets/icons/icon_perfil.svg");
+  outline: none;
+  border-color: #000000;
 }
 
-.input-style-perfil:focus,
 .input-style-senha:focus {
+  background-image: url("/web/views/scr/assets/icons/icon_locker.svg");
   outline: none;
   border-color: #000000;
 }
@@ -114,7 +122,7 @@ input::placeholder {
   stroke: rgba(43, 43, 43, 0.7);
 }
 
-.btn-a {
+.btn-a{
   text-decoration: none;
   color: aliceblue;
 }
