@@ -1,29 +1,66 @@
 package com.aracecultura.arace
 
 import android.os.Bundle
+import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsControllerCompat
+import androidx.navigation.NavArgument
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.setupWithNavController
+import com.aracecultura.arace.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
+
+    private lateinit var binding: ActivityMainBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
-        // A HERANÇA DA APP-DEV: Isso desenha a logo do app com base no themes.xml
-        val splashScreen = installSplashScreen()
+        installSplashScreen()
 
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
 
-        // LÓGICA DE ROTEAMENTO INICIAL DA SPLASH:
-        // Como o app sempre inicia no auth_graph (Login), a Splash Screen
-        // é o lugar perfeito para verificar o Firebase.
+        this.binding = ActivityMainBinding.inflate(
+            layoutInflater
+        )
 
-        // Exemplo:
-        // Se (FirebaseAuth.getInstance().currentUser != null) {
-        // val navController = findNavController(R.id.nav_host_fragment_container_da_activity)
-        // navController.navigate(R.id.action_global_to_main)
-        // }
+        setContentView(this.binding.root)
+
+        setupWindowDecor()
+        setupBottomNavigation()
     }
+
+    private fun setupWindowDecor() {
+        enableEdgeToEdge()
+
+        ViewCompat.setOnApplyWindowInsetsListener(this.binding.mainActivity) { v, insets ->
+
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+            insets
+        }
+
+
+        //WindowCompat.setDecorFitsSystemWindows(window,false)
+        //WindowInsetsControllerCompat(window, window.decorView).hide(WindowInsetsCompat.Type.statusBars())
+    }
+
+    private fun setupBottomNavigation() {
+        val navController =
+            this.binding.fragmentContainerView.getFragment<NavHostFragment>().navController
+
+        this.binding.bnvMenuInferiorNavegacao.setupWithNavController(navController)
+
+        navController.addOnDestinationChangedListener { _, destination, arguments ->
+            val showNav = arguments?.getBoolean("showBottomNav", false)
+                ?: (destination.parent?.arguments?.get("showBottomNav") as NavArgument).defaultValue as Boolean
+
+            this.binding.bnvMenuInferiorNavegacao.visibility =
+                if (showNav) View.VISIBLE else View.GONE
+        }
+    }
+
 }

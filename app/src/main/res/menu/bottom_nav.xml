@@ -14,4 +14,10 @@
         android:id="@+id/favoritos"
         android:icon="@drawable/ic_heart"
         android:title="Favoritos" />
+
+    <item
+        android:id="@+id/usuario"
+        android:icon="@drawable/circulo_usuario"
+        android:title="Eu"
+        />
 </menu>
