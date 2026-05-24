@@ -1,23 +1,24 @@
 package com.aracecultura.arace.ui.auth
 
 import android.os.Bundle
+import android.util.Patterns
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels // Importante para o 'by viewModels()'
 import androidx.navigation.fragment.findNavController
 import com.aracecultura.arace.R
 import com.aracecultura.arace.databinding.FragmentLoginBinding
+import com.google.firebase.auth.FirebaseAuth
 
-// Gerado utilizando a IA Gemini.
+
 class Login : Fragment() {
     private var _binding: FragmentLoginBinding? = null
     private val binding get() = this._binding!!
 
-    // O Firebase Auth saiu daqui! Agora chamamos o ViewModel:
-    private val viewModel: AuthViewModel by viewModels()
+    private val auth by lazy { FirebaseAuth.getInstance() }
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -31,7 +32,6 @@ class Login : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         this.initListeners()
-        this.observeViewModel() // Começa a observar o "cérebro"
     }
 
     private fun initListeners() {
@@ -40,35 +40,48 @@ class Login : Fragment() {
         }
 
         binding.loginBtn.setOnClickListener {
-            val email = binding.loginInput.text.toString().trim()
-            val senha = binding.loginSenha.text.toString().trim()
-
-            // Apenas delega a função para o ViewModel
-            viewModel.realizarLogin(email, senha)
+            this.login()
         }
     }
 
-    private fun observeViewModel() {
-        // O Fragment observa as mudanças de estado do LiveData
-        viewModel.loginState.observe(viewLifecycleOwner) { estado ->
-            when (estado) {
-                is AuthState.Loading -> {
-                    // Aqui você poderia ativar um loading/spinner se quiser
-                    binding.loginBtn.isEnabled = false
-                }
-                is AuthState.Success -> {
-                    binding.loginBtn.isEnabled = true
+    private fun login() {
+        val email = binding.loginInput.text.toString().trim()
+        val senha = binding.loginSenha.text.toString().trim()
+
+        /**
+         * Por enquanto, não avisa quanto a aspectos pontuais,
+         * apenas se há erro.
+         **/
+
+        if (!validarCredenciais(email, senha)) {
+            Toast.makeText(
+                requireContext(),
+                "Há erro nos dados.",
+                Toast.LENGTH_SHORT
+            ).show()
+            return
+        }
+
+        this.auth.signInWithEmailAndPassword(email, senha)
+            .addOnCompleteListener { it ->
+                if (it.isSuccessful) {
                     findNavController().navigate(R.id.action_auth_to_main)
                 }
-                is AuthState.Error -> {
-                    binding.loginBtn.isEnabled = true
-                    Toast.makeText(requireContext(), estado.theMessage, Toast.LENGTH_SHORT).show()
-                }
-                is AuthState.Idle -> {
-                    binding.loginBtn.isEnabled = true
-                }
+            }.addOnFailureListener {
+                Toast.makeText(
+                    requireContext(),
+                    "Falha no login, tente novamente.",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
-        }
+    }
+
+    private fun validarCredenciais(email: String, senha: String): Boolean {
+        // Patterns para e-mail e senha com mínimo de 8 caracteres para segurança.
+        val emailValido = email.isNotEmpty() && Patterns.EMAIL_ADDRESS.matcher(email).matches()
+        val senhaValida = senha.length >= 6
+
+        return emailValido && senhaValida
     }
 
     override fun onDestroyView() {
