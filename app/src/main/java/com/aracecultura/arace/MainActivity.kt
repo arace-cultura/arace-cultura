@@ -34,18 +34,18 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupWindowDecor() {
-        enableEdgeToEdge()
+        //enableEdgeToEdge()
 
-        ViewCompat.setOnApplyWindowInsetsListener(this.binding.mainActivity) { v, insets ->
+        /*ViewCompat.setOnApplyWindowInsetsListener(this.binding.mainActivity) { v, insets ->
 
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
-        }
+        }*/
 
 
-        //WindowCompat.setDecorFitsSystemWindows(window,false)
-        //WindowInsetsControllerCompat(window, window.decorView).hide(WindowInsetsCompat.Type.statusBars())
+        WindowCompat.setDecorFitsSystemWindows(window,false)
+        WindowInsetsControllerCompat(window, window.decorView).hide(WindowInsetsCompat.Type.statusBars())
     }
 
     private fun setupBottomNavigation() {
