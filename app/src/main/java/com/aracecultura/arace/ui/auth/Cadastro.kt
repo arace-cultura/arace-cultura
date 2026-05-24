@@ -16,6 +16,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.auth.FirebaseAuthUserCollisionException
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException
+import com.google.firebase.firestore.firestore
 
 
 class Cadastro : Fragment() {
@@ -23,6 +24,8 @@ class Cadastro : Fragment() {
     private val binding get() = _binding!!
 
     private val auth by lazy { FirebaseAuth.getInstance() }
+
+    private val db = Firebase.firestore
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -62,9 +65,24 @@ class Cadastro : Fragment() {
         }
 
         this.auth.createUserWithEmailAndPassword(email, senha).addOnCompleteListener { cadastro ->
-
             if (cadastro.isSuccessful) {
-                findNavController().navigate(R.id.action_global_to_main)
+                val novoUsuario = hashMapOf(
+                    "id" to cadastro.result.user?.uid
+                )
+
+                this.db.collection("Usuarios")
+                    .add(novoUsuario).addOnSuccessListener {
+                        findNavController().navigate(R.id.action_global_to_main)
+                    }
+                    .addOnFailureListener {
+                        Toast
+                            .makeText(
+                                requireContext(),
+                                "Houve um erro no cadastro.",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                    }
+
             }
         }.addOnFailureListener { exception ->
             val mensagemErro = when(exception) {

@@ -8,7 +8,7 @@
     tools:context=".ui.main.Explorar">
 
     <ImageView
-        android:id="@+id/background"
+        android:id="@+id/planoDeFundoImageView"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:alpha="0.2"

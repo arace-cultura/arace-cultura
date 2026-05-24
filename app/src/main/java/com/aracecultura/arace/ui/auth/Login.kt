@@ -17,7 +17,6 @@ class Login : Fragment() {
     private var _binding: FragmentLoginBinding? = null
     private val binding get() = this._binding!!
 
-
     private val auth by lazy { FirebaseAuth.getInstance() }
 
 
