@@ -66,22 +66,30 @@ class Cadastro : Fragment() {
 
         this.auth.createUserWithEmailAndPassword(email, senha).addOnCompleteListener { cadastro ->
             if (cadastro.isSuccessful) {
-                val novoUsuario = hashMapOf(
-                    "id" to cadastro.result.user?.uid
-                )
+                val userUID = cadastro.result.user?.uid
 
-                this.db.collection("Usuarios")
-                    .add(novoUsuario).addOnSuccessListener {
-                        findNavController().navigate(R.id.action_global_to_main)
-                    }
-                    .addOnFailureListener {
-                        Toast
-                            .makeText(
-                                requireContext(),
-                                "Houve um erro no cadastro.",
-                                Toast.LENGTH_SHORT
-                            ).show()
-                    }
+                if(userUID != null) {
+                    val novoUsuario = hashMapOf(
+                        "isProdutor" to false
+                    )
+
+                    this.db.collection("Usuarios")
+                        .document(userUID)
+                        .set(novoUsuario)
+                        .addOnSuccessListener {
+                            findNavController().navigate(R.id.action_auth_to_main)
+                        }
+                        .addOnFailureListener {
+                            Toast
+                                .makeText(
+                                    requireContext(),
+                                    "Houve um erro no cadastro.",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                        }
+                }
+
+
 
             }
         }.addOnFailureListener { exception ->

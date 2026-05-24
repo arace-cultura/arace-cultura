@@ -48,7 +48,7 @@ class Entrada : Fragment() {
 
     private fun checkAuth() {
         if (this.auth.currentUser != null) {
-            findNavController().navigate(R.id.action_global_to_main)
+            findNavController().navigate(R.id.action_auth_to_main)
         }
     }
 

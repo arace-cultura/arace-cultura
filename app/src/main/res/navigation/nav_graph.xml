@@ -27,9 +27,18 @@
     </navigation>
 
     <action
+        android:id="@+id/action_auth_to_main"
+        app:destination="@id/main_graph"
         android:id="@+id/action_global_to_main"
         app:destination="@id/navegacaoPrincipalFragment"
         app:popUpTo="@id/auth_graph"
+        app:popUpToInclusive="true"/>
+
+    <action
+        android:id="@+id/action_main_to_auth"
+        app:destination="@id/auth_graph"
+        app:popUpTo="@id/main_graph"
+        app:launchSingleTop="true"
         app:popUpToInclusive="true"/>
 
     <action
