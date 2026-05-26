@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/explorar"
+        android:icon="@drawable/ic_location_pin"
+        android:title="Explorar" />
+
+    <item
+        android:id="@+id/homePage"
+        android:icon="@drawable/ic_home"
+        android:title="Início" />
+
+    <item
+        android:id="@+id/perfilProdutor"
+        android:icon="@drawable/ic_produtor" android:title="Perfil" />
+</menu>

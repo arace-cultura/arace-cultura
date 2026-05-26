@@ -5,6 +5,7 @@
     android:id="@+id/auth_graph"
     app:startDestination="@id/entrada">
 
+
     <fragment
         android:id="@+id/login"
         android:name="com.aracecultura.arace.ui.auth.Login"
@@ -27,9 +28,6 @@
             android:id="@+id/action_entrada_to_cadastro"
             app:destination="@id/cadastro" />
     </fragment>
-    <argument
-        android:name="showBottomNav"
-        android:defaultValue="false"
-        app:argType="boolean"/>
+
 
 </navigation>
