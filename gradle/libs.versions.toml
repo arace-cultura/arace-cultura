@@ -20,6 +20,12 @@ compose = "1.11.0"
 coreSplashscreen = "1.2.0" # Vem da app-dev
 recyclerview = "1.4.0" # Vem da app-dev
 
+crashlytics = "3.0.2"
+lifecycleRuntimeKtx = "2.10.0"
+service = "4.4.2"
+coil = "2.7.0"
+activityCompose = "1.13.0"
+
 [libraries]
 androidx-compose-animation = { module = "androidx.compose.animation:animation", version.ref = "animation" }
 androidx-compose-material3 = { module = "androidx.compose.material3:material3" }
@@ -46,7 +52,13 @@ androidx-core-splashscreen = { module = "androidx.core:core-splashscreen", versi
 firebase-firestore = { module = "com.google.firebase:firebase-firestore" }
 androidx-recyclerview = { group = "androidx.recyclerview", name = "recyclerview", version.ref = "recyclerview" }
 
+coil = {module = "io.coil-kt:coil-compose", version.ref = "coil"}
+firebase-crashlytics = {module = "com.google.firebase:firebase-crashlytics"}
+androidx-lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycleRuntimeKtx" }
+androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activityCompose" }
+
 [plugins]
+crashlytics = {id = "com.google.firebase.crashlytics", version.ref = "crashlytics"}
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }

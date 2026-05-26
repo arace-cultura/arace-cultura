@@ -15,7 +15,7 @@
 
     <fragment
         android:id="@+id/produto"
-        android:name="com.aracecultura.arace.ui.Produto"
+        android:name="com.aracecultura.arace.ui.ExplorarProdutoFragment"
         tools:layout="@layout/fragment_produto" />
 
     <navigation

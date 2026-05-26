@@ -7,5 +7,5 @@
 
     <fragment android:id="@+id/homePage" android:name="com.aracecultura.arace.ui.main.HomePage" />
     <fragment android:id="@+id/favoritos" android:name="com.aracecultura.arace.ui.main.Favoritos" />
-    <!-- <fragment android:id="@+id/explorar" android:name="com.aracecultura.arace.ui.main.Explorar" /> -->
+    <fragment android:id="@+id/explorar" android:name="com.aracecultura.arace.ui.ExplorarProdutoFragment" /> -->
 </navigation>
