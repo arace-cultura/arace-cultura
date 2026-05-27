@@ -1,0 +1,15 @@
+/*
+  Página de recuperar senha
+*/
+
+body {
+  background-image: url("/images/p_recuperar_senha_bg.jpg");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.link-voltar {
+  color: white;
+  align-self: flex-start;
+}
