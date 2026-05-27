@@ -8,6 +8,7 @@ $routes->view("/", "index");
 $routes->view('entrada', 'entrada');
 $routes->view("login", "login");
 $routes->view("cadastro", "cadastro");
+$routes->view("recuperar_senha", "recuperar_senha");
 
 $routes->view("produtos", "produtos");
 
