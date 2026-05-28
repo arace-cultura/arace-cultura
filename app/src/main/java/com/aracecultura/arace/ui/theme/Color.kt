@@ -12,3 +12,13 @@ val pink40 = Color(0xFF7D5260)
 
 val bgDefault = Color(0xFFF4F2F0)
 val btColor = Color(0xFFE37038)
+
+val verdePrincipal = Color(0xFF679662)
+
+val verdeAzeitona = Color(0xFFB3BB39)
+
+val azulPrincipal = Color(0xFF2F5E91)
+
+val terracota = Color(0xFFD45D22)
+
+val azulCinza = Color(0xFF3C6B87)

@@ -4,21 +4,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.Toast
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
-import androidx.navigation.findNavController
-import androidx.navigation.fragment.findNavController
-import androidx.viewpager2.widget.ViewPager2
-import com.aracecultura.arace.R
-import com.aracecultura.arace.databinding.FragmentHomePageBinding
-import com.aracecultura.arace.ui.adapter.HomepageProdutosPagerAdapter
 import com.aracecultura.arace.ui.components.explorar.ExplorarProduto
-import com.aracecultura.arace.ui.components.home.TelaHome
 
-class HomePage : Fragment() {
+class ExplorarProduto : Fragment() {
+
     private lateinit var composeView: ComposeView
 
     override fun onCreateView(
@@ -34,13 +25,7 @@ class HomePage : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         composeView.setContent {
-            TelaHome(
-                onProdutoClick = { produtoId ->
-                    val action = HomePageDirections
-                        .actionHomePageToProdutoFragment(produtoId)
-                    findNavController().navigate(action)
-                }
-            )
+            ExplorarProduto()
         }
     }
 

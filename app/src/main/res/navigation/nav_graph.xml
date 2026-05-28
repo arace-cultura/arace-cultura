@@ -13,17 +13,13 @@
         android:name="com.aracecultura.arace.ui.main.NavegacaoPrincipal"
         tools:layout="@layout/fragment_navegacao_principal" />
 
-    <fragment
-        android:id="@+id/produto"
-        android:name="com.aracecultura.arace.ui.ExplorarProdutoFragment"
-        tools:layout="@layout/fragment_produto" />
-
     <navigation
         android:id="@+id/fluxo_cadastro_produtor"
         app:startDestination="@id/cadastroProdutorTela1">
         <fragment
             android:id="@+id/cadastroProdutorTela1"
-            android:name="com.aracecultura.arace.ui.auth.CadastroProdutorTela1" />
+            android:name="com.aracecultura.arace.ui.auth.CadastroProdutorTela1"
+            tools:layout="@layout/fragment_cadastro_produtor_tela1" />
     </navigation>
 
     <action
@@ -35,8 +31,4 @@
     <action
         android:id="@+id/action_global_cadastroProdutorFragment"
         app:destination="@id/fluxo_cadastro_produtor" />
-
-    <action
-        android:id="@+id/action_global_to_produto"
-        app:destination="@id/produto" />
 </navigation>

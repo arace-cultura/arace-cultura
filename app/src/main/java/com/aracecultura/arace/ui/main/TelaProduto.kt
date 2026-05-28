@@ -1,19 +1,20 @@
-package com.aracecultura.arace.ui
+package com.aracecultura.arace.ui.main
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.compose.ui.platform.ComposeView
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.aracecultura.arace.R
-import com.aracecultura.arace.ui.components.ExplorarProduto
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.navArgs
+import com.aracecultura.arace.ui.components.produto.TelaDoProduto
+import com.aracecultura.arace.ui.components.produto.TelaDoProdutoViewmodel
 
-
-class ExplorarProdutoFragment : Fragment() {
-
+class TelaProduto : Fragment() {
     private lateinit var composeView: ComposeView
+    private val args: TelaProdutoArgs by navArgs()
+    private val viewModel: TelaDoProdutoViewmodel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -27,9 +28,10 @@ class ExplorarProdutoFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        viewModel.carregarProduto(args.produtoId)
+
         composeView.setContent {
-            ExplorarProduto()
+            TelaDoProduto(viewModel = viewModel)
         }
     }
-
 }

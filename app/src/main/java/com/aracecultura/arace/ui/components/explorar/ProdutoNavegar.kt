@@ -1,4 +1,4 @@
-package com.aracecultura.arace.ui.components
+package com.aracecultura.arace.ui.components.explorar
 
 import android.net.Uri
 import androidx.compose.ui.text.font.Font
@@ -10,16 +10,13 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
@@ -29,6 +26,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.aracecultura.arace.data.model.Produto
+import com.aracecultura.arace.ui.components.AppButton
 import com.aracecultura.arace.ui.theme.bgDefault
 import com.aracecultura.arace.ui.theme.btColor
 
@@ -67,7 +65,7 @@ fun ProdutoNavegar (
         .background(bgDefault)
         .padding(12.dp)) {
         AsyncImage(
-            model = Uri.decode(produto.imagem),
+            model = Uri.decode(produto.imagens[0]),
             contentDescription = "Produto",
             modifier = Modifier
                 .height(screenWidth * 0.45f)
@@ -108,7 +106,7 @@ fun ProdutoNavegar (
                 )
             }
             AppButton(
-                text ="Adicionar ao carrinho",
+                text = "Adicionar ao carrinho",
                 fontSize = 16.sp,
                 textColor = bgDefault,
                 containerColor = btColor,

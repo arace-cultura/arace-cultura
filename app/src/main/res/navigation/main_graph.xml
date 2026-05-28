@@ -5,7 +5,31 @@
     android:id="@+id/main_graph"
     app:startDestination="@id/homePage">
 
-    <fragment android:id="@+id/homePage" android:name="com.aracecultura.arace.ui.main.HomePage" />
-    <fragment android:id="@+id/favoritos" android:name="com.aracecultura.arace.ui.main.Favoritos" />
-    <fragment android:id="@+id/explorar" android:name="com.aracecultura.arace.ui.ExplorarProdutoFragment" /> -->
+    <fragment
+        android:id="@+id/homePage"
+        android:name="com.aracecultura.arace.ui.main.HomePage">
+
+        <action
+            android:id="@+id/action_homePage_to_produtoFragment"
+            app:destination="@id/produto" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/produto"
+        android:name="com.aracecultura.arace.ui.main.TelaProduto">
+
+        <argument
+            android:name="produtoId"
+            app:argType="string" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/favoritos"
+        android:name="com.aracecultura.arace.ui.main.Favoritos"
+        tools:layout="@layout/fragment_favoritos" />
+
+    <fragment
+        android:id="@+id/explorar"
+        android:name="com.aracecultura.arace.ui.main.ExplorarProduto"
+        tools:layout="@layout/fragment_produto" />
 </navigation>

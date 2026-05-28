@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     id("com.google.gms.google-services")
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.navigation.safeargs)
     id("kotlin-parcelize") // Vem da app-dev
 }
 

@@ -58,6 +58,7 @@ androidx-lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecyc
 androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activityCompose" }
 
 [plugins]
+navigation-safeargs = { id = "androidx.navigation.safeargs.kotlin", version.ref = "navigationFragment" }
 crashlytics = {id = "com.google.firebase.crashlytics", version.ref = "crashlytics"}
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
