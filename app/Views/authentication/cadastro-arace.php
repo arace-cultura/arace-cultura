@@ -54,13 +54,13 @@
       <div class="item-animado atraso-5">
         <label class="permanecer">
           <input type="checkbox" id="termos" required />
-          Aceito os <a href="termos.html" target="_blank">termos de uso</a>
+          Aceito os <a href="termos.php" target="_blank">termos de uso</a>
         </label>
 
         <button type="submit" class="btn-login">Criar conta</button>
 
         <div class="links-rodape">
-          <a href="login-arace.html" class="esqueceu">Já tenho uma conta</a>
+          <a href="login-arace.php" class="esqueceu">Já tenho uma conta</a>
         </div>
       </div>
 

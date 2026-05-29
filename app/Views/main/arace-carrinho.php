@@ -17,15 +17,15 @@
   <header>
     <span class="logo">aracê</span>
     <div class="header-right">
-    <button class="cart-btn" type="button" onclick="window.location.href='carrinho.html'">
+    <button class="cart-btn" type="button" onclick="window.location.href='carrinho.php'">
         <i data-lucide="shopping-cart"></i>
         <span class="cart-count">2 itens</span>
       </button>
-    <button class="cart-btn" type="button" onclick="window.location.href='../user/favoritos.html'">
+    <button class="cart-btn" type="button" onclick="window.location.href='../user/favoritos.php'">
         <i data-lucide="heart"></i>
         <span class="cart-count">5 itens</span>
       </button>
-      <button class="avatar-btn" type="button" onclick="window.location.href='../user/perfil.html'" aria-label="Abrir perfil">
+      <button class="avatar-btn" type="button" onclick="window.location.href='../user/perfil.php'" aria-label="Abrir perfil">
         <i data-lucide="user"></i>
       </button>
     </div>
