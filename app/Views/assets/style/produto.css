@@ -1,0 +1,239 @@
+@import "../style/base2.css";
+
+/* ── BREADCRUMB ── */
+.breadcrumb {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 12px; color: var(--muted); margin-bottom: 1.5rem;
+}
+.breadcrumb a { color: var(--muted); text-decoration: none; }
+.breadcrumb a:hover { color: var(--laranja); }
+.breadcrumb svg { width: 12px; height: 12px; }
+
+/* ── PRODUCT HERO ── */
+.product-hero {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  background: var(--branco);
+  border: .5px solid var(--border);
+  border-radius: var(--r-lg);
+  padding: 2rem;
+  margin-bottom: 2rem;
+}
+
+/* Gallery */
+.gallery { display: flex; flex-direction: column; gap: .75rem; }
+.gallery-main {
+  width: 100%; aspect-ratio: 1;
+  border-radius: var(--r);
+  overflow: hidden; background: var(--bg);
+  border: .5px solid var(--border);
+}
+.gallery-main img { width: 100%; height: 100%; object-fit: cover; }
+.gallery-thumbs { display: flex; gap: .5rem; }
+.gallery-thumb {
+  width: 64px; height: 64px; flex-shrink: 0;
+  border-radius: 8px; overflow: hidden;
+  border: 2px solid transparent;
+  cursor: pointer; transition: border-color .15s;
+}
+.gallery-thumb img { width: 100%; height: 100%; object-fit: cover; }
+.gallery-thumb.active { border-color: var(--laranja); }
+
+/* Info */
+.product-info { display: flex; flex-direction: column; gap: 1rem; }
+
+.product-name {
+  font-family: var(--display);
+  font-size: 24px; font-weight: 700;
+  color: var(--text); line-height: 1.25;
+}
+
+.rating-row { display: flex; align-items: center; gap: 8px; }
+.stars { display: flex; gap: 2px; }
+.stars svg { width: 15px; height: 15px; fill: var(--amarelo); color: var(--amarelo); }
+.stars svg.half { fill: none; }
+.rating-count { font-size: 13px; color: var(--muted); }
+
+.price-row { display: flex; align-items: baseline; gap: 10px; }
+.price-current { font-size: 26px; font-weight: 700; color: var(--text); }
+.price-old {
+  font-size: 16px; color: var(--faint);
+  text-decoration: line-through;
+}
+.price-badge {
+  font-size: 12px; font-weight: 500;
+  background: var(--laranja-l); color: var(--laranja-d);
+  border-radius: 99px; padding: 2px 10px;
+}
+
+/* Variant thumbnails under price */
+.variant-imgs { display: flex; gap: 8px; }
+.variant-img-btn {
+  width: 48px; height: 48px; border-radius: 8px;
+  overflow: hidden; border: 2px solid transparent;
+  cursor: pointer; transition: border-color .15s;
+  padding: 0; background: none;
+}
+.variant-img-btn img { width: 100%; height: 100%; object-fit: cover; }
+.variant-img-btn.active { border-color: var(--laranja); }
+
+/* Description block */
+.product-desc-block {
+  background: var(--bg);
+  border-radius: var(--r);
+  padding: 1rem 1.25rem;
+  font-size: 13px; color: var(--muted);
+  line-height: 1.65;
+  border: .5px solid var(--border);
+}
+.product-desc-block strong { color: var(--text); font-size: 13px; }
+.product-desc-block p { margin-top: .25rem; }
+
+/* Action row */
+.action-row { display: flex; align-items: center; gap: .75rem; flex-wrap: wrap; }
+.btn-icon {
+  width: 38px; height: 38px;
+  border: .5px solid var(--border);
+  border-radius: var(--r); background: var(--branco);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; color: var(--muted);
+  transition: border-color .15s, color .15s;
+}
+.btn-icon:hover { border-color: var(--laranja); color: var(--laranja); }
+.btn-icon svg { width: 16px; height: 16px; }
+.btn-add {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 10px 22px; border: none; border-radius: var(--r);
+  font-size: 14px; font-weight: 500; font-family: var(--body);
+  cursor: pointer; transition: background .15s;
+  background: var(--bg); color: var(--text);
+  border: .5px solid var(--border);
+}
+.btn-add:hover { background: #e8e6e0; }
+.btn-add svg { width: 15px; height: 15px; }
+.btn-buy {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 10px 22px; border: none; border-radius: var(--r);
+  font-size: 14px; font-weight: 500; font-family: var(--body);
+  cursor: pointer; transition: background .15s;
+  background: var(--laranja); color: #fff;
+}
+.btn-buy:hover { background: var(--laranja-d); }
+.btn-buy svg { width: 15px; height: 15px; }
+
+/* ── DETAILS SECTION ── */
+.section-title {
+  font-size: 18px; font-weight: 500; color: var(--text);
+  margin-bottom: 1.25rem; padding-bottom: .5rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.product-details-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+/* Reviews */
+.reviews-header {
+  display: flex; align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+.reviews-meta { display: flex; align-items: center; gap: 8px; }
+.reviews-meta .big-rating {
+  font-size: 28px; font-weight: 700; color: var(--text);
+}
+.reviews-filters { display: flex; align-items: center; gap: 8px; }
+.select-filter {
+  font-family: var(--body); font-size: 13px;
+  border: .5px solid var(--border); border-radius: var(--r);
+  padding: 6px 10px; background: var(--branco); color: var(--text);
+  cursor: pointer; outline: none;
+}
+.btn-escrever {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 7px 16px; border: none; border-radius: var(--r);
+  font-size: 13px; font-weight: 500; font-family: var(--body);
+  background: var(--laranja); color: #fff;
+  cursor: pointer; transition: background .15s;
+}
+.btn-escrever:hover { background: var(--laranja-d); }
+
+.review-list { display: flex; flex-direction: column; gap: .75rem; }
+.review-card {
+  background: var(--branco);
+  border: .5px solid var(--border);
+  border-radius: var(--r);
+  padding: 1rem 1.25rem;
+}
+.review-card-header {
+  display: flex; align-items: center;
+  justify-content: space-between; margin-bottom: .5rem;
+}
+.review-user { font-size: 14px; font-weight: 500; color: var(--text); }
+.review-more { background: none; border: none; cursor: pointer; color: var(--faint); padding: 2px; }
+.review-more svg { width: 16px; height: 16px; }
+.review-text { font-size: 13px; color: var(--muted); line-height: 1.6; margin: .35rem 0; }
+.review-date { font-size: 11px; color: var(--faint); }
+
+/* Avaliações col */
+.avaliacoes-col {
+  background: var(--branco);
+  border: .5px solid var(--border);
+  border-radius: var(--r-lg);
+  padding: 1.5rem;
+}
+.comentarios-col {
+  background: var(--branco);
+  border: .5px solid var(--border);
+  border-radius: var(--r-lg);
+  padding: 1.5rem;
+}
+
+/* ── YOU MAY ALSO LIKE ── */
+.rec-section { margin-top: 1rem; }
+.rec-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+}
+.rec-card {
+  background: var(--branco);
+  border: .5px solid var(--border);
+  border-radius: var(--r);
+  overflow: hidden;
+  transition: box-shadow .15s;
+}
+.rec-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,.08); }
+.rec-card-img { width: 100%; aspect-ratio: 1; overflow: hidden; }
+.rec-card-img img { width: 100%; height: 100%; object-fit: cover; }
+.rec-card-body { padding: .75rem; }
+.rec-card-name { font-size: 13px; font-weight: 500; color: var(--text); margin-bottom: 2px; }
+.rec-card-rating { display: flex; align-items: center; gap: 4px; font-size: 12px; color: var(--muted); margin-bottom: 4px; }
+.rec-card-rating svg { width: 12px; height: 12px; fill: var(--amarelo); color: var(--amarelo); }
+.rec-card-price { font-size: 13px; color: var(--muted); margin-bottom: 2px; }
+.rec-card-price s { color: var(--faint); }
+.rec-card-price strong { color: var(--text); }
+.btn-add-rec {
+  width: 100%; margin-top: 8px;
+  padding: 7px; border: .5px solid var(--border);
+  border-radius: var(--r); background: var(--bg);
+  font-size: 12px; font-family: var(--body);
+  color: var(--text); cursor: pointer;
+  transition: background .15s;
+}
+.btn-add-rec:hover { background: #e8e6e0; }
+.btn-add-rec.laranja { background: var(--laranja); color: #fff; border-color: var(--laranja); }
+.btn-add-rec.laranja:hover { background: var(--laranja-d); }
+
+/* loading skeleton */
+.skeleton {
+  background: linear-gradient(90deg, #f0eee9 25%, #e8e5de 50%, #f0eee9 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.4s infinite;
+  border-radius: 6px;
+}
+@keyframes shimmer { from { background-position: 200% 0; } to { background-position: -200% 0; } }

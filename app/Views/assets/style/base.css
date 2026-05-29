@@ -1,0 +1,122 @@
+/* ── BASE ARACÊ — authentication ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --amarelo:    #f3a621;
+  --laranja:    #f2601a;
+  --laranja-d:  #c44a0f;
+  --laranja-l:  #fef0e9;
+  --azul:       #25518f;
+  --verde:      #478632;
+  --verde-l:    #eaf3de;
+  --bg:         #f4f2ed;
+  --branco:     #ffffff;
+  --border:     rgba(0,0,0,.09);
+  --text:       #1a1a18;
+  --muted:      #6b6b66;
+  --faint:      #a0a09a;
+  --r:          10px;
+  --r-lg:       16px;
+  --display:    'Playfair Display', serif;
+  --body:       'Google Sans Flex', 'Google Sans', sans-serif;
+}
+
+body {
+  min-height: 100vh;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--body);
+  background-image: url('../imgs/background-authentication.png');
+  background-size: cover; background-position: center;
+  background-color: #141c66;
+}
+body::before {
+  content: ''; position: fixed; inset: 0;
+  background: rgba(0,0,0,.35); z-index: 0;
+}
+
+/* Card */
+.login-card {
+  position: relative; z-index: 1;
+  background: var(--branco); border-radius: 20px;
+  padding: 60px 80px; width: 100%; max-width: 500px;
+  box-shadow: 0 8px 32px rgba(0,0,0,.18);
+}
+.cadastro-card { max-width: 460px; }
+
+.logo-wrap { text-align: center; margin-bottom: 12px; }
+.logo-wrap img { height: 60px; }
+
+.subtitle { text-align: center; font-size: 14px; color: var(--muted); margin-bottom: 1.75rem; }
+
+/* Inputs */
+.input-group-custom {
+  display: flex; align-items: center;
+  border: 1.5px solid #d1d5db; border-radius: var(--r);
+  padding: 0 12px; height: 46px;
+  background: #f3f4f6; margin-bottom: 1rem;
+  transition: border-color .2s, background .2s;
+}
+.input-group-custom:focus-within { border-color: var(--azul); background: var(--branco); }
+.input-group-custom svg { flex-shrink: 0; color: #9ca3af; width: 18px; height: 18px; margin-right: 10px; }
+.input-group-custom input,
+.input-group-custom select {
+  flex: 1; border: none; background: transparent;
+  font-size: .92rem; color: var(--text);
+  font-family: var(--body); outline: none;
+}
+.input-group-custom input::placeholder { color: #9ca3af; }
+.input-group-custom select { cursor: pointer; appearance: none; }
+.input-group-custom select:invalid { color: var(--muted); }
+
+.toggle-senha {
+  background: none; border: none; cursor: pointer;
+  padding: 0; color: #9ca3af;
+  display: flex; align-items: center; transition: color .2s;
+}
+.toggle-senha:hover { color: var(--azul); }
+.toggle-senha svg { width: 18px; height: 18px; }
+
+/* Checkbox */
+.permanecer {
+  display: flex; align-items: center; gap: 8px;
+  margin-bottom: 1.25rem; font-size: .88rem;
+  color: var(--text); cursor: pointer;
+}
+.permanecer input[type="checkbox"] { width: 15px; height: 15px; accent-color: var(--azul); cursor: pointer; }
+.permanecer a { color: var(--azul); text-decoration: none; font-weight: 500; }
+.permanecer a:hover { text-decoration: underline; }
+
+/* Botão */
+.btn-login {
+  width: 100%; height: 46px;
+  background: var(--azul); color: var(--branco);
+  border: none; border-radius: var(--r);
+  font-size: .95rem; font-weight: 500;
+  font-family: var(--body); cursor: pointer;
+  transition: background .2s; margin-bottom: 1.25rem;
+}
+.btn-login:hover { background: #1e4080; }
+
+/* Links rodapé */
+.links-rodape { display: flex; justify-content: space-between; font-size: .88rem; }
+.links-rodape a { text-decoration: none; color: var(--azul); font-weight: 500; }
+.links-rodape a.esqueceu { color: var(--muted); font-weight: 400; }
+.links-rodape a:hover { text-decoration: underline; }
+
+/* Erros */
+.erro-campo {
+  display: block; font-size: .8rem; color: #dc2626;
+  margin-top: -.5rem; margin-bottom: .75rem;
+}
+
+/* Animações */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.item-animado { animation: fadeInUp .8s ease-out forwards; opacity: 0; }
+.atraso-1 { animation-delay: .1s; }
+.atraso-2 { animation-delay: .2s; }
+.atraso-3 { animation-delay: .3s; }
+.atraso-4 { animation-delay: .4s; }
+.atraso-5 { animation-delay: .5s; }

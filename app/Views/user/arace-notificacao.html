@@ -1,0 +1,268 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Aracê — Notificações</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex&family=Playfair+Display:wght@700&display=swap" rel="stylesheet" />
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link href="../assets/style/notificacoes.css" rel="stylesheet" />
+</head>
+<body>
+
+<header>
+  <span class="logo">aracê</span>
+  <div class="search-wrap">
+    <i data-lucide="search"></i>
+    <input type="text" placeholder="Pesquisar produtos…" />
+  </div>
+  <div class="header-right">
+    <button class="cart-btn" type="button" onclick="window.location.href='../main/carrinho.html'"><i data-lucide="shopping-cart"></i><span class="cart-count">2 itens</span></button>
+    <button class="cart-btn" type="button" onclick="window.location.href='favoritos.html'"><i data-lucide="heart"></i><span class="cart-count">5 itens</span></button>
+    <button class="avatar-btn" type="button" onclick="window.location.href='perfil.html'" aria-label="Abrir perfil"><i data-lucide="user"></i></button>
+  </div>
+</header>
+
+<aside>
+  <a class="nav-item" href="../main/index.html"><i data-lucide="house"></i> Home page</a>
+  <a class="nav-item" href="../main/produtos.html"><i data-lucide="shopping-bag"></i> Produtos</a>
+  <a class="nav-item" href="../main/carrinho.html"><i data-lucide="shopping-cart"></i> Carrinho</a>
+  <a class="nav-item active" href="notificacoes.html"><i data-lucide="bell"></i> Notificações</a>
+  <a class="nav-item" href="../main/configuracoes.html"><i data-lucide="settings"></i> Configurações</a>
+  <a class="nav-item" href="./perfil.html"><i data-lucide="user"></i> Perfil</a>
+  <a class="nav-item" href="../authentication/cadastro-produtor.html"><i data-lucide="box"></i> Quero ser produtor</a>
+  <div class="nav-divider"></div>
+  <div class="nav-section">Reportar</div>
+  <a class="nav-item" href="../main/configuracoes.html#pagamento"><i data-lucide="hand-coins"></i> Detalhes de pagamento</a>
+</aside>
+
+<main>
+
+  <div class="notif-header">
+    <div>
+      <h1>Notificações</h1>
+      <p id="subtituloHeader">Você tem <strong>4 notificações não lidas</strong></p>
+    </div>
+    <div class="notif-header-actions">
+      <button class="btn-marcar-tudo" onclick="marcarTodasLidas()">
+        <i data-lucide="check-check"></i> Marcar todas como lidas
+      </button>
+    </div>
+  </div>
+
+  <!-- FILTROS -->
+  <div class="notif-filters" id="filtros">
+    <button class="notif-chip active" onclick="filtrar(this,'todas')">
+      <i data-lucide="layers"></i> Todas
+      <span class="chip-count" id="cnt-todas">7</span>
+    </button>
+    <button class="notif-chip" onclick="filtrar(this,'pedido')">
+      <i data-lucide="package"></i> Pedidos
+      <span class="chip-count" id="cnt-pedido">2</span>
+    </button>
+    <button class="notif-chip" onclick="filtrar(this,'promo')">
+      <i data-lucide="tag"></i> Promoções
+      <span class="chip-count" id="cnt-promo">2</span>
+    </button>
+    <button class="notif-chip" onclick="filtrar(this,'chat')">
+      <i data-lucide="message-circle"></i> Chat
+      <span class="chip-count" id="cnt-chat">1</span>
+    </button>
+    <button class="notif-chip" onclick="filtrar(this,'avaliacao')">
+      <i data-lucide="star"></i> Avaliações
+      <span class="chip-count" id="cnt-avaliacao">1</span>
+    </button>
+    <button class="notif-chip" onclick="filtrar(this,'sistema')">
+      <i data-lucide="info"></i> Sistema
+      <span class="chip-count" id="cnt-sistema">1</span>
+    </button>
+  </div>
+
+  <!-- LISTA -->
+  <div id="notifContainer"></div>
+
+</main>
+
+<script>
+// ── DADOS (substituir por fetch('/api/notificacoes') em produção) ──────────
+const NOTIFICACOES = [
+  {
+    id: 1, tipo: 'pedido', lida: false, dia: 'Hoje',
+    titulo: 'Pedido enviado!',
+    desc: 'Seu pedido <strong>#4821</strong> — Panela de barro Capixaba foi enviado e está a caminho.',
+    tempo: 'há 20 min',
+    thumb: 'https://images.unsplash.com/photo-1614613535308-eb5fbd847f51?w=80&q=70',
+    cta: { label: 'Rastrear pedido', icon: 'map-pin', href: '#' }
+  },
+  {
+    id: 2, tipo: 'chat', lida: false, dia: 'Hoje',
+    titulo: 'Nova mensagem de Mestre Zé Pedro',
+    desc: 'Olá! Obrigado pelo pedido. A panela está sendo embalada com cuidado para você.',
+    tempo: 'há 1h',
+    cta: { label: 'Ver conversa', icon: 'message-circle', href: 'arace-chat.html' }
+  },
+  {
+    id: 3, tipo: 'promo', lida: false, dia: 'Hoje',
+    titulo: 'Cupom exclusivo para você! 🎉',
+    desc: 'Use o código <strong>CAPIXABA15</strong> e ganhe 15% de desconto em toda a categoria Cerâmica. Válido até domingo.',
+    tempo: 'há 3h',
+    cta: { label: 'Usar cupom', icon: 'tag', href: '#' }
+  },
+  {
+    id: 4, tipo: 'avaliacao', lida: false, dia: 'Hoje',
+    titulo: 'Sua avaliação foi curtida',
+    desc: '<strong>12 pessoas</strong> acharam sua avaliação da Preguiça de madeira útil.',
+    tempo: 'há 5h',
+    cta: { label: 'Ver avaliação', icon: 'star', href: '#' }
+  },
+  {
+    id: 5, tipo: 'pedido', lida: true, dia: 'Ontem',
+    titulo: 'Pedido entregue com sucesso',
+    desc: 'Seu pedido <strong>#4790</strong> — Colar de pedras do ES foi entregue. Tudo certo?',
+    tempo: 'ontem às 14h32',
+    thumb: 'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=80&q=70',
+    cta: { label: 'Avaliar produto', icon: 'star', href: '#' }
+  },
+  {
+    id: 6, tipo: 'promo', lida: true, dia: 'Ontem',
+    titulo: 'Novos produtos dos seus artesãos favoritos',
+    desc: '<strong>Arte Vitória</strong> adicionou 3 novos produtos à loja. Confira antes que esgote!',
+    tempo: 'ontem às 10h15',
+    cta: { label: 'Ver produtos', icon: 'shopping-bag', href: '../main/produtos.html' }
+  },
+  {
+    id: 7, tipo: 'sistema', lida: true, dia: 'Esta semana',
+    titulo: 'Bem-vinda à Aracê!',
+    desc: 'Sua conta foi criada com sucesso. Explore produtos artesanais da cultura capixaba e apoie produtores locais.',
+    tempo: 'há 3 dias',
+    cta: { label: 'Explorar agora', icon: 'compass', href: '../main/index.html' }
+  },
+];
+
+let filtroAtivo = 'todas';
+
+// ── RENDER ────────────────────────────────────────────────────────────────
+const ICONE_TIPO = {
+  pedido:    'package',
+  promo:     'tag',
+  chat:      'message-circle',
+  avaliacao: 'star',
+  sistema:   'info',
+  aviso:     'alert-triangle',
+};
+
+function renderNotificacoes() {
+  const lista = filtroAtivo === 'todas'
+    ? NOTIFICACOES
+    : NOTIFICACOES.filter(n => n.tipo === filtroAtivo);
+
+  // agrupa por dia
+  const grupos = {};
+  lista.forEach(n => {
+    if (!grupos[n.dia]) grupos[n.dia] = [];
+    grupos[n.dia].push(n);
+  });
+
+  const container = document.getElementById('notifContainer');
+
+  if (!lista.length) {
+    container.innerHTML = `
+      <div class="notif-empty">
+        <i data-lucide="bell-off"></i>
+        <h2>Nenhuma notificação</h2>
+        <p>Quando houver novidades, elas aparecerão aqui.</p>
+      </div>`;
+    lucide.createIcons(); return;
+  }
+
+  container.innerHTML = Object.entries(grupos).map(([dia, itens]) => `
+    <div class="notif-day-group">
+      <div class="notif-day-label">${dia}</div>
+      <div class="notif-list">
+        ${itens.map(n => `
+          <div class="notif-card ${n.lida ? '' : 'nao-lida'}" id="notif-${n.id}" onclick="marcarLida(${n.id})">
+            ${n.thumb
+              ? `<img class="notif-thumb" src="${n.thumb}" alt="" />`
+              : `<div class="notif-icon ${n.tipo}"><i data-lucide="${ICONE_TIPO[n.tipo] || 'bell'}"></i></div>`
+            }
+            <div class="notif-body">
+              <div class="notif-title">${n.titulo}</div>
+              <div class="notif-desc">${n.desc}</div>
+              <div class="notif-meta">
+                <i data-lucide="clock"></i> ${n.tempo}
+                <span class="notif-tag ${n.tipo}">${labelTipo(n.tipo)}</span>
+              </div>
+              ${n.cta ? `
+                <a class="notif-cta" href="${n.cta.href}">
+                  <i data-lucide="${n.cta.icon}"></i> ${n.cta.label}
+                </a>` : ''}
+            </div>
+            <div class="notif-card-actions">
+              ${!n.lida ? `<div class="notif-dot"></div>` : ''}
+              <button class="notif-action-btn lida" title="Marcar como lida" onclick="event.stopPropagation();marcarLida(${n.id})">
+                <i data-lucide="check"></i>
+              </button>
+              <button class="notif-action-btn deletar" title="Remover" onclick="event.stopPropagation();remover(${n.id})">
+                <i data-lucide="x"></i>
+              </button>
+            </div>
+          </div>`).join('')}
+      </div>
+    </div>`).join('');
+
+  atualizarContadores();
+  lucide.createIcons();
+}
+
+function labelTipo(tipo) {
+  return { pedido:'Pedido', promo:'Promoção', chat:'Chat', avaliacao:'Avaliação', sistema:'Sistema', aviso:'Aviso' }[tipo] || tipo;
+}
+
+// ── AÇÕES ─────────────────────────────────────────────────────────────────
+function marcarLida(id) {
+  const n = NOTIFICACOES.find(n => n.id === id);
+  if (n) { n.lida = true; renderNotificacoes(); }
+}
+
+function marcarTodasLidas() {
+  NOTIFICACOES.forEach(n => n.lida = true);
+  renderNotificacoes();
+}
+
+function remover(id) {
+  const idx = NOTIFICACOES.findIndex(n => n.id === id);
+  if (idx !== -1) NOTIFICACOES.splice(idx, 1);
+  renderNotificacoes();
+}
+
+function filtrar(btn, tipo) {
+  filtroAtivo = tipo;
+  document.querySelectorAll('.notif-chip').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderNotificacoes();
+}
+
+function atualizarContadores() {
+  const tipos = ['pedido','promo','chat','avaliacao','sistema'];
+  const naoLidas = NOTIFICACOES.filter(n => !n.lida);
+
+  document.getElementById('cnt-todas').textContent = NOTIFICACOES.length;
+  tipos.forEach(t => {
+    const el = document.getElementById('cnt-' + t);
+    if (el) el.textContent = NOTIFICACOES.filter(n => n.tipo === t).length;
+  });
+
+  const sub = document.getElementById('subtituloHeader');
+  const qtd = naoLidas.length;
+  sub.innerHTML = qtd > 0
+    ? `Você tem <strong>${qtd} notificaç${qtd === 1 ? 'ão não lida' : 'ões não lidas'}</strong>`
+    : 'Tudo em dia! Nenhuma notificação pendente.';
+}
+
+// ── INIT ──────────────────────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', renderNotificacoes);
+</script>
+</body>
+</html>
