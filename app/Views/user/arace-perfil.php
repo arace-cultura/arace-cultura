@@ -14,7 +14,7 @@
 
   <!-- HEADER -->
   <header>
-  <a href="../main/index.html">
+  <a href="../main/index.php">
   <span class="logo">aracê</span>
   </a>
 
@@ -24,15 +24,15 @@
   </div>
 
   <div class="header-right">
-    <button class="cart-btn" type="button" onclick="window.location.href='../main/carrinho.html'">
+    <button class="cart-btn" type="button" onclick="window.location.href='../main/carrinho.php'">
       <i data-lucide="shopping-cart"></i>
       <span class="cart-count">2 itens</span>
     </button>
-    <button class="cart-btn" type="button" onclick="window.location.href='favoritos.html'">
+    <button class="cart-btn" type="button" onclick="window.location.href='favoritos.php'">
       <i data-lucide="heart"></i>
       <span class="cart-count">5 itens</span>
     </button>
-    <button class="avatar-btn" type="button" onclick="window.location.href='perfil.html'" aria-label="Abrir perfil">
+    <button class="avatar-btn" type="button" onclick="window.location.href='perfil.php'" aria-label="Abrir perfil">
       <i data-lucide="user"></i>
     </button>
   </div>
@@ -40,30 +40,30 @@
 
   <!-- SIDEBAR -->
   <aside>
-    <a class="nav-item" href="../main/index.html">
+    <a class="nav-item" href="../main/index.php">
       <i data-lucide="house"></i> Home page
     </a>
-    <a class="nav-item" href="../main/produtos.html">
+    <a class="nav-item" href="../main/produtos.php">
       <i data-lucide="shopping-bag"></i> Produtos
     </a>
-    <a class="nav-item" href="../main/carrinho.html">
+    <a class="nav-item" href="../main/carrinho.php">
       <i data-lucide="shopping-cart"></i> Carrinho
     </a>
-    <a class="nav-item" href="notificacoes.html">
+    <a class="nav-item" href="notificacoes.php">
       <i data-lucide="bell"></i> Notificações
     </a>
-    <a class="nav-item" href="../main/configuracoes.html">
+    <a class="nav-item" href="../main/configuracoes.php">
       <i data-lucide="settings"></i> Configurações
     </a>
-    <a class="nav-item active" href="perfil.html">
+    <a class="nav-item active" href="perfil.php">
       <i data-lucide="user"></i> Perfil
     </a>
-    <a class="nav-item" href="../authentication/cadastro-produtor.html">
+    <a class="nav-item" href="../authentication/cadastro-produtor.php">
       <i data-lucide="box"></i> Quero ser produtor
     </a>
     <div class="nav-divider"></div>
     <div class="nav-section">Reportar</div>
-    <a class="nav-item" href="../main/configuracoes.html#pagamento">
+    <a class="nav-item" href="../main/configuracoes.php#pagamento">
       <i data-lucide="hand-coins"></i> Detalhes de pagamento
     </a>
   </aside>
@@ -83,7 +83,7 @@
           <div class="profile-name">Usuário</div>
           <div class="profile-email">usuario@gmail.com</div>
         </div>
-        <a href="../main/configuracoes.html">
+        <a href="../main/configuracoes.php">
           <button class="btn-edit">
         <i data-lucide="pencil"></i> Editar perfil
           </button>

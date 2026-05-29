@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Aracê — Configuração Perfil Produtor</title>
+  <title>Aracê — Configurações</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex&family=Playfair+Display:wght@700&display=swap" rel="stylesheet" />
@@ -12,29 +12,33 @@
 </head>
 <body>
 
-  <header>
-    <span class="logo">aracê</span>
-    <div class="header-right">
-      <button class="cart-btn"><i data-lucide="shopping-cart"></i><span class="cart-count">2 itens</span></button>
-      <button class="cart-btn"><i data-lucide="heart"></i><span class="cart-count">5 itens</span></button>
-      <div class="avatar-btn"><i data-lucide="user"></i></div>
-    </div>
-  </header>
+<header>
+  <span class="logo">aracê</span>
+  <div class="search-wrap">
+    <i data-lucide="search"></i>
+    <input type="text" placeholder="Pesquisar produtos…" />
+  </div>
+  <div class="header-right">
+    <button class="cart-btn" type="button" onclick="window.location.href='carrinho.php'"><i data-lucide="shopping-cart"></i><span class="cart-count">2 itens</span></button>
+    <button class="cart-btn" type="button" onclick="window.location.href='../user/favoritos.php'"><i data-lucide="heart"></i><span class="cart-count">5 itens</span></button>
+    <button class="avatar-btn" type="button" onclick="window.location.href='../user/perfil.php'" aria-label="Abrir perfil"><i data-lucide="user"></i></button>
+  </div>
+</header>
 
-  <aside>
-    <a class="nav-item" href="../main/index.html"><i data-lucide="house"></i> Home page</a>
-    <a class="nav-item" href="./arace-producer-painel.html"><i data-lucide="layout-dashboard"></i> Painel</a>
-    <a class="nav-item" href="./arace-producer-painel-produtos.html"><i data-lucide="shopping-bag"></i> Meus produtos</a>
-    <a class="nav-item" href="./arace-producer-pedidos.html"><i data-lucide="package"></i> Pedidos</a>
-    <a class="nav-item" href="./arace-producer-profile-loja.html"><i data-lucide="store"></i> Minha loja</a>
-    <div class="nav-divider"></div>
-    <a class="nav-item active" href="./arace-producer-profile.html"><i data-lucide="user"></i> Perfil</a>
-    <a class="nav-item" href="../main/configuracoes.html"><i data-lucide="settings"></i> Configurações</a>
-    <div class="nav-section">Suporte</div>
-    <a class="nav-item" href="../main/configuracoes.html#pagamento"><i data-lucide="hand-coins"></i> Pagamentos</a>
-  </aside>
+<aside>
+  <a class="nav-item" href="index.php"><i data-lucide="house"></i> Home page</a>
+  <a class="nav-item" href="produtos.php"><i data-lucide="shopping-bag"></i> Produtos</a>
+  <a class="nav-item" href="carrinho.php"><i data-lucide="shopping-cart"></i> Carrinho</a>
+  <a class="nav-item" href="../user/notificacoes.php"><i data-lucide="bell"></i> Notificações</a>
+  <a class="nav-item active" href="configuracoes.php"><i data-lucide="settings"></i> Configurações</a>
+  <a class="nav-item" href="../user/perfil.php"><i data-lucide="user"></i> Perfil</a>
+  <a class="nav-item" href="../authentication/cadastro-produtor.php"><i data-lucide="box"></i> Quero ser produtor</a>
+  <div class="nav-divider"></div>
+  <div class="nav-section">Reportar</div>
+  <a class="nav-item" href="configuracoes.php#pagamento"><i data-lucide="hand-coins"></i> Detalhes de pagamento</a>
+</aside>
 
-  <main>
+<main>
   <div class="config-header">
     <div>
       <h1>Configurações</h1>
@@ -522,6 +526,11 @@
           </div>
         </div>
       </section>
+
+    </div><!-- /conteúdo -->
+  </div><!-- /config-layout -->
+</main>
+
 <!-- Toast de confirmação -->
 <div class="toast" id="toast">
   <i data-lucide="check-circle"></i>
@@ -529,7 +538,5 @@
 </div>
 
 <script src="../assets/js/config.js"></script>
-
-    </div><!-- /conteúdo -->
-  </div><!-- /config-layout -->
-</main>
+</body>
+</html>

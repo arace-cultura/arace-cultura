@@ -41,8 +41,8 @@
         <button type="submit" class="btn-login">Entrar</button>
 
         <div class="links-rodape">
-          <a href="cadastro-arace.html">Cadastre-se</a>
-          <a href="recuperar-senha.html" class="esqueceu">Esqueceu a senha?</a>
+          <a href="cadastro-arace.php">Cadastre-se</a>
+          <a href="recuperar-senha.php" class="esqueceu">Esqueceu a senha?</a>
         </div>
       </div>
     </form>

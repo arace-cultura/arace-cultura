@@ -22,16 +22,16 @@
   </header>
 
   <aside>
-    <a class="nav-item" href="../main/index.html"><i data-lucide="house"></i> Home page</a>
-    <a class="nav-item" href="../main/produtos.html"><i data-lucide="shopping-bag"></i> Produtos</a>
-    <a class="nav-item" href="../main/carrinho.html"><i data-lucide="shopping-cart"></i> Carrinho</a>
-    <a class="nav-item" href="./notificacoes.html"><i data-lucide="bell"></i> Notificações</a>
-    <a class="nav-item" href="../main/configuracoes.html"><i data-lucide="settings"></i> Configurações</a>
-    <a class="nav-item" href="./perfil.html"><i data-lucide="user"></i> Perfil</a>
-    <a class="nav-item" href="../authentication/cadastro-produtor.html"><i data-lucide="box"></i> Quero ser produtor</a>
+    <a class="nav-item" href="../main/index.php"><i data-lucide="house"></i> Home page</a>
+    <a class="nav-item" href="../main/produtos.php"><i data-lucide="shopping-bag"></i> Produtos</a>
+    <a class="nav-item" href="../main/carrinho.php"><i data-lucide="shopping-cart"></i> Carrinho</a>
+    <a class="nav-item" href="./notificacoes.php"><i data-lucide="bell"></i> Notificações</a>
+    <a class="nav-item" href="../main/configuracoes.php"><i data-lucide="settings"></i> Configurações</a>
+    <a class="nav-item" href="./perfil.php"><i data-lucide="user"></i> Perfil</a>
+    <a class="nav-item" href="../authentication/cadastro-produtor.php"><i data-lucide="box"></i> Quero ser produtor</a>
     <div class="nav-divider"></div>
     <div class="nav-section">Reportar</div>
-    <a class="nav-item active" href="arace-chat.html"><i data-lucide="message-circle"></i> Chat</a>
+    <a class="nav-item active" href="arace-chat.php"><i data-lucide="message-circle"></i> Chat</a>
   </aside>
 
   <main>

@@ -14,23 +14,23 @@
 
 <!-- HEADER -->
 <header>
-  <a href="index.html" class="logo">aracê</a>
+  <a href="index.php" class="logo">aracê</a>
 
-  <form class="search-wrap" action="arace-search.html" method="get">
+  <form class="search-wrap" action="arace-search.php" method="get">
     <i data-lucide="search"></i>
     <input type="text" name="q" id="searchHeaderInput" placeholder="Pesquisar produtos..." />
   </form>
 
   <div class="header-right">
-    <button class="cart-btn" type="button" onclick="window.location.href='carrinho.html'">
+    <button class="cart-btn" type="button" onclick="window.location.href='carrinho.php'">
       <i data-lucide="shopping-cart"></i>
       <span class="cart-count">2 itens</span>
     </button>
-    <button class="cart-btn" type="button" onclick="window.location.href='../user/favoritos.html'">
+    <button class="cart-btn" type="button" onclick="window.location.href='../user/favoritos.php'">
       <i data-lucide="heart"></i>
       <span class="cart-count">5 itens</span>
     </button>
-    <button class="avatar-btn" type="button" onclick="window.location.href='../user/perfil.html'">
+    <button class="avatar-btn" type="button" onclick="window.location.href='../user/perfil.php'">
       <i data-lucide="user"></i>
     </button>
   </div>
@@ -41,16 +41,16 @@
 
   <!-- NAV ASIDE (esquerda) -->
   <aside class="nav-aside">
-    <a class="nav-item" href="index.html"><i data-lucide="house"></i> Home page</a>
-    <a class="nav-item active" href="arace-search.html"><i data-lucide="shopping-bag"></i> Produtos</a>
-    <a class="nav-item" href="carrinho.html"><i data-lucide="shopping-cart"></i> Carrinho</a>
-    <a class="nav-item" href="../user/notificacoes.html"><i data-lucide="bell"></i> Notificações</a>
-    <a class="nav-item" href="configuracoes.html"><i data-lucide="settings"></i> Configurações</a>
-    <a class="nav-item" href="../user/perfil.html"><i data-lucide="user"></i> Perfil</a>
-    <a class="nav-item" href="../authentication/cadastro-produtor.html"><i data-lucide="box"></i> Quero ser produtor</a>
+    <a class="nav-item" href="index.php"><i data-lucide="house"></i> Home page</a>
+    <a class="nav-item active" href="arace-search.php"><i data-lucide="shopping-bag"></i> Produtos</a>
+    <a class="nav-item" href="carrinho.php"><i data-lucide="shopping-cart"></i> Carrinho</a>
+    <a class="nav-item" href="../user/notificacoes.php"><i data-lucide="bell"></i> Notificações</a>
+    <a class="nav-item" href="configuracoes.php"><i data-lucide="settings"></i> Configurações</a>
+    <a class="nav-item" href="../user/perfil.php"><i data-lucide="user"></i> Perfil</a>
+    <a class="nav-item" href="../authentication/cadastro-produtor.php"><i data-lucide="box"></i> Quero ser produtor</a>
     <div class="nav-divider"></div>
     <div class="nav-section">Reportar</div>
-    <a class="nav-item" href="configuracoes.html#pagamento"><i data-lucide="hand-coins"></i> Pagamentos</a>
+    <a class="nav-item" href="configuracoes.php#pagamento"><i data-lucide="hand-coins"></i> Pagamentos</a>
   </aside>
 
     <!-- CONTEÚDO -->
@@ -58,14 +58,14 @@
 
     <!-- Breadcrumb -->
     <div class="breadcrumb">
-      <a href="index.html">Início</a>
+      <a href="index.php">Início</a>
       <i data-lucide="chevron-right"></i>
       <span>Produtos</span>
     </div>
 
     <!-- Busca central -->
     <div class="search-bar-wrap">
-      <form class="search-bar" action="arace-search.html" method="get">
+      <form class="search-bar" action="arace-search.php" method="get">
         <i data-lucide="search"></i>
         <input type="text" name="q" id="searchPageInput" placeholder="pesquise um produto..." />
       </form>
@@ -73,35 +73,35 @@
 
     <!-- Categorias -->
     <div class="cat-grid">
-      <a class="cat-card" data-category-card="tudo" href="arace-search.html">
+      <a class="cat-card" data-category-card="tudo" href="arace-search.php">
         <div class="cat-icon" style="background:#f3a621"><i data-lucide="gallery-horizontal-end"></i></div>
         <span>Tudo</span>
       </a>
-      <a class="cat-card" data-category-card="pinturas" href="arace-search.html?categoria=pinturas">
+      <a class="cat-card" data-category-card="pinturas" href="arace-search.php?categoria=pinturas">
         <div class="cat-icon" style="background:#f2601a"><i data-lucide="palette"></i></div>
         <span>Pinturas</span>
       </a>
-      <a class="cat-card" data-category-card="casa-e-vida" href="arace-search.html?categoria=casa-e-vida">
+      <a class="cat-card" data-category-card="casa-e-vida" href="arace-search.php?categoria=casa-e-vida">
         <div class="cat-icon" style="background:#25518f"><i data-lucide="house"></i></div>
         <span>Casa & Vida</span>
       </a>
-      <a class="cat-card" data-category-card="retro" href="arace-search.html?categoria=retro">
+      <a class="cat-card" data-category-card="retro" href="arace-search.php?categoria=retro">
         <div class="cat-icon" style="background:#478632"><i data-lucide="videotape"></i></div>
         <span>Retro</span>
       </a>
-      <a class="cat-card" data-category-card="joias" href="arace-search.html?categoria=joias">
+      <a class="cat-card" data-category-card="joias" href="arace-search.php?categoria=joias">
         <div class="cat-icon" style="background:#f3a621"><i data-lucide="gem"></i></div>
         <span>Joias</span>
       </a>
-      <a class="cat-card" data-category-card="roupas" href="arace-search.html?categoria=roupas">
+      <a class="cat-card" data-category-card="roupas" href="arace-search.php?categoria=roupas">
         <div class="cat-icon" style="background:#f2601a"><i data-lucide="shirt"></i></div>
         <span>Roupas</span>
       </a>
-      <a class="cat-card" data-category-card="ceramica" href="arace-search.html?categoria=ceramica">
+      <a class="cat-card" data-category-card="ceramica" href="arace-search.php?categoria=ceramica">
         <div class="cat-icon" style="background:#25518f"><i data-lucide="amphora"></i></div>
         <span>Cerâmica</span>
       </a>
-      <a class="cat-card" data-category-card="artesanato" href="arace-search.html?categoria=artesanato">
+      <a class="cat-card" data-category-card="artesanato" href="arace-search.php?categoria=artesanato">
         <div class="cat-icon" style="background:#478632"><i data-lucide="paintbrush"></i></div>
         <span>Artesanato</span>
       </a>
