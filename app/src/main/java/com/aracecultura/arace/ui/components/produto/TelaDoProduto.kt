@@ -93,7 +93,7 @@ fun TelaDoProduto(
                     ) {
                         HorizontalPager(
                             state = pagerState,
-                            key = { index -> listaDeImagens[index] },
+                            key = { index -> index },
                             pageSpacing = 5.dp,
                             modifier = Modifier
                                 .fillMaxSize()
