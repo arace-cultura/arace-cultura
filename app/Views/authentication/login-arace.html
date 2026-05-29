@@ -1,0 +1,55 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Aracê - Login</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../assets/style/login.css">
+</head>
+<body>
+
+  <div class="login-card item-animado">
+    <div class="logo-wrap item-animado atraso-1">
+      <img src="assets/imgs/arace.png" alt="Logo Aracê" />
+    </div>
+
+    <p class="subtitle item-animado atraso-1">Bem-vindo de volta</p>
+
+    <form id="formLogin" novalidate>
+      <div class="input-group-custom item-animado atraso-2">
+        <i data-lucide="user"></i>
+        <input type="email" id="email" name="email" placeholder="E-mail" autocomplete="email" required />
+      </div>
+
+      <div class="input-group-custom item-animado atraso-3">
+        <i data-lucide="lock"></i>
+        <input type="password" id="senha" name="senha" placeholder="Senha" autocomplete="current-password" required />
+        <button type="button" class="toggle-senha" onclick="alternarSenha()" aria-label="Mostrar/ocultar senha">
+          <i id="icone-olho" data-lucide="eye"></i>
+        </button>
+      </div>
+
+      <div class="item-animado atraso-4">
+        <label class="permanecer">
+          <input type="checkbox" id="lembrar" name="lembrar" />
+          Permanecer conectado
+        </label>
+
+        <button type="submit" class="btn-login">Entrar</button>
+
+        <div class="links-rodape">
+          <a href="cadastro-arace.html">Cadastre-se</a>
+          <a href="recuperar-senha.html" class="esqueceu">Esqueceu a senha?</a>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script>lucide.createIcons();</script>
+  <script src="assets/js/login.js"></script>
+</body>
+</html>

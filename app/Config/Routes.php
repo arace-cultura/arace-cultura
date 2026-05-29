@@ -3,7 +3,7 @@
 use CodeIgniter\Router\RouteCollection;
 
 /** @var RouteCollection $routes */
-$routes->view("/", "index");
+$routes->view("/", "main/index");
 
 $routes->view('entrada', 'entrada');
 $routes->view("login", "login");
