@@ -1,7 +1,8 @@
-package com.aracecultura.arace.ui.components.home
+package com.aracecultura.arace.ui.components.produto
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
@@ -14,16 +15,21 @@ import androidx.compose.ui.unit.dp
 import com.aracecultura.arace.R
 
 @Composable
-fun StatusBolinha(selectedIndex: Int, index: Int, icone: Int = R.drawable.ic_flower) {
+fun StatusBolinhaGeral(selectedIndex: Int, index: Int) {
     Box(
         modifier = Modifier.size(24.dp),
         contentAlignment = Alignment.Center
     ) {
         if (index == selectedIndex) {
-            Image(
-                painter = painterResource(icone),
-                contentDescription = null,
-                modifier = Modifier.size(24.dp)
+            Box(
+                modifier = Modifier
+                    .size(16.dp)
+                    .background(Color.White, shape = CircleShape)
+                    .border(
+                        width = 5.dp,
+                        color = Color(0xFFE37038),
+                        shape = CircleShape
+                    )
             )
         } else {
             Box(

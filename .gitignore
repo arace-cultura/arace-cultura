@@ -16,12 +16,13 @@ captures/
 *.apk
 output-metadata.json
 
-# IntelliJ
+# IntelliJ — só os que não devem ser versionados
+.idea/caches/
+.idea/libraries/
+.idea/modules.xml
+.idea/workspace.xml
+.idea/navEditor.xml
 *.iml
-.idea/
-misc.xml
-deploymentTargetDropDown.xml
-render.experimental.xml
 
 # Keystore files
 *.jks

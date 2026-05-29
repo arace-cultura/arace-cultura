@@ -31,9 +31,9 @@ fun SecaoCategorias() {
             horizontalArrangement = Arrangement.SpaceEvenly // Distribui os 3 itens igualmente na largura
         ) {
             Spacer(Modifier.width(10.dp))
-            IconCategoria(btColor, R.drawable.artesanato, "Artesanato", modifier = Modifier)
-            IconCategoria(azulPrincipal, R.drawable.casa, "Casa",  modifier = Modifier)
-            IconCategoria(verdePrincipal, R.drawable.texteis, "Têxteis", modifier = Modifier)
+            IconCategoria(btColor, R.drawable.ic_artesanato, "Artesanato", modifier = Modifier)
+            IconCategoria(azulPrincipal, R.drawable.ic_casa, "Casa",  modifier = Modifier)
+            IconCategoria(verdePrincipal, R.drawable.ic_texteis, "Têxteis", modifier = Modifier)
             Spacer(Modifier.width(10.dp))
         }
 
@@ -43,9 +43,9 @@ fun SecaoCategorias() {
             horizontalArrangement = Arrangement.SpaceEvenly // Alinhamento idêntico à primeira linha
         ){
             Spacer(Modifier.width(10.dp))
-            IconCategoria(terracota, R.drawable.ceramica, "Cerâmica", modifier = Modifier)
-            IconCategoria(azulCinza, R.drawable.acessorios, "Acessórios", modifier = Modifier)
-            IconCategoria(verdeAzeitona, R.drawable.cosmeticos, "Cosméticos", modifier = Modifier)
+            IconCategoria(terracota, R.drawable.ic_ceramica, "Cerâmica", modifier = Modifier)
+            IconCategoria(azulCinza, R.drawable.ic_acessorios, "Acessórios", modifier = Modifier)
+            IconCategoria(verdeAzeitona, R.drawable.ic_cosmeticos, "Cosméticos", modifier = Modifier)
             Spacer(Modifier.width(10.dp))
         }
     }
