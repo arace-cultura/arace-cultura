@@ -25,6 +25,7 @@ lifecycleRuntimeKtx = "2.10.0"
 service = "4.4.2"
 coil = "2.7.0"
 activityCompose = "1.13.0"
+foundationLayout = "1.11.2"
 
 [libraries]
 androidx-compose-animation = { module = "androidx.compose.animation:animation", version.ref = "animation" }
@@ -56,6 +57,7 @@ coil = {module = "io.coil-kt:coil-compose", version.ref = "coil"}
 firebase-crashlytics = {module = "com.google.firebase:firebase-crashlytics"}
 androidx-lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycleRuntimeKtx" }
 androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activityCompose" }
+androidx-compose-foundation-layout = { group = "androidx.compose.foundation", name = "foundation-layout", version.ref = "foundationLayout" }
 
 [plugins]
 navigation-safeargs = { id = "androidx.navigation.safeargs.kotlin", version.ref = "navigationFragment" }

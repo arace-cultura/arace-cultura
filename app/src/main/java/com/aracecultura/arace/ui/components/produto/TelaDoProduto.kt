@@ -13,7 +13,11 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
@@ -36,19 +40,30 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.ExperimentalTextApi
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontVariation
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.zIndex
 import coil.compose.AsyncImage
+import com.aracecultura.arace.R
 import com.aracecultura.arace.data.model.Produto
 import com.aracecultura.arace.ui.components.CarregamentoContainer
-import com.aracecultura.arace.ui.components.explorar.googleFont
 import com.aracecultura.arace.ui.components.home.StatusBolinha
+import com.aracecultura.arace.ui.theme.GoogleSans
 import com.aracecultura.arace.ui.theme.bgDefault
+import com.aracecultura.arace.ui.theme.btColor
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import sombraInferior
 
 @Composable
 fun TelaDoProduto(
@@ -128,26 +143,77 @@ fun TelaDoProduto(
                             }
                         }
                     }
-                    Column(Modifier
-                        .fillMaxWidth()
-                        .weight(1f)
-                        .background(bgDefault)) {
-                        Row(Modifier
+                    Column(
+                        Modifier
+                            .zIndex(1f)
+                            .fillMaxWidth()
+                            .wrapContentHeight()
+                            .sombraInferior(alturaSombra = 16.dp)
                             .background(bgDefault)
-                            .padding(10.dp, 10.dp)) {
-                            Text(
-                                produtoAtual.nome,
-                                fontFamily = googleFont,
-                                fontSize = 30.sp,
-                                //fontWeight = Weight.Bold
-                            )
-                            Spacer(Modifier.weight(1f))
-                            Box(Modifier.padding(0.dp, 5.dp)){
-                                Avaliacao(produtoAtual.avaliacao)
+                            .padding(horizontal = 20.dp, vertical = 15.dp)
+                    ) {
+                        Row(Modifier.background(bgDefault)) {
+                            Column {
+                                Text(
+                                    text = produtoAtual.nome,
+                                    fontFamily = GoogleSans,
+                                    fontSize = 26.sp,
+                                    //fontWeight = FontWeight.Bold
+                                )
                             }
 
+                            Spacer(Modifier.weight(1f))
+
+                            Column(Modifier.padding(top = 10.dp)) {
+                                Avaliacao(produtoAtual.avaliacao)
+                            }
+                        }
+
+                        Row(Modifier.fillMaxWidth()) {
+                            Text(
+                                text = "R$${produtoAtual.preco}",
+                                fontFamily = GoogleSans,
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 20.sp
+                            )
+                            Spacer(Modifier.weight(1f))
+                            Text(
+                                text = "${produtoAtual.avaliacao}",
+                                fontSize = 16.sp,
+                                fontFamily = GoogleSans,
+                                fontWeight = FontWeight.Normal
+                            )
                         }
                     }
+                    Column(Modifier.padding(top = 20.dp).fillMaxWidth().weight(1f).padding(10.dp, 5.dp)){
+                        Row(Modifier.fillMaxWidth().background(bgDefault).padding(horizontal = 20.dp), verticalAlignment = Alignment.CenterVertically){
+                            Box(
+                                modifier = Modifier
+                                    .size(80.dp)
+                                    .clip(RoundedCornerShape(40.dp))
+                                    .background(btColor)
+                            )
+
+                            Text(
+                                "Paneleiras capixabas",
+                                modifier = Modifier.padding(start = 15.dp),
+                                fontSize = 22.sp,
+                                fontFamily = GoogleSans,
+                                fontWeight = FontWeight.Normal
+
+                            )
+                        }
+                        Box(Modifier.fillMaxWidth().padding(top = 20.dp).background(bgDefault)) {
+                            Text(
+                                "${produtoAtual.descricao}",
+                                modifier = Modifier.padding(horizontal = 15.dp),
+                                fontSize = 20.sp,
+                                fontFamily = GoogleSans,
+                                fontWeight = FontWeight.Normal
+                            )
+                        }
+                    }
+
                 }
             }
         }

@@ -27,32 +27,10 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.aracecultura.arace.data.model.Produto
 import com.aracecultura.arace.ui.components.AppButton
+import com.aracecultura.arace.ui.theme.GoogleSans
 import com.aracecultura.arace.ui.theme.bgDefault
 import com.aracecultura.arace.ui.theme.btColor
 
-@OptIn(ExperimentalTextApi::class)
-val googleFont = FontFamily(
-    Font(
-        R.font.google_sans_flex_variable_font,
-        weight = FontWeight.Light,
-        variationSettings = FontVariation.Settings(FontVariation.weight(300))
-    ),
-    Font(
-        R.font.google_sans_flex_variable_font,
-        weight = FontWeight.Normal,
-        variationSettings = FontVariation.Settings(FontVariation.weight(400))
-    ),
-    Font(
-        R.font.google_sans_flex_variable_font,
-        weight = FontWeight.Medium,
-        variationSettings = FontVariation.Settings(FontVariation.weight(500))
-    ),
-    Font(
-        R.font.google_sans_flex_variable_font,
-        weight = FontWeight.Bold,
-        variationSettings = FontVariation.Settings(FontVariation.weight(700))
-    )
-)
 
 @Composable
 
@@ -79,7 +57,7 @@ fun ProdutoNavegar (
                 text = if (produto.nome.length > 20)
                     produto.nome.take(17) + "..." else produto.nome,
                 fontSize = 18.sp,
-                fontFamily = googleFont,
+                fontFamily = GoogleSans,
                 fontWeight = FontWeight.Medium,
                 modifier = Modifier
                     .padding(bottom = 6.dp)

@@ -19,31 +19,37 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.aracecultura.arace.ui.components.explorar.googleFont
+import com.aracecultura.arace.ui.theme.GoogleSans
 
 @Composable
 fun IconCategoria(
     backgroundColor: Color,
     imagem: Int,
     legenda: String,
-    modifier: Modifier
+    modifier: Modifier = Modifier
 ) {
-    Column(horizontalAlignment = Alignment.CenterHorizontally){
-        Box(modifier = modifier
-            .clip(RoundedCornerShape(4.dp))
+
+    Column(
+        modifier = modifier,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ){
+        Box(modifier = Modifier
+            .clip(RoundedCornerShape(15.dp))
             .background(backgroundColor)
-            .padding(3.dp)){
+            .padding(10.dp)
+        ){
             Image(
                 painter = painterResource(imagem),
                 contentDescription = null,
-                modifier = Modifier.size(60.dp)
+                modifier = Modifier.size(45.dp)
             )
         }
         Spacer(Modifier.height(4.dp))
         Text(
-            legenda,
+            text = legenda,
             fontSize = 14.sp,
-            fontFamily = googleFont,
-            fontWeight = FontWeight.Medium)
+            fontFamily = GoogleSans,
+            fontWeight = FontWeight.Medium
+        )
     }
 }

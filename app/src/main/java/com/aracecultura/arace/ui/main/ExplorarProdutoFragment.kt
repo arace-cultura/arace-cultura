@@ -8,7 +8,7 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
 import com.aracecultura.arace.ui.components.explorar.ExplorarProduto
 
-class ExplorarProduto : Fragment() {
+class ExplorarProdutoFragment : Fragment() {
 
     private lateinit var composeView: ComposeView
 

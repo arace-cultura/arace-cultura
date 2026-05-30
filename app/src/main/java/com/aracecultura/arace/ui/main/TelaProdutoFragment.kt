@@ -11,9 +11,9 @@ import androidx.navigation.fragment.navArgs
 import com.aracecultura.arace.ui.components.produto.TelaDoProduto
 import com.aracecultura.arace.ui.components.produto.TelaDoProdutoViewmodel
 
-class TelaProduto : Fragment() {
+class TelaProdutoFragment : Fragment() {
     private lateinit var composeView: ComposeView
-    private val args: TelaProdutoArgs by navArgs()
+    private val args: TelaProdutoFragmentArgs by navArgs()
     private val viewModel: TelaDoProdutoViewmodel by viewModels()
 
     override fun onCreateView(

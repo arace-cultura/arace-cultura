@@ -7,7 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.aracecultura.arace.R
 
-class Favoritos : Fragment() {
+class FavoritosFragment : Fragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

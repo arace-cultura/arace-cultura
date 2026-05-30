@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/homePage"
-        android:name="com.aracecultura.arace.ui.main.HomePage">
+        android:name="com.aracecultura.arace.ui.main.HomePageFragment">
 
         <action
             android:id="@+id/action_homePage_to_produtoFragment"
@@ -16,7 +16,7 @@
 
     <fragment
         android:id="@+id/produto"
-        android:name="com.aracecultura.arace.ui.main.TelaProduto">
+        android:name="com.aracecultura.arace.ui.main.TelaProdutoFragment">
 
         <argument
             android:name="produtoId"
@@ -25,11 +25,11 @@
 
     <fragment
         android:id="@+id/favoritos"
-        android:name="com.aracecultura.arace.ui.main.Favoritos"
+        android:name="com.aracecultura.arace.ui.main.FavoritosFragment"
         tools:layout="@layout/fragment_favoritos" />
 
     <fragment
         android:id="@+id/explorar"
-        android:name="com.aracecultura.arace.ui.main.ExplorarProduto"
+        android:name="com.aracecultura.arace.ui.main.ExplorarProdutoFragment"
         tools:layout="@layout/fragment_produto" />
 </navigation>
