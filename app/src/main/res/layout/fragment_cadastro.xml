@@ -5,15 +5,16 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/f_login"
+    android:background="@drawable/auth_image"
     tools:context=".ui.auth.Cadastro">
 
     <LinearLayout
         android:layout_width="350dp"
-        android:layout_height="600dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/background_rounded"
         android:gravity="center_horizontal"
         android:orientation="vertical"
-        android:padding="10dp"
+        android:padding="24dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -22,73 +23,111 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
-            android:layout_marginBottom="32dp"
-            android:fontFamily="@font/librecaslondisplay_regular"
+            android:layout_marginBottom="24dp"
+            android:fontFamily="@font/google_sans_flex_variable_font"
+            android:gravity="center_horizontal"
             android:text="Criar conta"
-            android:textColor="@color/white"
-            android:textSize="55sp" />
+            android:textColor="@color/texto"
+            android:textSize="48sp" />
 
-        <EditText
-            android:id="@+id/cadastro_input"
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:background="@drawable/w_rectangle"
-            android:hint="Email"
-            android:inputType="textEmailAddress"
-            android:padding="16dp"
-            android:textColor="@color/gray"
-            android:textColorHint="@color/gray"
-            android:textSize="16sp" />
+            android:layout_marginBottom="12dp"
+            app:boxStrokeColor="@color/arace_blue"
+            app:hintTextColor="@color/arace_blue"
+            android:hint="Nome">
 
-        <EditText
-            android:id="@+id/cadastro_senha"
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/nome_input"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/google_sans_flex_variable_font"
+                android:inputType="textPersonName"
+                android:textColor="@color/texto" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:background="@drawable/w_rectangle"
-            android:hint="Senha"
-            android:inputType="textPassword"
-            android:padding="16dp"
-            android:textColor="@color/gray"
-            android:textColorHint="@color/gray"
-            android:textSize="16sp" />
+            android:layout_marginBottom="12dp"
+            app:boxStrokeColor="@color/arace_blue"
+            app:hintTextColor="@color/arace_blue"
+            android:hint="Email">
 
-        <EditText
-            android:id="@+id/cadastro_confirmar_senha"
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/cadastro_input"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/google_sans_flex_variable_font"
+                android:inputType="textEmailAddress"
+                android:textColor="@color/texto" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:background="@drawable/w_rectangle"
-            android:hint="Confirme sua senha"
-            android:inputType="textPassword"
-            android:padding="16dp"
-            android:textColor="@color/gray"
-            android:textColorHint="@color/gray"
-            android:textSize="16sp" />
+            android:layout_marginBottom="12dp"
+            app:boxStrokeColor="@color/arace_blue"
+            app:hintTextColor="@color/arace_blue"
+            app:endIconMode="password_toggle"
+            app:endIconTint="@color/hint_gray"
+            android:hint="Senha">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/cadastro_senha"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/google_sans_flex_variable_font"
+                android:inputType="textPassword"
+                android:textColor="@color/texto" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp"
+            app:boxStrokeColor="@color/arace_blue"
+            app:hintTextColor="@color/arace_blue"
+            app:endIconMode="password_toggle"
+            app:endIconTint="@color/hint_gray"
+            android:hint="Confirme sua senha">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/cadastro_confirmar_senha"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/google_sans_flex_variable_font"
+                android:inputType="textPassword"
+                android:textColor="@color/texto" />
+        </com.google.android.material.textfield.TextInputLayout>
 
         <Button
             android:id="@+id/cadastro_btn"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
-            android:backgroundTint="@color/white"
+            android:backgroundTint="@color/arace_blue"
+            android:fontFamily="@font/google_sans_flex_variable_font"
+            android:paddingHorizontal="40dp"
+            android:paddingVertical="12dp"
             android:text="Concluir"
-            android:textColor="@color/placeholder1"
-            android:textSize="20sp" />
+            android:textColor="@color/white"
+            android:textSize="18sp" />
 
         <TextView
             android:id="@+id/cadastro_back"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="16dp"
+            android:fontFamily="@font/google_sans_flex_variable_font"
             android:text="Voltar"
-            android:textAlignment="center"
-            android:textColor="@color/white"
+            android:textColor="@color/black"
             android:textSize="16sp" />
 
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
-

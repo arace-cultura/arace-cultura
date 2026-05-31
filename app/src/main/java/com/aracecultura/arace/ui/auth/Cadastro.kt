@@ -50,6 +50,7 @@ class Cadastro : Fragment() {
     private fun cadastrar() {
         val senha = this.binding.cadastroSenha.text.toString().trim()
         val email = this.binding.cadastroInput.text.toString().trim()
+        val nome = this.binding.nomeInput.text.toString().trim()
 
         if(!validarCredenciais(email, senha)){
             Toast

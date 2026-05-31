@@ -9,7 +9,7 @@
     <color name="strange_gray">#C1C1C1</color>
     <color name="gray">#D2D2D2</color>
     <color name="deep_blue">#003D7F</color>
-    <color name="middle_blue">#1569D4</color>
+    <color name="arace_blue">#2F5E91</color>
     <color name="placeholder2">#b9b9</color>
     <color name="placeholder1">#56A2CF</color>
     <color name="menu">#6E88AB</color>
@@ -19,6 +19,7 @@
     <color name="verde">#8DB641</color>
     <color name="laranja">#D45D22</color>
     <color name="bg_descubra">#F5F5F5</color>
+    <color name="hint_gray">#61000000</color>
 
     <color
         name="splash_background">
