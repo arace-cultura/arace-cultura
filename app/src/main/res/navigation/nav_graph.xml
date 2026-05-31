@@ -29,6 +29,13 @@
         app:popUpToInclusive="true"/>
 
     <action
+        android:id="@+id/action_main_to_auth"
+        app:destination="@id/auth_graph"
+        app:popUpTo="@id/main_graph"
+        app:launchSingleTop="true"
+        app:popUpToInclusive="true"/>
+
+    <action
         android:id="@+id/action_global_cadastroProdutorFragment"
         app:destination="@id/fluxo_cadastro_produtor" />
 </navigation>

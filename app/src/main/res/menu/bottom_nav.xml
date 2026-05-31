@@ -1,17 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item
-        android:id="@+id/explorar"
-        android:icon="@drawable/ic_location_pin"
-        android:title="Explorar" />
 
     <item
         android:id="@+id/homePage"
-        android:icon="@drawable/ic_home"
+        android:icon="@drawable/ic_home_selector"
         android:title="Início" />
 
     <item
+        android:id="@+id/explorar"
+        android:icon="@drawable/ic_pin_selector"
+        android:title="Explorar" />
+
+    <item
         android:id="@+id/favoritos"
-        android:icon="@drawable/ic_heart"
+        android:icon="@drawable/ic_heart_selector"
         android:title="Favoritos" />
+
+    <item
+        android:id="@+id/usuario"
+        android:icon="@drawable/ic_user_selector"
+        android:title="Eu"
+        />
 </menu>

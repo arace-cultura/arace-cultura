@@ -33,6 +33,7 @@ class NavegacaoPrincipal : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        binding.bnvMenuInferiorNavegacao.itemIconTintList = null
         super.onViewCreated(view, savedInstanceState)
 
         // getFragment é necessário pois o acesso ao navcontroller é da
