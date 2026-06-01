@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex&family=Playfair+Display:wght@700&display=swap" rel="stylesheet" />
   <script src="https://unpkg.com/lucide@latest"></script>
-  <link href="/css/config.css" rel="stylesheet" />
+  <link href="../assets/style/config.css" rel="stylesheet" />
 </head>
 <body>
 
@@ -106,11 +106,11 @@
             <div class="config-card-body">
               <div class="field-group">
                 <label>Nome Comercial da Loja</label>
-                <input class="input-field" type="text" value="Paneleiras Capixabas" />
+                <input class="input-field" type="text" id="lojaNome" value="Paneleiras Capixabas" />
               </div>
               <div class="field-group">
                 <label>História / Biografia da Loja</label>
-                <textarea class="input-field" rows="4" style="resize:vertical;line-height:1.5">Preservamos uma tradição centenária de produção artesanal de panelas de barro, símbolo da cultura capixaba. Cada peça carrega a identidade, o suor e o amor passado de geração em geração.</textarea>
+                <textarea class="input-field" id="lojaBio" rows="4" style="resize:vertical;line-height:1.5">Preservamos uma tradição centenária de produção artesanal de panelas de barro, símbolo da cultura capixaba. Cada peça carrega a identidade, o suor e o amor passado de geração em geração.</textarea>
               </div>
             </div>
             <div class="config-card-footer">
@@ -132,7 +132,7 @@
                 </div>
                 <div class="field-group">
                   <label>Categoria Principal</label>
-                  <select class="input-field">
+                  <select class="input-field" id="lojaCategoria">
                     <option value="ceramica" selected>Cerâmica & Panelas de Barro</option>
                     <option value="artesanato">Artesanato Geral</option>
                     <option value="alimentos">Doces & Alimentos Caseiros</option>
@@ -142,11 +142,11 @@
               <div class="field-row">
                 <div class="field-group">
                   <label>E-mail de Atendimento Comercial</label>
-                  <input class="input-field" type="email" value="contato@paneleiras.com" />
+                  <input class="input-field" type="email" id="lojaEmail" value="contato@paneleiras.com" />
                 </div>
                 <div class="field-group">
                   <label>WhatsApp / Telefone da Loja</label>
-                  <input class="input-field" type="tel" value="(27) 99999-1234" />
+                  <input class="input-field" type="tel" id="lojaTelefone" value="(27) 99999-1234" />
                 </div>
               </div>
             </div>
@@ -189,7 +189,7 @@
                 </div>
                 <div class="field-group">
                   <label>Distrito / Município</label>
-                  <input class="input-field" type="text" value="Goiabeiras - Vitória" readonly style="background:var(--bg)" />
+                  <input class="input-field" type="text" id="lojaCidade" value="Vitória - ES" readonly style="background:var(--bg)" />
                 </div>
               </div>
               <div class="field-group">
@@ -282,12 +282,10 @@
           <span id="toastMsg">Salvo com sucesso</span>
         </div>
 
+        <script src="../assets/js/arace-state.js"></script>
         <script src="../assets/js/config.js"></script>
 
       </div></div></main>
 
-  <script>
-    lucide.createIcons();
-  </script>
 </body>
 </html>

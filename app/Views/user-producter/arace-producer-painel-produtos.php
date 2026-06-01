@@ -1,191 +1,249 @@
-﻿﻿<!DOCTYPE html>
+﻿﻿﻿<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Aracê — Painel de Produtos</title>
+  <title>Aracê — Painel</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex&family=Playfair+Display:wght@700&display=swap" rel="stylesheet" />
   <script src="https://unpkg.com/lucide@latest"></script>
-  <link href="/css/loja.css" rel="stylesheet" />
-  <link href="/css/painel-produtos.css" rel="stylesheet" />
+  <link href="../assets/style/style-base.css" rel="stylesheet" />
 </head>
-<body class="bg-topografia">
+<body>
 
-  <header>
-    <span class="logo">aracê</span>
-    <div class="header-right">
-      <button class="cart-btn"><i data-lucide="shopping-cart"></i><span class="cart-count">2 itens</span></button>
-      <button class="cart-btn"><i data-lucide="heart"></i><span class="cart-count">5 itens</span></button>
-      <div class="avatar-btn"><i data-lucide="user"></i></div>
+<header>
+  <span class="logo">aracê</span>
+  <div class="header-right">
+    <button class="cart-btn"><i data-lucide="shopping-cart"></i><span class="cart-count">2 itens</span></button>
+    <button class="cart-btn"><i data-lucide="heart"></i><span class="cart-count">5 itens</span></button>
+    <div class="avatar-btn"><i data-lucide="user"></i></div>
+  </div>
+</header>
+
+<aside>
+  <a class="nav-item" href="../main/index.html"><i data-lucide="house"></i> Home page</a>
+  <a class="nav-item active" href="./arace-producer-painel.html"><i data-lucide="layout-dashboard"></i> Painel</a>
+  <a class="nav-item" href="./arace-producer-painel-produtos.html"><i data-lucide="shopping-bag"></i> Meus produtos</a>
+  <a class="nav-item" href="./arace-producer-pedidos.html"><i data-lucide="package"></i> Pedidos</a>
+  <a class="nav-item" href="./arace-producer-profile-loja.html"><i data-lucide="store"></i> Minha loja</a>
+  <div class="nav-divider"></div>
+  <a class="nav-item" href="./arace-producer-profile.html"><i data-lucide="user"></i> Perfil</a>
+  <a class="nav-item" href="../main/configuracoes.html"><i data-lucide="settings"></i> Configurações</a>
+  <div class="nav-section">Suporte</div>
+  <a class="nav-item" href="../main/configuracoes.html#pagamento"><i data-lucide="hand-coins"></i> Pagamentos</a>
+</aside>
+
+<main>
+
+  <!-- BOAS VINDAS -->
+  <div class="painel-welcome">
+    <div>
+      <h1>Bom dia! </h1>
+      <p>Aqui está um resumo da sua loja hoje — <span id="dataHoje"></span></p>
     </div>
-  </header>
+    <a href="./arace-producer-painel-produtos.html" class="btn-novo-produto">
+      <i data-lucide="plus"></i> Novo produto
+    </a>
+  </div>
 
-  <aside>
-    <a class="nav-item" href="../main/index.html"><i data-lucide="house"></i> Home page</a>
-    <a class="nav-item" href="./arace-producer-painel.html"><i data-lucide="layout-dashboard"></i> Painel</a>
-    <a class="nav-item active" href="./arace-producer-painel-produtos.html"><i data-lucide="shopping-bag"></i> Meus produtos</a>
-    <a class="nav-item" href="./arace-producer-pedidos.html"><i data-lucide="package"></i> Pedidos</a>
-    <a class="nav-item" href="./arace-producer-profile-loja.html"><i data-lucide="store"></i> Minha loja</a>
-    <div class="nav-divider"></div>
-    <a class="nav-item" href="./arace-producer-profile.html"><i data-lucide="user"></i> Perfil</a>
-    <a class="nav-item" href="../main/configuracoes.html"><i data-lucide="settings"></i> Configurações</a>
-    <div class="nav-section">Suporte</div>
-    <a class="nav-item" href="../main/configuracoes.html#pagamento"><i data-lucide="hand-coins"></i> Pagamentos</a>
-  </aside>
+  <!-- MÉTRICAS PRINCIPAIS -->
+  <div class="metricas-grid">
+    <div class="metrica-card">
+      <div class="metrica-icon verde"><i data-lucide="circle-dollar-sign"></i></div>
+      <div class="metrica-info">
+        <span class="metrica-label">Faturamento (mês)</span>
+        <span class="metrica-value">R$ 3.840,00</span>
+        <span class="metrica-delta positivo"><i data-lucide="trending-up"></i> +12% vs mês anterior</span>
+      </div>
+    </div>
+    <div class="metrica-card">
+      <div class="metrica-icon azul"><i data-lucide="package"></i></div>
+      <div class="metrica-info">
+        <span class="metrica-label">Pedidos (mês)</span>
+        <span class="metrica-value">27</span>
+        <span class="metrica-delta positivo"><i data-lucide="trending-up"></i> +5 vs mês anterior</span>
+      </div>
+    </div>
+    <div class="metrica-card">
+      <div class="metrica-icon laranja"><i data-lucide="clock"></i></div>
+      <div class="metrica-info">
+        <span class="metrica-label">Pedidos pendentes</span>
+        <span class="metrica-value">3</span>
+        <span class="metrica-delta neutro">Aguardando ação</span>
+      </div>
+    </div>
+    <div class="metrica-card">
+      <div class="metrica-icon amarelo"><i data-lucide="star"></i></div>
+      <div class="metrica-info">
+        <span class="metrica-label">Avaliação média</span>
+        <span class="metrica-value">4,8</span>
+        <span class="metrica-delta positivo"><i data-lucide="trending-up"></i> +0,2 este mês</span>
+      </div>
+    </div>
+  </div>
 
-  <main>
-    <div class="produtos-page-container">
-      
-      <section class="produtos-lista-section">
-        <div class="panel-header">
-          <div>
-            <h1 class="titulo-serif">Meus Produtos</h1>
-            <p>Gerencie o estoque, valores e detalhes da sua vitrine</p>
+  <!-- GRID CENTRAL -->
+  <div class="painel-grid">
+
+    <!-- PEDIDOS RECENTES -->
+    <div class="painel-card pedidos-recentes">
+      <div class="card-head">
+        <h2>Pedidos recentes</h2>
+        <a href="./arace-producer-pedidos.html" class="link-ver-todos">Ver todos <i data-lucide="arrow-right"></i></a>
+      </div>
+      <div class="pedidos-mini-list">
+
+        <div class="pedido-mini" data-href="./arace-producer-pedidos.html">
+          <div class="pedido-mini-id">#4821</div>
+          <div class="pedido-mini-info">
+            <span class="pedido-mini-cliente">Ana Clara Silva</span>
+            <span class="pedido-mini-produto">Kit Panela de Barro</span>
           </div>
-          <button class="btn-primary mobile-only-btn" onclick="focarFormulario()">
-            <i data-lucide="plus"></i> Novo Produto
-          </button>
+          <span class="status-badge pendente">Pendente</span>
+          <span class="pedido-mini-valor">R$200</span>
         </div>
 
-        <div class="produtos-management-grid">
-          
-          <div class="produto-manage-card">
-            <div class="card-img-wrapper">
-              <img src="../assets/imgs/kit-panela.jpg" alt="Kit Panela de Barro" />
-              <div class="card-actions-overlay">
-                <button class="action-btn edit" onclick="editarProduto(1)" title="Editar Produto">
-                  <i data-lucide="pencil"></i>
-                </button>
-                <button class="action-btn delete" onclick="excluirProduto(1)" title="Excluir Produto">
-                  <i data-lucide="trash-2"></i>
-                </button>
-              </div>
+        <div class="pedido-mini" data-href="./arace-producer-pedidos.html">
+          <div class="pedido-mini-id">#4820</div>
+          <div class="pedido-mini-info">
+            <span class="pedido-mini-cliente">Marcos Oliveira</span>
+            <span class="pedido-mini-produto">Panela Trad. M ×2</span>
+          </div>
+          <span class="status-badge producao">Em produção</span>
+          <span class="pedido-mini-valor">R$170</span>
+        </div>
+
+        <div class="pedido-mini" data-href="./arace-producer-pedidos.html">
+          <div class="pedido-mini-id">#4819</div>
+          <div class="pedido-mini-info">
+            <span class="pedido-mini-cliente">Fernanda Costa</span>
+            <span class="pedido-mini-produto">Prato de Cerâmica ×3</span>
+          </div>
+          <span class="status-badge enviado">Enviado</span>
+          <span class="pedido-mini-valor">R$135</span>
+        </div>
+
+        <div class="pedido-mini" data-href="./arace-producer-pedidos.html">
+          <div class="pedido-mini-id">#4818</div>
+          <div class="pedido-mini-info">
+            <span class="pedido-mini-cliente">João Pedro Matos</span>
+            <span class="pedido-mini-produto">Kit Panela de Barro</span>
+          </div>
+          <span class="status-badge entregue">Entregue</span>
+          <span class="pedido-mini-valor">R$200</span>
+        </div>
+
+        <div class="pedido-mini" data-href="./arace-producer-pedidos.html">
+          <div class="pedido-mini-id">#4817</div>
+          <div class="pedido-mini-info">
+            <span class="pedido-mini-cliente">Luciana Ferreira</span>
+            <span class="pedido-mini-produto">Vaso Artesanal Grande</span>
+          </div>
+          <span class="status-badge pendente">Pendente</span>
+          <span class="pedido-mini-valor">R$95</span>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- COLUNA DIREITA -->
+    <div class="painel-col-right">
+
+      <!-- PRODUTOS DA LOJA -->
+      <div class="painel-card">
+        <div class="card-head">
+          <h2>Meus produtos</h2>
+          <a href="./arace-producer-painel-produtos.html" class="link-ver-todos">Gerenciar <i data-lucide="arrow-right"></i></a>
+        </div>
+        <div class="produtos-mini-list">
+
+          <div class="produto-mini">
+            <div class="produto-mini-img" style="background:#b5a898"></div>
+            <div class="produto-mini-info">
+              <span class="produto-mini-nome">Kit Panela de Barro</span>
+              <span class="produto-mini-preco">R$ 200,00</span>
             </div>
-            <div class="card-manage-info">
-              <h3>Kit Panela de barro</h3>
-              <div class="price-stock-row">
-                <span class="price">R$ 200,00</span>
-                <span class="stock-badge">Em estoque</span>
-              </div>
+            <span class="stock-badge">Em estoque</span>
+            <div class="produto-mini-actions">
+              <button type="button" data-href="./arace-producer-painel-produtos.html" title="Editar"><i data-lucide="pencil"></i></button>
+              <button class="del" title="Excluir"><i data-lucide="trash-2"></i></button>
             </div>
           </div>
 
-          <div class="produto-manage-card">
-            <div class="card-img-wrapper">
-              <img src="../assets/imgs/kit-panela.jpg" alt="Panela de Barro Individual" />
-              <div class="card-actions-overlay">
-                <button class="action-btn edit" onclick="editarProduto(2)" title="Editar Produto">
-                  <i data-lucide="pencil"></i>
-                </button>
-                <button class="action-btn delete" onclick="excluirProduto(2)" title="Excluir Produto">
-                  <i data-lucide="trash-2"></i>
-                </button>
-              </div>
+          <div class="produto-mini">
+            <div class="produto-mini-img" style="background:#a09880"></div>
+            <div class="produto-mini-info">
+              <span class="produto-mini-nome">Panela Tradicional M</span>
+              <span class="produto-mini-preco">R$ 85,00</span>
             </div>
-            <div class="card-manage-info">
-              <h3>Panela de Barro Tradicional M</h3>
-              <div class="price-stock-row">
-                <span class="price">R$ 85,00</span>
-                <span class="stock-badge">Em estoque</span>
-              </div>
+            <span class="stock-badge">Em estoque</span>
+            <div class="produto-mini-actions">
+              <button type="button" data-href="./arace-producer-painel-produtos.html" title="Editar"><i data-lucide="pencil"></i></button>
+              <button class="del" title="Excluir"><i data-lucide="trash-2"></i></button>
+            </div>
+          </div>
+
+          <div class="produto-mini">
+            <div class="produto-mini-img" style="background:#c4b49a"></div>
+            <div class="produto-mini-info">
+              <span class="produto-mini-nome">Prato de Cerâmica</span>
+              <span class="produto-mini-preco">R$ 45,00</span>
+            </div>
+            <span class="stock-badge esgotado">Esgotado</span>
+            <div class="produto-mini-actions">
+              <button type="button" data-href="./arace-producer-painel-produtos.html" title="Editar"><i data-lucide="pencil"></i></button>
+              <button class="del" title="Excluir"><i data-lucide="trash-2"></i></button>
             </div>
           </div>
 
         </div>
-      </section>
 
-      <aside class="produtos-form-sidebar" id="moduloFormulario">
-        <div class="form-card-box">
-          <h2 class="titulo-serif" id="formTitulo">Adicionar produto</h2>
-          
-          <form id="productForm" onsubmit="salvarProduto(event)">
-            
-            <div class="image-upload-container">
-              <div class="image-upload-placeholder">
-                <i data-lucide="image" class="placeholder-icon"></i>
-                <button type="button" class="btn-choose-img">escolher imagem</button>
-                <input type="file" accept="image/*" id="produtoImagemInput" style="display: none;" />
+        <a href="./arace-producer-painel-produtos.html" class="btn-add-produto">
+          <i data-lucide="plus"></i> Adicionar produto
+        </a>
+      </div>
+
+      <!-- AVALIAÇÕES RECENTES -->
+      <div class="painel-card">
+        <div class="card-head">
+          <h2>Avaliações recentes</h2>
+        </div>
+        <div class="avaliacoes-list">
+
+          <div class="avaliacao-mini">
+            <div class="avaliacao-header">
+              <span class="avaliacao-user">Ana Clara Silva</span>
+              <div class="mini-stars">
+                <i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i>
+                <i data-lucide="star"></i><i data-lucide="star"></i>
               </div>
             </div>
+            <p class="avaliacao-text">Panela maravilhosa! Já fiz moqueca duas vezes, ficou perfeita.</p>
+            <span class="avaliacao-produto">Kit Panela de Barro · há 2 dias</span>
+          </div>
 
-            <div class="field-group-terracota">
-              <label for="prodNome">Nome</label>
-              <input type="text" id="prodNome" required placeholder="Ex: Kit Panela de Barro" />
+          <div class="avaliacao-mini">
+            <div class="avaliacao-header">
+              <span class="avaliacao-user">João Pedro Matos</span>
+              <div class="mini-stars">
+                <i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i>
+                <i data-lucide="star"></i><i data-lucide="star" style="opacity:.3"></i>
+              </div>
             </div>
+            <p class="avaliacao-text">Produto de excelente qualidade, bem embalado. Recomendo!</p>
+            <span class="avaliacao-produto">Panela Tradicional M · há 5 dias</span>
+          </div>
 
-            <div class="field-group-terracota">
-              <label for="prodPreco">Preço (R$)</label>
-              <input type="number" step="0.01" id="prodPreco" required placeholder="0,00" />
-            </div>
-
-            <div class="field-group-terracota description-box">
-              <label for="prodDescricao">Descrição</label>
-              <textarea id="prodDescricao" rows="4" placeholder="Descreva os detalhes da sua peça artesanal..."></textarea>
-            </div>
-
-            <div class="field-group-terracota">
-              <label for="prodOpcional">Descrição adicional (opcional)</label>
-              <input type="text" id="prodOpcional" placeholder="Ex: Dimensões, peso ou cuidados de cura" />
-            </div>
-
-            <button type="submit" class="btn-terracota-submit" id="btnSubmitForm">
-              Adicionar
-            </button>
-            
-            <button type="button" class="btn-cancel-edit" id="btnCancelEdit" onclick="resetarFormulario()" style="display: none;">
-              Cancelar Edição
-            </button>
-
-          </form>
         </div>
-      </aside>
+      </div>
 
     </div>
-  </main>
+  </div>
 
-  <script>
-    lucide.createIcons();
+</main>
 
-    // Lógicas dinâmicas básicas de mock-up para simular o comportamento
-    function editarProduto(id) {
-      document.getElementById('formTitulo').innerText = "Alterar produto";
-      document.getElementById('btnSubmitForm').innerText = "Salvar Alterações";
-      document.getElementById('btnCancelEdit').style.display = "block";
-      
-      // Simulação de preenchimento dos campos para alteração
-      if(id === 1) {
-        document.getElementById('prodNome').value = "Kit Panela de barro";
-        document.getElementById('prodPreco').value = "200.00";
-        document.getElementById('prodDescricao').value = "Preservamos uma tradição centenária de produção artesanal.";
-      }
-      focarFormulario();
-    }
-
-    function resetarFormulario() {
-      document.getElementById('productForm').reset();
-      document.getElementById('formTitulo').innerText = "Adicionar produto";
-      document.getElementById('btnSubmitForm').innerText = "Adicionar";
-      document.getElementById('btnCancelEdit').style.display = "none";
-    }
-
-    function excluirProduto(id) {
-      if(confirm("Tem certeza que deseja remover este produto da sua loja?")) {
-        alert("Produto removido com sucesso!");
-      }
-    }
-
-    function salvarProduto(e) {
-      e.preventDefault();
-      alert("Ação processada com sucesso no banco de dados!");
-      resetarFormulario();
-    }
-
-    function focarFormulario() {
-      document.getElementById('moduloFormulario').scrollIntoView({ behavior: 'smooth' });
-      document.getElementById('prodNome').focus();
-    }
-  </script>
+<script src="../assets/js/arace-state.js"></script>
+<script src="../assets/js/producer-painel-produtos.js"></script>
 </body>
 </html>

@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+﻿﻿<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
@@ -22,16 +22,16 @@
   </header>
 
   <aside>
-    <a class="nav-item" href="../main/index.php"><i data-lucide="house"></i> Home page</a>
-    <a class="nav-item" href="./arace-producer-painel.php"><i data-lucide="layout-dashboard"></i> Painel</a>
-    <a class="nav-item" href="./arace-producer-painel-produtos.php"><i data-lucide="shopping-bag"></i> Meus produtos</a>
-    <a class="nav-item" href="./arace-producer-pedidos.php"><i data-lucide="package"></i> Pedidos</a>
-    <a class="nav-item" href="./arace-producer-profile-loja.php"><i data-lucide="store"></i> Minha loja</a>
+    <a class="nav-item" href="../main/index.html"><i data-lucide="house"></i> Home page</a>
+    <a class="nav-item" href="./arace-producer-painel.html"><i data-lucide="layout-dashboard"></i> Painel</a>
+    <a class="nav-item" href="./arace-producer-painel-produtos.html"><i data-lucide="shopping-bag"></i> Meus produtos</a>
+    <a class="nav-item" href="./arace-producer-pedidos.html"><i data-lucide="package"></i> Pedidos</a>
+    <a class="nav-item" href="./arace-producer-profile-loja.html"><i data-lucide="store"></i> Minha loja</a>
     <div class="nav-divider"></div>
-    <a class="nav-item active" href="./arace-producer-profile.php"><i data-lucide="user"></i> Perfil</a>
-    <a class="nav-item" href="../main/configuracoes.php"><i data-lucide="settings"></i> Configurações</a>
+    <a class="nav-item active" href="./arace-producer-profile.html"><i data-lucide="user"></i> Perfil</a>
+    <a class="nav-item" href="../main/configuracoes.html"><i data-lucide="settings"></i> Configurações</a>
     <div class="nav-section">Suporte</div>
-    <a class="nav-item" href="../main/configuracoes.php#pagamento"><i data-lucide="hand-coins"></i> Pagamentos</a>
+    <a class="nav-item" href="../main/configuracoes.html#pagamento"><i data-lucide="hand-coins"></i> Pagamentos</a>
   </aside>
 
   <main>
@@ -45,6 +45,7 @@
         <div class="stat-label">Produtos para entrega</div>
         <div class="stat-value">10</div>
       </div>
+      
       <div class="stat-card">
         <div class="stat-label">Pendentes</div>
         <div class="stat-value">5</div>
@@ -62,7 +63,7 @@
           <div class="profile-name">Usuário</div>
           <div class="profile-email">usuario@gmail.com</div>
         </div>
-        <a href="arace-producer-config.php">
+        <a href="arace-producer-config.html">
         <button class="btn-edit">
           <i data-lucide="pencil"></i> Editar perfil
         </button>
