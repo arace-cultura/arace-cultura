@@ -1,5 +1,4 @@
-@import url("base2.css");
-
+@import "../style/style-base.css";
 /* ── STATS ── */
 .stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
 .stat-card {

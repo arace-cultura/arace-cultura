@@ -1,14 +1,5 @@
-@import "../style/base2.css";
+@import "../style/style-base.css";
 
-/* ── PAGE HEADER ── */
-.config-header {
-  display: flex; align-items: center; gap: 12px;
-  margin-bottom: 1.75rem;
-}
-.config-header h1 {
-  font-size: 22px; font-weight: 500; color: var(--text);
-}
-.config-header p { font-size: 13px; color: var(--muted); margin-top: 2px; }
 
 /* ── LAYOUT ── */
 .config-layout {

@@ -1,28 +1,4 @@
-@import url(base2.css);
-
-/* ── HEADER DA PÁGINA ── */
-.notif-header {
-  display: flex; align-items: flex-start; justify-content: space-between;
-  flex-wrap: wrap; gap: 1rem;
-}
-.notif-header h1 {
-  font-family: var(--display);
-  font-size: 1.5rem; font-weight: 700; color: var(--text); margin-bottom: .2rem;
-}
-.notif-header p { font-size: 13px; color: var(--muted); }
-.notif-header p strong { color: var(--text); }
-
-.btn-marcar-tudo {
-  display: inline-flex; align-items: center; gap: 6px;
-  padding: 8px 16px; border-radius: var(--r);
-  border: 1px solid var(--border); background: var(--branco);
-  font-size: 13px; font-family: var(--body); color: var(--muted);
-  cursor: pointer; transition: background .15s, color .15s, border-color .15s;
-  white-space: nowrap;
-}
-.btn-marcar-tudo svg { width: 14px; height: 14px; }
-.btn-marcar-tudo:hover { background: var(--verde-l); color: var(--verde); border-color: var(--verde); }
-
+@import "../style/style-base.css";
 /* ── FILTROS / CHIPS ── */
 .notif-filters {
   display: flex; align-items: center; gap: .4rem; flex-wrap: wrap;

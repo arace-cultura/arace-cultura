@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+﻿﻿<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
@@ -7,13 +7,13 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="../assets/style/login.css">
+  <link rel="stylesheet" href="/css/autenticacao.css">
 </head>
 <body>
 
   <div class="login-card item-animado">
     <div class="logo-wrap item-animado atraso-1">
-      <img src="assets/imgs/arace.png" alt="Logo Aracê" />
+      <img src="../assets/imgs/arace.png" alt="Logo Aracê" />
     </div>
 
     <p class="subtitle item-animado atraso-1">Bem-vindo de volta</p>
@@ -41,8 +41,8 @@
         <button type="submit" class="btn-login">Entrar</button>
 
         <div class="links-rodape">
-          <a href="cadastro-arace.php">Cadastre-se</a>
-          <a href="recuperar-senha.php" class="esqueceu">Esqueceu a senha?</a>
+          <a href="cadastro-arace.html">Cadastre-se</a>
+          <a href="recuperar-senha.html" class="esqueceu">Esqueceu a senha?</a>
         </div>
       </div>
     </form>

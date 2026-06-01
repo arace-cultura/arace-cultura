@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+﻿﻿<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="../assets/style/base.css">
+  <link rel="stylesheet" href="/css/autenticacao.css">
 </head>
 <body>
 
@@ -16,68 +16,50 @@
       <img src="../assets/imgs/arace.png" alt="Logo Aracê" />
     </div>
 
-    <p class="subtitle item-animado atraso-1">Começe a vender seus produtos</p>
+    <p class="subtitle item-animado atraso-1">Crie sua conta de produtor</p>
 
-    <form id="formCadastro" novalidate>
+    <form id="formCadastroDono" novalidate>
 
-    <!--Nome da loja-->
-    <div class="input-group-custom item-animado atraso-2">
-        <i data-lucide="house"></i>
-        <input type="text" id="nome" placeholder="Nome da loja" required />
-    </div>
-
-      <!--Email comercial -->
-
-    <div class="input-group-custom item-animado atraso-2">
-        <i data-lucide="mail"></i>
-        <input type="email" id="email" placeholder="E-mail comercial" required />
-    </div>
-
-      <!--Campo de telefone-->
-
-    <div class="input-group-custom item-animado atraso-3">
-        <i data-lucide="phone"></i>
-        <input type="tel" id="telefone" placeholder="Telefone comercial" />
+      <div class="input-group-custom item-animado atraso-2">
+        <i data-lucide="user"></i>
+        <input type="text" id="nome-dono" placeholder="Nome completo" required />
       </div>
 
-    <!-- Campo de cpf-->
-
-    <div class="input-group-custom item-animado atraso-3">
-        <i data-lucide="user"></i>
-        <input type="text" id="cpf" placeholder="CPF" required />
-    </div>
+      <div class="input-group-custom item-animado atraso-2">
+        <i data-lucide="id-card"></i> <input type="text" id="cpf" placeholder="CPF" required />
+      </div>
       <span id="cpf-erro" class="erro-campo" style="display:none">CPF inválido</span>
 
+      <div class="input-group-custom item-animado atraso-3">
+        <i data-lucide="mail"></i>
+        <input type="email" id="email" placeholder="E-mail de acesso" required />
+      </div>
 
-    <!--Campo de Distritoss-->
-    <div class="input-group-custom item-animado atraso-4">
-        <i data-lucide="map-pin"></i>
-        <select id="distritos" required>
-            <option value="" disabled selected>Distrito</option>
-    </select>
-        </div>
-    <span id="distritos-erro" class="erro-campo" style="display:none">Selecione um município</span>
+      <div class="input-group-custom item-animado atraso-3">
+        <i data-lucide="phone"></i>
+        <input type="tel" id="telefone" placeholder="Telefone / Celular" required />
+      </div>
 
-    <div class="item-animado atraso-5">
+      
+
+      <div class="item-animado atraso-5">
         <label class="permanecer">
           <input type="checkbox" id="termos" required />
-          Aceito os <a href="termos.php" target="_blank">termos de uso</a>
-    </label>
+          Aceito os <a href="termos.html" target="_blank">termos de uso</a>
+        </label>
 
-    <button type="submit" class="btn-login">Criar conta</button>
+        <button type="submit" class="btn-login">Dados da Loja</button>
 
         <div class="links-rodape">
-        <a href="login-arace.php" class="esqueceu">Já tenho uma loja</a>
-        <a href="../main/index.php" class="voltar">Voltar</a>
+          <a href="../main/index.html" class="voltar">Voltar</a>
         </div>
       </div>
-      
 
     </form>
   </div>
 
   <script src="https://unpkg.com/lucide@latest"></script>
   <script>lucide.createIcons();</script>
-  <script src="../assets/js/cadastro-loja.js"></script>
+  <script src="../assets/js/cadastro-dono.js"></script>
 </body>
 </html>
