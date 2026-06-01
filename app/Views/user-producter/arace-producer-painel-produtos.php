@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex&family=Playfair+Display:wght@700&display=swap" rel="stylesheet" />
   <script src="https://unpkg.com/lucide@latest"></script>
-  <link href="../assets/style/style-base.css" rel="stylesheet" />
+  <link href="/css/style-base.css" rel="stylesheet" />
 </head>
 <body>
 
@@ -243,7 +243,7 @@
 
 </main>
 
-<script src="../assets/js/arace-state.js"></script>
-<script src="../assets/js/producer-painel-produtos.js"></script>
+<script src="/js/arace-state.js"></script>
+<script src="/js/producer-painel-produtos.js"></script>
 </body>
 </html>

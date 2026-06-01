@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex&family=Playfair+Display:wght@700&display=swap" rel="stylesheet" />
   <script src="https://unpkg.com/lucide@latest"></script>
-  <link href="../assets/style/loja.css" rel="stylesheet" />
+  <link href="/css/loja.css" rel="stylesheet" />
 </head>
 <body>
 
@@ -210,7 +210,7 @@
     <span id="toast-msg">Adicionado ao carrinho!</span>
   </div>
 
-  <script src="../assets/js/arace-state.js"></script>
-  <script src="../assets/js/loja.js"></script>
+  <script src="/js/arace-state.js"></script>
+  <script src="/js/loja.js"></script>
 </body>
 </html>
