@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex&family=DM+Serif+Display&display=swap" rel="stylesheet" />
   <script src="https://unpkg.com/lucide@latest"></script>
-  <link href="../assets/style/perfil.css" rel="stylesheet" />
+  <link href="/css/perfil.css" rel="stylesheet" />
 </head>
 <body>
 
@@ -128,7 +128,7 @@
     </div>
 
   </main>
-  <script src="../assets/js/arace-state.js"></script>
-  <script src="../assets/js/perfil.js"></script>
+  <script src="/js/arace-state.js"></script>
+  <script src="/js/perfil.js"></script>
 </body>
 </html>
