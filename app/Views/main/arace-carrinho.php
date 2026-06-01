@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex&family=DM+Serif+Display&display=swap" rel="stylesheet" />
   <script src="https://unpkg.com/lucide@latest"></script>
-  <link rel="stylesheet" href="../assets/style/carrinho.css" />
+  <link rel="stylesheet" href="/css/carrinho.css" />
 </head>
 
 <body>
@@ -216,7 +216,7 @@
   <script>
     lucide.createIcons();
   </script>
-  <script src="../assets/js/arace-carrinho.js"></script>
+  <script src="/js/arace-carrinho.js"></script>
 
 </body>
 </html>

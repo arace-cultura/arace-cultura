@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex&family=Playfair+Display:wght@700&display=swap" rel="stylesheet" />
   <script src="https://unpkg.com/lucide@latest"></script>
-  <link href="../assets/style/search.css" rel="stylesheet" />
+  <link href="/css/search.css" rel="stylesheet" />
 </head>
 <body>
 
@@ -295,7 +295,7 @@
   </aside>
 </div><!-- /page-body -->
 
-<script src="../assets/js/arace-state.js"></script>
-<script src="../assets/js/search.js"></script>
+<script src="/js/arace-state.js"></script>
+<script src="/js/search.js"></script>
 </body>
 </html>

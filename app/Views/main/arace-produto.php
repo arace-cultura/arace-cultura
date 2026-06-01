@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex&family=Playfair+Display:ital,wght@0,700;1,400&display=swap" rel="stylesheet" />
   <script src="https://unpkg.com/lucide@latest"></script>
-  <link href="../assets/style/produto.css" rel="stylesheet" />
+  <link href="/css/produto.css" rel="stylesheet" />
 </head>
 <body>
 
@@ -47,6 +47,6 @@
   </div>
 </main>
 
-<script src="../assets/js/produto.js"></script>
+<script src="/js/produto.js"></script>
 </body>
 </html>
