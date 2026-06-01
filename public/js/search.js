@@ -1,9 +1,33 @@
 lucide.createIcons();
 
-  // Favorito toggle
-  document.querySelectorAll('.fav').forEach(btn =>
-    btn.addEventListener('click', () => btn.classList.toggle('active'))
-  );
+  function produtoDoCard(card, index) {
+    const nome = card.querySelector('.nome')?.textContent.trim() || 'Produto Arace';
+    const precoTexto = card.querySelector('.preco strong, .preco s')?.textContent || '0';
+    const preco = Number(precoTexto.replace(/[^\d,]/g, '').replace(',', '.')) || 0;
+    const cor = card.querySelector('.produto-img')?.style.background || '#b5a898';
+    const id = card.dataset.produtoId || `search-${nome.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/\W+/g, '-')}-${index}`;
+    card.dataset.produtoId = id;
+    return { id, nome, preco, cor, artesao: 'Arace', categoria: categoriaAtiva || 'ceramica', colecao: categoriaAtiva || 'ceramica', estrelas: 4, avaliacoes: 24 };
+  }
+
+  function configurarFavoritosBusca() {
+    document.querySelectorAll('.produto').forEach((card, index) => {
+      const produto = produtoDoCard(card, index);
+      const btn = card.querySelector('.fav');
+      if (!btn) return;
+
+      if (window.AraceState?.isFavorite(produto.id)) btn.classList.add('active');
+
+      btn.addEventListener('click', event => {
+        event.preventDefault();
+        event.stopPropagation();
+        const ativo = window.AraceState
+          ? window.AraceState.toggleFavorite(produto)
+          : !btn.classList.contains('active');
+        btn.classList.toggle('active', ativo);
+      });
+    });
+  }
 
   // Sincronizar queries nos dois inputs de busca
   const params = new URLSearchParams(window.location.search);
@@ -26,6 +50,8 @@ lucide.createIcons();
     document.getElementById('resultsTitle').textContent = `Busca por "${q}"`;
     document.getElementById('activeFilterLabel').textContent = 'Termo pesquisado';
   }
+
+  configurarFavoritosBusca();
 
   // Filtros com data-filter-param
   document.querySelectorAll('[data-filter-param]').forEach(btn => {

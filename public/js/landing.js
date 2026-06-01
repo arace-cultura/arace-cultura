@@ -112,10 +112,11 @@ function renderStars(nota) {
 }
 
 function produtoTemplate(produto) {
+  const favorito = window.AraceState ? window.AraceState.isFavorite(produto.id) : produto.favorito;
   return `
     <article class="produto" data-cat="${escaparHTML(produto.categoria)}" data-produto-id="${escaparHTML(produto.id)}">
       <div class="produto-img" style="background:${escaparHTML(produto.cor)}">
-        <button class="fav ${produto.favorito ? 'active' : ''}" type="button" aria-label="Favoritar produto">
+        <button class="fav ${favorito ? 'active' : ''}" type="button" aria-label="Favoritar produto">
           <i data-lucide="heart"></i>
         </button>
       </div>
@@ -185,7 +186,14 @@ function configurarAcoesProdutos() {
   grid.addEventListener('click', event => {
     const favorito = event.target.closest('.fav');
     if (favorito) {
-      favorito.classList.toggle('active');
+      const card = favorito.closest('.produto');
+      const produto = produtosAtuais.find(item => item.id === card?.dataset.produtoId);
+      if (!produto) return;
+
+      const ativo = window.AraceState
+        ? window.AraceState.toggleFavorite(produto)
+        : !favorito.classList.contains('active');
+      favorito.classList.toggle('active', ativo);
       return;
     }
 
