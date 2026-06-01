@@ -5,9 +5,9 @@
   --laranja-l:  #fef0e9;
   --azul:       #25518f;
   --verde:      #478632;
-  --bg:         #f4f2ed;
+  --bg:         #eee5db;
   --branco:     #ffffff;
-  --border:     rgba(0,0,0,.09);
+  --border:     rgba(121, 68, 25, 0.425);
   --text:       #1a1a18;
   --muted:      #6b6b66;
   --faint:      #a0a09a;
@@ -28,7 +28,7 @@ body {
 }
 body::before {
   content: ""; position: fixed; inset: 0;
-  background: url('../imgs/background.jpg') center/cover;
+  background: url('../imgs/background-main.jpg') center/cover;
   opacity: .12; z-index: -1; pointer-events: none;}
   
 a { text-decoration: none; color: inherit; }

@@ -1,4 +1,4 @@
-@import "../style/base2.css";
+@import "../style/style-base.css";
 
 main {
   padding: 2rem;
@@ -8,35 +8,6 @@ main {
   gap: 0;
 }
 
-/* ── PAGE HEADER ── */
-.page-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 1.5rem;
-}
-
-.page-title {
-  font-size: 22px;
-  font-weight: 500;
-  color: var(--text);
-  letter-spacing: -0.01em;
-}
-
-.btn-keep-shopping {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 13px;
-  color: var(--muted);
-  text-decoration: none;
-  padding: 6px 12px;
-  border-radius: var(--r);
-  transition: background 0.15s, color 0.15s;
-  font-family: var(--body);
-}
-.btn-keep-shopping svg { width: 15px; height: 15px; }
-.btn-keep-shopping:hover { background: var(--border); color: var(--text); }
 
 /* ── CART LAYOUT ── */
 .cart-layout {

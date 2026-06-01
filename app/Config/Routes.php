@@ -7,7 +7,8 @@ $routes->view("/", "main/index");
 
 $routes->view('entrada', 'entrada');
 $routes->view("login", "login");
-$routes->view("cadastro", "cadastro");
+$routes->view("cadastro", "authentication/cadastro-arace");
+
 
 $routes->view("produtos", "produtos");
 

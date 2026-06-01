@@ -11,7 +11,7 @@
   --verde-l:    #eaf3de;
   --bg:         #f4f2ed;
   --branco:     #ffffff;
-  --border:     rgba(0,0,0,.09);
+  --border:     rgba(15, 8, 56, 0.205);
   --text:       #1a1a18;
   --muted:      #6b6b66;
   --faint:      #a0a09a;
@@ -51,7 +51,7 @@ body::before {
 /* Inputs */
 .input-group-custom {
   display: flex; align-items: center;
-  border: 1.5px solid #d1d5db; border-radius: var(--r);
+  border: 1.5px solid #648ece; border-radius: var(--r);
   padding: 0 12px; height: 46px;
   background: #f3f4f6; margin-bottom: 1rem;
   transition: border-color .2s, background .2s;
