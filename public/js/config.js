@@ -1,20 +1,3 @@
-const CONFIG_PLACEHOLDER = {
-  perfil: {
-    nome: 'Maria',
-    sobrenome: 'Silva',
-    username: '@mariasilva',
-    bio: 'Amante da cultura capixaba',
-    nascimento: '1995-06-12',
-    genero: 'f',
-    email: 'maria@email.com',
-    telefone: '',
-  },
-  endereco: {
-    cidade: 'Vitoria',
-    estado: 'ES',
-  },
-};
-
 function preencherCampo(id, valor) {
   const campo = document.getElementById(id);
   if (campo) campo.value = valor ?? '';
@@ -29,12 +12,65 @@ function renderPerfilConfig(dados) {
   preencherCampo('genero', dados.genero);
   preencherCampo('email', dados.email);
   preencherCampo('tel', dados.telefone);
+  preencherCampo('cidade', dados.cidade);
+  preencherCampo('estado', dados.estado);
+
+  const preview = document.getElementById('avatarPreview');
+  if (preview && window.AraceState) {
+    window.AraceState.renderAvatar(preview, dados.avatar);
+  }
 }
 
 async function carregarConfiguracoes() {
   // Firestore/API: buscar o documento do usuario autenticado aqui.
   // Campos esperados: {{nome_usuario}}, {{email_usuario}}, {{telefone_usuario}}, {{endereco_usuario}}.
-  renderPerfilConfig(CONFIG_PLACEHOLDER.perfil);
+  const dados = window.AraceState ? window.AraceState.getUser() : {};
+  renderPerfilConfig(dados);
+  renderLojaConfig();
+}
+
+function renderLojaConfig() {
+  if (!window.AraceState) return;
+  const loja = window.AraceState.getProducer();
+  preencherCampo('lojaNome', loja.lojaNome);
+  preencherCampo('lojaBio', loja.lojaBio);
+  preencherCampo('lojaCategoria', loja.lojaCategoria);
+  preencherCampo('lojaEmail', loja.lojaEmail);
+  preencherCampo('lojaTelefone', loja.lojaTelefone);
+  preencherCampo('lojaCidade', `${loja.lojaCidade} - ${loja.lojaEstado}`);
+
+  const preview = document.getElementById('avatarPreview');
+  if (preview && document.getElementById('lojaNome')) {
+    window.AraceState.renderAvatar(preview, loja.lojaAvatar, 'store');
+  }
+}
+
+function coletarPerfilConfig() {
+  return {
+    nome: document.getElementById('nome')?.value.trim() || '',
+    sobrenome: document.getElementById('sobrenome')?.value.trim() || '',
+    username: document.getElementById('username')?.value.trim() || '',
+    bio: document.getElementById('bio')?.value.trim() || '',
+    nascimento: document.getElementById('nascimento')?.value || '',
+    genero: document.getElementById('genero')?.value || '',
+    email: document.getElementById('email')?.value.trim() || '',
+    telefone: document.getElementById('tel')?.value.trim() || '',
+    cidade: document.getElementById('cidade')?.value.trim() || '',
+    estado: document.getElementById('estado')?.value || '',
+  };
+}
+
+function coletarLojaConfig() {
+  return {
+    cadastrado: true,
+    lojaNome: document.getElementById('lojaNome')?.value.trim() || 'Minha loja Arace',
+    lojaBio: document.getElementById('lojaBio')?.value.trim() || '',
+    lojaCategoria: document.getElementById('lojaCategoria')?.value || 'artesanato',
+    lojaEmail: document.getElementById('lojaEmail')?.value.trim() || '',
+    lojaTelefone: document.getElementById('lojaTelefone')?.value.trim() || '',
+    lojaCidade: (document.getElementById('lojaCidade')?.value || 'Vitoria - ES').split('-')[0].trim(),
+    lojaEstado: (document.getElementById('lojaCidade')?.value || 'Vitoria - ES').split('-')[1]?.trim() || 'ES',
+  };
 }
 
 function trocarAba(btn, id) {
@@ -49,6 +85,15 @@ function trocarAba(btn, id) {
 }
 
 function salvar(msg) {
+  if (window.AraceState) {
+    if (document.getElementById('lojaNome')) {
+      window.AraceState.saveProducer(coletarLojaConfig());
+      window.AraceState.setMode('produtor');
+    } else if (document.getElementById('nome')) {
+      window.AraceState.saveUser(coletarPerfilConfig());
+    }
+  }
+
   const toast = document.getElementById('toast');
   const toastMsg = document.getElementById('toastMsg');
 
@@ -65,7 +110,15 @@ function previewAvatar(input) {
   const reader = new FileReader();
   reader.onload = event => {
     const preview = document.getElementById('avatarPreview');
-    if (preview) preview.innerHTML = `<img src="${event.target.result}" alt="Avatar do usuario" />`;
+    const image = event.target.result;
+    if (preview) preview.innerHTML = `<img src="${image}" alt="Avatar do usuario" />`;
+    if (window.AraceState) {
+      if (document.getElementById('lojaNome')) {
+        window.AraceState.saveProducer({ ...coletarLojaConfig(), lojaAvatar: image, cadastrado: true });
+      } else {
+        window.AraceState.saveUser({ avatar: image });
+      }
+    }
   };
   reader.readAsDataURL(input.files[0]);
 }
@@ -75,6 +128,13 @@ function removerAvatar() {
   if (!preview) return;
 
   preview.innerHTML = '<i data-lucide="user"></i>';
+  if (window.AraceState) {
+    if (document.getElementById('lojaNome')) {
+      window.AraceState.saveProducer({ lojaAvatar: '' });
+    } else {
+      window.AraceState.saveUser({ avatar: '' });
+    }
+  }
   lucide.createIcons();
 }
 
