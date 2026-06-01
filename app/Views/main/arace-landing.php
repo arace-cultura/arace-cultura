@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+﻿﻿<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8"/>
@@ -8,37 +8,35 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
   <link href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex&family=Playfair+Display:ital,wght@0,700;1,400&display=swap" rel="stylesheet"/>
   <script src="https://unpkg.com/lucide@latest"></script>
-  <link rel="stylesheet" href="/css/landing.css"/>
+  <link rel="stylesheet" href="../assets/style/landing.css"/>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 </head>
 <body>
 
+<!-- HEADER -->
 <header>
-  <a href="index.php" aria-label="Ir para a pagina inicial">
-  <span class="logo">aracê</span>
+  <a href="index.html" class="logo">aracê</a>
 
-  </a>
-
-  <form class="search-wrap js-search-form" action="arace-search.php" method="get">
+  <form class="search-wrap" action="arace-search.html" method="get">
     <i data-lucide="search"></i>
-    <input type="text" placeholder="Pesquisar produtos..." id="searchInput" name="q"/>
+    <input type="text" name="q" id="searchHeaderInput" placeholder="Pesquisar produtos..." />
   </form>
+
   <div class="header-right">
-    <button class="cart-btn" type="button" onclick="window.location.href='carrinho.php'">
+    <button class="cart-btn" type="button" onclick="window.location.href='carrinho.html'">
       <i data-lucide="shopping-cart"></i>
       <span class="cart-count">2 itens</span>
     </button>
-    <button class="cart-btn" type="button" onclick="window.location.href='../user/favoritos.php'">
+    <button class="cart-btn" type="button" onclick="window.location.href='../user/favoritos.html'">
       <i data-lucide="heart"></i>
       <span class="cart-count">5 itens</span>
     </button>
-    <button class="avatar-btn" type="button" onclick="window.location.href='../user/perfil.php'" aria-label="Abrir perfil">
+    <button class="avatar-btn" type="button" onclick="window.location.href='../user/perfil.html'">
       <i data-lucide="user"></i>
     </button>
   </div>
 </header>
-
 <!-- HERO -->
 <section class="hero">
   <div class="hero-slides">
@@ -56,7 +54,7 @@
 
 <!--Icone de chat-->
 <div class="chat-bubble">
-  <a href="../user/arace-chat.php">
+  <a href="../user/arace-chat.html">
     <i data-lucide="message-circle-more"></i>
   </a>
 </div>
@@ -68,14 +66,14 @@
       <h2>Categorias</h2>
     </div>
     <div class="cat-grid">
-      <a class="cat-card" href="arace-search.php"><div class="cat-icon" style="background:#f3a621"><i data-lucide="gallery-horizontal-end"></i></div><span>Tudo</span></a>
-      <a class="cat-card" href="arace-search.php?categoria=pinturas"><div class="cat-icon" style="background:#f2601a"><i data-lucide="palette"></i></div><span>Pinturas</span></a>
-      <a class="cat-card" href="arace-search.php?categoria=casa-e-vida"><div class="cat-icon" style="background:#25518f"><i data-lucide="house"></i></div><span>Casa & Vida</span></a>
-      <a class="cat-card" href="arace-search.php?categoria=retro"><div class="cat-icon" style="background:#478632"><i data-lucide="videotape"></i></div><span>Retro</span></a>
-      <a class="cat-card" href="arace-search.php?categoria=joias"><div class="cat-icon" style="background:#f3a621"><i data-lucide="gem"></i></div><span>Joias</span></a>
-      <a class="cat-card" href="arace-search.php?categoria=roupas"><div class="cat-icon" style="background:#f2601a"><i data-lucide="shirt"></i></div><span>Roupas</span></a>
-      <a class="cat-card" href="arace-search.php?categoria=ceramica"><div class="cat-icon" style="background:#25518f"><i data-lucide="amphora"></i></div><span>Cerâmica</span></a>
-      <a class="cat-card" href="arace-search.php?categoria=artesanato"><div class="cat-icon" style="background:#478632"><i data-lucide="paintbrush"></i></div><span>Artesanato</span></a>
+      <a class="cat-card" href="arace-search.html"><div class="cat-icon" style="background:#f3a621"><i data-lucide="gallery-horizontal-end"></i></div><span>Tudo</span></a>
+      <a class="cat-card" href="arace-search.html?categoria=pinturas"><div class="cat-icon" style="background:#f2601a"><i data-lucide="palette"></i></div><span>Pinturas</span></a>
+      <a class="cat-card" href="arace-search.html?categoria=casa-e-vida"><div class="cat-icon" style="background:#25518f"><i data-lucide="house"></i></div><span>Casa & Vida</span></a>
+      <a class="cat-card" href="arace-search.html?categoria=retro"><div class="cat-icon" style="background:#478632"><i data-lucide="videotape"></i></div><span>Retro</span></a>
+      <a class="cat-card" href="arace-search.html?categoria=joias"><div class="cat-icon" style="background:#f3a621"><i data-lucide="gem"></i></div><span>Joias</span></a>
+      <a class="cat-card" href="arace-search.html?categoria=roupas"><div class="cat-icon" style="background:#f2601a"><i data-lucide="shirt"></i></div><span>Roupas</span></a>
+      <a class="cat-card" href="arace-search.html?categoria=ceramica"><div class="cat-icon" style="background:#25518f"><i data-lucide="amphora"></i></div><span>Cerâmica</span></a>
+      <a class="cat-card" href="arace-search.html?categoria=artesanato"><div class="cat-icon" style="background:#478632"><i data-lucide="paintbrush"></i></div><span>Artesanato</span></a>
     </div>
   </div>
 </section>
@@ -113,7 +111,7 @@
   <div class="wrap">
     <div class="section-head">
       <h2>Destaques Produtores</h2>
-      <a href="../user-producter/arace-producer-painel.php" class="link-ver">Ver todos <i data-lucide="arrow-right"></i></a>
+      <a href="../user-producter/arace-producer-painel.html" class="link-ver">Ver todos <i data-lucide="arrow-right"></i></a>
     </div>
     <div class="produtores-grid" id="produtoresGrid">
       <!-- Firestore/API: os produtores serao renderizados por landing.js. -->
@@ -155,6 +153,7 @@
 
 
 
+<script src="../assets/js/arace-state.js"></script>
 <script src="../assets/js/landing.js"></script>
 <script src="../assets/js/search-navigation.js"></script>
 </body>

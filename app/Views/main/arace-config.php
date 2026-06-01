@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+﻿﻿<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
@@ -12,30 +12,42 @@
 </head>
 <body>
 
+<!-- HEADER -->
 <header>
-  <span class="logo">aracê</span>
-  <div class="search-wrap">
+  <a href="index.html" class="logo">aracê</a>
+
+  <form class="search-wrap" action="arace-search.html" method="get">
     <i data-lucide="search"></i>
-    <input type="text" placeholder="Pesquisar produtos…" />
-  </div>
+    <input type="text" name="q" id="searchHeaderInput" placeholder="Pesquisar produtos..." />
+  </form>
+
   <div class="header-right">
-    <button class="cart-btn" type="button" onclick="window.location.href='carrinho.php'"><i data-lucide="shopping-cart"></i><span class="cart-count">2 itens</span></button>
-    <button class="cart-btn" type="button" onclick="window.location.href='../user/favoritos.php'"><i data-lucide="heart"></i><span class="cart-count">5 itens</span></button>
-    <button class="avatar-btn" type="button" onclick="window.location.href='../user/perfil.php'" aria-label="Abrir perfil"><i data-lucide="user"></i></button>
+    <button class="cart-btn" type="button" onclick="window.location.href='carrinho.html'">
+      <i data-lucide="shopping-cart"></i>
+      <span class="cart-count">2 itens</span>
+    </button>
+    <button class="cart-btn" type="button" onclick="window.location.href='../user/favoritos.html'">
+      <i data-lucide="heart"></i>
+      <span class="cart-count">5 itens</span>
+    </button>
+    <button class="avatar-btn" type="button" onclick="window.location.href='../user/perfil.html'">
+      <i data-lucide="user"></i>
+    </button>
   </div>
 </header>
 
+
 <aside>
-  <a class="nav-item" href="index.php"><i data-lucide="house"></i> Home page</a>
-  <a class="nav-item" href="produtos.php"><i data-lucide="shopping-bag"></i> Produtos</a>
-  <a class="nav-item" href="carrinho.php"><i data-lucide="shopping-cart"></i> Carrinho</a>
-  <a class="nav-item" href="../user/notificacoes.php"><i data-lucide="bell"></i> Notificações</a>
-  <a class="nav-item active" href="configuracoes.php"><i data-lucide="settings"></i> Configurações</a>
-  <a class="nav-item" href="../user/perfil.php"><i data-lucide="user"></i> Perfil</a>
-  <a class="nav-item" href="../authentication/cadastro-produtor.php"><i data-lucide="box"></i> Quero ser produtor</a>
+  <a class="nav-item" href="index.html"><i data-lucide="house"></i> Home page</a>
+  <a class="nav-item" href="arace-search.html"><i data-lucide="shopping-bag"></i> Produtos</a>
+  <a class="nav-item" href="carrinho.html"><i data-lucide="shopping-cart"></i> Carrinho</a>
+  <a class="nav-item" href="../user/notificacoes.html"><i data-lucide="bell"></i> Notificações</a>
+  <a class="nav-item active" href="configuracoes.html"><i data-lucide="settings"></i> Configurações</a>
+  <a class="nav-item" href="../user/perfil.html"><i data-lucide="user"></i> Perfil</a>
+  <a class="nav-item" href="../authentication/cadastro-produtor.html"><i data-lucide="box"></i> Quero ser produtor</a>
   <div class="nav-divider"></div>
   <div class="nav-section">Reportar</div>
-  <a class="nav-item" href="configuracoes.php#pagamento"><i data-lucide="hand-coins"></i> Detalhes de pagamento</a>
+  <a class="nav-item" href="configuracoes.html#pagamento"><i data-lucide="hand-coins"></i> Detalhes de pagamento</a>
 </aside>
 
 <main>
@@ -537,6 +549,7 @@
   <span id="toastMsg">Salvo com sucesso</span>
 </div>
 
+<script src="../assets/js/arace-state.js"></script>
 <script src="../assets/js/config.js"></script>
 </body>
 </html>
