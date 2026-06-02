@@ -5,30 +5,65 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/auth_image"
+    android:background="@color/bg"
     tools:context=".ui.auth.Cadastro">
 
     <LinearLayout
-        android:layout_width="350dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/background_rounded"
+        android:background="@color/bg"
         android:gravity="center_horizontal"
         android:orientation="vertical"
-        android:padding="24dp"
+        android:padding="40dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="30dp">
+
+            <FrameLayout
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layout_constraintWidth_percent="0.5"
+                app:layout_constraintDimensionRatio="1:1"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                >
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="12dp"
+                    android:src="@drawable/lago" />
+
+            </FrameLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="24dp"
             android:fontFamily="@font/google_sans_flex_variable_font"
-            android:gravity="center_horizontal"
-            android:text="Criar conta"
+            android:text="Comece no Aracê"
             android:textColor="@color/texto"
-            android:textSize="48sp" />
+            android:textSize="24sp"
+            android:textFontWeight="500"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:fontFamily="@font/google_sans_flex_variable_font"
+            android:text="Cadastre-se nesse acervo capixaba"
+            android:textColor="@color/texto"
+            android:textSize="18sp"
+            android:textFontWeight="400"/>
+
 
         <com.google.android.material.textfield.TextInputLayout
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
@@ -37,7 +72,11 @@
             android:layout_marginBottom="12dp"
             app:boxStrokeColor="@color/arace_blue"
             app:hintTextColor="@color/arace_blue"
-            android:hint="Nome">
+            android:hint="Nome"
+            app:boxCornerRadiusTopStart="15dp"
+            app:boxCornerRadiusTopEnd="15dp"
+            app:boxCornerRadiusBottomStart="15dp"
+            app:boxCornerRadiusBottomEnd="15dp">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/nome_input"
@@ -55,7 +94,12 @@
             android:layout_marginBottom="12dp"
             app:boxStrokeColor="@color/arace_blue"
             app:hintTextColor="@color/arace_blue"
-            android:hint="Email">
+            android:hint="Email"
+            app:boxCornerRadiusTopStart="15dp"
+            app:boxCornerRadiusTopEnd="15dp"
+            app:boxCornerRadiusBottomStart="15dp"
+            app:boxCornerRadiusBottomEnd="15dp"
+            >
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/cadastro_input"
@@ -75,7 +119,11 @@
             app:hintTextColor="@color/arace_blue"
             app:endIconMode="password_toggle"
             app:endIconTint="@color/hint_gray"
-            android:hint="Senha">
+            android:hint="Senha"
+            app:boxCornerRadiusTopStart="15dp"
+            app:boxCornerRadiusTopEnd="15dp"
+            app:boxCornerRadiusBottomStart="15dp"
+            app:boxCornerRadiusBottomEnd="15dp">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/cadastro_senha"
@@ -95,7 +143,11 @@
             app:hintTextColor="@color/arace_blue"
             app:endIconMode="password_toggle"
             app:endIconTint="@color/hint_gray"
-            android:hint="Confirme sua senha">
+            android:hint="Confirme sua senha"
+            app:boxCornerRadiusTopStart="15dp"
+            app:boxCornerRadiusTopEnd="15dp"
+            app:boxCornerRadiusBottomStart="15dp"
+            app:boxCornerRadiusBottomEnd="15dp">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/cadastro_confirmar_senha"
