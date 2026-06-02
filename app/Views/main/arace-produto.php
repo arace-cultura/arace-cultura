@@ -28,17 +28,34 @@
 </header>
 
 <aside>
-  <a class="nav-item" href="index.php"><i data-lucide="house"></i> Home page</a>
-  <a class="nav-item active" href="produtos.php"><i data-lucide="shopping-bag"></i> Produtos</a>
-  <a class="nav-item" href="carrinho.php"><i data-lucide="shopping-cart"></i> Carrinho</a>
-  <a class="nav-item" href="../user/notificacoes.php"><i data-lucide="bell"></i> Notificações</a>
-  <a class="nav-item" href="configuracoes.php"><i data-lucide="settings"></i> Configurações</a>
-  <a class="nav-item" href="../user/perfil.php"><i data-lucide="user"></i> Perfil</a>
-  <a class="nav-item" href="../authentication/cadastro-produtor.php"><i data-lucide="box"></i> Quero ser produtor</a>
-  <div class="nav-divider"></div>
-  <div class="nav-section">Reportar</div>
-  <a class="nav-item" href="configuracoes.php#pagamento"><i data-lucide="hand-coins"></i> Detalhes de pagamento</a>
-</aside>
+    <a class="nav-item" href="{{routes('landing-page')}}">
+      <i data-lucide="house"></i> Home page
+    </a>
+    <a class="nav-item" href="{{routes('main_produtos')}}">
+      <i data-lucide="shopping-bag"></i> Produtos
+    </a>
+    <a class="nav-item active" href="{{routes('main_arace_carrinho')}}">
+      <i data-lucide="shopping-cart"></i> Carrinho
+    </a>
+    <a class="nav-item" href="{{routes('user_arace_notificacoes')}}">
+      <i data-lucide="bell"></i> Notificações
+    </a>
+    <a class="nav-item" href="{{routes('main_arace_configuracoes')}}">
+      <i data-lucide="settings"></i> Configurações
+    </a>
+    <a class="nav-item" href="{{routes('user_arace_perfil')}}">
+      <i data-lucide="user"></i> Perfil
+    </a>
+    <a class="nav-item" href="{{routes('auth_cadastro_producer_arace')}}">
+      <i data-lucide="box"></i> Quero ser produtor
+    </a>
+    <div class="nav-divider"></div>
+    <div class="nav-section">Reportar</div>
+    <a class="nav-item" href="{{routes('main_arace_configuracoes')}}">
+      <i data-lucide="hand-coins"></i> Detalhes de pagamento
+    </a>
+  </aside>
+
 
 <main id="main-content">
   <!-- preenchido via JS -->
