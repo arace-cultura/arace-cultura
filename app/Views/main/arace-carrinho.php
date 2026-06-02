@@ -33,30 +33,30 @@
 
   <!-- SIDEBAR -->
   <aside>
-    <a class="nav-item" href="{{routes('landing-page')}}">
+    <a class="nav-item" href="{{route('landing-page')}}">
       <i data-lucide="house"></i> Home page
     </a>
-    <a class="nav-item" href="{{routes('main_produtos')}}">
+    <a class="nav-item" href="{{route('main_produtos')}}">
       <i data-lucide="shopping-bag"></i> Produtos
     </a>
-    <a class="nav-item active" href="{{routes('main_arace_carrinho')}}">
+    <a class="nav-item active" href="{{route('main_arace_carrinho')}}">
       <i data-lucide="shopping-cart"></i> Carrinho
     </a>
-    <a class="nav-item" href="{{routes('user_arace_notificacoes')}}">
+    <a class="nav-item" href="{{route('user_arace_notificacoes')}}">
       <i data-lucide="bell"></i> Notificações
     </a>
-    <a class="nav-item" href="{{routes('main_arace_configuracoes')}}">
+    <a class="nav-item" href="{{route('main_arace_configuracoes')}}">
       <i data-lucide="settings"></i> Configurações
     </a>
-    <a class="nav-item" href="{{routes('user_arace_perfil')}}">
+    <a class="nav-item" href="{{route('user_arace_perfil')}}">
       <i data-lucide="user"></i> Perfil
     </a>
-    <a class="nav-item" href="{{routes('auth_cadastro_producer_arace')}}">
+    <a class="nav-item" href="{{route('auth_cadastro_producer_arace')}}">
       <i data-lucide="box"></i> Quero ser produtor
     </a>
     <div class="nav-divider"></div>
     <div class="nav-section">Reportar</div>
-    <a class="nav-item" href="{{routes('main_arace_configuracoes')}}">
+    <a class="nav-item" href="{{route('main_arace_configuracoes')}}">
       <i data-lucide="hand-coins"></i> Detalhes de pagamento
     </a>
   </aside>

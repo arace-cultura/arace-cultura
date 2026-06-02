@@ -10,6 +10,6 @@
     // O PHP gera a URL e o JavaScript executa o redirecionamento
     window.location.replace("<?= url_to('main_arace_carrinho') ?>");
 </script>
-  <a href="{{routes('main_arace_carrinho')}}">Ir para Carrinho</a>
+  <a href="{{route('main_arace_carrinho')}}">Ir para Carrinho</a>
 </body>
 </html>
