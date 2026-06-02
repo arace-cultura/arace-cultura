@@ -5,7 +5,7 @@ import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.aracecultura.arace.supabase
-import com.aracecultura.arace.data.model.Produto // Importe a sua data class
+import com.aracecultura.arace.data.model.Produto
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
 import com.google.firebase.firestore.firestore

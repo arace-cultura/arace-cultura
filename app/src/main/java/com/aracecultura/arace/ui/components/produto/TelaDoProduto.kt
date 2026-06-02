@@ -186,7 +186,7 @@ fun TelaDoProduto(
                         }
                     }
                     Column(Modifier.padding(top = 20.dp).fillMaxWidth().weight(1f).padding(10.dp, 5.dp)){
-                        Row(Modifier.fillMaxWidth().background(bgDefault).padding(horizontal = 20.dp), verticalAlignment = Alignment.CenterVertically){
+                        /*Row(Modifier.fillMaxWidth().background(bgDefault).padding(horizontal = 20.dp), verticalAlignment = Alignment.CenterVertically){
                             Box(
                                 modifier = Modifier
                                     .size(80.dp)
@@ -202,7 +202,7 @@ fun TelaDoProduto(
                                 fontWeight = FontWeight.Normal
 
                             )
-                        }
+                        }*/
                         Box(Modifier.fillMaxWidth().padding(top = 20.dp).background(bgDefault)) {
                             Text(
                                 "${produtoAtual.descricao}",

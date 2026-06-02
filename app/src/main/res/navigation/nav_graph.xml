@@ -16,10 +16,36 @@
     <navigation
         android:id="@+id/fluxo_cadastro_produtor"
         app:startDestination="@id/cadastroProdutorTela1">
+
         <fragment
             android:id="@+id/cadastroProdutorTela1"
             android:name="com.aracecultura.arace.ui.auth.CadastroProdutorTela1"
-            tools:layout="@layout/fragment_cadastro_produtor_tela1" />
+            tools:layout="@layout/fragment_cadastro_produtor_tela1">
+            <action
+                android:id="@+id/action_tela1_to_tela2"
+                app:destination="@id/cadastroProdutorTela2" />
+        </fragment>
+
+        <fragment
+            android:id="@+id/cadastroProdutorTela2"
+            android:name="com.aracecultura.arace.ui.auth.CadastroProdutorTela2"
+            tools:layout="@layout/fragment_cadastro_produtor_tela2">
+            <action
+                android:id="@+id/action_tela2_to_tela3"
+                app:destination="@id/cadastroProdutorTela3" />
+        </fragment>
+
+        <fragment
+            android:id="@+id/cadastroProdutorTela3"
+            android:name="com.aracecultura.arace.ui.auth.CadastroProdutorTela3"
+            tools:layout="@layout/fragment_cadastro_produtor_tela3">
+
+            <action
+                android:id="@+id/action_cadastro_concluido"
+                app:destination="@id/navegacaoPrincipalFragment"
+                app:popUpTo="@id/fluxo_cadastro_produtor"
+                app:popUpToInclusive="true" />
+        </fragment>
     </navigation>
 
     <action
@@ -38,4 +64,5 @@
     <action
         android:id="@+id/action_global_cadastroProdutorFragment"
         app:destination="@id/fluxo_cadastro_produtor" />
+
 </navigation>
