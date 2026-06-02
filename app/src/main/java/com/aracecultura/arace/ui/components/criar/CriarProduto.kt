@@ -88,6 +88,7 @@ fun CriarProduto(
         modifier = Modifier
             .fillMaxSize()
             .background(bgDefault)
+
     ) {
         Image(
             painter = painterResource(id = R.drawable.bg_explorar),

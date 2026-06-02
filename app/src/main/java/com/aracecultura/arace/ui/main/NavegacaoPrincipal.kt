@@ -16,6 +16,7 @@ import com.aracecultura.arace.ui.main.jetpack.SeletorModoBottomSheet
 import android.util.Log
 import androidx.fragment.app.setFragmentResultListener
 import androidx.navigation.fragment.findNavController
+import com.google.firebase.auth.FirebaseAuth
 
 
 class NavegacaoPrincipal : Fragment() {
@@ -87,7 +88,11 @@ class NavegacaoPrincipal : Fragment() {
     private fun verificarEEntrarModoProdutor() {
         val sharedPref = requireActivity().getSharedPreferences("AracePrefs", android.content.Context.MODE_PRIVATE)
 
-        val isProdutorCadastrado = sharedPref.getBoolean("STATUS_PRODUTOR", false)
+        // Pegamos o ID do usuário atual para verificar a chave correta
+        val userId = FirebaseAuth.getInstance().currentUser?.uid ?: "desconhecido"
+
+        // Lemos a chave com o ID atrelado
+        val isProdutorCadastrado = sharedPref.getBoolean("STATUS_PRODUTOR_$userId", false)
 
         if (isProdutorCadastrado) {
             Log.d("ModoArace", "Trocando footer para Produtor.")
@@ -96,7 +101,6 @@ class NavegacaoPrincipal : Fragment() {
             Log.d("ModoArace", "Redirecionando para Cadastro.")
             iniciarFluxoCadastroProdutor()
         }
-
     }
 
 
@@ -135,6 +139,8 @@ class NavegacaoPrincipal : Fragment() {
             this.binding.fcvNavegacaoPrincipal.getFragment<NavHostFragment>().navController
         )
     }
+
+
 
 
 }
