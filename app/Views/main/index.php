@@ -6,7 +6,12 @@
   <title>Arace - Home</title>
 </head>
 <body>
-  <script>window.location.replace('arace-landing.php');</script>
-  <a href="arace-landing.php">Ir para a Home</a>
+<script>
+    // O PHP gera a URL e o JavaScript executa o redirecionamento
+    window.location.replace("<?= url_to('landing-page') ?>");
+</script>
+
+
+  <a href="{{ route('landing-page') }}">Ir para a Home</a>
 </body>
 </html>
