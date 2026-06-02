@@ -6,7 +6,10 @@
   <title>Arace - Perfil</title>
 </head>
 <body>
-  <script>window.location.replace('arace-perfil.php');</script>
-  <a href="arace-perfil.php">Ir para Perfil</a>
+  <script>
+    // O PHP gera a URL e o JavaScript executa o redirecionamento
+    window.location.replace("<?= url_to('user_arace_perfil') ?>");
+</script>
+  <a href="{{route('user_arace_perfil')}}">Ir para Perfil</a>
 </body>
 </html>

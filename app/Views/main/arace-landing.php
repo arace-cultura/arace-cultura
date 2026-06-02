@@ -33,7 +33,7 @@
       <i data-lucide="heart"></i>
       <span class="cart-count">5 itens</span>
     </button>
-    <button class="avatar-btn" type="button" onclick="window.location.href='/usuario/perfil'">
+    <button class="avatar-btn" type="button" onclick="window.location.href='login'">
       <i data-lucide="user"></i>
     </button>
   </div>
