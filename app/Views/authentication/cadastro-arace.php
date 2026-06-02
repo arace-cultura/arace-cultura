@@ -13,13 +13,13 @@
 
   <div class="login-card cadastro-card item-animado">
     <div class="logo-wrap item-animado atraso-1">
-      <img src="../assets/imgs/arace.png" alt="Logo Aracê" />
+      <img src="/images/arace.png" alt="Logo Aracê" />
     </div>
 
     <p class="subtitle item-animado atraso-1">Crie sua conta</p>
 
     <form id="formCadastro" novalidate>
-
+  
       <div class="input-group-custom item-animado atraso-2">
         <i data-lucide="user"></i>
         <input type="text" id="nome" placeholder="Nome completo" required />
@@ -57,10 +57,10 @@
           Aceito os <a href="termos.html" target="_blank">termos de uso</a>
         </label>
 
-        <button type="submit" class="btn-login">Criar conta</button>
+        <button type="submit" class="btn-login"><a href="/usuario/perfil">Criar conta</a></button>
 
         <div class="links-rodape">
-          <a href="{{'auth_login'}}" class="esqueceu">Já tenho uma conta</a>
+          <a href="login" class="esqueceu">Já tenho uma conta</a>
         </div>
       </div>
 
@@ -69,6 +69,6 @@
 
   <script src="https://unpkg.com/lucide@latest"></script>
   <script>lucide.createIcons();</script>
-  <script src="assets/js/cadastro.js"></script>
+  <script src="/js/cadastro.js"></script>
 </body>
 </html>

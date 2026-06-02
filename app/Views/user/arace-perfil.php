@@ -14,7 +14,7 @@
 
 <!-- HEADER -->
 <header>
-  <a href="../main/index.html" class="logo">aracê</a>
+  <a href="/" class="logo">aracê</a>
 
   <form class="search-wrap" action="../main/arace-search.html" method="get">
     <i data-lucide="search"></i>

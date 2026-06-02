@@ -13,7 +13,7 @@
 
   <div class="login-card item-animado">
     <div class="logo-wrap item-animado atraso-1">
-      <img src="../assets/imgs/arace.png" alt="Logo Aracê" />
+      <img src="/images/arace.png" alt="Logo Aracê" />
     </div>
 
     <p class="subtitle item-animado atraso-1">Bem-vindo de volta</p>
@@ -38,11 +38,11 @@
           Permanecer conectado
         </label>
 
-        <button type="submit" class="btn-login">Entrar</button>
+        <button type="submit" class="btn-login" ><a href="/usuario/perfil">Entrar</a></button>
 
         <div class="links-rodape">
-          <a href="{{route('auth_cadastro')}}">Cadastre-se</a>
-          <a href="recuperar-senha.html" class="esqueceu">Esqueceu a senha?</a>
+          <a href="cadastro">Cadastre-se</a>
+          <a href="" class="esqueceu">Esqueceu a senha?</a>
         </div>
       </div>
     </form>
@@ -50,6 +50,6 @@
 
   <script src="https://unpkg.com/lucide@latest"></script>
   <script>lucide.createIcons();</script>
-  <script src="assets/js/login.js"></script>
+  <script src="/js/login.js"></script>
 </body>
 </html>
