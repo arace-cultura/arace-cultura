@@ -4,12 +4,60 @@ use CodeIgniter\Router\RouteCollection;
 
 /** @var RouteCollection $routes */
 
-// Rota Raiz (Ex: aponta para a landing page dentro da pasta main)
-$routes->view('/', 'main/arace-landing', ['as' => 'landing-page']);
+// ============================================================================
+// 1. HOME / ENTRADA PRINCIPAL
+// ============================================================================
+// Define que a raiz do site abre o index que redireciona para a landing page
+$routes->view('/', 'main/index', ['as' => 'home']);
+$routes->view('entrada', 'entrada', ['as' => 'entrada']);
 
-// Demais rotas do seu projeto com seus respectivos apelidos
-$routes->view('entrada', 'entrada', ['as' => 'rota_entrada']);
-$routes->view("login", "authentication/login-arace", ['as' => 'rota_login']);
-$routes->view("cadastro", "authentication/cadastro-arace", ['as' => 'rota_cadastro']);
-$routes->view("produtos", "main/produtos", ['as' => 'rota_produtos']);
-$routes->view("carrinho", "main/carrinho", ['as' => 'rota_carrinho']);
+
+// ============================================================================
+// 2. AUTENTICAÇÃO (authentication/)
+// ============================================================================
+$routes->view('login', 'authentication/login-arace', ['as' => 'auth_login']);
+$routes->view('cadastro', 'authentication/cadastro-arace', ['as' => 'auth_cadastro']);
+
+
+// ============================================================================
+// 3. PÁGINAS PRINCIPAIS DA LOJA (main/)
+// ============================================================================
+$routes->view('landing-page', 'main/arace-landing', ['as' => 'main_landing']);
+$routes->view('produtos', 'main/produtos', ['as' => 'main_produtos']);
+$routes->view('produto/detalhes', 'main/arace-produto', ['as' => 'main_produto_detalhes']);
+$routes->view('pesquisa', 'main/arace-search', ['as' => 'main_pesquisa']);
+
+// Carrinhos
+$routes->view('carrinho', 'main/carrinho', ['as' => 'main_carrinho']);
+$routes->view('arace-carrinho', 'main/arace-carrinho', ['as' => 'main_arace_carrinho']);
+
+// Configurações Gerais da Main
+$routes->view('configuracoes', 'main/configuracoes', ['as' => 'main_configuracoes']);
+$routes->view('arace-config', 'main/arace-config', ['as' => 'main_arace_config']);
+
+
+// ============================================================================
+// 4. ÁREA DO CLIENTE / USUÁRIO (user/)
+// ============================================================================
+$routes->view('usuario/perfil', 'user/perfil', ['as' => 'user_perfil']);
+$routes->view('usuario/arace-perfil', 'user/arace-perfil', ['as' => 'user_arace_perfil']);
+$routes->view('usuario/chat', 'user/arace-chat', ['as' => 'user_chat']);
+
+// Favoritos
+$routes->view('usuario/favoritos', 'user/favoritos', ['as' => 'user_favoritos']);
+$routes->view('usuario/arace-favoritos', 'user/arace-favorites', ['as' => 'user_arace_favoritos']);
+
+// Notificações
+$routes->view('usuario/notificacoes', 'user/notificacoes', ['as' => 'user_notificacoes']);
+$routes->view('usuario/arace-notificacao', 'user/arace-notificacao', ['as' => 'user_arace_notificacao']);
+
+
+// ============================================================================
+// 5. ÁREA DO PRODUTOR / LOJISTA (user-producter/)
+// ============================================================================
+$routes->view('produtor/painel', 'user-producter/arace-producer-painel-produtos', ['as' => 'produtor_painel']);
+$routes->view('produtor/pedidos', 'user-producter/arace-producer-pedidos', ['as' => 'produtor_pedidos']);
+$routes->view('produtor/perfil', 'user-producter/arace-producer-profile', ['as' => 'produtor_perfil']);
+$routes->view('produtor/perfil-loja', 'user-producter/arace-producer-profile-loja', ['as' => 'produtor_perfil_loja']);
+$routes->view('produtor/configuracao', 'user-producter/arace-producer-config', ['as' => 'produtor_config']);
+$routes->view('produtor/configuracao-loja', 'user-producter/arace-producer-config-loja', ['as' => 'produtor_config_loja']);
