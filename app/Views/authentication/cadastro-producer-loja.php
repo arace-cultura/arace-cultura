@@ -68,7 +68,7 @@
         <button type="submit" class="btn-login">Criar conta da loja</button>
 
         <div class="links-rodape">
-          <a href="../authentication/cadastro-producer-arace.html" class="voltar">Voltar</a>
+          <a href="{{route('auth_cadastro_producer_arace')}}" class="voltar">Voltar</a>
         </div>
       </div>
 
