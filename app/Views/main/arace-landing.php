@@ -16,23 +16,24 @@
 
 <!-- HEADER -->
 <header>
-  <a href="{{route('home')}}" class="logo">aracê</a>
+  <a href="/" class="logo">aracê</a>
 
-  <form class="search-wrap" action="arace-search.html" method="get">
+  <form class="search-wrap" action="/pesquisa" method="get">
     <i data-lucide="search"></i>
     <input type="text" name="q" id="searchHeaderInput" placeholder="Pesquisar produtos..." />
   </form>
 
   <div class="header-right">
-    <button class="cart-btn" type="button" onclick="window.location.href='carrinho.html'">
+    <!-- Deveriam ser <a></a> -->
+    <button class="cart-btn" type="button" onclick="window.location.href='/carrinho'">
       <i data-lucide="shopping-cart"></i>
       <span class="cart-count">2 itens</span>
     </button>
-    <button class="cart-btn" type="button" onclick="window.location.href='../user/favoritos.html'">
+    <button class="cart-btn" type="button" onclick="window.location.href='/usuario/favoritos'">
       <i data-lucide="heart"></i>
       <span class="cart-count">5 itens</span>
     </button>
-    <button class="avatar-btn" type="button" onclick="window.location.href='../user/perfil.html'">
+    <button class="avatar-btn" type="button" onclick="window.location.href='/usuario/perfil'">
       <i data-lucide="user"></i>
     </button>
   </div>
