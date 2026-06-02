@@ -60,7 +60,7 @@
         <button type="submit" class="btn-login">Criar conta</button>
 
         <div class="links-rodape">
-          <a href="login-arace.html" class="esqueceu">Já tenho uma conta</a>
+          <a href="{{'auth_login'}}" class="esqueceu">Já tenho uma conta</a>
         </div>
       </div>
 

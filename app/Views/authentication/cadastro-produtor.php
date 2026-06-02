@@ -6,7 +6,10 @@
   <title>Arace - Cadastro Produtor</title>
 </head>
 <body>
-  <script>window.location.replace('cadastro-producter-arace.php');</script>
-  <a href="cadastro-producter-arace.php">Ir para Cadastro Produtor</a>
+  <script>
+    // O PHP gera a URL e o JavaScript executa o redirecionamento
+    window.location.replace("<?= url_to('auth_cadastro_producter_arace') ?>");
+</script>
+  <a href="{{route('auth_cadastro_producter_arace')}}">Ir para Cadastro Produtor</a>
 </body>
 </html>

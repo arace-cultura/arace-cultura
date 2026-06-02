@@ -41,7 +41,7 @@
         <button type="submit" class="btn-login">Entrar</button>
 
         <div class="links-rodape">
-          <a href="cadastro-arace.html">Cadastre-se</a>
+          <a href="{{route('auth_cadastro')}}">Cadastre-se</a>
           <a href="recuperar-senha.html" class="esqueceu">Esqueceu a senha?</a>
         </div>
       </div>
