@@ -50,7 +50,7 @@ $routes->view('usuario/chat', 'user/arace-chat', ['as' => 'user_chat']);
 
 // Favoritos
 $routes->view('usuario/favoritos', 'user/favoritos', ['as' => 'user_favoritos']);
-$routes->view('usuario/arace-favoritos', 'user/arace-favorites', ['as' => 'user_arace_favoritos']);
+$routes->view('usuario/arace-favoritos', 'user/arace-favoritos', ['as' => 'user_arace_favoritos']);
 
 // Notificações
 $routes->view('usuario/notificacoes', 'user/notificacoes', ['as' => 'user_notificacoes']);

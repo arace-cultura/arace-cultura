@@ -6,7 +6,7 @@
   <title>Arace - Favoritos</title>
 </head>
 <body>
-  <script>window.location.replace('arace-favoritos.php');</script>
+  <script>window.location.replace('arace-favoritos');</script>
   <a href="arace-favoritos.php">Ir para Favoritos</a>
 </body>
 </html>
