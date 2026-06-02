@@ -33,7 +33,7 @@ $routes->view('produto/detalhes', 'main/arace-produto', ['as' => 'main_produto_d
 $routes->view('pesquisa', 'main/arace-search', ['as' => 'main_pesquisa']);
 
 // Carrinhos
-$routes->view('carrinho', 'main/carrinho', ['as' => 'main_carrinho']);
+
 $routes->view('arace-carrinho', 'main/arace-carrinho', ['as' => 'main_arace_carrinho']);
 
 // Configurações Gerais da Main
@@ -44,16 +44,13 @@ $routes->view('arace-config', 'main/arace-config', ['as' => 'main_arace_config']
 // ============================================================================
 // 4. ÁREA DO CLIENTE / USUÁRIO (user/)
 // ============================================================================
-$routes->view('usuario/perfil', 'user/perfil', ['as' => 'user_perfil']);
 $routes->view('usuario/arace-perfil', 'user/arace-perfil', ['as' => 'user_arace_perfil']);
 $routes->view('usuario/chat', 'user/arace-chat', ['as' => 'user_chat']);
 
 // Favoritos
-$routes->view('usuario/favoritos', 'user/favoritos', ['as' => 'user_favoritos']);
 $routes->view('usuario/arace-favoritos', 'user/arace-favoritos', ['as' => 'user_arace_favoritos']);
 
 // Notificações
-$routes->view('usuario/notificacoes', 'user/notificacoes', ['as' => 'user_notificacoes']);
 $routes->view('usuario/arace-notificacao', 'user/arace-notificacao', ['as' => 'user_arace_notificacao']);
 
 
