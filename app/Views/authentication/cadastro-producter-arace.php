@@ -51,7 +51,7 @@
         <button type="submit" class="btn-login">Dados da Loja</button>
 
         <div class="links-rodape">
-          <a href="{{route('home')}}" class="voltar">Voltar</a>
+          <a href="/" class="voltar">Voltar</a>
         </div>
       </div>
 
@@ -60,6 +60,6 @@
 
   <script src="https://unpkg.com/lucide@latest"></script>
   <script>lucide.createIcons();</script>
-  <script src="../assets/js/cadastro-dono.js"></script>
+  <script src="/js/cadastro-dono.js"></script>
 </body>
 </html>
