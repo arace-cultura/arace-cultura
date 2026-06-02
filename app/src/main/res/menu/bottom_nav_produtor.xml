@@ -11,8 +11,8 @@
         android:title="Explorar" />
 
     <item
-        android:id="@+id/favoritos"
-        android:icon="@drawable/ic_heart_selector"
+        android:id="@+id/adicionar"
+        android:icon="@drawable/ic_adicionar"
         android:title="Favoritos" />
 
     <item

@@ -87,6 +87,14 @@ dependencies {
     implementation(libs.firebase.firestore)
     implementation(libs.androidx.recyclerview)
 
+    implementation(platform("io.github.jan-tennert.supabase:bom:3.1.4"))
+    implementation("io.github.jan-tennert.supabase:postgrest-kt")
+    implementation("io.github.jan-tennert.supabase:auth-kt")
+    implementation("io.github.jan-tennert.supabase:storage-kt")
+
+    // engine HTTP (obrigatório)
+    implementation("io.ktor:ktor-client-android:3.1.2")
+
     // Geralmente, o bundle padrão de Compose já resolve isso:
     implementation(libs.ui)
     implementation(libs.androidx.compose.material3)

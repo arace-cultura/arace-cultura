@@ -101,8 +101,6 @@ class NavegacaoPrincipal : Fragment() {
 
 
 
-
-
     override fun onDestroyView() {
         super.onDestroyView()
         this._binding = null

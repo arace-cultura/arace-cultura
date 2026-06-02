@@ -35,4 +35,8 @@
     <fragment
         android:id="@+id/explorar"
         android:name="com.aracecultura.arace.ui.main.ExplorarProdutoFragment" />
+
+    <fragment
+        android:id="@+id/adicionar"
+        android:name="com.aracecultura.arace.ui.main.CriarProdutoFragment" />
 </navigation>
