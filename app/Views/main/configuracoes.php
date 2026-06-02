@@ -6,7 +6,10 @@
   <title>Arace - Configuracoes</title>
 </head>
 <body>
-  <script>window.location.replace('arace-config.php' + window.location.hash);</script>
-  <a href="arace-config.php">Ir para Configuracoes</a>
+  <script>
+    // O PHP gera a URL e o JavaScript executa o redirecionamento
+    window.location.replace("<?= url_to('main_arace_configuracao') ?>");
+</script>
+  <a href="{{routes('main_arace_configuracao')}}">Ir para Configuracoes</a>
 </body>
 </html>

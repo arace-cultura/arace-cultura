@@ -6,7 +6,10 @@
   <title>Arace - Carrinho</title>
 </head>
 <body>
-  <script>window.location.replace('arace-carrinho.php');</script>
-  <a href="arace-carrinho.php">Ir para Carrinho</a>
+  <script>
+    // O PHP gera a URL e o JavaScript executa o redirecionamento
+    window.location.replace("<?= url_to('main_arace_carrinho') ?>");
+</script>
+  <a href="{{routes('main_arace_carrinho')}}">Ir para Carrinho</a>
 </body>
 </html>

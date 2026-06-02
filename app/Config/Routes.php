@@ -9,7 +9,6 @@ use CodeIgniter\Router\RouteCollection;
 // ============================================================================
 // Define que a raiz do site abre o index que redireciona para a landing page
 $routes->view('/', 'main/index', ['as' => 'home']);
-$routes->view('entrada', 'entrada', ['as' => 'entrada']);
 
 
 // ============================================================================
@@ -18,11 +17,17 @@ $routes->view('entrada', 'entrada', ['as' => 'entrada']);
 $routes->view('login', 'authentication/login-arace', ['as' => 'auth_login']);
 $routes->view('cadastro', 'authentication/cadastro-arace', ['as' => 'auth_cadastro']);
 
+// Novas rotas de cadastro encontradas na pasta authentication
+$routes->view('cadastro/produtor', 'authentication/cadastro-produtor', ['as' => 'auth_cadastro_produtor']);
+$routes->view('cadastro/produtor-arace', 'authentication/cadastro-producer-arace', ['as' => 'auth_cadastro_producer_arace']);
+$routes->view('cadastro/produtor-loja', 'authentication/cadastro-producer-loja', ['as' => 'auth_cadastro_producer_loja']);
+$routes->view('cadastro/produtora-arace', 'authentication/cadastro-producter-arace', ['as' => 'auth_cadastro_producter_arace']);
+
 
 // ============================================================================
 // 3. PÁGINAS PRINCIPAIS DA LOJA (main/)
 // ============================================================================
-$routes->view('landing-page', 'main/arace-landing', ['as' => 'main_landing']);
+$routes->view('landing-page', 'main/arace-landing', ['as' => 'landing-page']);
 $routes->view('produtos', 'main/produtos', ['as' => 'main_produtos']);
 $routes->view('produto/detalhes', 'main/arace-produto', ['as' => 'main_produto_detalhes']);
 $routes->view('pesquisa', 'main/arace-search', ['as' => 'main_pesquisa']);

@@ -6,7 +6,10 @@
   <title>Arace - Produtos</title>
 </head>
 <body>
-  <script>window.location.replace('arace-landing.php#produtos');</script>
-  <a href="arace-landing.php#produtos">Ir para Produtos</a>
+  <script>
+    // O PHP gera a URL e o JavaScript executa o redirecionamento
+    window.location.replace("<?= url_to('landing-page') ?>");
+</script>
+  <a href="landing-page">Ir para Produtos</a>
 </body>
 </html>

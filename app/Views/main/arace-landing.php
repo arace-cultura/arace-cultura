@@ -16,7 +16,7 @@
 
 <!-- HEADER -->
 <header>
-  <a href="index.html" class="logo">aracê</a>
+  <a href="{{routes('home')}}" class="logo">aracê</a>
 
   <form class="search-wrap" action="arace-search.html" method="get">
     <i data-lucide="search"></i>
