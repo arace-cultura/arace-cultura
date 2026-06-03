@@ -37,7 +37,6 @@ $routes->view('pesquisa', 'main/arace-search', ['as' => 'main_pesquisa']);
 $routes->view('arace-carrinho', 'main/arace-carrinho', ['as' => 'main_arace_carrinho']);
 
 // Configurações Gerais da Main
-$routes->view('configuracoes', 'main/configuracoes', ['as' => 'main_configuracoes']);
 $routes->view('arace-config', 'main/arace-config', ['as' => 'main_arace_config']);
 
 
