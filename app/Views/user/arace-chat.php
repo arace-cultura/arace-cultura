@@ -12,26 +12,52 @@
 </head>
 <body>
 
-  <header>
-    <span class="logo">aracê</span>
+<!-- HEADER -->
+<header>
+    <a href="/" class="logo">aracê</a>
     <div class="header-right">
-      <button class="cart-btn"><i data-lucide="shopping-cart"></i><span class="cart-count">2 itens</span></button>
-      <button class="cart-btn"><i data-lucide="heart"></i><span class="cart-count">5 itens</span></button>
-      <div class="avatar-btn"><i data-lucide="user"></i></div>
+    <button class="cart-btn" type="button" onclick="window.location.href='/arace-carrinho'">
+        <i data-lucide="shopping-cart"></i>
+        <span class="cart-count">2 itens</span>
+      </button>
+    <button class="cart-btn" type="button" onclick="window.location.href='/usuario/arace-favoritos'">
+        <i data-lucide="heart"></i>
+        <span class="cart-count">5 itens</span>
+      </button>
+      <button class="avatar-btn" type="button" onclick="window.location.href='/usuario/arace-perfil'" aria-label="Abrir perfil">
+        <i data-lucide="user"></i>
+      </button>
     </div>
   </header>
 
-  <aside>
-    <a class="nav-item" href="../main/index.php"><i data-lucide="house"></i> Home page</a>
-    <a class="nav-item" href="../main/produtos.php"><i data-lucide="shopping-bag"></i> Produtos</a>
-    <a class="nav-item" href="../main/carrinho.php"><i data-lucide="shopping-cart"></i> Carrinho</a>
-    <a class="nav-item" href="./notificacoes.php"><i data-lucide="bell"></i> Notificações</a>
-    <a class="nav-item" href="../main/configuracoes.php"><i data-lucide="settings"></i> Configurações</a>
-    <a class="nav-item" href="./perfil.php"><i data-lucide="user"></i> Perfil</a>
-    <a class="nav-item" href="../authentication/cadastro-produtor.php"><i data-lucide="box"></i> Quero ser produtor</a>
+<!-- SIDEBAR -->
+<aside>
+    <a class="nav-item" href="/">
+      <i data-lucide="house"></i> Home page
+    </a>
+    <a class="nav-item" href="/arace-produtos">
+      <i data-lucide="shopping-bag"></i> Produtos
+    </a>
+    <a class="nav-item active" href="/arace-carrinho">
+      <i data-lucide="shopping-cart"></i> Carrinho
+    </a>
+    <a class="nav-item" href="/usuario/arace-notificacao">
+      <i data-lucide="bell"></i> Notificações
+    </a>
+    <a class="nav-item" href="/arace-config">
+      <i data-lucide="settings"></i> Configurações
+    </a>
+    <a class="nav-item" href="/usuario/arace-perfil">
+      <i data-lucide="user"></i> Perfil
+    </a>
+    <a class="nav-item" href="/auth/cadastro/produtor">
+      <i data-lucide="box"></i> Quero ser produtor
+    </a>
     <div class="nav-divider"></div>
     <div class="nav-section">Reportar</div>
-    <a class="nav-item active" href="arace-chat.php"><i data-lucide="message-circle"></i> Chat</a>
+    <a class="nav-item" href="/arace-config">
+      <i data-lucide="hand-coins"></i> Detalhes de pagamento
+    </a>
   </aside>
 
   <main>
