@@ -1,4 +1,4 @@
-@import "/css/style-base.css";
+@import "../css/style-base.css";
 /* ── FILTROS ── */
 .fav-toolbar {
   display: flex; align-items: center; gap: .75rem;

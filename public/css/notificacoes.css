@@ -1,4 +1,4 @@
-@import "../style/style-base.css";
+@import "../css/style-base.css";
 /* ── FILTROS / CHIPS ── */
 .notif-filters {
   display: flex; align-items: center; gap: .4rem; flex-wrap: wrap;
