@@ -15,7 +15,7 @@
 
   <!-- HEADER -->
   <header>
-    <span class="logo">aracê</span>
+    <a href="/" class="logo">aracê</a>
     <div class="header-right">
     <button class="cart-btn" type="button" onclick="window.location.href='/arace-carrinho'">
         <i data-lucide="shopping-cart"></i>
@@ -42,21 +42,21 @@
     <a class="nav-item active" href="/arace-carrinho">
       <i data-lucide="shopping-cart"></i> Carrinho
     </a>
-    <a class="nav-item" href="/usuario/arace-notificacoes">
+    <a class="nav-item" href="/usuario/arace-notificacao">
       <i data-lucide="bell"></i> Notificações
     </a>
-    <a class="nav-item" href="/arace-configuracoes">
+    <a class="nav-item" href="/arace-config">
       <i data-lucide="settings"></i> Configurações
     </a>
     <a class="nav-item" href="/usuario/arace-perfil">
       <i data-lucide="user"></i> Perfil
     </a>
-    <a class="nav-item" href="/auth/cadastro/produtor">
+    <a class="nav-item" href="/cadastro/produtor-arace">
       <i data-lucide="box"></i> Quero ser produtor
     </a>
     <div class="nav-divider"></div>
     <div class="nav-section">Reportar</div>
-    <a class="nav-item" href="/arace-configuracoes">
+    <a class="nav-item" href="/arace-config">
       <i data-lucide="hand-coins"></i> Detalhes de pagamento
     </a>
   </aside>
