@@ -49,10 +49,13 @@ import com.aracecultura.arace.ui.theme.btColor
 import com.aracecultura.arace.R
 import com.aracecultura.arace.data.model.Produto
 import com.aracecultura.arace.ui.components.SearchBar
+import com.aracecultura.arace.ui.theme.GoogleSans
 
 @Composable
 fun ExplorarProduto(
-    viewmodel: ExplorarProdutoViewmodel = viewModel()
+    viewmodel: ExplorarProdutoViewmodel = viewModel(),
+    uid: String,
+    onNavigateToProduto: (String) -> Unit = {}
 ) {
     val libreCaslonDisplay = remember{FontFamily(Font(R.font.librecaslondisplay_regular))}
     val categoriasList = remember { listOf("Têxteis", "Cerâmica", "Entalhe")}
@@ -74,17 +77,39 @@ fun ExplorarProduto(
                 .alpha(0.25f)
         )
         Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
                 .fillMaxSize()
-                .padding(2.dp)
-
-
         ) {
-            Row(modifier = Modifier.fillMaxWidth().height(40.dp)) {
+            Text(
+                "Descubra",
+                fontFamily = GoogleSans,
+                fontSize = 36.sp,
+                textAlign = TextAlign.Center,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(bgDefault)
+                    .padding(vertical = 10.dp)
+            )
+
+            Box(Modifier.fillMaxSize()){
+
+                LazyColumn() {
+                    items(
+                        items = produtos.value,
+                        key = { produto -> produto.id }
+                    ) { produto ->
+                        // Repassamos as ações para cada item renderizado
+                        ProdutoNavegar(
+                            produto = produto,
+                            onProdutoClick = { onNavigateToProduto(produto.id) },
+                            onAddToCartClick = { viewmodel.adicionarAoCarrinho(produto, uid) } // ← direto
+                        )
+                    }
+                }
+
                 AppButton(
                     modifier = Modifier
-                        .width(150.dp)
+                        .width(100.dp)
                         .height(40.dp),
                     text = "Filtros",
                     textColor = bgDefault,
@@ -98,37 +123,7 @@ fun ExplorarProduto(
                     ),
                     onClick = { mostrarCategorias = !mostrarCategorias }
                 )
-            }
 
-            Box(modifier = Modifier.fillMaxWidth()) {
-
-                Column(modifier = Modifier.fillMaxSize()) {
-                    Box(
-                        contentAlignment = Alignment.Center,
-                        modifier = Modifier
-                            .fillMaxWidth(1f)
-                            .height(50.dp)
-                            .background(bgDefault)
-
-                    ) {
-                        Text(
-                            "Descubra",
-                            Modifier.width(200.dp),
-                            fontFamily = libreCaslonDisplay,
-                            fontSize = 40.sp,
-                            textAlign = TextAlign.Center
-                        )
-                    }
-                    LazyColumn() {
-                        items(
-                            items = produtos.value,
-                            key = { produto -> produto.id }
-                        ) { produto ->
-                            ProdutoNavegar(produto)
-
-                        }
-                    }
-                }
             }
         }
 

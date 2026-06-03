@@ -7,6 +7,7 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -27,6 +28,7 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.aracecultura.arace.data.model.Produto
 import com.aracecultura.arace.ui.components.AppButton
+import com.aracecultura.arace.ui.components.produto.Avaliacao
 import com.aracecultura.arace.ui.theme.GoogleSans
 import com.aracecultura.arace.ui.theme.bgDefault
 import com.aracecultura.arace.ui.theme.btColor
@@ -35,12 +37,15 @@ import com.aracecultura.arace.ui.theme.btColor
 @Composable
 
 fun ProdutoNavegar (
-    produto: Produto
+    produto: Produto,
+    onProdutoClick: () -> Unit = {},      // Recebe o clique na linha
+    onAddToCartClick: () -> Unit = {}
 ) {
     val screenWidth = LocalConfiguration.current.screenWidthDp.dp
     Row(modifier =  Modifier
-        .padding(top = 12.dp)
+        .padding(bottom = 12.dp)
         .background(bgDefault)
+        .clickable { onProdutoClick() }
         .padding(12.dp)) {
         AsyncImage(
             model = Uri.decode(produto.imagens[0]),
@@ -68,12 +73,8 @@ fun ProdutoNavegar (
                 fontSize = 16.sp
             )
             Spacer(modifier = Modifier.height(8.dp))
-            Image(
-                painter = painterResource(id = R.drawable.estrela),
-                contentDescription = null,
-                modifier = Modifier
-                    .width(screenWidth * 0.2f)
-            )
+
+            Avaliacao(produto.avaliacao)
             Spacer(modifier = Modifier.height(8.dp))
             Row(verticalAlignment = Alignment.Top){
                 Text("R$ ", fontSize = 12.sp)
@@ -89,7 +90,7 @@ fun ProdutoNavegar (
                 textColor = bgDefault,
                 containerColor = btColor,
                 borderColor = btColor,
-                onClick = { println("Clicou em $screenWidth") },
+                onClick = { onAddToCartClick() },
                 modifier = Modifier
                     .padding(top = 8.dp)
                     .width(screenWidth * 0.5f)

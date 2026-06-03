@@ -1,24 +1,18 @@
 package com.aracecultura.arace.ui.main
 
 import android.os.Bundle
+import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.compose.ui.platform.ComposeView
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.aracecultura.arace.R
-import com.aracecultura.arace.ui.components.explorar.ExplorarProduto
-import com.aracecultura.arace.ui.components.explorar.ExplorarProdutoViewmodel
+import com.aracecultura.arace.ui.components.perfil.cliente.PerfilCliente
 import com.google.firebase.auth.FirebaseAuth
 
-class ExplorarProdutoFragment : Fragment() {
-
+class PerfilClienteFragment : Fragment() {
     private lateinit var composeView: ComposeView
-    // Instanciamos o viewmodel aqui para poder passar a ação do carrinho
-    private val viewModel: ExplorarProdutoViewmodel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -32,18 +26,23 @@ class ExplorarProdutoFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Pega o ID do usuário atual
         val uid = FirebaseAuth.getInstance().currentUser?.uid ?: ""
 
+        // Dentro de PerfilClienteFragment.kt (no onViewCreated)
         composeView.setContent {
-            ExplorarProduto(
+            PerfilCliente(
                 uid = uid,
-                onNavigateToProduto = { produtoId ->
-                    // 1. Navega para a tela do produto passando o ID no Bundle
-                    val bundle = Bundle().apply {
-                        putString("produtoId", produtoId)
-                    }
-                    findNavController().navigate(R.id.action_explorar_to_produto, bundle)
+                onEditClick = { /* sua navegação de edição */ },
+                onLogoutClick = {
+                    // 1. Desloga do Firebase
+                    FirebaseAuth.getInstance().signOut()
+
+                    // 2. Avisa a NavegacaoPrincipal para mudar de tela via FragmentResult
+                    requireActivity().supportFragmentManager.setFragmentResult("logout_request", Bundle())
+                },
+                onModoChanged = { isProdutor ->
+                    val bundle = Bundle().apply { putBoolean("isProdutor", isProdutor) }
+                    requireActivity().supportFragmentManager.setFragmentResult("mudanca_modo_request", bundle)
                 }
             )
         }

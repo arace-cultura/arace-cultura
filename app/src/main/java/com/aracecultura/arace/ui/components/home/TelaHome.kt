@@ -17,8 +17,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowLeft
 import androidx.compose.material.icons.filled.KeyboardArrowRight
@@ -60,6 +62,7 @@ fun TelaHome(
     val produtos: State<List<Produto>> = viewmodel.produtos.collectAsState()
     val listaDeProdutos = produtos.value
     val scope = rememberCoroutineScope()
+    val scrollState = rememberScrollState()
 
     Box(
         modifier = Modifier
@@ -75,7 +78,7 @@ fun TelaHome(
                 .alpha(0.25f)
         )
 
-        Column(modifier = Modifier.fillMaxSize()) {
+        Column(modifier = Modifier.fillMaxSize().verticalScroll(scrollState)) {
             Spacer(modifier = Modifier.height(20.dp))
             Box(Modifier.fillMaxWidth().background(bgDefault)){
                 Text(

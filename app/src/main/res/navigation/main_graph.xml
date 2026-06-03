@@ -24,17 +24,21 @@
     </fragment>
 
     <fragment
-        android:id="@+id/usuario"
-        android:name="com.aracecultura.arace.ui.main.Usuario"/>
+        android:id="@+id/perfilcliente"
+        android:name="com.aracecultura.arace.ui.main.PerfilClienteFragment"/>
 
     <fragment
-        android:id="@+id/favoritos"
-        android:name="com.aracecultura.arace.ui.main.FavoritosFragment"
-        tools:layout="@layout/fragment_favoritos" />
+        android:id="@+id/carrinho"
+        android:name="com.aracecultura.arace.ui.main.CarrinhoFragment" />
 
     <fragment
         android:id="@+id/explorar"
-        android:name="com.aracecultura.arace.ui.main.ExplorarProdutoFragment" />
+        android:name="com.aracecultura.arace.ui.main.ExplorarProdutoFragment">
+
+        <action
+            android:id="@+id/action_explorar_to_produto"
+            app:destination="@id/produto" />
+    </fragment>
 
     <fragment
         android:id="@+id/adicionar"

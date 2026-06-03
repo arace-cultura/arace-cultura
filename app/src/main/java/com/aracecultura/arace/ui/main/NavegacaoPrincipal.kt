@@ -66,6 +66,36 @@ class NavegacaoPrincipal : Fragment() {
             }
         }
 
+        requireActivity().supportFragmentManager.setFragmentResultListener(
+            "mudanca_modo_request",
+            viewLifecycleOwner
+        ) { _, bundle ->
+
+            val isProdutor = bundle.getBoolean("isProdutor", false)
+
+            // Converte o booleano do Firebase/Compose para o seu Enum (Modo)
+            val modoSelecionado = if (isProdutor) Modo.PRODUTOR else Modo.CLIENTE
+
+            quandoModoMudar(modoSelecionado)
+        }
+
+        setFragmentResultListener("mudanca_modo_request") { _, bundle ->
+            val querSerProdutor = bundle.getBoolean("isProdutor", false)
+
+            val modoSelecionado = if (querSerProdutor) Modo.PRODUTOR else Modo.CLIENTE
+            quandoModoMudar(modoSelecionado)
+        }
+
+        // Dentro do onViewCreated de NavegacaoPrincipal.kt
+
+        requireActivity().supportFragmentManager.setFragmentResultListener(
+            "logout_request",
+            viewLifecycleOwner
+        ) { _, _ ->
+            // A NavegacaoPrincipal está no root, então ela ENCONTRA a action sem dar crash!
+            findNavController().navigate(R.id.action_main_to_auth)
+        }
+
 
     }
 

@@ -16,6 +16,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.aracecultura.arace.ui.theme.GoogleSans
 
 @Composable
 fun AppButton(
@@ -42,6 +43,7 @@ fun AppButton(
     ) {
         Text(
             text = text,
+            fontFamily = GoogleSans,
             fontSize = fontSize,
             color = textColor
         )

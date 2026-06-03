@@ -1,5 +1,6 @@
 package com.aracecultura.arace.ui.components.explorar
 
+import android.util.Log // <-- Import necessário para os testes no Logcat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.aracecultura.arace.data.model.Produto
@@ -43,5 +44,34 @@ class ExplorarProdutoViewmodel : ViewModel() {
         }catch (e: Exception){
             emptyList()
         }
+    }
+
+    fun adicionarAoCarrinho(produto: Produto, uid: String) {
+        // Trava de segurança: se não houver usuário logado, não faz nada
+        if (uid.isBlank()) {
+            Log.w("Carrinho", "Tentativa de adicionar ao carrinho sem usuário logado.")
+            return
+        }
+
+        // Formatamos o mapa de dados exatamente com os atributos solicitados
+        val itemCarrinho = hashMapOf(
+            "nome" to produto.nome,
+            "preco" to produto.preco,
+            // Pega apenas a primeira imagem da lista (se existir) e coloca dentro de uma nova List
+            "imagens" to if (produto.imagens.isNotEmpty()) listOf(produto.imagens[0]) else emptyList<String>()
+        )
+
+        // Salva na coleção: Carrinho -> [UID do Usuário] -> Produtos -> [ID do Produto]
+        db.collection("Carrinho")
+            .document(uid)
+            .collection("Produtos")
+            .document(produto.id)
+            .set(itemCarrinho)
+            .addOnSuccessListener {
+                Log.d("Carrinho", "Produto ${produto.nome} adicionado com sucesso!")
+            }
+            .addOnFailureListener { e ->
+                Log.e("Carrinho", "Erro ao adicionar produto", e)
+            }
     }
 }

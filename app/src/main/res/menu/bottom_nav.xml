@@ -12,12 +12,12 @@
         android:title="Explorar" />
 
     <item
-        android:id="@+id/favoritos"
-        android:icon="@drawable/ic_heart_selector"
-        android:title="Favoritos" />
+        android:id="@+id/carrinho"
+        android:icon="@drawable/ic_carrinho_selector"
+        android:title="Carrinho" />
 
     <item
-        android:id="@+id/usuario"
+        android:id="@+id/perfilcliente"
         android:icon="@drawable/ic_user_selector"
         android:title="Eu"
         />
