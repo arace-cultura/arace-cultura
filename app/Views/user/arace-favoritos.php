@@ -43,18 +43,35 @@
   </a>
 </div>
 
+<!-- SIDEBAR -->
 <aside>
-  <a class="nav-item" href="../main/index.html"><i data-lucide="house"></i> Home page</a>
-  <a class="nav-item" href="../main/arace-search.html"><i data-lucide="shopping-bag"></i> Produtos</a>
-  <a class="nav-item" href="../main/carrinho.html"><i data-lucide="shopping-cart"></i> Carrinho</a>
-  <a class="nav-item" href="notificacoes.html"><i data-lucide="bell"></i> Notificações</a>
-  <a class="nav-item" href="../main/configuracoes.html"><i data-lucide="settings"></i> Configurações</a>
-  <a class="nav-item" href="perfil.html"><i data-lucide="user"></i> Perfil</a>
-  <a class="nav-item" href="../authentication/cadastro-produtor.html"><i data-lucide="box"></i> Quero ser produtor</a>
-  <div class="nav-divider"></div>
-  <div class="nav-section">Reportar</div>
-  <a class="nav-item" href="../main/configuracoes.html#pagamento"><i data-lucide="hand-coins"></i> Detalhes de pagamento</a>
-</aside>
+    <a class="nav-item" href="/">
+      <i data-lucide="house"></i> Home page
+    </a>
+    <a class="nav-item" href="/arace-produtos">
+      <i data-lucide="shopping-bag"></i> Produtos
+    </a>
+    <a class="nav-item active" href="/arace-carrinho">
+      <i data-lucide="shopping-cart"></i> Carrinho
+    </a>
+    <a class="nav-item" href="/usuario/arace-notificacao">
+      <i data-lucide="bell"></i> Notificações
+    </a>
+    <a class="nav-item" href="/arace-config">
+      <i data-lucide="settings"></i> Configurações
+    </a>
+    <a class="nav-item" href="/usuario/arace-perfil">
+      <i data-lucide="user"></i> Perfil
+    </a>
+    <a class="nav-item" href="/auth/cadastro/produtor">
+      <i data-lucide="box"></i> Quero ser produtor
+    </a>
+    <div class="nav-divider"></div>
+    <div class="nav-section">Reportar</div>
+    <a class="nav-item" href="/arace-config">
+      <i data-lucide="hand-coins"></i> Detalhes de pagamento
+    </a>
+  </aside>
 
 <main>
 
