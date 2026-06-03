@@ -58,12 +58,9 @@ import com.aracecultura.arace.R
 import com.aracecultura.arace.data.model.Produto
 import com.aracecultura.arace.ui.components.CarregamentoContainer
 import com.aracecultura.arace.ui.components.home.StatusBolinha
+import com.aracecultura.arace.ui.components.sombraInferior
 import com.aracecultura.arace.ui.theme.GoogleSans
 import com.aracecultura.arace.ui.theme.bgDefault
-import com.aracecultura.arace.ui.theme.btColor
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-import sombraInferior
 
 @Composable
 fun TelaDoProduto(

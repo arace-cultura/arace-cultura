@@ -215,24 +215,3 @@ fun PerfilCliente(
         }
     }
 }
-
-@Composable
-fun InfoRow(label: String, value: String) {
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Text(
-            text = label,
-            fontSize = 18.sp,
-            fontWeight = FontWeight.Medium,
-            color = Color.Black
-        )
-        Text(
-            text = value,
-            fontSize = 18.sp,
-            color = Color(0xFF4A5568)
-        )
-    }
-}

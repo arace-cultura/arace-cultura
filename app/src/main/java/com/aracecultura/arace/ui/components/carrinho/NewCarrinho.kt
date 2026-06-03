@@ -49,6 +49,13 @@ fun NewCarrinho(
 
         Scaffold(
             containerColor = Color.Transparent,
+            bottomBar = {
+                SecaoFinalizarCompra(
+                    produtos = produtos.value,
+                    onFinalizarClick = {
+                    }
+                )
+            }
         ) { paddingValues ->
             Column(
                 modifier = Modifier
