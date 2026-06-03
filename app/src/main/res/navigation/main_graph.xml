@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_graph"
+    app:startDestination="@id/homePage">
+
+    <fragment
+        android:id="@+id/homePage"
+        android:name="com.aracecultura.arace.ui.main.HomePageFragment">
+
+        <action
+            android:id="@+id/action_homePage_to_produtoFragment"
+            app:destination="@id/produto" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/produto"
+        android:name="com.aracecultura.arace.ui.main.TelaProdutoFragment">
+
+        <argument
+            android:name="produtoId"
+            app:argType="string" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/perfilcliente"
+        android:name="com.aracecultura.arace.ui.main.PerfilClienteFragment"/>
+
+    <fragment
+        android:id="@+id/perfilProdutor"
+        android:name="com.aracecultura.arace.ui.main.PerfilProdutorFragment" />
+
+    <fragment
+        android:id="@+id/carrinho"
+        android:name="com.aracecultura.arace.ui.main.CarrinhoFragment" />
+
+    <fragment
+        android:id="@+id/explorar"
+        android:name="com.aracecultura.arace.ui.main.ExplorarProdutoFragment">
+
+        <action
+            android:id="@+id/action_explorar_to_produto"
+            app:destination="@id/produto" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/adicionar"
+        android:name="com.aracecultura.arace.ui.main.CriarProdutoFragment" />
+</navigation>
