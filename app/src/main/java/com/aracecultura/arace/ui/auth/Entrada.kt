@@ -30,6 +30,7 @@ class Entrada : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        this.checkAuth()
         this.initListeners()
     }
 

@@ -5,90 +5,196 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/f_login"
+    android:background="@color/bg"
     tools:context=".ui.auth.Cadastro">
 
+    <ImageView
+        android:id="@+id/bgPlaceholder"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:src="@drawable/img_bg_explorar"
+        android:alpha="0.15"
+        android:scaleType="centerCrop"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
     <LinearLayout
-        android:layout_width="350dp"
-        android:layout_height="600dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:gravity="center_horizontal"
         android:orientation="vertical"
-        android:padding="10dp"
+        android:padding="40dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="30dp">
+
+            <FrameLayout
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layout_constraintWidth_percent="0.5"
+                app:layout_constraintDimensionRatio="1:1"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                >
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="12dp"
+                    android:src="@drawable/lago" />
+
+            </FrameLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
-            android:layout_marginBottom="32dp"
-            android:fontFamily="@font/librecaslondisplay_regular"
-            android:text="Criar conta"
-            android:textColor="@color/white"
-            android:textSize="55sp" />
+            android:fontFamily="@font/google_sans_flex_variable_font"
+            android:text="Comece no Aracê"
+            android:textColor="@color/texto"
+            android:textSize="24sp"
+            android:textFontWeight="500"/>
 
-        <EditText
-            android:id="@+id/cadastro_input"
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:background="@drawable/w_rectangle"
+            android:layout_marginBottom="10dp"
+            android:fontFamily="@font/google_sans_flex_variable_font"
+            android:text="Cadastre-se nesse acervo capixaba"
+            android:textColor="@color/texto"
+            android:textSize="18sp"
+            android:textFontWeight="400"/>
+
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:background="@color/bg"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"
+            app:boxStrokeColor="@color/arace_blue"
+            app:hintTextColor="@color/arace_blue"
+            android:hint="Nome"
+            app:boxCornerRadiusTopStart="15dp"
+            app:boxCornerRadiusTopEnd="15dp"
+            app:boxCornerRadiusBottomStart="15dp"
+            app:boxCornerRadiusBottomEnd="15dp">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/nome_input"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/google_sans_flex_variable_font"
+                android:inputType="textPersonName"
+                android:textColor="@color/texto" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:background="@color/bg"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"
+            app:boxStrokeColor="@color/arace_blue"
+            app:hintTextColor="@color/arace_blue"
             android:hint="Email"
-            android:inputType="textEmailAddress"
-            android:padding="16dp"
-            android:textColor="@color/gray"
-            android:textColorHint="@color/gray"
-            android:textSize="16sp" />
+            app:boxCornerRadiusTopStart="15dp"
+            app:boxCornerRadiusTopEnd="15dp"
+            app:boxCornerRadiusBottomStart="15dp"
+            app:boxCornerRadiusBottomEnd="15dp"
+            >
 
-        <EditText
-            android:id="@+id/cadastro_senha"
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/cadastro_input"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/google_sans_flex_variable_font"
+                android:inputType="textEmailAddress"
+                android:textColor="@color/texto" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:background="@color/bg"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:background="@drawable/w_rectangle"
+            android:layout_marginBottom="12dp"
+            app:boxStrokeColor="@color/arace_blue"
+            app:hintTextColor="@color/arace_blue"
+            app:endIconMode="password_toggle"
+            app:endIconTint="@color/hint_gray"
             android:hint="Senha"
-            android:inputType="textPassword"
-            android:padding="16dp"
-            android:textColor="@color/gray"
-            android:textColorHint="@color/gray"
-            android:textSize="16sp" />
+            app:boxCornerRadiusTopStart="15dp"
+            app:boxCornerRadiusTopEnd="15dp"
+            app:boxCornerRadiusBottomStart="15dp"
+            app:boxCornerRadiusBottomEnd="15dp">
 
-        <EditText
-            android:id="@+id/cadastro_confirmar_senha"
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/cadastro_senha"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/google_sans_flex_variable_font"
+                android:inputType="textPassword"
+                android:textColor="@color/texto" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:background="@color/bg"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:background="@drawable/w_rectangle"
+            android:layout_marginBottom="24dp"
+            app:boxStrokeColor="@color/arace_blue"
+            app:hintTextColor="@color/arace_blue"
+            app:endIconMode="password_toggle"
+            app:endIconTint="@color/hint_gray"
             android:hint="Confirme sua senha"
-            android:inputType="textPassword"
-            android:padding="16dp"
-            android:textColor="@color/gray"
-            android:textColorHint="@color/gray"
-            android:textSize="16sp" />
+            app:boxCornerRadiusTopStart="15dp"
+            app:boxCornerRadiusTopEnd="15dp"
+            app:boxCornerRadiusBottomStart="15dp"
+            app:boxCornerRadiusBottomEnd="15dp">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/cadastro_confirmar_senha"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/google_sans_flex_variable_font"
+                android:inputType="textPassword"
+                android:textColor="@color/texto" />
+        </com.google.android.material.textfield.TextInputLayout>
 
         <Button
             android:id="@+id/cadastro_btn"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
-            android:backgroundTint="@color/white"
+            android:backgroundTint="@color/arace_blue"
+            android:fontFamily="@font/google_sans_flex_variable_font"
+            android:paddingHorizontal="40dp"
+            android:paddingVertical="12dp"
             android:text="Concluir"
-            android:textColor="@color/placeholder1"
-            android:textSize="20sp" />
+            android:textColor="@color/white"
+            android:textSize="18sp" />
 
         <TextView
             android:id="@+id/cadastro_back"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="16dp"
+            android:fontFamily="@font/google_sans_flex_variable_font"
             android:text="Voltar"
-            android:textAlignment="center"
-            android:textColor="@color/white"
+            android:textColor="@color/black"
             android:textSize="16sp" />
 
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
-

@@ -5,17 +5,6 @@
     android:id="@+id/auth_graph"
     app:startDestination="@id/entrada">
 
-
-    <fragment
-        android:id="@+id/login"
-        android:name="com.aracecultura.arace.ui.auth.Login"
-        android:label="fragment_login"
-        tools:layout="@layout/fragment_login" />
-    <fragment
-        android:id="@+id/cadastro"
-        android:name="com.aracecultura.arace.ui.auth.Cadastro"
-        android:label="fragment_cadastro"
-        tools:layout="@layout/fragment_cadastro" />
     <fragment
         android:id="@+id/entrada"
         android:name="com.aracecultura.arace.ui.auth.Entrada"
@@ -29,5 +18,15 @@
             app:destination="@id/cadastro" />
     </fragment>
 
+    <fragment
+        android:id="@+id/login"
+        android:name="com.aracecultura.arace.ui.auth.Login"
+        android:label="fragment_login"
+        tools:layout="@layout/fragment_login" />
 
+    <fragment
+        android:id="@+id/cadastro"
+        android:name="com.aracecultura.arace.ui.auth.Cadastro"
+        android:label="fragment_cadastro"
+        tools:layout="@layout/fragment_cadastro" />
 </navigation>

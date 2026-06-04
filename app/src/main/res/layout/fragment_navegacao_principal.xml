@@ -16,7 +16,9 @@
     -->
 
     <com.google.android.material.appbar.AppBarLayout
+        android:elevation="8dp"
         android:id="@+id/appBarLayout"
+        android:background="#F9F8F7"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -32,10 +34,10 @@
                 android:id="@+id/btnMenuModo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="end"
+                android:layout_gravity="start"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:padding="16dp"
-                android:src="@drawable/menu"/>
+                android:src="@drawable/ic_menu"/>
 
         </com.google.android.material.appbar.MaterialToolbar>
     </com.google.android.material.appbar.AppBarLayout>
@@ -65,7 +67,13 @@
         />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:elevation="8dp"
+        app:itemIconSize="28dp"
+        android:background="#F9F8F7"
+        app:itemActiveIndicatorStyle="@null"
+        app:itemTextColor="@color/texto"
         android:id="@+id/bnvMenuInferiorNavegacao"
+        app:itemIconTint="@null"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:itemGravity="center"

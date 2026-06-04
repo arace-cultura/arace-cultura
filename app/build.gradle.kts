@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     id("com.google.gms.google-services")
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.navigation.safeargs)
     id("kotlin-parcelize") // Vem da app-dev
 }
 
@@ -52,6 +53,15 @@ android {
 }
 
 dependencies {
+    implementation(libs.androidx.lifecycle.runtime.ktx)
+    implementation(libs.androidx.activity.compose)
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.0")
+
+    implementation(platform(libs.firebase.bom))
+    //implementation(libs.firebase.crashlytics)
+    implementation(libs.firebase.auth)
+    implementation(libs.firebase.firestore)
+    implementation(libs.coil)
     
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
@@ -76,6 +86,14 @@ dependencies {
     implementation(libs.androidx.core.splashscreen)
     implementation(libs.firebase.firestore)
     implementation(libs.androidx.recyclerview)
+
+    implementation(platform("io.github.jan-tennert.supabase:bom:3.1.4"))
+    implementation("io.github.jan-tennert.supabase:postgrest-kt")
+    implementation("io.github.jan-tennert.supabase:auth-kt")
+    implementation("io.github.jan-tennert.supabase:storage-kt")
+
+    // engine HTTP (obrigatório)
+    implementation("io.ktor:ktor-client-android:3.1.2")
 
     // Geralmente, o bundle padrão de Compose já resolve isso:
     implementation(libs.ui)

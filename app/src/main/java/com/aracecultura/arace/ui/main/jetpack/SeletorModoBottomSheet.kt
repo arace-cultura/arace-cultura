@@ -32,9 +32,9 @@ Agora possuímos um onModoSelecionado, e o invocamos na NavegacaoPrincipal via o
 */
 
 enum class Modo { CLIENTE, PRODUTOR} // enum é uma classe passsiva cuja única especificação
-                                     // é ter um universo de valores limitados. Só é acessível
-                                     // Modo.Cliente e Modo.Produtor. Isso é mais seguro tendo
-                                     // em vista que já esperamos o acesso via Modo.(...)
+// é ter um universo de valores limitados. Só é acessível
+// Modo.Cliente e Modo.Produtor. Isso é mais seguro tendo
+// em vista que já esperamos o acesso via Modo.(...)
 
 class SeletorModoBottomSheet (
     var onModoSelecionado: ((Modo) -> Unit)? = null // Unit é análogo ao void; a val é um comportamento
