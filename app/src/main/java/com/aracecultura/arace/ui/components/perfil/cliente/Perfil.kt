@@ -43,7 +43,7 @@ fun PerfilCliente(
 
     Box(Modifier.background(bgDefault)) {
         Image(
-            painter = painterResource(id = R.drawable.bg_explorar),
+            painter = painterResource(id = R.drawable.img_bg_explorar),
             contentDescription = null,
             contentScale = ContentScale.Crop,
             modifier = Modifier.fillMaxSize(),

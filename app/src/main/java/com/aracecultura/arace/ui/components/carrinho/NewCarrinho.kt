@@ -40,7 +40,7 @@ fun NewCarrinho(
     Box(modifier = Modifier.fillMaxSize().background(bgDefault)) {
 
         Image(
-            painter = painterResource(id = R.drawable.bg_explorar),
+            painter = painterResource(id = R.drawable.img_bg_explorar),
             contentDescription = "Background Topográfico",
             contentScale = ContentScale.Crop,
             modifier = Modifier.fillMaxSize(),

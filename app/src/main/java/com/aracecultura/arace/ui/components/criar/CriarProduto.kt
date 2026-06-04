@@ -34,8 +34,6 @@ import com.aracecultura.arace.R
 import com.aracecultura.arace.ui.components.AppButton
 import com.aracecultura.arace.ui.theme.bgDefault
 import com.aracecultura.arace.ui.theme.btColor
-import com.aracecultura.arace.ui.components.criar.ProdutoUiState
-import com.aracecultura.arace.ui.components.criar.ProdutoViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -91,7 +89,7 @@ fun CriarProduto(
 
     ) {
         Image(
-            painter = painterResource(id = R.drawable.bg_explorar),
+            painter = painterResource(id = R.drawable.img_bg_explorar),
             contentDescription = null,
             contentScale = ContentScale.Crop,
             modifier = Modifier

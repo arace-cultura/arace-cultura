@@ -70,7 +70,7 @@ fun TelaHome(
             .background(bgDefault)
     ) {
         Image(
-            painter = painterResource(id = R.drawable.bg_explorar),
+            painter = painterResource(id = R.drawable.img_bg_explorar),
             contentDescription = null,
             contentScale = ContentScale.Crop,
             modifier = Modifier
@@ -146,8 +146,10 @@ fun TelaHome(
                         val produtoAtual = listaDeProdutos[index]
                         Column(Modifier.clickable { onProdutoClick(produtoAtual.id) }) {
                             AsyncImage(
-                                model = produtoAtual.imagens[0],
+                                model = produtoAtual.imagens.firstOrNull(),
                                 contentDescription = "Imagem do carrossel",
+                                placeholder = painterResource(id = R.drawable.placeholder),
+                                error = painterResource(id = R.drawable.placeholder),
                                 contentScale = ContentScale.Crop,
                                 modifier = Modifier
                                     .weight(1f)
@@ -224,7 +226,7 @@ fun TelaHome(
                         Row(
                             horizontalArrangement = Arrangement.spacedBy(10.dp)
                         ) {
-                            listaDeProdutos.forEachIndexed { index, imagem ->
+                            listaDeProdutos.forEachIndexed { index, _ ->
                                 StatusBolinha(pagerState.currentPage, index)
                             }
                         }

@@ -45,7 +45,3 @@ fun ButtonCustomized(
         )
     }
 }
-
-fun onClick() {
-    TODO("Not yet implemented")
-}

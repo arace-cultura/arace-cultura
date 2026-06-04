@@ -48,8 +48,10 @@ fun ProdutoNavegar (
         .clickable { onProdutoClick() }
         .padding(12.dp)) {
         AsyncImage(
-            model = Uri.decode(produto.imagens[0]),
+            model = produto.imagens.firstOrNull()?.let(Uri::decode),
             contentDescription = "Produto",
+            placeholder = painterResource(id = R.drawable.placeholder),
+            error = painterResource(id = R.drawable.placeholder),
             modifier = Modifier
                 .height(screenWidth * 0.45f)
                 .weight(1f)

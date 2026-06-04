@@ -26,18 +26,4 @@ class TelaDoProdutoViewmodel : ViewModel() {
             _produto.value = documento.toObject(Produto::class.java)
         }
     }
-
-    private suspend fun getAllProducts(): List<Produto> {
-        return try {
-            db.collection("Produtos")
-                .get()
-                .await()
-                .documents
-                .mapNotNull { snapshot ->
-                    snapshot.toObject(Produto::class.java)
-                }
-        } catch (e: Exception) {
-            emptyList()
-        }
-    }
 }
