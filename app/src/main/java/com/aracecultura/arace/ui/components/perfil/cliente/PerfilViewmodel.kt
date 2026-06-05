@@ -13,7 +13,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 
-// Data class para representar os dados do usuário
+// Data class perfeita para o Firestore
 data class Usuario(
     val id: String = "",
     val nome: String = "",
@@ -35,42 +35,44 @@ class PerfilViewModel : ViewModel() {
                 val document = withContext(Dispatchers.IO) {
                     db.collection("Usuarios").document(uid).get().await()
                 }
-                val userData = document.toObject(Usuario::class.java)
+
+                // Mapeia o documento para o objeto, adicionando também o ID do documento por segurança
+                val userData = document.toObject(Usuario::class.java)?.copy(id = document.id)
+
                 if (userData != null) {
                     _usuario.value = userData
                 } else {
-                    // Fallback para visualização caso o documento não exista
                     _usuario.value = Usuario(id = uid, nome = "Usuário", email = "usuario@gmail.com")
                 }
             } catch (e: Exception) {
-                // Tratar erro
+                e.printStackTrace() // Ajuda a debugar no Logcat caso dê erro
             }
         }
     }
 
     // Altera o modo de visualização entre Cliente e Produtor
     fun alterarModoVisualizacao(isProdutor: Boolean, uid: String) {
+        // Guarda o estado anterior caso a requisição falhe
+        val estadoAnterior = _usuario.value
         _usuario.value = _usuario.value.copy(isProdutor = isProdutor)
 
-        // Salva a preferência no Firestore em background
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 db.collection("Usuarios").document(uid)
                     .update("isProdutor", isProdutor)
                     .await()
             } catch (e: Exception) {
-                // Tratar erro
+                _usuario.value = estadoAnterior
             }
         }
     }
+    // Atualiza os dados editados
+    fun salvarEdicaoPerfil(novoNome: String, novaFotoUrl: String, uid: String, onSucesso: () -> Unit = {}) {
+        val estadoAnterior = _usuario.value
 
-    // Atualiza os dados editados (ex: nome, nova foto)
-    fun salvarEdicaoPerfil(novoNome: String, novaFotoUrl: String, uid: String) {
         viewModelScope.launch {
-            // 1. Atualiza o estado da UI instantaneamente
             _usuario.value = _usuario.value.copy(nome = novoNome, fotoUrl = novaFotoUrl)
-
-            // 2. Persiste no banco de dados
+            // Persiste no banco de dados
             try {
                 withContext(Dispatchers.IO) {
                     val updates = mapOf(
@@ -79,8 +81,10 @@ class PerfilViewModel : ViewModel() {
                     )
                     db.collection("Usuarios").document(uid).update(updates).await()
                 }
+                // Se salvou com sucesso, executa a ação de voltar de tela
+                onSucesso()
             } catch (e: Exception) {
-                // Tratar erro (ex: reverter estado, mostrar toast)
+                _usuario.value = estadoAnterior
             }
         }
     }

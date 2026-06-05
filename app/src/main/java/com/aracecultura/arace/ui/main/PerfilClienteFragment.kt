@@ -5,46 +5,54 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.ComposeView
-import androidx.navigation.fragment.findNavController
-import com.aracecultura.arace.R
+import com.aracecultura.arace.ui.components.perfil.cliente.EditarPerfilUsuario
 import com.aracecultura.arace.ui.components.perfil.cliente.PerfilCliente
 import com.google.firebase.auth.FirebaseAuth
 
 class PerfilClienteFragment : Fragment() {
-    private lateinit var composeView: ComposeView
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        return ComposeView(requireContext()).also {
-            composeView = it
-        }
-    }
+        return ComposeView(requireContext()).apply {
+            setContent {
+                //Controla o estado de qual tela exibir
+                var editando by remember { mutableStateOf(false) }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+                //Pega o UID real do usuário logado no Firebase
+                val uid = FirebaseAuth.getInstance().currentUser?.uid ?: ""
 
-        val uid = FirebaseAuth.getInstance().currentUser?.uid ?: ""
+                if (editando) {
+                    // Mostra a tela de Edição
+                    EditarPerfilUsuario(
+                        uid = uid,
+                        onVoltarClick = { editando = false } // Volta para a tela de visualização
+                    )
+                } else {
+                    // Mostra a tela de Visualização Padrão
+                    PerfilCliente(
+                        uid = uid,
+                        onEditClick = { editando = true }, // Altera o estado para abrir a edição
+                        onLogoutClick = {
+                            // Desloga do Firebase
+                            FirebaseAuth.getInstance().signOut()
 
-        // Dentro de PerfilClienteFragment.kt (no onViewCreated)
-        composeView.setContent {
-            PerfilCliente(
-                uid = uid,
-                onEditClick = { /* sua navegação de edição */ },
-                onLogoutClick = {
-                    // 1. Desloga do Firebase
-                    FirebaseAuth.getInstance().signOut()
-
-                    // 2. Avisa a NavegacaoPrincipal para mudar de tela via FragmentResult
-                    requireActivity().supportFragmentManager.setFragmentResult("logout_request", Bundle())
-                },
-                onModoChanged = { isProdutor ->
-                    val bundle = Bundle().apply { putBoolean("isProdutor", isProdutor) }
-                    requireActivity().supportFragmentManager.setFragmentResult("mudanca_modo_request", bundle)
+                            // Avisa a NavegacaoPrincipal para mudar de tela via FragmentResult
+                            requireActivity().supportFragmentManager.setFragmentResult("logout_request", Bundle())
+                        },
+                        onModoChanged = { isProdutor ->
+                            val bundle = Bundle().apply { putBoolean("isProdutor", isProdutor) }
+                            requireActivity().supportFragmentManager.setFragmentResult("mudanca_modo_request", bundle)
+                        }
+                    )
                 }
-            )
+            }
         }
     }
 }
