@@ -76,7 +76,7 @@ fun TelaDoProduto(
                     ) {
                         if (listaDeImagens.isEmpty()) {
                             Image(
-                                painter = painterResource(id = com.aracecultura.arace.R.drawable.placeholder),
+                                painter = painterResource(id = com.aracecultura.arace.R.drawable.img_placeholder),
                                 contentDescription = "Produto sem imagem",
                                 contentScale = ContentScale.Crop,
                                 modifier = Modifier.fillMaxSize()

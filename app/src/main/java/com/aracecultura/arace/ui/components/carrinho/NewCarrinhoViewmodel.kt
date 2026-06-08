@@ -1,9 +1,9 @@
 package com.aracecultura.arace.ui.components.carrinho
 
 import android.util.Log
-import androidx.compose.ui.graphics.vector.EmptyPath
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.aracecultura.arace.data.model.ItemCarrinho
 import com.aracecultura.arace.data.model.Produto
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.FirebaseFirestore
@@ -17,59 +17,77 @@ import kotlinx.coroutines.withContext
 
 class NewCarrinhoViewModel : ViewModel() {
 
-    private var db: FirebaseFirestore = Firebase.firestore
+    private val db: FirebaseFirestore = Firebase.firestore
 
+    private val _estado = MutableStateFlow<EstadoCarrinho>(EstadoCarrinho.Carregando)
+    val estado: StateFlow<EstadoCarrinho> = _estado
 
-    private val _produtos = MutableStateFlow<List<Produto>>(emptyList())
-    val produtos: StateFlow<List<Produto>> = _produtos
-
-
-    fun getCartProducts(uid: String) {
+    fun carregarCarrinho(uid: String) {
         viewModelScope.launch {
-            val result: List<Produto> = withContext(Dispatchers.IO) {
+            _estado.value = EstadoCarrinho.Carregando
+
+            val itens: List<ItemCarrinho> = withContext(Dispatchers.IO) {
                 getAllCartProducts(uid)
             }
-            _produtos.value = result
+
+            _estado.value = EstadoCarrinho.Pronto(itens)
         }
     }
 
-    private suspend fun getAllCartProducts(uid: String): List<Produto> {
+    private suspend fun getAllCartProducts(uid: String): List<ItemCarrinho> {
         return try {
-            // Acessa a coleção "Carrinho", encontra o documento do usuário pelo UID,
-            // e lista os itens salvos na subcoleção "Produtos" (ou o nome que você usar no banco).
-            db.collection("Carrinho")
+            val snapshot = db.collection("Carrinho")
                 .document(uid)
                 .collection("Produtos")
                 .get()
                 .await()
-                .documents
-                .mapNotNull { snapshot ->
-                    snapshot.toObject(Produto::class.java)
+
+            snapshot.documents.mapNotNull { doc ->
+                val idDocumento = doc.id
+
+                // Pega a quantidade (se não achar, assume 1)
+                val qtd = doc.getLong("quantidade")?.toInt() ?: 1
+
+                // O pulo do gato: o documento inteiro É o produto
+                val produtoMapeado = doc.toObject(Produto::class.java)
+
+                if (produtoMapeado != null) {
+                    ItemCarrinho(
+                        id = idDocumento,
+                        produto = produtoMapeado,
+                        quantidade = qtd
+                    )
+                } else {
+                    Log.e("Carrinho", "Documento $idDocumento falhou ao mapear para Produto.")
+                    null
                 }
+            }
         } catch (e: Exception) {
-            Log.e("Carrinho", "Falha ao converter ou buscar dados", e)
+            Log.e("Carrinho", "Falha ao buscar dados", e)
             emptyList()
         }
     }
 
-    fun removerProduto(produto: Produto, uid: String) {
+    fun removerItem(item: ItemCarrinho, uid: String) {
         viewModelScope.launch {
             try {
-                // 1. Remove do Firestore usando a mesma rota do UID e o ID do documento do produto
                 withContext(Dispatchers.IO) {
                     db.collection("Carrinho")
                         .document(uid)
                         .collection("Produtos")
-                        .document(produto.id)
+                        .document(item.id)
                         .delete()
                         .await()
                 }
 
-                // 2. Se a exclusão no banco for bem-sucedida, atualiza o fluxo local instantaneamente
-                _produtos.value = _produtos.value.filter { it.id != produto.id }
+                val estadoAtual = _estado.value
+                if (estadoAtual is EstadoCarrinho.Pronto) {
+                    val listaAtualizada = estadoAtual.itens.filter { it.id != item.id }
+                    _estado.value = EstadoCarrinho.Pronto(listaAtualizada)
+                }
 
             } catch (e: Exception) {
-                // Opcional: Tratar erro (ex: reverter estado, mostrar log/toast)
+                Log.e("Carrinho", "Erro ao remover item do carrinho", e)
             }
         }
     }

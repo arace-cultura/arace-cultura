@@ -1,11 +1,8 @@
 package com.aracecultura.arace.ui.components.explorar
 
 import android.net.Uri
-import androidx.compose.ui.text.font.Font
 import com.aracecultura.arace.R
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -21,8 +18,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.ExperimentalTextApi
-import androidx.compose.ui.text.font.FontVariation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
@@ -50,8 +45,8 @@ fun ProdutoNavegar (
         AsyncImage(
             model = produto.imagens.firstOrNull()?.let(Uri::decode),
             contentDescription = "Produto",
-            placeholder = painterResource(id = R.drawable.placeholder),
-            error = painterResource(id = R.drawable.placeholder),
+            placeholder = painterResource(id = R.drawable.img_placeholder),
+            error = painterResource(id = R.drawable.img_placeholder),
             modifier = Modifier
                 .height(screenWidth * 0.45f)
                 .weight(1f)

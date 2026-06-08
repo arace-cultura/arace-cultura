@@ -136,7 +136,7 @@ fun CriarProduto(
                         )
                     } else {
                         Image(
-                            painter = painterResource(id = R.drawable.placeholder),
+                            painter = painterResource(id = R.drawable.img_placeholder),
                             contentDescription = null,
                             contentScale = ContentScale.Crop,
                             modifier = Modifier

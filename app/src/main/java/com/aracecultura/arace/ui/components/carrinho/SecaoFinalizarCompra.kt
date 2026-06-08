@@ -19,20 +19,26 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
-import com.aracecultura.arace.data.model.Produto
+import com.aracecultura.arace.data.model.ItemCarrinho
 import com.aracecultura.arace.ui.components.DirecaoSombra
 import com.aracecultura.arace.ui.components.sombraInferior
 import com.aracecultura.arace.ui.theme.GoogleSans
 import com.aracecultura.arace.ui.theme.bgDefault
 import com.aracecultura.arace.ui.theme.btColor
+import java.text.NumberFormat
+import java.util.Locale
 
 @Composable
 fun SecaoFinalizarCompra(
-    produtos: List<Produto>,
+    produtos: List<ItemCarrinho>,
     onFinalizarClick: () -> Unit
 ) {
-    // Calcula o valor total somando a propriedade 'preco' de cada produto.
-    val valorTotal = produtos.sumOf { it.preco ?: 0.0 }
+    // CRÍTICO: Multiplica o preço pela quantidade do carrinho!
+    val valorTotal = produtos.sumOf {
+        (it.produto.preco) * it.quantidade
+    }
+
+    val formatoMoeda = NumberFormat.getCurrencyInstance(Locale("pt", "BR"))
 
     Box(
         modifier = Modifier
@@ -56,8 +62,7 @@ fun SecaoFinalizarCompra(
                     color = Color.Gray
                 )
                 Text(
-                    // Formata o valor para o padrão de moeda (ex: R$ 150,00)
-                    text = String.format("R$ %.2f", valorTotal),
+                    text = formatoMoeda.format(valorTotal),
                     fontFamily = GoogleSans,
                     fontSize = 24.sp,
                     color = MaterialTheme.colorScheme.onSurface
