@@ -15,6 +15,10 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -36,7 +40,8 @@ import com.aracecultura.arace.ui.theme.bgDefault
 
 @Composable
 fun TelaDoProduto(
-    viewModel: TelaDoProdutoViewmodel
+    viewModel: TelaDoProdutoViewmodel,
+    onBackClick: () -> Unit = {}
 ) {
     Box(
         modifier = Modifier
@@ -193,6 +198,20 @@ fun TelaDoProduto(
 
                 }
             }
+        }
+
+        IconButton(
+            onClick = onBackClick,
+            modifier = Modifier
+                .align(Alignment.TopStart)
+                .padding(12.dp)
+                .zIndex(2f)
+        ) {
+            Icon(
+                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                contentDescription = "Voltar",
+                tint = androidx.compose.ui.graphics.Color.Black
+            )
         }
     }
 }

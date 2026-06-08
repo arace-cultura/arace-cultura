@@ -15,8 +15,12 @@ import com.aracecultura.arace.ui.main.jetpack.Modo
 import com.aracecultura.arace.ui.main.jetpack.SeletorModoBottomSheet
 import android.util.Log
 import androidx.fragment.app.setFragmentResultListener
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 
 
 class NavegacaoPrincipal : Fragment() {
@@ -40,9 +44,17 @@ class NavegacaoPrincipal : Fragment() {
         // getFragment é necessário pois o acesso ao navcontroller é da
         // fragment dentro do fcvNavegacaoPrincipal, que é, na verdade,
         // uma view que pertence à main activity.
-        this.binding.bnvMenuInferiorNavegacao.setupWithNavController(
-            this.binding.fcvNavegacaoPrincipal.getFragment<NavHostFragment>().navController
-        )
+        val navController = this.binding.fcvNavegacaoPrincipal.getFragment<NavHostFragment>().navController
+
+        this.binding.bnvMenuInferiorNavegacao.setupWithNavController(navController)
+
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            val esconderFooter = destination.id == R.id.produto ||
+                destination.id == R.id.finalizarCompraFragment
+
+            this.binding.bnvMenuInferiorNavegacao.visibility =
+                if (esconderFooter) View.GONE else View.VISIBLE
+        }
 
         this.binding.btnMenuModo.setOnClickListener {
             val bottomSheet = SeletorModoBottomSheet()
@@ -119,17 +131,32 @@ class NavegacaoPrincipal : Fragment() {
         val sharedPref = requireActivity().getSharedPreferences("AracePrefs", android.content.Context.MODE_PRIVATE)
 
         // Pegamos o ID do usuário atual para verificar a chave correta
-        val userId = FirebaseAuth.getInstance().currentUser?.uid ?: "desconhecido"
+        val userId = FirebaseAuth.getInstance().currentUser?.uid ?: return
 
-        // Lemos a chave com o ID atrelado
-        val isProdutorCadastrado = sharedPref.getBoolean("STATUS_PRODUTOR_$userId", false)
+        viewLifecycleOwner.lifecycleScope.launch {
+            val isProdutorCadastrado = try {
+                FirebaseFirestore.getInstance()
+                    .collection("Produtores")
+                    .document(userId)
+                    .get()
+                    .await()
+                    .exists()
+            } catch (e: Exception) {
+                Log.e("ModoArace", "Falha ao buscar status de produtor no banco.", e)
+                sharedPref.getBoolean("STATUS_PRODUTOR_$userId", false)
+            }
 
-        if (isProdutorCadastrado) {
-            Log.d("ModoArace", "Trocando footer para Produtor.")
-            configurarMenuProdutor()
-        } else {
-            Log.d("ModoArace", "Redirecionando para Cadastro.")
-            iniciarFluxoCadastroProdutor()
+            sharedPref.edit()
+                .putBoolean("STATUS_PRODUTOR_$userId", isProdutorCadastrado)
+                .apply()
+
+            if (isProdutorCadastrado) {
+                Log.d("ModoArace", "Trocando footer para Produtor.")
+                configurarMenuProdutor()
+            } else {
+                Log.d("ModoArace", "Redirecionando para Cadastro.")
+                iniciarFluxoCadastroProdutor()
+            }
         }
     }
 
@@ -142,6 +169,8 @@ class NavegacaoPrincipal : Fragment() {
 
     private fun configurarMenuCliente() {
         val bottomNav = this.binding.bnvMenuInferiorNavegacao
+        val navController = this.binding.fcvNavegacaoPrincipal.getFragment<NavHostFragment>().navController
+        val destinoAtual = navController.currentDestination?.id
 
         // 1. Apaga os ícones atuais
         bottomNav.menu.clear()
@@ -150,13 +179,14 @@ class NavegacaoPrincipal : Fragment() {
         bottomNav.inflateMenu(R.menu.bottom_nav)
 
         // 3. Reconecta o controller para ele reconhecer os "novos" botões
-        bottomNav.setupWithNavController(
-            this.binding.fcvNavegacaoPrincipal.getFragment<NavHostFragment>().navController
-        )
+        bottomNav.setupWithNavController(navController)
+        destinoAtual?.let { bottomNav.menu.findItem(it)?.isChecked = true }
     }
 
     private fun configurarMenuProdutor() {
         val bottomNav = this.binding.bnvMenuInferiorNavegacao
+        val navController = this.binding.fcvNavegacaoPrincipal.getFragment<NavHostFragment>().navController
+        val destinoAtual = navController.currentDestination?.id
 
         // 1. Apaga os ícones atuais (do cliente)
         bottomNav.menu.clear()
@@ -165,9 +195,8 @@ class NavegacaoPrincipal : Fragment() {
         bottomNav.inflateMenu(R.menu.bottom_nav_produtor)
 
         // 3. Reconecta o controller para ele reconhecer os "novos" botões
-        bottomNav.setupWithNavController(
-            this.binding.fcvNavegacaoPrincipal.getFragment<NavHostFragment>().navController
-        )
+        bottomNav.setupWithNavController(navController)
+        destinoAtual?.let { bottomNav.menu.findItem(it)?.isChecked = true }
     }
 
 

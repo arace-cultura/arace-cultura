@@ -3,7 +3,9 @@ package com.aracecultura.arace.ui.components.perfil.cliente
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.Firebase
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.SetOptions
 import com.google.firebase.firestore.firestore
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -35,14 +37,29 @@ class PerfilViewModel : ViewModel() {
                 val document = withContext(Dispatchers.IO) {
                     db.collection("Usuarios").document(uid).get().await()
                 }
+                val possuiCadastroProdutor = withContext(Dispatchers.IO) {
+                    db.collection("Produtores").document(uid).get().await().exists()
+                }
+                val emailAutenticado = FirebaseAuth.getInstance().currentUser?.email.orEmpty()
 
                 // Mapeia o documento para o objeto, adicionando também o ID do documento por segurança
-                val userData = document.toObject(Usuario::class.java)?.copy(id = document.id)
+                val userData = document.toObject(Usuario::class.java)
+                    ?.copy(id = document.id, isProdutor = possuiCadastroProdutor)
 
                 if (userData != null) {
-                    _usuario.value = userData
+                    _usuario.value = userData.copy(
+                        email = userData.email.ifBlank { emailAutenticado }
+                    )
+                    if (possuiCadastroProdutor && document.getBoolean("isProdutor") != true) {
+                        withContext(Dispatchers.IO) {
+                            db.collection("Usuarios")
+                                .document(uid)
+                                .set(mapOf("isProdutor" to true), SetOptions.merge())
+                                .await()
+                        }
+                    }
                 } else {
-                    _usuario.value = Usuario(id = uid, nome = "Usuário", email = "usuario@gmail.com")
+                    _usuario.value = Usuario(id = uid, nome = "Usuário", email = emailAutenticado, isProdutor = possuiCadastroProdutor)
                 }
             } catch (e: Exception) {
                 e.printStackTrace() // Ajuda a debugar no Logcat caso dê erro

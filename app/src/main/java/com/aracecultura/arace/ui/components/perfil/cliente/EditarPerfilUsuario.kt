@@ -37,6 +37,12 @@ fun EditarPerfilUsuario(
 
     var nomeInput by remember { mutableStateOf("") }
 
+    LaunchedEffect(uid) {
+        if (uid.isNotBlank()) {
+            viewModel.carregarDadosUsuario(uid)
+        }
+    }
+
     LaunchedEffect(usuario) {
         if (nomeInput.isEmpty() && usuario.nome.isNotEmpty()) {
             nomeInput = usuario.nome

@@ -10,9 +10,16 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.ComposeView
+import com.aracecultura.arace.ui.components.explorar.TelaConfiguracoes
 import com.aracecultura.arace.ui.components.perfil.cliente.EditarPerfilUsuario
 import com.aracecultura.arace.ui.components.perfil.cliente.PerfilCliente
 import com.google.firebase.auth.FirebaseAuth
+
+private enum class TelaPerfil {
+    PERFIL,
+    EDITAR,
+    CONFIGURACOES
+}
 
 class PerfilClienteFragment : Fragment() {
 
@@ -23,22 +30,35 @@ class PerfilClienteFragment : Fragment() {
         return ComposeView(requireContext()).apply {
             setContent {
                 //Controla o estado de qual tela exibir
-                var editando by remember { mutableStateOf(false) }
+                var telaAtual by remember { mutableStateOf(TelaPerfil.PERFIL) }
 
                 //Pega o UID real do usuário logado no Firebase
                 val uid = FirebaseAuth.getInstance().currentUser?.uid ?: ""
 
-                if (editando) {
+                when (telaAtual) {
+                    TelaPerfil.EDITAR -> {
                     // Mostra a tela de Edição
                     EditarPerfilUsuario(
                         uid = uid,
-                        onVoltarClick = { editando = false } // Volta para a tela de visualização
+                        onVoltarClick = { telaAtual = TelaPerfil.PERFIL }
                     )
-                } else {
+                    }
+                    TelaPerfil.CONFIGURACOES -> {
+                        TelaConfiguracoes(
+                            onBackClick = { telaAtual = TelaPerfil.PERFIL },
+                            onMeusDadosClick = { telaAtual = TelaPerfil.EDITAR },
+                            onSairClick = {
+                                FirebaseAuth.getInstance().signOut()
+                                requireActivity().supportFragmentManager.setFragmentResult("logout_request", Bundle())
+                            }
+                        )
+                    }
+                    TelaPerfil.PERFIL -> {
                     // Mostra a tela de Visualização Padrão
                     PerfilCliente(
                         uid = uid,
-                        onEditClick = { editando = true }, // Altera o estado para abrir a edição
+                        onEditClick = { telaAtual = TelaPerfil.EDITAR },
+                        onSettingsClick = { telaAtual = TelaPerfil.CONFIGURACOES },
                         onLogoutClick = {
                             // Desloga do Firebase
                             FirebaseAuth.getInstance().signOut()
@@ -51,6 +71,7 @@ class PerfilClienteFragment : Fragment() {
                             requireActivity().supportFragmentManager.setFragmentResult("mudanca_modo_request", bundle)
                         }
                     )
+                    }
                 }
             }
         }

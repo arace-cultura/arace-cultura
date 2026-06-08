@@ -29,6 +29,7 @@ fun PerfilCliente(
     uid: String,
     viewModel: PerfilViewModel = viewModel(),
     onEditClick: () -> Unit = {},
+    onSettingsClick: () -> Unit = {},
     onLogoutClick: () -> Unit = {},
     onModoChanged: (Boolean) -> Unit = {} // Repassa se é produtor (true) ou cliente (false)
 ) {
@@ -200,6 +201,17 @@ fun PerfilCliente(
                 }
 
                 Spacer(Modifier.weight(1f))
+
+                Text(
+                    text = "Configurações",
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.Black,
+                    modifier = Modifier
+                        .clickable { onSettingsClick() }
+                        .padding(8.dp)
+                )
+                Spacer(modifier = Modifier.height(8.dp))
 
                 // --- BOTÃO SAIR ---
                 Text(

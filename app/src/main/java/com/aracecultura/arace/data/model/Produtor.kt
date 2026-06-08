@@ -1,13 +1,15 @@
 package com.aracecultura.arace.data.model
 
 import android.os.Parcelable
+import com.google.firebase.firestore.DocumentId
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class Produtor(
+    @DocumentId val uid: String = "",
     val nomeCompleto: String = "",
     val nomeLoja: String = "",
-    val tipoPessoa: String = "", // "PF" ou "PJ"
+    val tipoPessoa: String = "",
     val razaoSocial: String = "",
     val cnpj: String = "",
     val telefone: String = "",

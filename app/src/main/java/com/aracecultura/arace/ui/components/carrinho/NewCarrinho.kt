@@ -29,7 +29,6 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.aracecultura.arace.R
 import com.aracecultura.arace.data.model.ItemCarrinho
-import com.aracecultura.arace.ui.components.carrinho.ProdutoCardItem
 import com.aracecultura.arace.ui.theme.GoogleSans
 import com.aracecultura.arace.ui.theme.bgDefault
 
@@ -42,6 +41,7 @@ sealed interface EstadoCarrinho {
 fun NewCarrinho(
     viewModel: NewCarrinhoViewModel = viewModel(),
     uid: String,
+    onFinalizarClick: () -> Unit = {},
     onDeleteClick: (ItemCarrinho) -> Unit = {}
 ) {
     val estado by viewModel.estado.collectAsState()
@@ -71,7 +71,7 @@ fun NewCarrinho(
                 val itens = (estado as? EstadoCarrinho.Pronto)?.itens ?: emptyList()
                 SecaoFinalizarCompra(
                     produtos = itens,
-                    onFinalizarClick = {}
+                    onFinalizarClick = onFinalizarClick
                 )
             }
         ) { paddingValues ->
@@ -85,6 +85,13 @@ fun NewCarrinho(
                 Spacer(modifier = Modifier.height(24.dp))
                 ListaItens(
                     estado = estado,
+                    modifier = Modifier.weight(1f),
+                    onAumentarQuantidade = { item ->
+                        viewModel.alterarQuantidade(item, uid, item.quantidade + 1)
+                    },
+                    onDiminuirQuantidade = { item ->
+                        viewModel.alterarQuantidade(item, uid, item.quantidade - 1)
+                    },
                     onRemoverItem = { item ->
                         viewModel.removerItem(item, uid)
                         onDeleteClick(item)
@@ -112,21 +119,19 @@ private fun TituloCarrinho() {
 @Composable
 private fun ListaItens(
     estado: EstadoCarrinho,
+    modifier: Modifier = Modifier,
+    onAumentarQuantidade: (ItemCarrinho) -> Unit,
+    onDiminuirQuantidade: (ItemCarrinho) -> Unit,
     onRemoverItem: (ItemCarrinho) -> Unit
 ) {
     LazyColumn(
+        modifier = modifier,
         contentPadding = PaddingValues(horizontal = 16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         when (estado) {
             is EstadoCarrinho.Carregando -> items(3) {
-                ProdutoCardItem(
-                    produto = null, // Skeleton ativado por ser null
-                    quantidade = 0,
-                    onIncreaseClick = {},
-                    onDecreaseClick = {},
-                    onDeleteClick = {}
-                )
+                ProdutoCardItem(produto = null)
             }
             is EstadoCarrinho.Pronto -> items(
                 items = estado.itens,
@@ -135,11 +140,9 @@ private fun ListaItens(
                 ProdutoCardItem(
                     produto = item.produto,
                     quantidade = item.quantidade,
-                    onIncreaseClick = { /* Lógica de + */ },
-                    onDecreaseClick = { /* Lógica de - */ },
-                    onDeleteClick = {
-                        onRemoverItem(item)
-                    }
+                    onIncreaseClick = { onAumentarQuantidade(item) },
+                    onDecreaseClick = { onDiminuirQuantidade(item) },
+                    onDeleteClick = { onRemoverItem(item) }
                 )
             }
         }

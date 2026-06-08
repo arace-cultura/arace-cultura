@@ -1,4 +1,4 @@
-package com.arace.app.ui.screens
+package com.aracecultura.arace.ui.components.carrinho
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background

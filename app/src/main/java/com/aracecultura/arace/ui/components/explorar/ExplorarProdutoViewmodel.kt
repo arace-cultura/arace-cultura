@@ -5,7 +5,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.aracecultura.arace.data.model.Produto
 import com.google.firebase.Firebase
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.SetOptions
 import com.google.firebase.firestore.firestore
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -58,7 +60,8 @@ class ExplorarProdutoViewmodel : ViewModel() {
             "nome" to produto.nome,
             "preco" to produto.preco,
             // Pega apenas a primeira imagem da lista (se existir) e coloca dentro de uma nova List
-            "imagens" to if (produto.imagens.isNotEmpty()) listOf(produto.imagens[0]) else emptyList<String>()
+            "imagens" to if (produto.imagens.isNotEmpty()) listOf(produto.imagens[0]) else emptyList<String>(),
+            "quantidade" to FieldValue.increment(1)
         )
 
         // Salva na coleção: Carrinho -> [UID do Usuário] -> Produtos -> [ID do Produto]
@@ -66,7 +69,7 @@ class ExplorarProdutoViewmodel : ViewModel() {
             .document(uid)
             .collection("Produtos")
             .document(produto.id)
-            .set(itemCarrinho)
+            .set(itemCarrinho, SetOptions.merge())
             .addOnSuccessListener {
                 Log.d("Carrinho", "Produto ${produto.nome} adicionado com sucesso!")
             }
