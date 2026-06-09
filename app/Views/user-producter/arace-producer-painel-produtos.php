@@ -14,23 +14,23 @@
 
 <!-- HEADER -->
 <header>
-  <a href="../main/index.html" class="logo">aracê</a>
+  <a href="/" class="logo">aracê</a>
 
-  <form class="search-wrap" action="../main/arace-search.html" method="get">
+  <form class="search-wrap" action="/pesquisa" method="get">
     <i data-lucide="search"></i>
     <input type="text" name="q" id="searchHeaderInput" placeholder="Pesquisar produtos..." />
   </form>
 
   <div class="header-right">
-    <button class="cart-btn" type="button" onclick="window.location.href='../main/carrinho.html'">
+    <button class="cart-btn" type="button" onclick="window.location.href='/arace-carrinho'">
       <i data-lucide="shopping-cart"></i>
       <span class="cart-count">2 itens</span>
     </button>
-    <button class="cart-btn" type="button" onclick="window.location.href='../user/favoritos.html'">
+    <button class="cart-btn" type="button" onclick="window.location.href='/usuario/arace-favoritos'">
       <i data-lucide="heart"></i>
       <span class="cart-count">5 itens</span>
     </button>
-    <button class="avatar-btn" type="button" onclick="window.location.href='../user/perfil.html'">
+    <button class="avatar-btn" type="button" onclick="window.location.href='/usuario/arace-perfil'">
       <i data-lucide="user"></i>
     </button>
   </div>
@@ -38,7 +38,7 @@
 
 <!--Icone de chat-->
 <div class="chat-bubble">
-  <a href="../user/arace-chat.html">
+  <a href="/usuario/chat">
     <i data-lucide="message-circle-more"></i>
   </a>
 </div>
@@ -63,7 +63,7 @@
     <a class="nav-item" href="/usuario/arace-perfil">
       <i data-lucide="user"></i> Perfil
     </a>
-    <a class="nav-item" href="/auth/cadastro/produtor">
+    <a class="nav-item" href="/cadastro/produtor">
       <i data-lucide="box"></i> Quero ser produtor
     </a>
     <div class="nav-divider"></div>
@@ -81,7 +81,7 @@
       <h1>Bom dia! </h1>
       <p>Aqui está um resumo da sua loja hoje — <span id="dataHoje"></span></p>
     </div>
-    <a href="./arace-producer-painel-produtos.html" class="btn-novo-produto">
+    <a href="/produtor/painel" class="btn-novo-produto">
       <i data-lucide="plus"></i> Novo produto
     </a>
   </div>
@@ -129,11 +129,11 @@
     <div class="painel-card pedidos-recentes">
       <div class="card-head">
         <h2>Pedidos recentes</h2>
-        <a href="./arace-producer-pedidos.html" class="link-ver-todos">Ver todos <i data-lucide="arrow-right"></i></a>
+        <a href="/produtor/pedidos" class="link-ver-todos">Ver todos <i data-lucide="arrow-right"></i></a>
       </div>
       <div class="pedidos-mini-list">
 
-        <div class="pedido-mini" data-href="./arace-producer-pedidos.html">
+        <div class="pedido-mini" data-href="/produtor/pedidos">
           <div class="pedido-mini-id">#4821</div>
           <div class="pedido-mini-info">
             <span class="pedido-mini-cliente">Ana Clara Silva</span>
@@ -143,7 +143,7 @@
           <span class="pedido-mini-valor">R$200</span>
         </div>
 
-        <div class="pedido-mini" data-href="./arace-producer-pedidos.html">
+        <div class="pedido-mini" data-href="/produtor/pedidos">
           <div class="pedido-mini-id">#4820</div>
           <div class="pedido-mini-info">
             <span class="pedido-mini-cliente">Marcos Oliveira</span>
@@ -153,7 +153,7 @@
           <span class="pedido-mini-valor">R$170</span>
         </div>
 
-        <div class="pedido-mini" data-href="./arace-producer-pedidos.html">
+        <div class="pedido-mini" data-href="/produtor/pedidos">
           <div class="pedido-mini-id">#4819</div>
           <div class="pedido-mini-info">
             <span class="pedido-mini-cliente">Fernanda Costa</span>
@@ -163,7 +163,7 @@
           <span class="pedido-mini-valor">R$135</span>
         </div>
 
-        <div class="pedido-mini" data-href="./arace-producer-pedidos.html">
+        <div class="pedido-mini" data-href="/produtor/pedidos">
           <div class="pedido-mini-id">#4818</div>
           <div class="pedido-mini-info">
             <span class="pedido-mini-cliente">João Pedro Matos</span>
@@ -173,7 +173,7 @@
           <span class="pedido-mini-valor">R$200</span>
         </div>
 
-        <div class="pedido-mini" data-href="./arace-producer-pedidos.html">
+        <div class="pedido-mini" data-href="/produtor/pedidos">
           <div class="pedido-mini-id">#4817</div>
           <div class="pedido-mini-info">
             <span class="pedido-mini-cliente">Luciana Ferreira</span>
@@ -193,7 +193,7 @@
       <div class="painel-card">
         <div class="card-head">
           <h2>Meus produtos</h2>
-          <a href="./arace-producer-painel-produtos.html" class="link-ver-todos">Gerenciar <i data-lucide="arrow-right"></i></a>
+          <a href="/produtor/painel" class="link-ver-todos">Gerenciar <i data-lucide="arrow-right"></i></a>
         </div>
         <div class="produtos-mini-list">
 
@@ -205,7 +205,7 @@
             </div>
             <span class="stock-badge">Em estoque</span>
             <div class="produto-mini-actions">
-              <button type="button" data-href="./arace-producer-painel-produtos.html" title="Editar"><i data-lucide="pencil"></i></button>
+              <button type="button" data-href="/produtor/painel" title="Editar"><i data-lucide="pencil"></i></button>
               <button class="del" title="Excluir"><i data-lucide="trash-2"></i></button>
             </div>
           </div>
@@ -218,7 +218,7 @@
             </div>
             <span class="stock-badge">Em estoque</span>
             <div class="produto-mini-actions">
-              <button type="button" data-href="./arace-producer-painel-produtos.html" title="Editar"><i data-lucide="pencil"></i></button>
+              <button type="button" data-href="/produtor/painel" title="Editar"><i data-lucide="pencil"></i></button>
               <button class="del" title="Excluir"><i data-lucide="trash-2"></i></button>
             </div>
           </div>
@@ -231,14 +231,14 @@
             </div>
             <span class="stock-badge esgotado">Esgotado</span>
             <div class="produto-mini-actions">
-              <button type="button" data-href="./arace-producer-painel-produtos.html" title="Editar"><i data-lucide="pencil"></i></button>
+              <button type="button" data-href="/produtor/painel" title="Editar"><i data-lucide="pencil"></i></button>
               <button class="del" title="Excluir"><i data-lucide="trash-2"></i></button>
             </div>
           </div>
 
         </div>
 
-        <a href="./arace-producer-painel-produtos.html" class="btn-add-produto">
+        <a href="/produtor/painel" class="btn-add-produto">
           <i data-lucide="plus"></i> Adicionar produto
         </a>
       </div>

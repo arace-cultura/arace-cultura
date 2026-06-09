@@ -109,7 +109,7 @@ function renderProduto(p) {
   main.innerHTML = `
     <!-- BREADCRUMB -->
     <nav class="breadcrumb">
-      <a href="index.html">Início</a>
+      <a href="/">Início</a>
       <i data-lucide="chevron-right"></i>
       <a href="#">Loja</a>
       <i data-lucide="chevron-right"></i>

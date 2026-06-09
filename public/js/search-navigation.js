@@ -4,8 +4,8 @@ function termoDeBusca(input) {
 
 function irParaBusca(form) {
   const input = form.querySelector('input[name="q"], input[type="text"]');
-  const destino = new URL(form.getAttribute('action') || 'arace-search.html', window.location.href);
-  const paginaAtualBusca = window.location.pathname.endsWith('/arace-search.html');
+  const destino = new URL(form.getAttribute('action') || '/pesquisa', window.location.href);
+  const paginaAtualBusca = window.location.pathname.endsWith('/pesquisa');
   const params = paginaAtualBusca ? new URLSearchParams(window.location.search) : new URLSearchParams();
   const termo = termoDeBusca(input);
 

@@ -27,32 +27,32 @@ function atualizarCarrinho() {
 
 function asideCliente() {
   return `
-    <a class="nav-item" href="../main/index.html"><i data-lucide="house"></i> Home page</a>
-    <a class="nav-item" href="../main/arace-search.html"><i data-lucide="shopping-bag"></i> Produtos</a>
-    <a class="nav-item" href="../main/carrinho.html"><i data-lucide="shopping-cart"></i> Carrinho</a>
-    <a class="nav-item" href="../user/notificacoes.html"><i data-lucide="bell"></i> Notificacoes</a>
-    <a class="nav-item" href="../main/configuracoes.html"><i data-lucide="settings"></i> Configuracoes</a>
-    <a class="nav-item" href="../user/perfil.html"><i data-lucide="user"></i> Perfil</a>
-    <a class="nav-item" href="../authentication/cadastro-produtor.html"><i data-lucide="box"></i> Quero ser produtor</a>
+    <a class="nav-item" href="/"><i data-lucide="house"></i> Home page</a>
+    <a class="nav-item" href="/pesquisa"><i data-lucide="shopping-bag"></i> Produtos</a>
+    <a class="nav-item" href="/arace-carrinho"><i data-lucide="shopping-cart"></i> Carrinho</a>
+    <a class="nav-item" href="/usuario/arace-notificacao"><i data-lucide="bell"></i> Notificacoes</a>
+    <a class="nav-item" href="/arace-config"><i data-lucide="settings"></i> Configuracoes</a>
+    <a class="nav-item" href="/usuario/arace-perfil"><i data-lucide="user"></i> Perfil</a>
+    <a class="nav-item" href="/cadastro/produtor"><i data-lucide="box"></i> Quero ser produtor</a>
     <div class="nav-divider"></div>
     <div class="nav-section">Reportar</div>
-    <a class="nav-item" href="../main/configuracoes.html#pagamento"><i data-lucide="hand-coins"></i> Detalhes de pagamento</a>
+    <a class="nav-item" href="/arace-config#pagamento"><i data-lucide="hand-coins"></i> Detalhes de pagamento</a>
   `;
 }
 
 function asideProdutor() {
   return `
-    <a class="nav-item" href="../main/index.html"><i data-lucide="house"></i> Home page</a>
-    <a class="nav-item" href="./arace-producer-painel-produtos.html"><i data-lucide="layout-dashboard"></i> Painel</a>
-    <a class="nav-item" href="./arace-producer-painel-produtos.html"><i data-lucide="shopping-bag"></i> Meus produtos</a>
-    <a class="nav-item" href="./arace-producer-pedidos.html"><i data-lucide="package"></i> Pedidos</a>
-    <a class="nav-item active" href="./arace-producer-profile-loja.html" aria-current="page"><i data-lucide="store"></i> Minha loja</a>
+    <a class="nav-item" href="/"><i data-lucide="house"></i> Home page</a>
+    <a class="nav-item" href="/produtor/painel"><i data-lucide="layout-dashboard"></i> Painel</a>
+    <a class="nav-item" href="/produtor/painel"><i data-lucide="shopping-bag"></i> Meus produtos</a>
+    <a class="nav-item" href="/produtor/pedidos"><i data-lucide="package"></i> Pedidos</a>
+    <a class="nav-item active" href="/produtor/perfil-loja" aria-current="page"><i data-lucide="store"></i> Minha loja</a>
     <div class="nav-divider"></div>
-    <a class="nav-item" href="./arace-producer-profile.html"><i data-lucide="user"></i> Perfil</a>
-    <a class="nav-item" href="./arace-producer-config-loja.html"><i data-lucide="settings"></i> Configuracoes da loja</a>
+    <a class="nav-item" href="/produtor/perfil"><i data-lucide="user"></i> Perfil</a>
+    <a class="nav-item" href="/produtor/configuracao-loja"><i data-lucide="settings"></i> Configuracoes da loja</a>
     <button class="nav-item nav-button" type="button" id="verComoCliente"><i data-lucide="eye"></i> Ver como cliente</button>
     <div class="nav-section">Suporte</div>
-    <a class="nav-item" href="../main/configuracoes.html#pagamento"><i data-lucide="hand-coins"></i> Pagamentos</a>
+    <a class="nav-item" href="/arace-config#pagamento"><i data-lucide="hand-coins"></i> Pagamentos</a>
   `;
 }
 
@@ -138,15 +138,15 @@ function configurarProdutos() {
 
 function configurarHeader() {
   document.getElementById('btn-cart')?.addEventListener('click', () => {
-    window.location.href = '../main/carrinho.html';
+    window.location.href = '/arace-carrinho';
   });
 
   document.getElementById('btn-fav')?.addEventListener('click', () => {
-    window.location.href = '../user/favoritos.html';
+    window.location.href = '/usuario/arace-favoritos';
   });
 
   document.querySelector('header .avatar-btn')?.addEventListener('click', () => {
-    window.location.href = '../user/perfil.html';
+    window.location.href = '/usuario/arace-perfil';
   });
 }
 
@@ -177,7 +177,7 @@ function configurarBanner() {
   });
 
   document.getElementById('btn-edit-banner')?.addEventListener('click', () => {
-    window.location.href = './arace-producer-config-loja.html';
+    window.location.href = '/produtor/configuracao-loja';
   });
 }
 

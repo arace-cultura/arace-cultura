@@ -59,7 +59,7 @@ lucide.createIcons();
     btn.addEventListener('click', () => {
       const p = new URLSearchParams(window.location.search);
       p.set(btn.dataset.filterParam, btn.dataset.filterValue);
-      window.location.href = `arace-search.html?${p}`;
+      window.location.href = `/pesquisa?${p}`;
     });
   });
 
@@ -68,7 +68,7 @@ lucide.createIcons();
     const p = new URLSearchParams(window.location.search);
     const cat = document.querySelector('input[name="categoria"]:checked');
     cat ? p.set('categoria', cat.value) : p.delete('categoria');
-    window.location.href = `arace-search.html${p.toString() ? '?' + p : ''}`;
+    window.location.href = `/pesquisa${p.toString() ? '?' + p : ''}`;
   });
 
   // Range duplo

@@ -50,7 +50,7 @@
     <a class="nav-item" href="/usuario/arace-perfil">
       <i data-lucide="user"></i> Perfil
     </a>
-    <a class="nav-item" href="/auth/cadastro/produtor">
+    <a class="nav-item" href="/cadastro/produtor">
       <i data-lucide="box"></i> Quero ser produtor
     </a>
     <div class="nav-divider"></div>

@@ -45,7 +45,7 @@
       <div class="item-animado atraso-5">
         <label class="permanecer">
           <input type="checkbox" id="termos" required />
-          Aceito os <a href="termos.html" target="_blank">termos de uso</a>
+          Aceito os <a href="#" target="_blank">termos de uso</a>
         </label>
 
         <button type="submit" class="btn-login">Dados da Loja</button>

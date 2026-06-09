@@ -1,8 +1,8 @@
 const ROTAS = {
-  produtos: 'produtos.html',
-  carrinho: 'carrinho.html',
-  favoritos: '/usuario/favoritos',
-  perfil: '/usuario/perfil',
+  produtos: '/arace-produtos',
+  carrinho: '/arace-carrinho',
+  favoritos: '/usuario/arace-favoritos',
+  perfil: '/usuario/arace-perfil',
 };
 
 const PRODUTOS_DESTAQUE = [
@@ -122,7 +122,7 @@ function produtoTemplate(produto) {
       </div>
       <div class="produto-info">
         <span class="artesao">${escaparHTML(produto.artesao)}</span>
-        <a href="arace-produto.html?id=${encodeURIComponent(produto.id)}" class="nome">${escaparHTML(produto.nome)}</a>
+        <a href="/produto/detalhes?id=${encodeURIComponent(produto.id)}" class="nome">${escaparHTML(produto.nome)}</a>
         <div class="stars">
           ${renderStars(produto.estrelas)}
           <span>(${produto.avaliacoes})</span>

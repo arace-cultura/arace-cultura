@@ -7,7 +7,7 @@ const PORT = 3000;
 app.use(express.static(path.join(__dirname, 'web')));
 
 app.get('/', (req, res) => {
-  res.redirect('/main/index.html');
+  res.redirect('/');
 });
 
 app.listen(PORT, () => {

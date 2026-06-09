@@ -182,8 +182,8 @@
       event.preventDefault();
       setMode('produtor');
       window.location.href = link.href.includes('/authentication/')
-        ? '../user-producter/arace-producer-profile-loja.php'
-        : './arace-producer-profile-loja.php';
+        ? '/produtor/perfil-loja'
+        : '/produtor/perfil-loja';
     });
   }
 

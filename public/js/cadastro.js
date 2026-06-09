@@ -57,7 +57,7 @@ document.getElementById('formCadastro').addEventListener('submit', async functio
     const dados = await resposta.json();
 
     if (resposta.ok) {
-      window.location.href = 'login.html';
+      window.location.href = '/login';
     } else {
       alert(dados.mensagem || 'Erro ao criar conta.');
     }
