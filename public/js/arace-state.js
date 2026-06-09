@@ -32,7 +32,7 @@
     lojaTelefone: '(27) 99999-1234',
     lojaEmail: 'contato@paneleiras.com',
     lojaAvatar: '',
-    lojaBanner: '/images/bahia-vitoria.jpg',
+    lojaBanner: '../assets/imgs/bahia-vitoria.jpg',
   };
 
   const DEFAULT_FAVORITES = [
