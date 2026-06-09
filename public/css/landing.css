@@ -1,4 +1,4 @@
-@import "../css/style-base.css";
+
 :root {
   --amarelo:    #f3a621;
   --laranja:    #f2601a;
@@ -29,7 +29,7 @@ body {
 }
 body::before {
   content: ""; position: fixed; inset: 0;
-  background: url('../imgs/background-main.jpg') center/cover;
+  background: url('../images/background-main.jpg') center/cover;
   opacity: .12; z-index: -1; pointer-events: none;}
   
 a { text-decoration: none; color: inherit; }

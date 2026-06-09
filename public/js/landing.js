@@ -1,8 +1,8 @@
 const ROTAS = {
   produtos: 'produtos.html',
   carrinho: 'carrinho.html',
-  favoritos: '../user/favoritos.html',
-  perfil: '../user/perfil.html',
+  favoritos: '/usuario/favoritos',
+  perfil: '/usuario/perfil',
 };
 
 const PRODUTOS_DESTAQUE = [
