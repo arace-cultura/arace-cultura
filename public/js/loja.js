@@ -88,7 +88,7 @@ function renderDadosLoja() {
   if (history) history.textContent = loja.lojaBio;
   if (avatar) window.AraceState.renderAvatar(avatar, loja.lojaAvatar, 'store');
   if (banner) {
-    banner.src = loja.lojaBanner || '/images/bahia-vitoria.jpg';
+    banner.src = loja.lojaBanner || '../assets/imgs/bahia-vitoria.jpg';
     banner.alt = `Capa da loja ${loja.lojaNome}`;
   }
 }
