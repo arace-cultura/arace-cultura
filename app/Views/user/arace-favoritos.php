@@ -14,23 +14,23 @@
 
 <!-- HEADER -->
 <header>
-  <a href="../main/index.html" class="logo">aracê</a>
+  <a href="/" class="logo">aracê</a>
 
-  <form class="search-wrap" action="../main/arace-search.html" method="get">
+  <form class="search-wrap" action="/pesquisa" method="get">
     <i data-lucide="search"></i>
     <input type="text" name="q" id="searchHeaderInput" placeholder="Pesquisar produtos..." />
   </form>
 
   <div class="header-right">
-    <button class="cart-btn" type="button" onclick="window.location.href='../main/carrinho.html'">
+    <button class="cart-btn" type="button" onclick="window.location.href='/arace-carrinho'">
       <i data-lucide="shopping-cart"></i>
       <span class="cart-count">2 itens</span>
     </button>
-    <button class="cart-btn" type="button" onclick="window.location.href='../user/favoritos.html'">
+    <button class="cart-btn" type="button" onclick="window.location.href='/usuario/arace-favoritos'">
       <i data-lucide="heart"></i>
       <span class="cart-count">5 itens</span>
     </button>
-    <button class="avatar-btn" type="button" onclick="window.location.href='../user/perfil.html'">
+    <button class="avatar-btn" type="button" onclick="window.location.href='/usuario/arace-perfil'">
       <i data-lucide="user"></i>
     </button>
   </div>
@@ -38,7 +38,7 @@
 
 <!--Icone de chat-->
 <div class="chat-bubble">
-  <a href="../user/arace-chat.html">
+  <a href="/usuario/chat">
     <i data-lucide="message-circle-more"></i>
   </a>
 </div>
@@ -63,7 +63,7 @@
     <a class="nav-item" href="/usuario/arace-perfil">
       <i data-lucide="user"></i> Perfil
     </a>
-    <a class="nav-item" href="/auth/cadastro/produtor">
+    <a class="nav-item" href="/cadastro/produtor">
       <i data-lucide="box"></i> Quero ser produtor
     </a>
     <div class="nav-divider"></div>

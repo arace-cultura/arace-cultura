@@ -48,7 +48,7 @@
     <a class="nav-item" href="/usuario/arace-perfil">
       <i data-lucide="user"></i> Perfil
     </a>
-    <a class="nav-item" href="/auth/cadastro/produtor">
+    <a class="nav-item" href="/cadastro/produtor">
       <i data-lucide="box"></i> Quero ser produtor
     </a>
     <div class="nav-divider"></div>
@@ -121,7 +121,7 @@ const NOTIFICACOES = [
     titulo: 'Nova mensagem de Mestre Zé Pedro',
     desc: 'Olá! Obrigado pelo pedido. A panela está sendo embalada com cuidado para você.',
     tempo: 'há 1h',
-    cta: { label: 'Ver conversa', icon: 'message-circle', href: 'arace-chat.php' }
+    cta: { label: 'Ver conversa', icon: 'message-circle', href: '/usuario/chat' }
   },
   {
     id: 3, tipo: 'promo', lida: false, dia: 'Hoje',
@@ -150,14 +150,14 @@ const NOTIFICACOES = [
     titulo: 'Novos produtos dos seus artesãos favoritos',
     desc: '<strong>Arte Vitória</strong> adicionou 3 novos produtos à loja. Confira antes que esgote!',
     tempo: 'ontem às 10h15',
-    cta: { label: 'Ver produtos', icon: 'shopping-bag', href: '../main/produtos.php' }
+    cta: { label: 'Ver produtos', icon: 'shopping-bag', href: '/arace-produtos' }
   },
   {
     id: 7, tipo: 'sistema', lida: true, dia: 'Esta semana',
     titulo: 'Bem-vinda à Aracê!',
     desc: 'Sua conta foi criada com sucesso. Explore produtos artesanais da cultura capixaba e apoie produtores locais.',
     tempo: 'há 3 dias',
-    cta: { label: 'Explorar agora', icon: 'compass', href: '../main/index.php' }
+    cta: { label: 'Explorar agora', icon: 'compass', href: '/' }
   },
 ];
 

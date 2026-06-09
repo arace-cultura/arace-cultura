@@ -42,7 +42,7 @@ function renderCards(lista) {
         <i data-lucide="heart"></i>
         <h2>Nenhum favorito aqui</h2>
         <p>Explore os produtos e salve os que voce curtir</p>
-        <a href="../main/produtos.html" class="btn-explorar">
+        <a href="/arace-produtos" class="btn-explorar">
           <i data-lucide="shopping-bag"></i> Explorar produtos
         </a>
       </div>`;

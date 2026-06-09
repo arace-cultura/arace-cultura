@@ -32,7 +32,7 @@
 
 <!--Chat-->
 <div class="chat-bubble">
-  <a href="/usuario/arace-chat">
+  <a href="/usuario/chat">
     <i data-lucide="message-circle-more"></i>
   </a>
 </div>
@@ -60,7 +60,7 @@
     <a class="nav-item" href="/usuario/arace-perfil">
       <i data-lucide="user"></i> Perfil
     </a>
-    <a class="nav-item" href="/auth/cadastro/produtor">
+    <a class="nav-item" href="/cadastro/produtor">
       <i data-lucide="box"></i> Quero ser produtor
     </a>
     <div class="nav-divider"></div>
@@ -75,14 +75,14 @@
 
     <!-- Breadcrumb -->
     <div class="breadcrumb">
-      <a href="index.html">Início</a>
+      <a href="/">Início</a>
       <i data-lucide="chevron-right"></i>
       <span>Produtos</span>
     </div>
 
     <!-- Busca central -->
     <div class="search-bar-wrap">
-      <form class="search-bar" action="arace-search.html" method="get">
+      <form class="search-bar" action="/pesquisa" method="get">
         <i data-lucide="search"></i>
         <input type="text" name="q" id="searchPageInput" placeholder="pesquise um produto..." />
       </form>
@@ -90,35 +90,35 @@
 
     <!-- Categorias -->
     <div class="cat-grid">
-      <a class="cat-card" data-category-card="tudo" href="arace-search.html">
+      <a class="cat-card" data-category-card="tudo" href="/pesquisa">
         <div class="cat-icon" style="background:#f3a621"><i data-lucide="gallery-horizontal-end"></i></div>
         <span>Tudo</span>
       </a>
-      <a class="cat-card" data-category-card="pinturas" href="arace-search.html?categoria=pinturas">
+      <a class="cat-card" data-category-card="pinturas" href="/pesquisa?categoria=pinturas">
         <div class="cat-icon" style="background:#f2601a"><i data-lucide="palette"></i></div>
         <span>Pinturas</span>
       </a>
-      <a class="cat-card" data-category-card="casa-e-vida" href="arace-search.html?categoria=casa-e-vida">
+      <a class="cat-card" data-category-card="casa-e-vida" href="/pesquisa?categoria=casa-e-vida">
         <div class="cat-icon" style="background:#25518f"><i data-lucide="house"></i></div>
         <span>Casa & Vida</span>
       </a>
-      <a class="cat-card" data-category-card="retro" href="arace-search.html?categoria=retro">
+      <a class="cat-card" data-category-card="retro" href="/pesquisa?categoria=retro">
         <div class="cat-icon" style="background:#478632"><i data-lucide="videotape"></i></div>
         <span>Retro</span>
       </a>
-      <a class="cat-card" data-category-card="joias" href="arace-search.html?categoria=joias">
+      <a class="cat-card" data-category-card="joias" href="/pesquisa?categoria=joias">
         <div class="cat-icon" style="background:#f3a621"><i data-lucide="gem"></i></div>
         <span>Joias</span>
       </a>
-      <a class="cat-card" data-category-card="roupas" href="arace-search.html?categoria=roupas">
+      <a class="cat-card" data-category-card="roupas" href="/pesquisa?categoria=roupas">
         <div class="cat-icon" style="background:#f2601a"><i data-lucide="shirt"></i></div>
         <span>Roupas</span>
       </a>
-      <a class="cat-card" data-category-card="ceramica" href="arace-search.html?categoria=ceramica">
+      <a class="cat-card" data-category-card="ceramica" href="/pesquisa?categoria=ceramica">
         <div class="cat-icon" style="background:#25518f"><i data-lucide="amphora"></i></div>
         <span>Cerâmica</span>
       </a>
-      <a class="cat-card" data-category-card="artesanato" href="arace-search.html?categoria=artesanato">
+      <a class="cat-card" data-category-card="artesanato" href="/pesquisa?categoria=artesanato">
         <div class="cat-icon" style="background:#478632"><i data-lucide="paintbrush"></i></div>
         <span>Artesanato</span>
       </a>

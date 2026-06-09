@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <meta http-equiv="refresh" content="0; url=arace-landing.php" />
+  <meta http-equiv="refresh" content="0; url=/landing-page" />
   <title>Arace - Home</title>
 </head>
 <body>
@@ -12,6 +12,6 @@
 </script>
 
 
-  <a href="{{ route('landing-page') }}">Ir para a Home</a>
+  <a href="/landing-page">Ir para a Home</a>
 </body>
 </html>

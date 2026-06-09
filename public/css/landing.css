@@ -22,15 +22,21 @@
 }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: smooth; }
+html { 
+  scroll-behavior: smooth; 
+  margin: 0 !important; 
+  padding: 0 !important; 
+}
 body {
   font-family: var(--body); color: var(--text);
   min-height: 100vh; background: var(--bg);
+  position: relative;
 }
 body::before {
   content: ""; position: fixed; inset: 0;
   background: url('../images/background-main.jpg') center/cover;
-  opacity: .12; z-index: -1; pointer-events: none;}
+  opacity: .12; z-index: -1; pointer-events: none;
+}
   
 a { text-decoration: none; color: inherit; }
 img { max-width: 100%; display: block; }
@@ -70,11 +76,18 @@ img { max-width: 100%; display: block; }
 
 /* header*/
 header {
-  position: sticky; top: 0; z-index: 100;
+  position: fixed; 
+  top: 0; 
+  left: 0;
+  width: 100%;
+  z-index: 1000;
   background: var(--branco);
   border-bottom: 1px solid var(--border);
-  display: flex; align-items: center; gap: 1rem;
-  padding: 0 2rem; height: 56px;
+  display: flex; 
+  align-items: center; 
+  gap: 1rem;
+  padding: 0 2rem; 
+  height: 56px;
 }
 
 .logo {
@@ -151,7 +164,7 @@ header {
 }
 .hero-img {
   position: absolute; inset: 0;
-  background: url(../imgs/bahia-vitoria.jpg) center/cover;
+  background: url('../images/bahia-vitoria.jpg') center/cover;
 }
 .hero-overlay {
   position: absolute; inset: 0;
@@ -204,7 +217,7 @@ header {
 
 
 /* ── LAYOUT ── */
-.section { padding: 3.5rem 0;border:1px solid var(--border) }
+.section { padding: 3.5rem 0;border:1px solid var(--border); }
 .wrap { max-width: 1320px; margin: 0 auto; padding: 0 2rem; }
 
 .section-head {

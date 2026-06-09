@@ -66,7 +66,7 @@
 
     <div class="page-header">
       <h1 class="page-title">Seu carrinho</h1>
-      <a href="produtos.html" class="btn-keep-shopping">
+      <a href="/arace-produtos" class="btn-keep-shopping">
         <i data-lucide="arrow-left"></i> Continuar comprando
       </a>
     </div>
@@ -78,7 +78,7 @@
       </div>
       <h2>Seu carrinho está vazio</h2>
       <p>Explore nossa coleção e encontre algo especial para você.</p>
-      <a href="produtos.html" class="btn-primary-arace">Ver produtos</a>
+      <a href="/arace-produtos" class="btn-primary-arace">Ver produtos</a>
     </div>
 
     <!-- Layout principal: itens + resumo -->
