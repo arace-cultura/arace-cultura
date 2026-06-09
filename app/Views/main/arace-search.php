@@ -14,31 +14,25 @@
 
 <!-- HEADER -->
 <header>
-  <a href="index.html" class="logo">aracê</a>
-
-  <form class="search-wrap" action="arace-search.html" method="get">
-    <i data-lucide="search"></i>
-    <input type="text" name="q" id="searchHeaderInput" placeholder="Pesquisar produtos..." />
-  </form>
-
-  <div class="header-right">
-    <button class="cart-btn" type="button" onclick="window.location.href='carrinho.html'">
-      <i data-lucide="shopping-cart"></i>
-      <span class="cart-count">2 itens</span>
-    </button>
-    <button class="cart-btn" type="button" onclick="window.location.href='../user/favoritos.html'">
-      <i data-lucide="heart"></i>
-      <span class="cart-count">5 itens</span>
-    </button>
-    <button class="avatar-btn" type="button" onclick="window.location.href='../user/perfil.html'">
-      <i data-lucide="user"></i>
-    </button>
-  </div>
-</header>
+    <a href="/" class="logo">aracê</a>
+    <div class="header-right">
+    <button class="cart-btn" type="button" onclick="window.location.href='/arace-carrinho'">
+        <i data-lucide="shopping-cart"></i>
+        <span class="cart-count">2 itens</span>
+      </button>
+    <button class="cart-btn" type="button" onclick="window.location.href='/usuario/arace-favoritos'">
+        <i data-lucide="heart"></i>
+        <span class="cart-count">5 itens</span>
+      </button>
+      <button class="avatar-btn" type="button" onclick="window.location.href='/usuario/arace-perfil'" aria-label="Abrir perfil">
+        <i data-lucide="user"></i>
+      </button>
+    </div>
+  </header>
 
 <!--Chat-->
 <div class="chat-bubble">
-  <a href="../user/arace-chat.html">
+  <a href="/usuario/arace-chat">
     <i data-lucide="message-circle-more"></i>
   </a>
 </div>
@@ -48,30 +42,30 @@
 
   <!-- NAV ASIDE (esquerda) -->
   <aside>
-    <a class="nav-item" href="{{route('landing-page')}}">
+    <a class="nav-item" href="/">
       <i data-lucide="house"></i> Home page
     </a>
-    <a class="nav-item" href="{{route('main_produtos')}}">
+    <a class="nav-item" href="/arace-produtos">
       <i data-lucide="shopping-bag"></i> Produtos
     </a>
-    <a class="nav-item active" href="{{route('main_arace_carrinho')}}">
+    <a class="nav-item active" href="/arace-carrinho">
       <i data-lucide="shopping-cart"></i> Carrinho
     </a>
-    <a class="nav-item" href="{{route('user_arace_notificacoes')}}">
+    <a class="nav-item" href="/usuario/arace-notificacao">
       <i data-lucide="bell"></i> Notificações
     </a>
-    <a class="nav-item" href="{{route('main_arace_configuracoes')}}">
+    <a class="nav-item" href="/arace-config">
       <i data-lucide="settings"></i> Configurações
     </a>
-    <a class="nav-item" href="{{route('user_arace_perfil')}}">
+    <a class="nav-item" href="/usuario/arace-perfil">
       <i data-lucide="user"></i> Perfil
     </a>
-    <a class="nav-item" href="{{route('auth_cadastro_producer_arace')}}">
+    <a class="nav-item" href="/auth/cadastro/produtor">
       <i data-lucide="box"></i> Quero ser produtor
     </a>
     <div class="nav-divider"></div>
     <div class="nav-section">Reportar</div>
-    <a class="nav-item" href="{{route('main_arace_configuracoes')}}">
+    <a class="nav-item" href="/arace-config">
       <i data-lucide="hand-coins"></i> Detalhes de pagamento
     </a>
   </aside>

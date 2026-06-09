@@ -12,28 +12,66 @@
 </head>
 <body>
 
-  <header>
-    <span class="logo">aracê</span>
-    <div class="header-right">
-      <button class="cart-btn"><i data-lucide="shopping-cart"></i><span class="cart-count">2 itens</span></button>
-      <button class="cart-btn"><i data-lucide="heart"></i><span class="cart-count">5 itens</span></button>
-      <div class="avatar-btn"><i data-lucide="user"></i></div>
-    </div>
-  </header>
+  <!-- HEADER -->
+<header>
+  <a href="../main/index.html" class="logo">aracê</a>
 
-  <aside>
-    <a class="nav-item" href="../main/index.html"><i data-lucide="house"></i> Home page</a>
-    <a class="nav-item" href="./arace-producer-painel.html"><i data-lucide="layout-dashboard"></i> Painel</a>
-    <a class="nav-item" href="./arace-producer-painel-produtos.html"><i data-lucide="shopping-bag"></i> Meus produtos</a>
-    <a class="nav-item" href="./arace-producer-pedidos.html"><i data-lucide="package"></i> Pedidos</a>
-    <a class="nav-item" href="./arace-producer-profile-loja.html"><i data-lucide="store"></i> Minha loja</a>
+  <form class="search-wrap" action="../main/arace-search.html" method="get">
+    <i data-lucide="search"></i>
+    <input type="text" name="q" id="searchHeaderInput" placeholder="Pesquisar produtos..." />
+  </form>
+
+  <div class="header-right">
+    <button class="cart-btn" type="button" onclick="window.location.href='../main/carrinho.html'">
+      <i data-lucide="shopping-cart"></i>
+      <span class="cart-count">2 itens</span>
+    </button>
+    <button class="cart-btn" type="button" onclick="window.location.href='../user/favoritos.html'">
+      <i data-lucide="heart"></i>
+      <span class="cart-count">5 itens</span>
+    </button>
+    <button class="avatar-btn" type="button" onclick="window.location.href='../user/perfil.html'">
+      <i data-lucide="user"></i>
+    </button>
+  </div>
+</header>
+
+<!--Icone de chat-->
+<div class="chat-bubble">
+  <a href="../user/arace-chat.html">
+    <i data-lucide="message-circle-more"></i>
+  </a>
+</div>
+
+<!-- SIDEBAR -->
+<aside>
+    <a class="nav-item" href="/">
+      <i data-lucide="house"></i> Home page
+    </a>
+    <a class="nav-item" href="/arace-produtos">
+      <i data-lucide="shopping-bag"></i> Produtos
+    </a>
+    <a class="nav-item active" href="/arace-carrinho">
+      <i data-lucide="shopping-cart"></i> Carrinho
+    </a>
+    <a class="nav-item" href="/usuario/arace-notificacao">
+      <i data-lucide="bell"></i> Notificações
+    </a>
+    <a class="nav-item" href="/arace-config">
+      <i data-lucide="settings"></i> Configurações
+    </a>
+    <a class="nav-item" href="/usuario/arace-perfil">
+      <i data-lucide="user"></i> Perfil
+    </a>
+    <a class="nav-item" href="/auth/cadastro/produtor">
+      <i data-lucide="box"></i> Quero ser produtor
+    </a>
     <div class="nav-divider"></div>
-    <a class="nav-item active" href="./arace-producer-profile.html"><i data-lucide="user"></i> Perfil</a>
-    <a class="nav-item" href="../main/configuracoes.html"><i data-lucide="settings"></i> Configurações</a>
-    <div class="nav-section">Suporte</div>
-    <a class="nav-item" href="../main/configuracoes.html#pagamento"><i data-lucide="hand-coins"></i> Pagamentos</a>
+    <div class="nav-section">Reportar</div>
+    <a class="nav-item" href="/arace-config">
+      <i data-lucide="hand-coins"></i> Detalhes de pagamento
+    </a>
   </aside>
-
   <main>
   <div class="config-header">
     <div>

@@ -25,11 +25,11 @@
 
   <div class="header-right">
     <!-- Deveriam ser <a></a> -->
-    <button class="cart-btn" type="button" onclick="window.location.href='/carrinho'">
+    <button class="cart-btn" type="button" onclick="window.location.href='/arace-carrinho'">
       <i data-lucide="shopping-cart"></i>
       <span class="cart-count">2 itens</span>
     </button>
-    <button class="cart-btn" type="button" onclick="window.location.href='/usuario/favoritos'">
+    <button class="cart-btn" type="button" onclick="window.location.href='/usuario/arace-favoritos'">
       <i data-lucide="heart"></i>
       <span class="cart-count">5 itens</span>
     </button>
