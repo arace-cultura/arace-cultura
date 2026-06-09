@@ -38,7 +38,7 @@
           Permanecer conectado
         </label>
 
-        <button type="submit" class="btn-login" ><a href="/usuario/perfil">Entrar</a></button>
+        <button type="submit" class="btn-login" ><a href="/usuario/arace-perfil">Entrar</a></button>
 
         <div class="links-rodape">
           <a href="cadastro">Cadastre-se</a>

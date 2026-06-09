@@ -12,38 +12,43 @@
 </head>
 <body>
 
-<header>
-  <span class="logo">aracê</span>
-  <div class="search-wrap">
-    <i data-lucide="search"></i>
-    <input type="text" placeholder="Pesquisar produtos…" />
-  </div>
-  <div class="header-right">
-    <button class="cart-btn" type="button" onclick="window.location.href='carrinho.php'"><i data-lucide="shopping-cart"></i>
-      <span class="cart-count">2 itens</span></button>
-    <button class="cart-btn" type="button" onclick="window.location.href='../user/favoritos.php'"><i data-lucide="heart"></i>
-      <span class="cart-count">5 itens</span></button>
-    <button class="avatar-btn" type="button" onclick="window.location.href='../user/perfil.php'" aria-label="Abrir perfil"><i data-lucide="user"></i></button>
-  </div>
-</header>
 
+<!-- HEADER -->
+<header>
+    <a href="/" class="logo">aracê</a>
+    <div class="header-right">
+    <button class="cart-btn" type="button" onclick="window.location.href='/arace-carrinho'">
+        <i data-lucide="shopping-cart"></i>
+        <span class="cart-count">2 itens</span>
+      </button>
+    <button class="cart-btn" type="button" onclick="window.location.href='/usuario/arace-favoritos'">
+        <i data-lucide="heart"></i>
+        <span class="cart-count">5 itens</span>
+      </button>
+      <button class="avatar-btn" type="button" onclick="window.location.href='/usuario/arace-perfil'" aria-label="Abrir perfil">
+        <i data-lucide="user"></i>
+      </button>
+    </div>
+  </header>
+
+<!-- SIDEBAR -->
 <aside>
     <a class="nav-item" href="/">
       <i data-lucide="house"></i> Home page
     </a>
-    <a class="nav-item" href="/produtos">
+    <a class="nav-item" href="/arace-produtos">
       <i data-lucide="shopping-bag"></i> Produtos
     </a>
-    <a class="nav-item active" href="/carrinho">
+    <a class="nav-item active" href="/arace-carrinho">
       <i data-lucide="shopping-cart"></i> Carrinho
     </a>
-    <a class="nav-item" href="/user/notificacoes">
+    <a class="nav-item" href="/usuario/arace-notificacao">
       <i data-lucide="bell"></i> Notificações
     </a>
-    <a class="nav-item" href="/configuracoes">
+    <a class="nav-item" href="/arace-config">
       <i data-lucide="settings"></i> Configurações
     </a>
-    <a class="nav-item" href="/user/perfil">
+    <a class="nav-item" href="/usuario/arace-perfil">
       <i data-lucide="user"></i> Perfil
     </a>
     <a class="nav-item" href="/auth/cadastro/produtor">
@@ -51,10 +56,11 @@
     </a>
     <div class="nav-divider"></div>
     <div class="nav-section">Reportar</div>
-    <a class="nav-item" href="/configuracoes">
+    <a class="nav-item" href="/arace-config">
       <i data-lucide="hand-coins"></i> Detalhes de pagamento
     </a>
   </aside>
+
 
 
 <main id="main-content">
