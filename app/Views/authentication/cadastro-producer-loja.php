@@ -13,7 +13,7 @@
 
   <div class="login-card cadastro-card item-animado">
     <div class="logo-wrap item-animado atraso-1">
-      <img src="../assets/imgs/arace.png" alt="Logo Aracê" />
+      <img src="/images/arace.png" alt="Logo Aracê" />
     </div>
 
     <p class="subtitle item-animado atraso-1">Comece a vender seus produtos</p>
@@ -68,7 +68,7 @@
         <button type="submit" class="btn-login">Criar conta da loja</button>
 
         <div class="links-rodape">
-          <a href="{{route('auth_cadastro_producer_arace')}}" class="voltar">Voltar</a>
+          <a href="<?= url_to('auth_cadastro_producter_arace') ?>" class="voltar">Voltar</a>
         </div>
       </div>
 
@@ -77,6 +77,6 @@
 
   <script src="https://unpkg.com/lucide@latest"></script>
   <script>lucide.createIcons();</script>
-  <script src="../assets/js/cadastro-loja.js"></script>
+  <script src="/js/cadastro-loja.js"></script>
 </body>
 </html>
