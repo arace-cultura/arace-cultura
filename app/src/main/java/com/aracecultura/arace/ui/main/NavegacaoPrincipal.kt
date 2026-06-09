@@ -56,15 +56,14 @@ class NavegacaoPrincipal : Fragment() {
                 if (esconderFooter) View.GONE else View.VISIBLE
         }
 
-        this.binding.btnMenuModo.setOnClickListener {
-            val bottomSheet = SeletorModoBottomSheet()
-
-
-            bottomSheet.onModoSelecionado = { modoSelecionado ->
-                quandoModoMudar(modoSelecionado)
-            }
-            bottomSheet.show(childFragmentManager, "SeletorModo")
-        }
+        // Backdoor desativada — troca de modo agora é feita pelo BotaoVisualizacao nos perfis
+        // this.binding.btnMenuModo.setOnClickListener {
+        //     val bottomSheet = SeletorModoBottomSheet()
+        //     bottomSheet.onModoSelecionado = { modoSelecionado ->
+        //         quandoModoMudar(modoSelecionado)
+        //     }
+        //     bottomSheet.show(childFragmentManager, "SeletorModo")
+        // }
 
         // Verificação do cadastro de produtor bem sucedido!
 
@@ -180,7 +179,11 @@ class NavegacaoPrincipal : Fragment() {
 
         // 3. Reconecta o controller para ele reconhecer os "novos" botões
         bottomNav.setupWithNavController(navController)
-        destinoAtual?.let { bottomNav.menu.findItem(it)?.isChecked = true }
+        if (destinoAtual == R.id.perfilprodutor) {
+            navController.navigate(R.id.perfilcliente)
+        } else {
+            destinoAtual?.let { bottomNav.menu.findItem(it)?.isChecked = true }
+        }
     }
 
     private fun configurarMenuProdutor() {
@@ -196,7 +199,11 @@ class NavegacaoPrincipal : Fragment() {
 
         // 3. Reconecta o controller para ele reconhecer os "novos" botões
         bottomNav.setupWithNavController(navController)
-        destinoAtual?.let { bottomNav.menu.findItem(it)?.isChecked = true }
+        if (destinoAtual == R.id.perfilcliente) {
+            navController.navigate(R.id.perfilprodutor)
+        } else {
+            destinoAtual?.let { bottomNav.menu.findItem(it)?.isChecked = true }
+        }
     }
 
 

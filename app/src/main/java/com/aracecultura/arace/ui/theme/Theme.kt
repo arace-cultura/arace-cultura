@@ -1,37 +1,44 @@
 package com.aracecultura.arace.ui.theme
 
-import android.app.Activity
-import android.os.Build
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.darkColorScheme
-import androidx.compose.material3.dynamicDarkColorScheme
-import androidx.compose.material3.dynamicLightColorScheme
+import androidx.compose.material3.Typography
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.platform.LocalContext
 
-private val darkColorScheme = darkColorScheme(
-    primary = purple80,
-    secondary = purpleGrey80,
-    tertiary = pink80
-)
-
-private val lightColorScheme = lightColorScheme(
+private val araceColorScheme = lightColorScheme(
     primary = purple40,
     secondary = purpleGrey40,
     tertiary = pink40,
     background = bgDefault,
     outline = btColor,
-
-
-    /* Other default colors to override
-    background = Color(0xFFFFFBFE),
-    surface = Color(0xFFFFFBFE),
-    onPrimary = Color.White,
-    onSecondary = Color.White,
-    onTertiary = Color.White,
-    onBackground = Color(0xFF1C1B1F),
-    onSurface = Color(0xFF1C1B1F),
-    */
 )
+
+val AraceTypography = run {
+    val base = Typography()
+    Typography(
+        displayLarge   = base.displayLarge.copy(fontFamily = GoogleSans),
+        displayMedium  = base.displayMedium.copy(fontFamily = GoogleSans),
+        displaySmall   = base.displaySmall.copy(fontFamily = GoogleSans),
+        headlineLarge  = base.headlineLarge.copy(fontFamily = GoogleSans),
+        headlineMedium = base.headlineMedium.copy(fontFamily = GoogleSans),
+        headlineSmall  = base.headlineSmall.copy(fontFamily = GoogleSans),
+        titleLarge     = base.titleLarge.copy(fontFamily = GoogleSans),
+        titleMedium    = base.titleMedium.copy(fontFamily = GoogleSans),
+        titleSmall     = base.titleSmall.copy(fontFamily = GoogleSans),
+        bodyLarge      = base.bodyLarge.copy(fontFamily = GoogleSans),
+        bodyMedium     = base.bodyMedium.copy(fontFamily = GoogleSans),
+        bodySmall      = base.bodySmall.copy(fontFamily = GoogleSans),
+        labelLarge     = base.labelLarge.copy(fontFamily = GoogleSans),
+        labelMedium    = base.labelMedium.copy(fontFamily = GoogleSans),
+        labelSmall     = base.labelSmall.copy(fontFamily = GoogleSans),
+    )
+}
+
+@Composable
+fun AraceTheme(content: @Composable () -> Unit) {
+    MaterialTheme(
+        colorScheme = araceColorScheme,
+        typography = AraceTypography,
+        content = content
+    )
+}

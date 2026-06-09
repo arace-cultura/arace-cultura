@@ -8,6 +8,7 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.aracecultura.arace.ui.components.carrinho.CheckoutPaymentScreen
+import com.aracecultura.arace.ui.theme.AraceTheme
 
 class FinalizarCompraFragment : Fragment() {
 
@@ -18,7 +19,9 @@ class FinalizarCompraFragment : Fragment() {
     ): View {
         return ComposeView(requireContext()).apply {
             setContent {
-                CheckoutPaymentScreen(navController = findNavController())
+                AraceTheme {
+                    CheckoutPaymentScreen(navController = findNavController())
+                }
             }
         }
     }

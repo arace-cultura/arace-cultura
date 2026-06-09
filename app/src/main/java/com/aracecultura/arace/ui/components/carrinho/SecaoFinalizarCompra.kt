@@ -33,6 +33,8 @@ fun SecaoFinalizarCompra(
     produtos: List<ItemCarrinho>,
     onFinalizarClick: () -> Unit
 ) {
+    if (produtos.isEmpty()) return
+
     // CRÍTICO: Multiplica o preço pela quantidade do carrinho!
     val valorTotal = produtos.sumOf {
         (it.produto.preco) * it.quantidade

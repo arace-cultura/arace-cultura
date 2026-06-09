@@ -11,6 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.compose.ui.unit.dp
+import com.aracecultura.arace.ui.theme.AraceTheme
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
 /*
@@ -47,7 +48,7 @@ class SeletorModoBottomSheet (
         return ComposeView(requireContext()).apply {
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
             setContent {
-                MaterialTheme {
+                AraceTheme {
                     OpcoesDeModo(
                         onSelecionar = { modo ->
                             onModoSelecionado?.invoke(modo)

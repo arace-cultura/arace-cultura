@@ -28,6 +28,10 @@
         android:name="com.aracecultura.arace.ui.main.PerfilClienteFragment"/>
 
     <fragment
+        android:id="@+id/perfilprodutor"
+        android:name="com.aracecultura.arace.ui.main.PerfilProdutorFragment"/>
+
+    <fragment
         android:id="@+id/carrinho"
         android:name="com.aracecultura.arace.ui.main.CarrinhoFragment">
 

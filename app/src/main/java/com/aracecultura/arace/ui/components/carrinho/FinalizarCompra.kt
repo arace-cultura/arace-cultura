@@ -13,6 +13,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
@@ -24,6 +25,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.aracecultura.arace.R
+import com.aracecultura.arace.ui.components.AppButton
+import com.aracecultura.arace.ui.theme.bgDefault
+import com.aracecultura.arace.ui.theme.btColor
 
 object CheckoutRoutes {
     const val PAYMENT      = "checkout_payment"
@@ -75,13 +79,13 @@ fun CheckoutPaymentScreen(
         )
     }
 
-    Box(modifier = Modifier.fillMaxSize()) {
+    Box(modifier = Modifier.fillMaxSize().background(bgDefault)) {
 
         Image(
             painter = painterResource(id = backgroundRes),
             contentDescription = null,
             contentScale = ContentScale.Crop,
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier.fillMaxSize().alpha(0.25f)
         )
 
         Column(
@@ -174,16 +178,22 @@ fun CheckoutPaymentScreen(
 
             Spacer(Modifier.weight(1f))
 
-            PrimaryButton(
-                text = "Copie código",
-                onClick = { copied = true }
+            AppButton(
+                text = "Copiar código",
+                onClick = { copied = true },
+                containerColor = btColor,
+                modifier = Modifier.fillMaxWidth().padding(horizontal = 32.dp).height(50.dp),
+                fontSize = 15.sp
             )
 
             Spacer(Modifier.height(12.dp))
 
-            PrimaryButton(
+            AppButton(
                 text = "Cancelar",
-                onClick = { showCancelDialog = true }
+                onClick = { showCancelDialog = true },
+                containerColor = btColor,
+                modifier = Modifier.fillMaxWidth().padding(horizontal = 32.dp).height(50.dp),
+                fontSize = 15.sp
             )
 
             Spacer(Modifier.height(24.dp))
@@ -250,14 +260,17 @@ fun CheckoutConfirmationScreen(
 
             Spacer(Modifier.weight(1f))
 
-            PrimaryButton(
+            AppButton(
                 text = "Continue comprando",
                 onClick = {
                     navController.popBackStack(
                         route = CheckoutRoutes.PAYMENT,
                         inclusive = true
                     )
-                }
+                },
+                containerColor = Color(0xFFCE5A14),
+                modifier = Modifier.fillMaxWidth().padding(horizontal = 32.dp).height(50.dp),
+                fontSize = 15.sp
             )
 
             Spacer(Modifier.height(24.dp))
@@ -291,25 +304,3 @@ private fun CheckoutTopBar(onBack: () -> Unit) {
     }
 }
 
-@Composable
-private fun PrimaryButton(
-    text: String,
-    onClick: () -> Unit
-) {
-    Button(
-        onClick = onClick,
-        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFCE5A14)),
-        shape = RoundedCornerShape(50.dp),
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 32.dp)
-            .height(50.dp)
-    ) {
-        Text(
-            text = text,
-            fontSize = 15.sp,
-            fontWeight = FontWeight.SemiBold,
-            color = Color.White
-        )
-    }
-}

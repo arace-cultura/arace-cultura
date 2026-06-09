@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.aracecultura.arace.R
+import com.aracecultura.arace.ui.components.perfil.BotaoVisualizacao
 import com.aracecultura.arace.ui.theme.GoogleSans
 import com.aracecultura.arace.ui.theme.bgDefault
 
@@ -73,7 +74,7 @@ fun PerfilCliente(
                     modifier = Modifier
                         .padding(16.dp)
                         .size(48.dp)
-                        .align(Alignment.TopEnd)
+                        .align(Alignment.TopStart)
                         .background(Color(0xFF3B4045), CircleShape)
                         .clickable { onEditClick() },
                     contentAlignment = Alignment.Center
@@ -84,6 +85,15 @@ fun PerfilCliente(
                         tint = Color.White
                     )
                 }
+
+                BotaoVisualizacao(
+                    modoAtualIsProdutor = usuario.isProdutor,
+                    onModoChanged = { isProdutor ->
+                        viewModel.alterarModoVisualizacao(isProdutor, uid)
+                        onModoChanged(isProdutor)
+                    },
+                    modifier = Modifier.align(Alignment.TopEnd)
+                )
 
                 // Textos
                 Column(
@@ -132,73 +142,6 @@ fun PerfilCliente(
                 Spacer(modifier = Modifier.height(16.dp))
                 InfoRow(label = "Email", value = usuario.email.ifEmpty { "carregando..." })
                 Spacer(modifier = Modifier.height(32.dp))
-
-                // Linha Modo de Visualização (Com RadioButtons alinhados e clicáveis na linha toda)
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.Top
-                ) {
-                    Text(
-                        text = "Modo de visualização",
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight.Medium,
-                        color = Color.Black,
-                        modifier = Modifier.padding(top = 12.dp) // Alinha texto com o primeiro RadioButton
-                    )
-
-                    Column(horizontalAlignment = Alignment.Start) {
-
-                        // Radio: Cliente
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier
-                                .clickable {
-                                    viewModel.alterarModoVisualizacao(false, uid)
-                                    onModoChanged(false)
-                                }
-                                .padding(vertical = 4.dp)
-                        ) {
-                            // MinimumInteractiveComponentSize ajuda a alinhar perfeitamente sem margens invisíveis indesejadas
-                            CompositionLocalProvider(LocalMinimumInteractiveComponentEnforcement provides false) {
-                                RadioButton(
-                                    selected = !usuario.isProdutor,
-                                    onClick = null, // Deixe nulo pois o Row lida com o clique
-                                    colors = RadioButtonDefaults.colors(
-                                        selectedColor = Color(0xFFD66027),
-                                        unselectedColor = Color(0xFFD66027)
-                                    )
-                                )
-                            }
-                            Spacer(modifier = Modifier.width(8.dp))
-                            Text(text = "Cliente", fontSize = 18.sp, color = Color(0xFF4A5568))
-                        }
-
-                        // Radio: Produtor
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier
-                                .clickable {
-                                    viewModel.alterarModoVisualizacao(true, uid)
-                                    onModoChanged(true)
-                                }
-                                .padding(vertical = 4.dp)
-                        ) {
-                            CompositionLocalProvider(LocalMinimumInteractiveComponentEnforcement provides false) {
-                                RadioButton(
-                                    selected = usuario.isProdutor,
-                                    onClick = null,
-                                    colors = RadioButtonDefaults.colors(
-                                        selectedColor = Color(0xFFD66027),
-                                        unselectedColor = Color(0xFFD66027)
-                                    )
-                                )
-                            }
-                            Spacer(modifier = Modifier.width(8.dp))
-                            Text(text = "Produtor", fontSize = 18.sp, color = Color(0xFF4A5568))
-                        }
-                    }
-                }
 
                 Spacer(Modifier.weight(1f))
 

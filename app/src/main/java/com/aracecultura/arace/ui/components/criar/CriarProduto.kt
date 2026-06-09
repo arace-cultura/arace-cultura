@@ -7,6 +7,7 @@ import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -24,6 +25,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -32,6 +34,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import com.aracecultura.arace.R
 import com.aracecultura.arace.ui.components.AppButton
+import com.aracecultura.arace.ui.theme.GoogleSans
 import com.aracecultura.arace.ui.theme.bgDefault
 import com.aracecultura.arace.ui.theme.btColor
 
@@ -144,24 +147,35 @@ fun CriarProduto(
                                 .aspectRatio(348f / 284f)
                                 .clip(RoundedCornerShape(15.dp))
                         )
-                    }
 
-                    Column(
-                        modifier = Modifier.fillMaxSize(),
-                        verticalArrangement = Arrangement.Center,
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        ButtonCustomized(
-                            text = if (selectedImageUri == null) "escolher imagem" else "trocar imagem",
-                            textColor = Color.Black,
-                            containerColor = bgDefault,
-                            borderColor = Color.Black
+                        Column(
+                            verticalArrangement = Arrangement.Center,
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            modifier = Modifier.fillMaxSize().clickable(enabled = true){
+                                photoPickerLauncher.launch(
+                                    PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+                                )
+                            }
                         ) {
-                            photoPickerLauncher.launch(
-                                PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+                            Icon(
+                                painter = painterResource(id = R.drawable.ic_image),
+                                contentDescription = "Editar Perfil",
+                                tint = Color.White,
+                                modifier = Modifier.size(80.dp)
+                            )
+                            Spacer(Modifier.height(10.dp))
+                            Text(
+                                text = "escolher\nimagem",
+                                fontFamily = GoogleSans,
+                                fontSize = 20.sp,
+                                fontWeight = FontWeight.Medium,
+                                lineHeight = 20.sp,
+                                color = Color.White
                             )
                         }
+
                     }
+
                 }
 
                 Spacer(Modifier.height(20.dp))

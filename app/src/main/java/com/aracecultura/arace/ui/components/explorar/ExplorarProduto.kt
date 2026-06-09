@@ -20,10 +20,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -43,13 +43,11 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.aracecultura.arace.ui.components.AppButton
 import com.aracecultura.arace.ui.components.OrderBy
-import androidx.compose.foundation.lazy.items
+import com.aracecultura.arace.ui.components.SearchBar
+import com.aracecultura.arace.R
+import com.aracecultura.arace.ui.theme.GoogleSans
 import com.aracecultura.arace.ui.theme.bgDefault
 import com.aracecultura.arace.ui.theme.btColor
-import com.aracecultura.arace.R
-import com.aracecultura.arace.data.model.Produto
-import com.aracecultura.arace.ui.components.SearchBar
-import com.aracecultura.arace.ui.theme.GoogleSans
 
 @Composable
 fun ExplorarProduto(
@@ -57,12 +55,18 @@ fun ExplorarProduto(
     uid: String,
     onNavigateToProduto: (String) -> Unit = {}
 ) {
-    val libreCaslonDisplay = remember{FontFamily(Font(R.font.librecaslondisplay_regular))}
-    val categoriasList = remember { listOf("Têxteis", "Cerâmica", "Entalhe")}
+    val categoriasList = remember { listOf("Têxteis", "Cerâmica", "Entalhe") }
+    val ordenacaoOpcoes = remember {
+        listOf("Nome" to "nome", "Preço ↑" to "preco_asc", "Preço ↓" to "preco_desc", "Avaliação" to "avaliacao")
+    }
 
     var textPesquisarMu by remember { mutableStateOf("") }
-    var mostrarCategorias by remember{ mutableStateOf(false) }
-    val produtos: State<List<Produto>> = viewmodel.produtos.collectAsState()
+    var mostrarCategorias by remember { mutableStateOf(false) }
+
+    val produtos by viewmodel.produtosFiltrados.collectAsState()
+    val categoriasSelecionadas by viewmodel.categoriasSelecionadas.collectAsState()
+    val ordenacaoAtual by viewmodel.ordenacao.collectAsState()
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -76,10 +80,7 @@ fun ExplorarProduto(
                 .fillMaxSize()
                 .alpha(0.25f)
         )
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-        ) {
+        Column(modifier = Modifier.fillMaxSize()) {
             Text(
                 "Descubra",
                 fontFamily = GoogleSans,
@@ -91,18 +92,17 @@ fun ExplorarProduto(
                     .padding(vertical = 10.dp)
             )
 
-            Box(Modifier.fillMaxSize()){
-
-                LazyColumn() {
+            Box(Modifier.fillMaxSize()) {
+                LazyColumn {
+                    item { Spacer(modifier = Modifier.height(56.dp)) }
                     items(
-                        items = produtos.value,
+                        items = produtos,
                         key = { produto -> produto.id }
                     ) { produto ->
-                        // Repassamos as ações para cada item renderizado
                         ProdutoNavegar(
                             produto = produto,
                             onProdutoClick = { onNavigateToProduto(produto.id) },
-                            onAddToCartClick = { viewmodel.adicionarAoCarrinho(produto, uid) } // ← direto
+                            onAddToCartClick = { viewmodel.adicionarAoCarrinho(produto, uid) }
                         )
                     }
                 }
@@ -123,15 +123,14 @@ fun ExplorarProduto(
                     ),
                     onClick = { mostrarCategorias = !mostrarCategorias }
                 )
-
             }
         }
 
         AnimatedVisibility(
             visible = mostrarCategorias,
-            enter =  fadeIn(animationSpec = tween(300)),
+            enter = fadeIn(animationSpec = tween(300)),
             exit = fadeOut(animationSpec = tween(300))
-        ){
+        ) {
             Box(
                 modifier = Modifier
                     .fillMaxSize()
@@ -162,11 +161,23 @@ fun ExplorarProduto(
                             .width(130.dp)
                             .padding(start = 8.dp, end = 8.dp)
                     )
-                    Spacer(
-                        modifier = Modifier.height(20.dp).width(3.dp).background(btColor)
-                    )
-                    Box(modifier = Modifier.weight(1f)) {
-                        OrderBy(Color.Black)
+                    Spacer(modifier = Modifier.height(20.dp).width(3.dp).background(btColor))
+                    Row(modifier = Modifier.weight(1f).padding(start = 8.dp)) {
+                        ordenacaoOpcoes.forEach { (label, valor) ->
+                            val selecionado = ordenacaoAtual == valor
+                            AppButton(
+                                text = label,
+                                textColor = if (selecionado) bgDefault else btColor,
+                                containerColor = if (selecionado) btColor else bgDefault,
+                                borderColor = btColor,
+                                shape = RoundedCornerShape(50),
+                                modifier = Modifier
+                                    .wrapContentWidth()
+                                    .height(36.dp)
+                                    .padding(end = 6.dp),
+                                onClick = { viewmodel.setOrdenacao(valor) }
+                            )
+                        }
                     }
                 }
                 Spacer(modifier = Modifier.height(10.dp))
@@ -179,9 +190,7 @@ fun ExplorarProduto(
                             .padding(start = 8.dp, end = 8.dp)
                             .background(bgDefault)
                     )
-                    Spacer(
-                        modifier = Modifier.height(20.dp).width(3.dp).background(btColor)
-                    )
+                    Spacer(modifier = Modifier.height(20.dp).width(3.dp).background(btColor))
                     SearchBar(
                         modifier = Modifier.weight(1f),
                         text = textPesquisarMu,
@@ -190,29 +199,26 @@ fun ExplorarProduto(
                         containerColor = bgDefault,
                         placeholder = "Pesquise um município"
                     )
-
                 }
                 Spacer(modifier = Modifier.height(10.dp))
                 Text(
                     text = "Categorias:",
                     fontSize = 20.sp,
-                    modifier = Modifier
-                        .padding(start = 8.dp)
+                    modifier = Modifier.padding(start = 8.dp)
                 )
                 Spacer(modifier = Modifier.height(20.dp))
-                Categorias(
-                    categorias = categoriasList,
-                ) { categoria ->
+                Categorias(categorias = categoriasList) { categoria ->
+                    val selecionada = categoria in categoriasSelecionadas
                     AppButton(
                         text = categoria,
-                        textColor = btColor,
-                        containerColor = bgDefault,
+                        textColor = if (selecionada) bgDefault else btColor,
+                        containerColor = if (selecionada) btColor else bgDefault,
                         borderColor = btColor,
                         shape = RoundedCornerShape(50),
                         modifier = Modifier
                             .wrapContentWidth()
                             .height(40.dp),
-                        onClick = { println("Clicou em $categoria") }
+                        onClick = { viewmodel.toggleCategoria(categoria) }
                     )
                 }
             }

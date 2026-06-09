@@ -13,6 +13,7 @@ import androidx.compose.ui.platform.ComposeView
 import com.aracecultura.arace.ui.components.explorar.TelaConfiguracoes
 import com.aracecultura.arace.ui.components.perfil.cliente.EditarPerfilUsuario
 import com.aracecultura.arace.ui.components.perfil.cliente.PerfilCliente
+import com.aracecultura.arace.ui.theme.AraceTheme
 import com.google.firebase.auth.FirebaseAuth
 
 private enum class TelaPerfil {
@@ -29,6 +30,7 @@ class PerfilClienteFragment : Fragment() {
     ): View {
         return ComposeView(requireContext()).apply {
             setContent {
+                AraceTheme {
                 //Controla o estado de qual tela exibir
                 var telaAtual by remember { mutableStateOf(TelaPerfil.PERFIL) }
 
@@ -73,6 +75,7 @@ class PerfilClienteFragment : Fragment() {
                     )
                     }
                 }
+                } // AraceTheme
             }
         }
     }

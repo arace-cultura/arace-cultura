@@ -16,5 +16,9 @@ data class Produtor(
     val cep: String = "",
     val endereco: String = "",
     val tipoArtesanato: String = "",
-    val categoriaProduto: String = ""
+    val categoriaProduto: String = "",
+    val banner: String = "",
+    val fotoLoja: String = "",
+    val fotosHistoria: List<String> = emptyList(),
+    val historia: String = ""
 ) : Parcelable

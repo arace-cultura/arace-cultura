@@ -9,6 +9,7 @@ import androidx.compose.ui.platform.ComposeView
 import com.aracecultura.arace.R
 import com.aracecultura.arace.ui.components.criar.CriarProduto
 import com.aracecultura.arace.ui.components.explorar.ExplorarProduto
+import com.aracecultura.arace.ui.theme.AraceTheme
 
 class CriarProdutoFragment : Fragment() {
     private lateinit var composeView: ComposeView
@@ -26,7 +27,7 @@ class CriarProdutoFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         composeView.setContent {
-            CriarProduto()
+            AraceTheme { CriarProduto() }
         }
     }
 }
