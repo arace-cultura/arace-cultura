@@ -7,18 +7,18 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="/css/autenticacao.css">
+  <link rel="stylesheet" href="<?= base_url('css/autenticacao.css') ?>">
 </head>
 <body>
 
   <div class="login-card item-animado">
     <div class="logo-wrap item-animado atraso-1">
-      <img src="/images/arace.png" alt="Logo Aracê" />
+      <img src="<?= base_url('images/arace.png') ?>" alt="Logo Aracê" />
     </div>
 
     <p class="subtitle item-animado atraso-1">Bem-vindo de volta</p>
 
-    <form id="formLogin" novalidate>
+    <form id="formLogin" action="<?= base_url('login') ?>" method="post" novalidate>
       <div class="input-group-custom item-animado atraso-2">
         <i data-lucide="user"></i>
         <input type="email" id="email" name="email" placeholder="E-mail" autocomplete="email" required />
@@ -50,5 +50,6 @@
 
   <script src="https://unpkg.com/lucide@latest"></script>
   <script>lucide.createIcons();</script>
+  <script src="<?= base_url('js/login.js') ?>"></script>
 </body>
 </html>

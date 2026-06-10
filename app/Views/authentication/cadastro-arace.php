@@ -7,37 +7,37 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="/css/autenticacao.css">
+  <link rel="stylesheet" href="<?= base_url('css/autenticacao.css') ?>">
 </head>
 <body>
 
   <div class="login-card cadastro-card item-animado">
     <div class="logo-wrap item-animado atraso-1">
-      <img src="/images/arace.png" alt="Logo Aracê" />
+      <img src="<?= base_url('images/arace.png') ?>" alt="Logo Aracê" />
     </div>
 
     <p class="subtitle item-animado atraso-1">Crie sua conta</p>
 
-    <form id="formCadastro" action="/usuario/arace-perfil" method="get" novalidate>
+    <form id="formCadastro" action="<?= base_url('cadastro') ?>" method="post" novalidate>
   
       <div class="input-group-custom item-animado atraso-2">
         <i data-lucide="user"></i>
-        <input type="text" id="nome" placeholder="Nome completo" required />
+        <input type="text" id="nome" name="nome" placeholder="Nome completo" autocomplete="name" required />
       </div>
 
       <div class="input-group-custom item-animado atraso-2">
         <i data-lucide="mail"></i>
-        <input type="email" id="email" placeholder="E-mail" required />
+        <input type="email" id="email" name="email" placeholder="E-mail" autocomplete="email" required />
       </div>
 
       <div class="input-group-custom item-animado atraso-3">
         <i data-lucide="phone"></i>
-        <input type="tel" id="telefone" placeholder="Telefone" />
+        <input type="tel" id="telefone" name="telefone" placeholder="Telefone" autocomplete="tel" />
       </div>
 
       <div class="input-group-custom item-animado atraso-3">
         <i data-lucide="lock"></i>
-        <input type="password" id="senha" placeholder="Senha" required />
+        <input type="password" id="senha" name="senha" placeholder="Senha" autocomplete="new-password" required />
         <button type="button" class="toggle-senha" onclick="alternarSenha('senha', 'icone-olho-1')">
           <i id="icone-olho-1" data-lucide="eye"></i>
         </button>
@@ -45,7 +45,7 @@
 
       <div class="input-group-custom item-animado atraso-4">
         <i data-lucide="lock-keyhole"></i>
-        <input type="password" id="confirmarSenha" placeholder="Confirmar senha" required />
+        <input type="password" id="confirmarSenha" name="confirmarSenha" placeholder="Confirmar senha" autocomplete="new-password" required />
         <button type="button" class="toggle-senha" onclick="alternarSenha('confirmarSenha', 'icone-olho-2')">
           <i id="icone-olho-2" data-lucide="eye"></i>
         </button>
@@ -69,6 +69,6 @@
 
   <script src="https://unpkg.com/lucide@latest"></script>
   <script>lucide.createIcons();</script>
-  <script src="/js/cadastro.js"></script>
+  <script src="<?= base_url('js/cadastro.js') ?>"></script>
 </body>
 </html>

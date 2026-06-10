@@ -7,36 +7,36 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="/css/autenticacao.css">
+  <link rel="stylesheet" href="<?= base_url('css/autenticacao.css') ?>">
 </head>
 <body>
 
   <div class="login-card cadastro-card item-animado">
     <div class="logo-wrap item-animado atraso-1">
-      <img src="/images/arace.png" alt="Logo Aracê" />
+      <img src="<?= base_url('images/arace.png') ?>" alt="Logo Aracê" />
     </div>
 
     <p class="subtitle item-animado atraso-1">Comece a vender seus produtos</p>
 
-    <form id="formCadastro" action="/cadastro/produtor-loja" method="get" novalidate>
+    <form id="formCadastro" action="<?= base_url('cadastro/produtor-loja') ?>" method="post" novalidate>
 
       <div class="input-group-custom item-animado atraso-2">
-        <i data-lucide="store"></i> <input type="text" id="nome" placeholder="Nome da loja" required />
+        <i data-lucide="store"></i> <input type="text" id="nome" name="nome" placeholder="Nome da loja" required />
       </div>
 
       <div class="input-group-custom item-animado atraso-2">
         <i data-lucide="file-text"></i>
-        <input type="text" id="cnpj" placeholder="CNPJ (opcional)" />
+        <input type="text" id="cnpj" name="cnpj" placeholder="CNPJ (opcional)" />
       </div>
 
       <div class="input-group-custom item-animado atraso-3">
         <i data-lucide="mail"></i>
-        <input type="email" id="email" placeholder="E-mail comercial" required />
+        <input type="email" id="email" name="email" placeholder="E-mail comercial" autocomplete="email" required />
       </div>
 
       <div class="input-group-custom item-animado atraso-3">
         <i data-lucide="phone"></i>
-        <input type="tel" id="telefone" placeholder="Telefone / WhatsApp comercial" required />
+        <input type="tel" id="telefone" name="telefone" placeholder="Telefone / WhatsApp comercial" autocomplete="tel" required />
       </div>
 
       <div class="input-group-custom item-animado atraso-4">
@@ -77,6 +77,6 @@
 
   <script src="https://unpkg.com/lucide@latest"></script>
   <script>lucide.createIcons();</script>
-  <script src="/js/cadastro-loja.js"></script>
+  <script src="<?= base_url('js/cadastro-loja.js') ?>"></script>
 </body>
 </html>

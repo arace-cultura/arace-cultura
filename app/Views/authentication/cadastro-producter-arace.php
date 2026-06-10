@@ -7,37 +7,37 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="/css/autenticacao.css">
+  <link rel="stylesheet" href="<?= base_url('css/autenticacao.css') ?>">
 </head>
 <body>
 
   <div class="login-card cadastro-card item-animado">
     <div class="logo-wrap item-animado atraso-1">
-      <img src="/images/arace.png" alt="Logo Aracê" />
+      <img src="<?= base_url('images/arace.png') ?>" alt="Logo Aracê" />
     </div>
 
     <p class="subtitle item-animado atraso-1">Crie sua conta de produtor</p>
 
-    <form id="formCadastroDono" action="/produtor/perfil-loja" method="get" novalidate>
+    <form id="formCadastroDono" action="<?= base_url('cadastro/produtora-arace') ?>" method="post" novalidate>
 
       <div class="input-group-custom item-animado atraso-2">
         <i data-lucide="user"></i>
-        <input type="text" id="nome-dono" placeholder="Nome completo" required />
+        <input type="text" id="nome-dono" name="nome-dono" placeholder="Nome completo" autocomplete="name" required />
       </div>
 
       <div class="input-group-custom item-animado atraso-2">
-        <i data-lucide="id-card"></i> <input type="text" id="cpf" placeholder="CPF" required />
+        <i data-lucide="id-card"></i> <input type="text" id="cpf" name="cpf" placeholder="CPF" required />
       </div>
       <span id="cpf-erro" class="erro-campo" style="display:none">CPF inválido</span>
 
       <div class="input-group-custom item-animado atraso-3">
         <i data-lucide="mail"></i>
-        <input type="email" id="email" placeholder="E-mail de acesso" required />
+        <input type="email" id="email" name="email" placeholder="E-mail de acesso" autocomplete="email" required />
       </div>
 
       <div class="input-group-custom item-animado atraso-3">
         <i data-lucide="phone"></i>
-        <input type="tel" id="telefone" placeholder="Telefone / Celular" required />
+        <input type="tel" id="telefone" name="telefone" placeholder="Telefone / Celular" autocomplete="tel" required />
       </div>
 
       
@@ -60,5 +60,6 @@
 
   <script src="https://unpkg.com/lucide@latest"></script>
   <script>lucide.createIcons();</script>
+  <script src="<?= base_url('js/cadastro-produtor.js') ?>"></script>
 </body>
 </html>
