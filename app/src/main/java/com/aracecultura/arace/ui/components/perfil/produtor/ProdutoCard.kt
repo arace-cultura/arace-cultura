@@ -21,7 +21,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
-import com.aracecultura.arace.ui.theme.GoogleSans
 
 @Composable
 fun ProdutoCard(
@@ -57,7 +56,6 @@ fun ProdutoCard(
                         .background(Color.White.copy(alpha = 0.8f), RoundedCornerShape(4.dp))
                         .padding(horizontal = 4.dp, vertical = 2.dp),
                     fontSize = 12.sp,
-                    fontFamily = GoogleSans,
                     fontWeight = FontWeight.Bold
                 )
             }
@@ -69,7 +67,7 @@ fun ProdutoCard(
                     .padding(4.dp),
                 contentAlignment = Alignment.Center
             ) {
-                Text(text = nome, color = Color.White, fontFamily = GoogleSans, fontSize = 16.sp)
+                Text(text = nome, color = Color.White, fontSize = 16.sp)
             }
         }
     }

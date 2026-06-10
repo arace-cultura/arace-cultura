@@ -1,9 +1,11 @@
 package com.aracecultura.arace.data.model
 
 import android.os.Parcelable
+import androidx.compose.runtime.Immutable
 import com.google.firebase.firestore.DocumentId
 import kotlinx.parcelize.Parcelize
 
+@Immutable
 @Parcelize
 data class Produtor(
     @DocumentId val uid: String = "",

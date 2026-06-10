@@ -27,7 +27,8 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.aracecultura.arace.ui.theme.GoogleSans
+import com.aracecultura.arace.ui.theme.bgDefault
+import com.aracecultura.arace.ui.theme.btColor
 
 @Composable
 fun TelaConfiguracoes(
@@ -45,6 +46,7 @@ fun TelaConfiguracoes(
         modifier = Modifier
             .fillMaxSize()
             .verticalScroll(scrollState)
+            .background(bgDefault)
     ) {
 
         Box(
@@ -78,7 +80,6 @@ fun TelaConfiguracoes(
 
             Text(
                 text = "Configurações",
-                fontFamily = GoogleSans,
                 fontSize = 32.sp,
                 fontWeight = FontWeight.Medium,
                 color = Color.Black,
@@ -163,7 +164,6 @@ fun ConfiguracaoSwitchItem(
 
         Text(
             text = text,
-            fontFamily = GoogleSans,
             fontSize = 18.sp,
             fontWeight = FontWeight.Medium,
             color = Color.Black,
@@ -174,7 +174,7 @@ fun ConfiguracaoSwitchItem(
             checked = checked,
             onCheckedChange = onCheckedChange,
             colors = SwitchDefaults.colors(
-                checkedTrackColor = Color(0xFFB95F29),
+                checkedTrackColor = btColor,
                 uncheckedTrackColor = Color.LightGray,
                 checkedThumbColor = Color.White,
                 uncheckedThumbColor = Color.White
@@ -215,7 +215,6 @@ fun ConfiguracaoItem(
 
         Text(
             text = text,
-            fontFamily = GoogleSans,
             fontSize = 18.sp,
             fontWeight = FontWeight.Medium,
             color = Color.Black,

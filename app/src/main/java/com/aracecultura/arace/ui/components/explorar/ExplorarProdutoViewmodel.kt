@@ -30,11 +30,18 @@ class ExplorarProdutoViewmodel : ViewModel() {
     private val _ordenacao = MutableStateFlow("nome")
     val ordenacao: StateFlow<String> = _ordenacao
 
+    private val _isLoading = MutableStateFlow(true)
+    val isLoading: StateFlow<Boolean> = _isLoading
+
     val produtosFiltrados: StateFlow<List<Produto>> = combine(
         _produtos, _categoriasSelecionadas, _ordenacao
     ) { todos, categorias, ordem ->
         val filtrados = if (categorias.isEmpty()) todos
-                        else todos.filter { p -> p.categorias.any { it in categorias } }
+                        else todos.filter { p ->
+                            p.categorias.any { cat ->
+                                categorias.any { it.equals(cat.trim(), ignoreCase = true) }
+                            }
+                        }
         when (ordem) {
             "preco_asc" -> filtrados.sortedBy { it.preco }
             "preco_desc" -> filtrados.sortedByDescending { it.preco }
@@ -49,10 +56,12 @@ class ExplorarProdutoViewmodel : ViewModel() {
 
     private fun getProducts() {
         viewModelScope.launch {
+            _isLoading.value = true
             val result: List<Produto> = withContext(Dispatchers.IO) {
                 getAllProducts()
             }
             _produtos.value = result
+            _isLoading.value = false
         }
     }
 

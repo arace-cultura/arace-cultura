@@ -28,7 +28,6 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.aracecultura.arace.data.model.Produtor
 import com.aracecultura.arace.ui.components.AppButton
-import com.aracecultura.arace.ui.theme.GoogleSans
 import com.aracecultura.arace.ui.theme.btColor
 
 @Composable
@@ -47,7 +46,6 @@ fun NossaHistoriaSection(
     ) {
         Text(
             text = "Nossa história",
-            fontFamily = GoogleSans,
             fontSize = 18.sp,
             fontWeight = FontWeight.Medium,
             modifier = Modifier.padding(bottom = 12.dp)
@@ -87,7 +85,6 @@ fun NossaHistoriaSection(
 
         Text(
             text = historia,
-            fontFamily = GoogleSans,
             fontSize = 16.sp,
             maxLines = if (historiaExpandida) Int.MAX_VALUE else 3,
             overflow = TextOverflow.Ellipsis,

@@ -42,7 +42,6 @@ import coil.compose.SubcomposeAsyncImage
 import com.aracecultura.arace.R
 import com.aracecultura.arace.data.model.Produto
 import com.aracecultura.arace.ui.components.CarregamentoContainer
-import com.aracecultura.arace.ui.theme.GoogleSans
 import com.aracecultura.arace.ui.theme.bgDefault
 import com.aracecultura.arace.ui.theme.btColor
 import kotlinx.coroutines.delay
@@ -113,7 +112,6 @@ private fun TituloSecao(titulo: String) {
                 .fillMaxWidth()
                 .padding(horizontal = 20.dp),
             fontSize = 26.sp,
-            fontFamily = GoogleSans,
             fontWeight = FontWeight.Medium
         )
     }
@@ -203,7 +201,6 @@ private fun RodapeCartaoProduto(produto: Produto) {
         Row(modifier = Modifier.padding(start = 20.dp, top = 4.dp, end = 20.dp)) {
             Text(
                 text = produto.nome,
-                fontFamily = GoogleSans,
                 fontWeight = FontWeight.SemiBold,
                 fontSize = 24.sp,
                 color = Color.White
@@ -211,7 +208,6 @@ private fun RodapeCartaoProduto(produto: Produto) {
             Spacer(modifier = Modifier.weight(1f))
             Text(
                 text = "R$${produto.preco}",
-                fontFamily = GoogleSans,
                 fontWeight = FontWeight.SemiBold,
                 fontSize = 20.sp,
                 color = Color.White,
@@ -221,7 +217,6 @@ private fun RodapeCartaoProduto(produto: Produto) {
         Row(modifier = Modifier.padding(start = 20.dp, bottom = 8.dp)) {
             Text(
                 text = descricaoResumida,
-                fontFamily = GoogleSans,
                 fontWeight = FontWeight.Normal,
                 fontSize = 16.sp,
                 color = Color.White

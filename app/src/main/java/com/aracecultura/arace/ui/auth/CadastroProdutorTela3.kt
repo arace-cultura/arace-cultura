@@ -20,6 +20,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.aracecultura.arace.R
+import com.aracecultura.arace.data.model.CategoriasProduto
 import com.aracecultura.arace.data.model.Produtor
 import com.google.android.material.textfield.TextInputEditText
 import kotlinx.coroutines.launch
@@ -83,7 +84,7 @@ class CadastroProdutorTela3 : Fragment(R.layout.fragment_cadastro_produtor_tela3
             ArrayAdapter(
                 requireContext(),
                 android.R.layout.simple_dropdown_item_1line,
-                arrayOf("Artesanato", "Têxteis", "Cosméticos", "Casa", "Cerâmica", "Acessórios")
+                CategoriasProduto.TODAS
             )
         )
 

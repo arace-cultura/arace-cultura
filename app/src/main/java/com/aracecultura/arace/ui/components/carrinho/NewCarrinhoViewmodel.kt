@@ -18,14 +18,23 @@ import kotlinx.coroutines.withContext
 
 class NewCarrinhoViewModel : ViewModel() {
 
+    init {
+        Log.d("CarrinhoDebug", "ViewModel CRIADO: ${this.hashCode()}")
+    }
+
     private val db: FirebaseFirestore = Firebase.firestore
 
     private val _estado = MutableStateFlow<EstadoCarrinho>(EstadoCarrinho.Carregando)
     val estado: StateFlow<EstadoCarrinho> = _estado.asStateFlow()
 
     fun carregarCarrinho(uid: String) {
+        Log.d("CarrinhoDebug", "carregarCarrinho() chamado (vm=${this.hashCode()})")
         viewModelScope.launch {
-            _estado.value = EstadoCarrinho.Carregando
+            // Só mostra skeleton se ainda não há conteúdo: recargas com a tela
+            // já populada atualizam silenciosamente, sem resetar o scroll
+            if (_estado.value !is EstadoCarrinho.Pronto) {
+                _estado.value = EstadoCarrinho.Carregando
+            }
             val itens = withContext(Dispatchers.IO) { buscarItensDoCarrinho(uid) }
             _estado.value = EstadoCarrinho.Pronto(itens)
         }
@@ -80,6 +89,7 @@ class NewCarrinhoViewModel : ViewModel() {
     }
 
     fun alterarQuantidade(item: ItemCarrinho, uid: String, novaQuantidade: Int) {
+        Log.d("CarrinhoDebug", "alterarQuantidade: item=${item.id.takeLast(5)} nova=$novaQuantidade")
         if (novaQuantidade <= 0) {
             removerItem(item, uid)
             return
@@ -98,9 +108,10 @@ class NewCarrinhoViewModel : ViewModel() {
                         .update("quantidade", novaQuantidade)
                         .await()
                 }
+                Log.d("CarrinhoDebug", "update Firestore OK: item=${item.id.takeLast(5)}")
             } catch (e: Exception) {
                 _estado.value = estadoAnterior
-                Log.e("Carrinho", "Erro ao alterar quantidade do item ${item.id}", e)
+                Log.e("CarrinhoDebug", "update Firestore FALHOU, estado restaurado", e)
             }
         }
     }

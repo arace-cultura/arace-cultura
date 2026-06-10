@@ -2,13 +2,14 @@ package com.aracecultura.arace.ui.components.explorar
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
-import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
-import androidx.compose.animation.shrinkVertically
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -16,12 +17,15 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -35,17 +39,14 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.Font
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.aracecultura.arace.ui.components.AppButton
-import com.aracecultura.arace.ui.components.OrderBy
 import com.aracecultura.arace.ui.components.SearchBar
 import com.aracecultura.arace.R
-import com.aracecultura.arace.ui.theme.GoogleSans
+import com.aracecultura.arace.data.model.CategoriasProduto
 import com.aracecultura.arace.ui.theme.bgDefault
 import com.aracecultura.arace.ui.theme.btColor
 
@@ -55,9 +56,14 @@ fun ExplorarProduto(
     uid: String,
     onNavigateToProduto: (String) -> Unit = {}
 ) {
-    val categoriasList = remember { listOf("Têxteis", "Cerâmica", "Entalhe") }
+    val categoriasList = CategoriasProduto.TODAS
     val ordenacaoOpcoes = remember {
-        listOf("Nome" to "nome", "Preço ↑" to "preco_asc", "Preço ↓" to "preco_desc", "Avaliação" to "avaliacao")
+        listOf(
+            "Nome" to "nome",
+            "Menor preço" to "preco_asc",
+            "Maior preço" to "preco_desc",
+            "Avaliação" to "avaliacao"
+        )
     }
 
     var textPesquisarMu by remember { mutableStateOf("") }
@@ -66,6 +72,7 @@ fun ExplorarProduto(
     val produtos by viewmodel.produtosFiltrados.collectAsState()
     val categoriasSelecionadas by viewmodel.categoriasSelecionadas.collectAsState()
     val ordenacaoAtual by viewmodel.ordenacao.collectAsState()
+    val isLoading by viewmodel.isLoading.collectAsState()
 
     Box(
         modifier = Modifier
@@ -83,7 +90,6 @@ fun ExplorarProduto(
         Column(modifier = Modifier.fillMaxSize()) {
             Text(
                 "Descubra",
-                fontFamily = GoogleSans,
                 fontSize = 36.sp,
                 textAlign = TextAlign.Center,
                 modifier = Modifier
@@ -95,20 +101,39 @@ fun ExplorarProduto(
             Box(Modifier.fillMaxSize()) {
                 LazyColumn {
                     item { Spacer(modifier = Modifier.height(56.dp)) }
-                    items(
-                        items = produtos,
-                        key = { produto -> produto.id }
-                    ) { produto ->
-                        ProdutoNavegar(
-                            produto = produto,
-                            onProdutoClick = { onNavigateToProduto(produto.id) },
-                            onAddToCartClick = { viewmodel.adicionarAoCarrinho(produto, uid) }
-                        )
+                    when {
+                        isLoading -> items(4) {
+                            ProdutoNavegarSkeleton()
+                        }
+                        produtos.isEmpty() -> item {
+                            Text(
+                                text = "Nenhum produto encontrado com os filtros selecionados.",
+                                fontSize = 16.sp,
+                                color = Color.Gray,
+                                textAlign = TextAlign.Center,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(horizontal = 24.dp, vertical = 32.dp)
+                            )
+                        }
+                        else -> items(
+                            items = produtos,
+                            key = { produto -> produto.id }
+                        ) { produto ->
+                            ProdutoNavegar(
+                                produto = produto,
+                                onProdutoClick = { onNavigateToProduto(produto.id) },
+                                onAddToCartClick = { viewmodel.adicionarAoCarrinho(produto, uid) }
+                            )
+                        }
                     }
                 }
 
                 AppButton(
                     modifier = Modifier
+                        // -1dp elimina o fio transparente de antialiasing
+                        // na junção com o título acima
+                        .offset(y = (-1).dp)
                         .width(100.dp)
                         .height(40.dp),
                     text = "Filtros",
@@ -141,17 +166,29 @@ fun ExplorarProduto(
 
         AnimatedVisibility(
             visible = mostrarCategorias,
-            enter = expandVertically(
-                expandFrom = Alignment.Top,
+            // slideIn anima só a translação (GPU), sem re-medir o painel a cada
+            // frame como expandVertically fazia — abertura muito mais fluida
+            enter = slideInVertically(
+                initialOffsetY = { -it },
                 animationSpec = tween(durationMillis = 300)
             ) + fadeIn(animationSpec = tween(durationMillis = 300)),
-            exit = shrinkVertically(
-                shrinkTowards = Alignment.Top,
+            exit = slideOutVertically(
+                targetOffsetY = { -it },
                 animationSpec = tween(durationMillis = 300)
             ) + fadeOut(animationSpec = tween(durationMillis = 300)),
             modifier = Modifier.align(Alignment.TopCenter)
         ) {
-            Column(modifier = Modifier.background(bgDefault).padding(bottom = 16.dp)) {
+            Column(
+                modifier = Modifier
+                    .background(bgDefault)
+                    // Consome cliques dentro do painel: sem isso, toques em áreas
+                    // não-interativas atravessam até o scrim e fecham o menu
+                    .clickable(
+                        interactionSource = remember { MutableInteractionSource() },
+                        indication = null
+                    ) {}
+                    .padding(bottom = 16.dp)
+            ) {
                 Spacer(modifier = Modifier.height(10.dp))
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(
@@ -162,21 +199,40 @@ fun ExplorarProduto(
                             .padding(start = 8.dp, end = 8.dp)
                     )
                     Spacer(modifier = Modifier.height(20.dp).width(3.dp).background(btColor))
-                    Row(modifier = Modifier.weight(1f).padding(start = 8.dp)) {
-                        ordenacaoOpcoes.forEach { (label, valor) ->
-                            val selecionado = ordenacaoAtual == valor
-                            AppButton(
-                                text = label,
-                                textColor = if (selecionado) bgDefault else btColor,
-                                containerColor = if (selecionado) btColor else bgDefault,
-                                borderColor = btColor,
-                                shape = RoundedCornerShape(50),
-                                modifier = Modifier
-                                    .wrapContentWidth()
-                                    .height(36.dp)
-                                    .padding(end = 6.dp),
-                                onClick = { viewmodel.setOrdenacao(valor) }
-                            )
+                    Box(modifier = Modifier.weight(1f).padding(start = 16.dp)) {
+                        var ordenacaoExpandida by remember { mutableStateOf(false) }
+                        val labelAtual = ordenacaoOpcoes
+                            .firstOrNull { it.second == ordenacaoAtual }?.first
+                            ?: "Selecione uma ordem..."
+
+                        Text(
+                            text = labelAtual,
+                            fontSize = 18.sp,
+                            color = Color.Black.copy(alpha = 0.7f),
+                            modifier = Modifier.clickable { ordenacaoExpandida = true }
+                        )
+                        DropdownMenu(
+                            expanded = ordenacaoExpandida,
+                            onDismissRequest = { ordenacaoExpandida = false },
+                            modifier = Modifier
+                                .background(bgDefault)
+                                .width(180.dp)
+                        ) {
+                            ordenacaoOpcoes.forEach { (label, valor) ->
+                                DropdownMenuItem(
+                                    text = {
+                                        Text(
+                                            text = label,
+                                            fontSize = 18.sp,
+                                            color = if (ordenacaoAtual == valor) btColor else Color.Black
+                                        )
+                                    },
+                                    onClick = {
+                                        ordenacaoExpandida = false
+                                        viewmodel.setOrdenacao(valor)
+                                    }
+                                )
+                            }
                         }
                     }
                 }

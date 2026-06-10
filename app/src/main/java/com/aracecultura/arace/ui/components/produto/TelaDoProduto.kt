@@ -35,7 +35,6 @@ import androidx.compose.ui.zIndex
 import coil.compose.AsyncImage
 import com.aracecultura.arace.ui.components.CarregamentoContainer
 import com.aracecultura.arace.ui.components.sombraInferior
-import com.aracecultura.arace.ui.theme.GoogleSans
 import com.aracecultura.arace.ui.theme.bgDefault
 
 @Composable
@@ -138,7 +137,6 @@ fun TelaDoProduto(
                             Column {
                                 Text(
                                     text = produtoAtual.nome,
-                                    fontFamily = GoogleSans,
                                     fontSize = 26.sp,
                                     //fontWeight = FontWeight.Bold
                                 )
@@ -154,7 +152,6 @@ fun TelaDoProduto(
                         Row(Modifier.fillMaxWidth()) {
                             Text(
                                 text = "R$${produtoAtual.preco}",
-                                fontFamily = GoogleSans,
                                 fontWeight = FontWeight.Bold,
                                 fontSize = 20.sp
                             )
@@ -162,7 +159,6 @@ fun TelaDoProduto(
                             Text(
                                 text = "${produtoAtual.avaliacao}",
                                 fontSize = 16.sp,
-                                fontFamily = GoogleSans,
                                 fontWeight = FontWeight.Normal
                             )
                         }
@@ -180,7 +176,6 @@ fun TelaDoProduto(
                                 "Paneleiras capixabas",
                                 modifier = Modifier.padding(start = 15.dp),
                                 fontSize = 22.sp,
-                                fontFamily = GoogleSans,
                                 fontWeight = FontWeight.Normal
 
                             )
@@ -190,7 +185,6 @@ fun TelaDoProduto(
                                 produtoAtual.descricao,
                                 modifier = Modifier.padding(horizontal = 15.dp),
                                 fontSize = 20.sp,
-                                fontFamily = GoogleSans,
                                 fontWeight = FontWeight.Normal
                             )
                         }

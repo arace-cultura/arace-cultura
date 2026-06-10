@@ -9,7 +9,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
-import com.aracecultura.arace.ui.theme.GoogleSans
 
 @Composable
 fun FooterRow(label: String, value: String) {
@@ -17,7 +16,7 @@ fun FooterRow(label: String, value: String) {
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        Text(text = label, fontFamily = GoogleSans, color = Color.White, fontSize = 14.sp)
-        Text(text = value, fontFamily = GoogleSans, color = Color.White, fontSize = 14.sp, textAlign = TextAlign.End)
+        Text(text = label, color = Color.White, fontSize = 14.sp)
+        Text(text = value, color = Color.White, fontSize = 14.sp, textAlign = TextAlign.End)
     }
 }

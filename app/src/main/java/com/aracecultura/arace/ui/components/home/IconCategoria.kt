@@ -19,7 +19,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.aracecultura.arace.ui.theme.GoogleSans
 
 @Composable
 fun IconCategoria(
@@ -48,7 +47,6 @@ fun IconCategoria(
         Text(
             text = legenda,
             fontSize = 14.sp,
-            fontFamily = GoogleSans,
             fontWeight = FontWeight.Medium
         )
     }

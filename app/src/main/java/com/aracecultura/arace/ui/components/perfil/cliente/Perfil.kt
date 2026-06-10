@@ -21,7 +21,6 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.aracecultura.arace.R
 import com.aracecultura.arace.ui.components.perfil.BotaoVisualizacao
-import com.aracecultura.arace.ui.theme.GoogleSans
 import com.aracecultura.arace.ui.theme.bgDefault
 
 @OptIn(ExperimentalMaterial3Api::class) // Necessário para ajustar os RadioButtons nativos
@@ -66,7 +65,7 @@ fun PerfilCliente(
                             .weight(3f)
                             .background(Color(0xFFD66027))
                     )
-                    Spacer(Modifier.weight(4f))
+                    Spacer(Modifier.weight(2f))
                 }
 
                 // Botão de Editar
@@ -92,7 +91,7 @@ fun PerfilCliente(
                         viewModel.alterarModoVisualizacao(isProdutor, uid)
                         onModoChanged(isProdutor)
                     },
-                    modifier = Modifier.align(Alignment.TopEnd)
+                    modifier = Modifier.align(Alignment.TopEnd).offset(y = (-2).dp)
                 )
 
                 // Textos
@@ -106,7 +105,6 @@ fun PerfilCliente(
                 ) {
                     Text(
                         text = usuario.nome.ifEmpty { "Usuário" },
-                        fontFamily = GoogleSans,
                         fontSize = 30.sp,
                         fontWeight = FontWeight.Medium,
                         color = Color(0xFF1F2937)
@@ -148,7 +146,7 @@ fun PerfilCliente(
                 Text(
                     text = "Configurações",
                     fontSize = 18.sp,
-                    fontWeight = FontWeight.Bold,
+                    fontWeight = FontWeight.Medium,
                     color = Color.Black,
                     modifier = Modifier
                         .clickable { onSettingsClick() }
@@ -160,7 +158,7 @@ fun PerfilCliente(
                 Text(
                     text = "Sair",
                     fontSize = 18.sp,
-                    fontWeight = FontWeight.Bold,
+                    fontWeight = FontWeight.Medium,
                     color = Color.Black,
                     modifier = Modifier
                         .clickable { onLogoutClick() }

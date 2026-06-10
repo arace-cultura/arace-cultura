@@ -1,7 +1,6 @@
 package com.aracecultura.arace.ui.components.carrinho
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -22,11 +21,13 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
@@ -37,7 +38,6 @@ import coil.compose.SubcomposeAsyncImage
 import com.aracecultura.arace.R
 import com.aracecultura.arace.data.model.Produto
 import com.aracecultura.arace.ui.components.CarregamentoContainer
-import com.aracecultura.arace.ui.theme.GoogleSans
 import java.util.Locale
 
 private val CorBotaoControle = Color(0xFFE46D39)
@@ -128,7 +128,6 @@ private fun ConteudoProdutoCardItem(
             text = produto.nome.ifEmpty { "Produto" },
             fontWeight = FontWeight.SemiBold,
             fontSize = 18.sp,
-            fontFamily = GoogleSans,
             color = Color.Black,
             maxLines = 1
         )
@@ -136,14 +135,12 @@ private fun ConteudoProdutoCardItem(
         Text(
             text = "Valor: R$ $precoFormatado",
             fontSize = 15.sp,
-            fontFamily = GoogleSans,
             color = Color.Black
         )
         Spacer(modifier = Modifier.height(4.dp))
         Text(
             text = "Quantidade:",
             fontSize = 13.sp,
-            fontFamily = GoogleSans,
             color = Color.Gray
         )
     }
@@ -182,7 +179,6 @@ private fun ControlesQuantidade(
             text = quantidade.toString(),
             fontSize = 18.sp,
             fontWeight = FontWeight.Medium,
-            fontFamily = GoogleSans,
             color = Color.Black
         )
 
@@ -204,7 +200,11 @@ private fun ControlesQuantidade(
             contentDescription = "Remover do carrinho",
             modifier = Modifier
                 .size(24.dp)
-                .clickable(onClick = onDeleteClick),
+                // pointerInput em vez de clickable: gesto puro, sem foco nem
+                // semântica de press — o press do clickable estava rolando a lista
+                .pointerInput(Unit) {
+                    detectTapGestures(onTap = { onDeleteClick() })
+                },
             tint = Color.Black
         )
     }
@@ -220,7 +220,11 @@ private fun BotaoControle(
             .size(26.dp)
             .clip(CircleShape)
             .background(CorBotaoControle)
-            .clickable(onClick = onClick),
+            // pointerInput em vez de clickable: gesto puro, sem foco nem
+            // semântica de press — o press do clickable estava rolando a lista
+            .pointerInput(Unit) {
+                detectTapGestures(onTap = { onClick() })
+            },
         contentAlignment = Alignment.Center
     ) {
         content()

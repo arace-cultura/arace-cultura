@@ -22,7 +22,6 @@ import androidx.compose.ui.zIndex
 import com.aracecultura.arace.data.model.ItemCarrinho
 import com.aracecultura.arace.ui.components.DirecaoSombra
 import com.aracecultura.arace.ui.components.sombraInferior
-import com.aracecultura.arace.ui.theme.GoogleSans
 import com.aracecultura.arace.ui.theme.bgDefault
 import com.aracecultura.arace.ui.theme.btColor
 import java.text.NumberFormat
@@ -59,13 +58,11 @@ fun SecaoFinalizarCompra(
             Column {
                 Text(
                     text = "Total",
-                    fontFamily = GoogleSans,
                     fontSize = 14.sp,
                     color = Color.Gray
                 )
                 Text(
                     text = formatoMoeda.format(valorTotal),
-                    fontFamily = GoogleSans,
                     fontSize = 24.sp,
                     color = MaterialTheme.colorScheme.onSurface
                 )
@@ -80,7 +77,6 @@ fun SecaoFinalizarCompra(
             ) {
                 Text(
                     text = "Finalizar",
-                    fontFamily = GoogleSans,
                     fontSize = 18.sp,
                     color = Color.White
                 )

@@ -19,6 +19,8 @@
     <color name="verde">#8DB641</color>
     <color name="laranja">#D45D22</color>
     <color name="bg">#F5F5F5</color>
+    <!-- Deve casar com bgDefault em ui/theme/Color.kt -->
+    <color name="bg_default">#F4F2F0</color>
     <color name="hint_gray">#61000000</color>
 
     <color

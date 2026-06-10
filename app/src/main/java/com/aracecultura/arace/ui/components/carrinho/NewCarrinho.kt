@@ -12,15 +12,18 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.Scaffold
+import androidx.compose.foundation.lazy.rememberLazyListState
+import android.util.Log
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
@@ -29,7 +32,6 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.aracecultura.arace.R
 import com.aracecultura.arace.data.model.ItemCarrinho
-import com.aracecultura.arace.ui.theme.GoogleSans
 import com.aracecultura.arace.ui.theme.bgDefault
 
 sealed interface EstadoCarrinho {
@@ -45,6 +47,31 @@ fun NewCarrinho(
     onDeleteClick: (ItemCarrinho) -> Unit = {}
 ) {
     val estado by viewModel.estado.collectAsState()
+    val listState = rememberLazyListState()
+
+    // ---- Instrumentação temporária do reset de scroll ----
+    DisposableEffect(Unit) {
+        Log.d("CarrinhoDebug", "Composição CRIADA (listState=${listState.hashCode()})")
+        onDispose { Log.d("CarrinhoDebug", "Composição DESCARTADA") }
+    }
+    LaunchedEffect(listState) {
+        snapshotFlow {
+            Triple(
+                listState.firstVisibleItemIndex,
+                listState.firstVisibleItemScrollOffset,
+                listState.layoutInfo.visibleItemsInfo.firstOrNull()?.key
+            )
+        }.collect { (index, offset, key) ->
+            Log.d(
+                "CarrinhoDebug",
+                "scroll: index=$index offset=$offset primeiraKey=$key " +
+                    "total=${listState.layoutInfo.totalItemsCount} " +
+                    "viewport=${listState.layoutInfo.viewportSize} " +
+                    "emProgresso=${listState.isScrollInProgress}"
+            )
+        }
+    }
+    // ------------------------------------------------------
 
     LaunchedEffect(uid) {
         if (uid.isNotBlank()) {
@@ -65,27 +92,20 @@ fun NewCarrinho(
             alpha = 0.3f
         )
 
-        Scaffold(
-            containerColor = Color.Transparent,
-            bottomBar = {
-                val itens = (estado as? EstadoCarrinho.Pronto)?.itens ?: emptyList()
-                SecaoFinalizarCompra(
-                    produtos = itens,
-                    onFinalizarClick = onFinalizarClick
-                )
-            }
-        ) { paddingValues ->
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(paddingValues)
-            ) {
-                TituloCarrinho()
-                Ordenar()
-                Spacer(modifier = Modifier.height(24.dp))
+        // Column simples no lugar de Scaffold: o bottomBar do Scaffold é uma
+        // subcomposição medida durante o layout e, lendo o mesmo estado que o
+        // clique altera, forçava re-subcomposição/remedição da LazyColumn no
+        // mesmo frame — reescrevendo a posição de scroll (recuo fixo de 441px)
+        Column(modifier = Modifier.fillMaxSize()) {
+            TituloCarrinho()
+            // Mesmo padrão do Explorar: o botão é overlay e a lista
+            // rola por trás dele; o Spacer inicial em ListaItens evita
+            // que o primeiro item nasça ocluso.
+            Box(modifier = Modifier.weight(1f)) {
                 ListaItens(
                     estado = estado,
-                    modifier = Modifier.weight(1f),
+                    listState = listState,
+                    modifier = Modifier.fillMaxSize(),
                     onAumentarQuantidade = { item ->
                         viewModel.alterarQuantidade(item, uid, item.quantidade + 1)
                     },
@@ -97,7 +117,12 @@ fun NewCarrinho(
                         onDeleteClick(item)
                     }
                 )
+                Ordenar()
             }
+            SecaoFinalizarCompra(
+                produtos = (estado as? EstadoCarrinho.Pronto)?.itens ?: emptyList(),
+                onFinalizarClick = onFinalizarClick
+            )
         }
     }
 }
@@ -106,7 +131,6 @@ fun NewCarrinho(
 private fun TituloCarrinho() {
     Text(
         text = "Carrinho",
-        fontFamily = GoogleSans,
         fontSize = 36.sp,
         modifier = Modifier
             .fillMaxWidth()
@@ -119,6 +143,7 @@ private fun TituloCarrinho() {
 @Composable
 private fun ListaItens(
     estado: EstadoCarrinho,
+    listState: LazyListState,
     modifier: Modifier = Modifier,
     onAumentarQuantidade: (ItemCarrinho) -> Unit,
     onDiminuirQuantidade: (ItemCarrinho) -> Unit,
@@ -126,12 +151,14 @@ private fun ListaItens(
 ) {
     LazyColumn(
         modifier = modifier,
-        contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
+        state = listState,
+        contentPadding = PaddingValues(horizontal = 16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        item { Spacer(modifier = Modifier.height(48.dp)) }
+        // 40dp + 16dp do spacedBy = 56dp, igual ao Explorar
+        item(key = "espaco_topo") { Spacer(modifier = Modifier.height(40.dp)) }
         when (estado) {
-            is EstadoCarrinho.Carregando -> items(3) {
+            is EstadoCarrinho.Carregando -> items(3, key = { "skeleton_$it" }) {
                 ProdutoCardItem(produto = null)
             }
             is EstadoCarrinho.Pronto -> items(

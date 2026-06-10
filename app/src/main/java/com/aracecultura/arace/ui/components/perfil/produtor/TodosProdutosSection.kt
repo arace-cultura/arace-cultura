@@ -23,7 +23,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.aracecultura.arace.data.model.Produto
-import com.aracecultura.arace.ui.theme.GoogleSans
 import java.util.Locale
 
 @Composable
@@ -45,13 +44,11 @@ fun TodosProdutosSection(
         ) {
             Text(
                 text = "Todos produtos",
-                fontFamily = GoogleSans,
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Medium
             )
             Text(
                 text = "Ordenar por: nome",
-                fontFamily = GoogleSans,
                 fontSize = 12.sp,
                 color = Color.DarkGray
             )
@@ -60,7 +57,6 @@ fun TodosProdutosSection(
         if (produtos.isEmpty()) {
             Text(
                 text = "Nenhum produto cadastrado ainda.",
-                fontFamily = GoogleSans,
                 fontSize = 14.sp,
                 color = Color.DarkGray
             )

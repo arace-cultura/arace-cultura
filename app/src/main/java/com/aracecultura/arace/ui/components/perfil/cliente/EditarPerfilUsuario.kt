@@ -23,7 +23,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.aracecultura.arace.R
-import com.aracecultura.arace.ui.theme.GoogleSans
 import com.aracecultura.arace.ui.theme.bgDefault
 
 @Composable
@@ -117,7 +116,6 @@ fun EditarPerfilUsuario(
             ) {
                 Text(
                     text = "Alterar Informações",
-                    fontFamily = GoogleSans,
                     fontSize = 22.sp,
                     fontWeight = FontWeight.Medium,
                     color = Color(0xFF1F2937)

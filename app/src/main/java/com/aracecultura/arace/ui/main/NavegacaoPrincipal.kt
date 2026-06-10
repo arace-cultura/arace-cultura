@@ -57,13 +57,13 @@ class NavegacaoPrincipal : Fragment() {
         }
 
         // Backdoor desativada — troca de modo agora é feita pelo BotaoVisualizacao nos perfis
-        // this.binding.btnMenuModo.setOnClickListener {
-        //     val bottomSheet = SeletorModoBottomSheet()
-        //     bottomSheet.onModoSelecionado = { modoSelecionado ->
-        //         quandoModoMudar(modoSelecionado)
-        //     }
-        //     bottomSheet.show(childFragmentManager, "SeletorModo")
-        // }
+        this.binding.btnMenuModo.setOnClickListener {
+             val bottomSheet = SeletorModoBottomSheet()
+             bottomSheet.onModoSelecionado = { modoSelecionado ->
+                 quandoModoMudar(modoSelecionado)
+             }
+             bottomSheet.show(childFragmentManager, "SeletorModo")
+         }
 
         // Verificação do cadastro de produtor bem sucedido!
 

@@ -33,8 +33,8 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import com.aracecultura.arace.R
+import com.aracecultura.arace.data.model.CategoriasProduto
 import com.aracecultura.arace.ui.components.AppButton
-import com.aracecultura.arace.ui.theme.GoogleSans
 import com.aracecultura.arace.ui.theme.bgDefault
 import com.aracecultura.arace.ui.theme.btColor
 
@@ -50,7 +50,7 @@ fun CriarProduto(
     var textDesc1 by remember { mutableStateOf("") }
     var textPreco by remember { mutableStateOf("") }
 
-    val categorias = listOf("Artesanato", "Têxteis", "Cosméticos", "Casa", "Cerâmica", "Acessórios")
+    val categorias = CategoriasProduto.TODAS
     var expandedCategoria by remember { mutableStateOf(false) }
     var selectedCategoria by remember { mutableStateOf("") }
 
@@ -166,7 +166,6 @@ fun CriarProduto(
                             Spacer(Modifier.height(10.dp))
                             Text(
                                 text = "escolher\nimagem",
-                                fontFamily = GoogleSans,
                                 fontSize = 20.sp,
                                 fontWeight = FontWeight.Medium,
                                 lineHeight = 20.sp,

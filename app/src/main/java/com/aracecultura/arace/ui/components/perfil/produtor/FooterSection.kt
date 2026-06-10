@@ -17,7 +17,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.aracecultura.arace.data.model.Produtor
-import com.aracecultura.arace.ui.theme.GoogleSans
 
 @Composable
 fun FooterSection(
@@ -34,7 +33,6 @@ fun FooterSection(
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             Text(
                 text = "Informações",
-                fontFamily = GoogleSans,
                 color = Color.White,
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Medium

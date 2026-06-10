@@ -32,7 +32,6 @@ import com.aracecultura.arace.data.model.Produto
 import com.aracecultura.arace.data.model.Produtor
 import com.aracecultura.arace.ui.components.CarregamentoContainer
 import com.aracecultura.arace.ui.components.perfil.BotaoVisualizacao
-import com.aracecultura.arace.ui.theme.GoogleSans
 import com.aracecultura.arace.ui.theme.bgDefault
 import com.aracecultura.arace.ui.theme.btColor
 import com.aracecultura.arace.ui.theme.verdePrincipal
@@ -224,7 +223,6 @@ private fun PerfilProdutorContent(
                             text = nomeExibicao.take(1).uppercase(),
                             color = Color.White,
                             fontSize = 48.sp,
-                            fontFamily = GoogleSans,
                             fontWeight = FontWeight.SemiBold
                         )
                     } else {
@@ -250,14 +248,12 @@ private fun PerfilProdutorContent(
                 Text(
                     text = nomeExibicao,
                     fontSize = 32.sp,
-                    fontFamily = GoogleSans,
                     textAlign = TextAlign.Center,
                     modifier = Modifier.padding(top = 8.dp, bottom = 24.dp)
                 )
 
                 Text(
                     text = "Nossos produtos em destaque",
-                    fontFamily = GoogleSans,
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Medium,
                     modifier = Modifier
