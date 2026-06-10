@@ -31,10 +31,10 @@ document.getElementById('formCadastro').addEventListener('submit', async functio
 
   /* Validação: senhas iguais */
   if (senha !== confirmarSenha) {
-    erroSenha.style.display = 'block';
+    if (erroSenha) erroSenha.style.display = 'block';
     return;
   } else {
-    erroSenha.style.display = 'none';
+    if (erroSenha) erroSenha.style.display = 'none';
   }
 
   /* Validação: termos aceitos */
@@ -67,6 +67,5 @@ document.getElementById('formCadastro').addEventListener('submit', async functio
   }
   */
 
-  //conectar ao banco de dados
-  alert(`Conta criada para: ${nome} (${email})`);
+  window.location.href = '/usuario/arace-perfil';
 });

@@ -18,7 +18,7 @@
 
     <p class="subtitle item-animado atraso-1">Crie sua conta</p>
 
-    <form id="formCadastro" novalidate>
+    <form id="formCadastro" action="/usuario/arace-perfil" method="get" novalidate>
   
       <div class="input-group-custom item-animado atraso-2">
         <i data-lucide="user"></i>
