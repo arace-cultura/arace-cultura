@@ -18,7 +18,7 @@
 
     <p class="subtitle item-animado atraso-1">Crie sua conta de produtor</p>
 
-    <form id="formCadastroDono" novalidate>
+    <form id="formCadastroDono" action="/produtor/perfil-loja" method="get" novalidate>
 
       <div class="input-group-custom item-animado atraso-2">
         <i data-lucide="user"></i>
@@ -60,6 +60,5 @@
 
   <script src="https://unpkg.com/lucide@latest"></script>
   <script>lucide.createIcons();</script>
-  <script src="/js/cadastro-dono.js"></script>
 </body>
 </html>

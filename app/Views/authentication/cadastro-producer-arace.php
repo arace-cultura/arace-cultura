@@ -8,7 +8,7 @@
 <body>
   <script>
     // O PHP gera a URL e o JavaScript executa o redirecionamento
-    window.location.replace("<?= url_to('auth_cadastro') ?>");
+    window.location.replace("<?= url_to('auth_cadastro_producter_arace') ?>");
 </script>
   <a href="<?= url_to('auth_cadastro_producter_arace') ?>">Ir para Cadastro Produtor</a>
 </body>

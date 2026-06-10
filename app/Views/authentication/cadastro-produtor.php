@@ -10,6 +10,6 @@
     // O PHP gera a URL e o JavaScript executa o redirecionamento
     window.location.replace("<?= url_to('auth_cadastro_producter_arace') ?>");
 </script>
-  <a href="cadastro/produtora-arace">Ir para Cadastro Produtor</a>
+  <a href="/cadastro/produtora-arace">Ir para Cadastro Produtor</a>
 </body>
 </html>

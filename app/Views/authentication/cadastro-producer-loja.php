@@ -18,7 +18,7 @@
 
     <p class="subtitle item-animado atraso-1">Comece a vender seus produtos</p>
 
-    <form id="formCadastro" novalidate>
+    <form id="formCadastro" action="/cadastro/produtor-loja" method="get" novalidate>
 
       <div class="input-group-custom item-animado atraso-2">
         <i data-lucide="store"></i> <input type="text" id="nome" placeholder="Nome da loja" required />
