@@ -119,11 +119,14 @@ class NewCarrinhoViewModel : ViewModel() {
     private fun atualizarQuantidadeLocal(itemId: String, novaQuantidade: Int) {
         val estadoAtual = _estado.value
         if (estadoAtual is EstadoCarrinho.Pronto) {
-            _estado.value = EstadoCarrinho.Pronto(
-                estadoAtual.itens.map { item ->
-                    if (item.id == itemId) item.copy(quantidade = novaQuantidade) else item
-                }
+            val novaLista = estadoAtual.itens.map { item ->
+                if (item.id == itemId) item.copy(quantidade = novaQuantidade) else item
+            }
+            Log.d(
+                "CarrinhoDebug",
+                "estadoLocal: ${novaLista.joinToString { "${it.id.takeLast(5)}=${it.quantidade}" }}"
             )
+            _estado.value = EstadoCarrinho.Pronto(novaLista)
         }
     }
 }

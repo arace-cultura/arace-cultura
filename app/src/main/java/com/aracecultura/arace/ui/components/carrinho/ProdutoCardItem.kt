@@ -15,8 +15,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -34,13 +32,15 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import coil.compose.SubcomposeAsyncImage
+import androidx.compose.ui.graphics.painter.ColorPainter
+import coil.compose.AsyncImage
 import com.aracecultura.arace.R
 import com.aracecultura.arace.data.model.Produto
 import com.aracecultura.arace.ui.components.CarregamentoContainer
 import java.util.Locale
 
 private val CorBotaoControle = Color(0xFFE46D39)
+private val CorPlaceholderImagem = Color(0xFFE9E5E1)
 
 @Composable
 fun ProdutoCardItem(
@@ -67,13 +67,16 @@ fun ProdutoCardItem(
             if (produto == null) {
                 CarregamentoContainer(modifier = imagemModifier)
             } else {
-                SubcomposeAsyncImage(
+                // AsyncImage (sem subcomposição) no lugar de SubcomposeAsyncImage:
+                // a subcomposição durante a medição da LazyColumn estava
+                // envolvida na reescrita da posição de scroll a cada clique
+                AsyncImage(
                     model = produto.imagens.firstOrNull(),
                     contentDescription = produto.nome,
                     contentScale = ContentScale.Crop,
-                    modifier = imagemModifier,
-                    loading = { CarregamentoContainer(modifier = Modifier.fillMaxSize()) },
-                    error = { CarregamentoContainer(modifier = Modifier.fillMaxSize()) }
+                    placeholder = ColorPainter(CorPlaceholderImagem),
+                    error = ColorPainter(CorPlaceholderImagem),
+                    modifier = imagemModifier
                 )
             }
 

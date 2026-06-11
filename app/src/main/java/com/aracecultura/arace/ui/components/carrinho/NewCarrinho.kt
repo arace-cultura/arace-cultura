@@ -149,6 +149,13 @@ private fun ListaItens(
     onDiminuirQuantidade: (ItemCarrinho) -> Unit,
     onRemoverItem: (ItemCarrinho) -> Unit
 ) {
+    if (estado is EstadoCarrinho.Pronto) {
+        Log.d(
+            "CarrinhoDebug",
+            "render(listState=${listState.hashCode()}): " +
+                estado.itens.joinToString { "${it.id.takeLast(5)}=${it.quantidade}" }
+        )
+    }
     LazyColumn(
         modifier = modifier,
         state = listState,
