@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Button
 import android.widget.RadioGroup
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.aracecultura.arace.R
@@ -29,6 +30,10 @@ class CadastroProdutorTela1 : Fragment(R.layout.fragment_cadastro_produtor_tela1
                 R.id.action_tela1_to_tela2,
                 Bundle().apply { putParcelable("produtorData", produtor) }
             )
+
+            view.findViewById<TextView>(R.id.btnVoltar).setOnClickListener {
+                findNavController().popBackStack()
+            }
         }
     }
 }

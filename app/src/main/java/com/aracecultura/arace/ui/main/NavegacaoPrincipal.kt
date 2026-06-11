@@ -10,6 +10,7 @@ import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.aracecultura.arace.R
+import com.aracecultura.arace.data.LojaRepository
 import com.aracecultura.arace.databinding.FragmentNavegacaoPrincipalBinding
 import com.aracecultura.arace.ui.main.jetpack.Modo
 import com.aracecultura.arace.ui.main.jetpack.SeletorModoBottomSheet
@@ -18,9 +19,7 @@ import androidx.fragment.app.setFragmentResultListener
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.tasks.await
 
 
 class NavegacaoPrincipal : Fragment() {
@@ -56,7 +55,6 @@ class NavegacaoPrincipal : Fragment() {
                 if (esconderFooter) View.GONE else View.VISIBLE
         }
 
-        // Backdoor desativada — troca de modo agora é feita pelo BotaoVisualizacao nos perfis
         this.binding.btnMenuModo.setOnClickListener {
              val bottomSheet = SeletorModoBottomSheet()
              bottomSheet.onModoSelecionado = { modoSelecionado ->
@@ -133,27 +131,24 @@ class NavegacaoPrincipal : Fragment() {
         val userId = FirebaseAuth.getInstance().currentUser?.uid ?: return
 
         viewLifecycleOwner.lifecycleScope.launch {
-            val isProdutorCadastrado = try {
-                FirebaseFirestore.getInstance()
-                    .collection("Produtores")
-                    .document(userId)
-                    .get()
-                    .await()
-                    .exists()
+            // Conta é produtora se está vinculada a uma loja (Usuarios.lojaId);
+            // o repositório também migra cadastros legados (Produtores/{uid})
+            val temLoja = try {
+                LojaRepository.resolverLojaId(userId) != null
             } catch (e: Exception) {
-                Log.e("ModoArace", "Falha ao buscar status de produtor no banco.", e)
+                Log.e("ModoArace", "Falha ao buscar vínculo de loja no banco.", e)
                 sharedPref.getBoolean("STATUS_PRODUTOR_$userId", false)
             }
 
             sharedPref.edit()
-                .putBoolean("STATUS_PRODUTOR_$userId", isProdutorCadastrado)
+                .putBoolean("STATUS_PRODUTOR_$userId", temLoja)
                 .apply()
 
-            if (isProdutorCadastrado) {
+            if (temLoja) {
                 Log.d("ModoArace", "Trocando footer para Produtor.")
                 configurarMenuProdutor()
             } else {
-                Log.d("ModoArace", "Redirecionando para Cadastro.")
+                Log.d("ModoArace", "Redirecionando para escolha de loja.")
                 iniciarFluxoCadastroProdutor()
             }
         }

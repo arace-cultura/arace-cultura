@@ -1,17 +1,9 @@
 package com.aracecultura.arace
 
 import android.os.Bundle
-import android.view.View
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
-import androidx.core.view.WindowInsetsCompat
-import androidx.core.view.WindowInsetsControllerCompat
-import androidx.navigation.NavArgument
-import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.ui.setupWithNavController
 import com.aracecultura.arace.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
@@ -34,18 +26,13 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupWindowDecor() {
-        //enableEdgeToEdge()
-
-        /*ViewCompat.setOnApplyWindowInsetsListener(this.binding.mainActivity) { v, insets ->
-
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
-        }*/
-
-
-        WindowCompat.setDecorFitsSystemWindows(window,false)
-        WindowInsetsControllerCompat(window, window.decorView).hide(WindowInsetsCompat.Type.statusBars())
+        // Modo padrão: o decor acomoda as barras do sistema e o conteúdo do
+        // app nunca fica sob elas. O modo anterior (edge-to-edge com
+        // decorFitsSystemWindows=false + hide(statusBars) e NENHUM consumo de
+        // insets) deixava a janela inteira sob as barras — provável raiz das
+        // "correções" espúrias de scroll nas listas (carrinho/explorar/home),
+        // cuja magnitude coincidia com a altura das barras inferiores.
+        WindowCompat.setDecorFitsSystemWindows(window, true)
     }
 
     /*private fun setupBottomNavigation() {

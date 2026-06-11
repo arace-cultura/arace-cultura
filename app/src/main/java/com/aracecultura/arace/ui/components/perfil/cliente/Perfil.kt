@@ -19,6 +19,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import coil.compose.AsyncImage
 import com.aracecultura.arace.R
 import com.aracecultura.arace.ui.components.perfil.BotaoVisualizacao
 import com.aracecultura.arace.ui.theme.bgDefault
@@ -64,7 +65,16 @@ fun PerfilCliente(
                             .fillMaxWidth()
                             .weight(3f)
                             .background(Color(0xFFD66027))
-                    )
+                    ) {
+                        if (usuario.bannerUrl.isNotBlank()) {
+                            AsyncImage(
+                                model = usuario.bannerUrl,
+                                contentDescription = "Banner do perfil",
+                                contentScale = ContentScale.Crop,
+                                modifier = Modifier.fillMaxSize()
+                            )
+                        }
+                    }
                     Spacer(Modifier.weight(2f))
                 }
 
@@ -121,9 +131,26 @@ fun PerfilCliente(
                         .size(140.dp)
                         .align(Alignment.Center)
                         .offset(y = (-15).dp)
-                        .background(Color.Gray, CircleShape)
                         .clip(CircleShape)
-                )
+                        .background(Color.Gray),
+                    contentAlignment = Alignment.Center
+                ) {
+                    if (usuario.fotoUrl.isNotBlank()) {
+                        AsyncImage(
+                            model = usuario.fotoUrl,
+                            contentDescription = "Foto de perfil",
+                            contentScale = ContentScale.Crop,
+                            modifier = Modifier.fillMaxSize()
+                        )
+                    } else {
+                        Text(
+                            text = usuario.nome.take(1).uppercase().ifBlank { "?" },
+                            fontSize = 48.sp,
+                            fontWeight = FontWeight.SemiBold,
+                            color = Color.White
+                        )
+                    }
+                }
             }
 
             Spacer(modifier = Modifier.height(24.dp))

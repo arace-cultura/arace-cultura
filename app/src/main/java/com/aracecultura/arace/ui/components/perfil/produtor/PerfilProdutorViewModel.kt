@@ -2,6 +2,7 @@ package com.aracecultura.arace.ui.components.perfil.produtor
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.aracecultura.arace.data.LojaRepository
 import com.aracecultura.arace.data.model.Produto
 import com.aracecultura.arace.data.model.Produtor
 import com.google.firebase.firestore.FirebaseFirestore
@@ -36,9 +37,14 @@ class PerfilProdutorViewModel : ViewModel() {
             _uiState.value = _uiState.value.copy(isLoading = true, errorMessage = null)
             try {
                 val (produtor, produtos) = withContext(Dispatchers.IO) {
-                    val produtorSnapshot = db.collection("Produtores").document(uid).get().await()
+                    // O perfil exibido é o da LOJA vinculada à conta, que pode
+                    // ser compartilhada entre várias contas
+                    val lojaId = LojaRepository.resolverLojaId(uid)
+                        ?: return@withContext null to emptyList<Produto>()
+
+                    val produtorSnapshot = db.collection("Produtores").document(lojaId).get().await()
                     val produtosSnapshot = db.collection("Produtos")
-                        .whereEqualTo("produtorId", uid)
+                        .whereEqualTo("produtorId", lojaId)
                         .get()
                         .await()
 

@@ -1,7 +1,12 @@
 package com.aracecultura.arace.ui.components.perfil.cliente
 
+import android.content.Context
+import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.aracecultura.arace.data.ImagemRepository
+import com.aracecultura.arace.data.LojaRepository
+import com.aracecultura.arace.data.model.Produtor
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -21,6 +26,7 @@ data class Usuario(
     val nome: String = "",
     val email: String = "",
     val fotoUrl: String = "",
+    val bannerUrl: String = "",
     val isProdutor: Boolean = false
 )
 
@@ -30,6 +36,24 @@ class PerfilViewModel : ViewModel() {
     private val _usuario = MutableStateFlow(Usuario())
     val usuario: StateFlow<Usuario> = _usuario.asStateFlow()
 
+    // Cadastro de produtor atrelado à conta (null se a conta não é produtora)
+    private val _produtor = MutableStateFlow<Produtor?>(null)
+    val produtor: StateFlow<Produtor?> = _produtor.asStateFlow()
+
+    fun carregarDadosProdutor(uid: String) {
+        viewModelScope.launch {
+            try {
+                _produtor.value = withContext(Dispatchers.IO) {
+                    val lojaId = LojaRepository.resolverLojaId(uid) ?: return@withContext null
+                    db.collection("Produtores").document(lojaId).get().await()
+                        .toObject(Produtor::class.java)
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+    }
+
     // Busca os dados do usuário no Firestore ao abrir o perfil
     fun carregarDadosUsuario(uid: String) {
         viewModelScope.launch {
@@ -38,7 +62,7 @@ class PerfilViewModel : ViewModel() {
                     db.collection("Usuarios").document(uid).get().await()
                 }
                 val possuiCadastroProdutor = withContext(Dispatchers.IO) {
-                    db.collection("Produtores").document(uid).get().await().exists()
+                    LojaRepository.resolverLojaId(uid) != null
                 }
                 val emailAutenticado = FirebaseAuth.getInstance().currentUser?.email.orEmpty()
 
@@ -83,18 +107,36 @@ class PerfilViewModel : ViewModel() {
             }
         }
     }
-    // Atualiza os dados editados
-    fun salvarEdicaoPerfil(novoNome: String, novaFotoUrl: String, uid: String, onSucesso: () -> Unit = {}) {
+    // Atualiza os dados editados; URIs novas (foto/banner) são enviadas ao
+    // storage antes de persistir as URLs
+    fun salvarEdicaoPerfil(
+        context: Context,
+        novoNome: String,
+        uid: String,
+        novaFotoUri: Uri? = null,
+        novoBannerUri: Uri? = null,
+        onSucesso: () -> Unit = {}
+    ) {
         val estadoAnterior = _usuario.value
 
         viewModelScope.launch {
-            _usuario.value = _usuario.value.copy(nome = novoNome, fotoUrl = novaFotoUrl)
-            // Persiste no banco de dados
             try {
+                val fotoUrl = novaFotoUri?.let {
+                    ImagemRepository.upload(context, uid, "perfil", it)
+                } ?: estadoAnterior.fotoUrl
+                val bannerUrl = novoBannerUri?.let {
+                    ImagemRepository.upload(context, uid, "banner", it)
+                } ?: estadoAnterior.bannerUrl
+
+                _usuario.value = estadoAnterior.copy(
+                    nome = novoNome, fotoUrl = fotoUrl, bannerUrl = bannerUrl
+                )
+
                 withContext(Dispatchers.IO) {
                     val updates = mapOf(
                         "nome" to novoNome,
-                        "fotoUrl" to novaFotoUrl
+                        "fotoUrl" to fotoUrl,
+                        "bannerUrl" to bannerUrl
                     )
                     db.collection("Usuarios").document(uid).update(updates).await()
                 }

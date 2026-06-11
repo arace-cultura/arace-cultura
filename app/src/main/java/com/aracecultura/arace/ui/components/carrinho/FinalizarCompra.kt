@@ -5,7 +5,9 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Menu
@@ -92,7 +94,8 @@ fun CheckoutPaymentScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .statusBarsPadding()
-                .navigationBarsPadding(),
+                .navigationBarsPadding()
+                .verticalScroll(rememberScrollState()),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
@@ -176,7 +179,8 @@ fun CheckoutPaymentScreen(
                 Text("Código copiado!", fontSize = 12.sp, color = Color(0xFFCE5A14))
             }
 
-            Spacer(Modifier.weight(1f))
+            // Espaço fixo: Spacer(weight) é incompatível com verticalScroll
+            Spacer(Modifier.height(48.dp))
 
             AppButton(
                 text = "Copiar código",
@@ -219,7 +223,8 @@ fun CheckoutConfirmationScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .statusBarsPadding()
-                .navigationBarsPadding(),
+                .navigationBarsPadding()
+                .verticalScroll(rememberScrollState()),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
@@ -234,7 +239,8 @@ fun CheckoutConfirmationScreen(
                 color = Color(0xFF2E2B27)
             )
 
-            Spacer(Modifier.weight(1f))
+            // Espaços fixos: Spacer(weight) é incompatível com verticalScroll
+            Spacer(Modifier.height(120.dp))
 
             Icon(
                 painter = painterResource(id = R.drawable.ic_bag_check),
@@ -258,7 +264,7 @@ fun CheckoutConfirmationScreen(
                 color = Color(0xFF7A7168)
             )
 
-            Spacer(Modifier.weight(1f))
+            Spacer(Modifier.height(120.dp))
 
             AppButton(
                 text = "Continue comprando",

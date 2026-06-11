@@ -4,6 +4,7 @@ import android.content.Context
 import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.aracecultura.arace.data.LojaRepository
 import com.aracecultura.arace.data.model.Produtor
 import com.aracecultura.arace.supabase
 import com.google.firebase.auth.FirebaseAuth
@@ -34,6 +35,7 @@ class CadastroProdutorViewModel : ViewModel() {
     fun salvarProdutor(
         context: Context,
         produtor: Produtor,
+        senhaLoja: String,
         bannerUri: Uri? = null,
         fotoLojaUri: Uri? = null,
         fotosHistoriaUris: List<Uri> = emptyList()
@@ -58,22 +60,17 @@ class CadastroProdutorViewModel : ViewModel() {
                     uploadImagemProdutor(context, uid, uri, "historia-$index")
                 }
 
-                db.collection("Produtores")
-                    .document(uid)
-                    .set(
-                        produtor.copy(
-                            uid = uid,
-                            banner = bannerUrl,
-                            fotoLoja = fotoLojaUrl,
-                            fotosHistoria = fotosHistoriaUrls
-                        )
-                    )
-                    .await()
-
-                db.collection("Usuarios")
-                    .document(uid)
-                    .set(mapOf("isProdutor" to true), SetOptions.merge())
-                    .await()
+                // Cria a loja com id próprio (compartilhável entre contas),
+                // grava o hash da senha e vincula esta conta a ela
+                LojaRepository.criarLoja(
+                    uid = uid,
+                    produtor = produtor.copy(
+                        banner = bannerUrl,
+                        fotoLoja = fotoLojaUrl,
+                        fotosHistoria = fotosHistoriaUrls
+                    ),
+                    senha = senhaLoja
+                )
 
                 _resultado.value = ResultadoCadastro.Sucesso
             } catch (e: Exception) {
@@ -103,11 +100,7 @@ class CadastroProdutorViewModel : ViewModel() {
 
     suspend fun isProdutor(uid: String): Boolean {
         return try {
-            db.collection("Produtores")
-                .document(uid)
-                .get()
-                .await()
-                .exists()
+            LojaRepository.resolverLojaId(uid) != null
         } catch (e: Exception) {
             false
         }

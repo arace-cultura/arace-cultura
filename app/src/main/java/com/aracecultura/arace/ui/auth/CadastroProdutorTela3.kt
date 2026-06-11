@@ -2,6 +2,7 @@ package com.aracecultura.arace.ui.auth
 
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
@@ -9,6 +10,7 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.os.bundleOf
@@ -71,6 +73,7 @@ class CadastroProdutorTela3 : Fragment(R.layout.fragment_cadastro_produtor_tela3
         val etTipoArt  = view.findViewById<TextInputEditText>(R.id.etTipoArtesanato)
         val acCategoria = view.findViewById<AutoCompleteTextView>(R.id.acCategoria)
         val etHistoria = view.findViewById<TextInputEditText>(R.id.etHistoria)
+        val etSenhaLoja = view.findViewById<TextInputEditText>(R.id.etSenhaLoja)
 
         tvBannerSelecionado = view.findViewById(R.id.tvBannerSelecionado)
         tvFotoLojaSelecionada = view.findViewById(R.id.tvFotoLojaSelecionada)
@@ -107,6 +110,11 @@ class CadastroProdutorTela3 : Fragment(R.layout.fragment_cadastro_produtor_tela3
         }
 
         view.findViewById<Button>(R.id.btnFinalizar).setOnClickListener {
+            if (etSenhaLoja.text.toString().length < 4) {
+                etSenhaLoja.error = "A senha da loja deve ter pelo menos 4 caracteres"
+                etSenhaLoja.requestFocus()
+                return@setOnClickListener
+            }
             viewModel.salvarProdutor(
                 context = requireContext(),
                 produtorRecebido.copy(
@@ -116,6 +124,7 @@ class CadastroProdutorTela3 : Fragment(R.layout.fragment_cadastro_produtor_tela3
                     categoriaProduto = acCategoria.text.toString(),
                     historia = etHistoria.text.toString()
                 ),
+                senhaLoja = etSenhaLoja.text.toString(),
                 bannerUri = bannerUri,
                 fotoLojaUri = fotoLojaUri,
                 fotosHistoriaUris = fotosHistoriaUris
@@ -138,7 +147,12 @@ class CadastroProdutorTela3 : Fragment(R.layout.fragment_cadastro_produtor_tela3
                             findNavController().navigate(R.id.action_cadastro_concluido)
                         }
                         is ResultadoCadastro.Erro -> {
-                            // TODO: Snackbar.make(view, resultado.mensagem, Snackbar.LENGTH_LONG).show()
+                            Log.e("CadastroProdutor", "Falha no cadastro: ${resultado.mensagem}")
+                            Toast.makeText(
+                                requireContext(),
+                                resultado.mensagem,
+                                Toast.LENGTH_LONG
+                            ).show()
                         }
                         else -> Unit
                     }

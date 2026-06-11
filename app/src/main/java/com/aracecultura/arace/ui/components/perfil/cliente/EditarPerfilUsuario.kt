@@ -1,5 +1,9 @@
 package com.aracecultura.arace.ui.components.perfil.cliente
 
+import android.net.Uri
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -15,11 +19,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import coil.compose.AsyncImage
 import com.aracecultura.arace.R
 import com.aracecultura.arace.ui.theme.bgDefault
 
@@ -29,10 +35,21 @@ fun EditarPerfilUsuario(
     viewModel: PerfilViewModel = viewModel(),
     onVoltarClick: () -> Unit = {}
 ) {
+    val context = LocalContext.current
     val usuario by viewModel.usuario.collectAsState()
     val scrollState = rememberScrollState()
 
     var nomeInput by remember { mutableStateOf("") }
+    var novaFotoUri by remember { mutableStateOf<Uri?>(null) }
+    var novoBannerUri by remember { mutableStateOf<Uri?>(null) }
+
+    val fotoPicker = rememberLauncherForActivityResult(
+        ActivityResultContracts.PickVisualMedia()
+    ) { uri -> if (uri != null) novaFotoUri = uri }
+
+    val bannerPicker = rememberLauncherForActivityResult(
+        ActivityResultContracts.PickVisualMedia()
+    ) { uri -> if (uri != null) novoBannerUri = uri }
 
     LaunchedEffect(uid) {
         if (uid.isNotBlank()) {
@@ -64,12 +81,40 @@ fun EditarPerfilUsuario(
                     .weight(2f)
             ) {
                 Column(Modifier.fillMaxSize()) {
+                    // Banner: toque para trocar
                     Box(
                         modifier = Modifier
                             .fillMaxWidth()
                             .weight(3f)
                             .background(Color(0xFFD66027))
-                    )
+                            .clickable {
+                                bannerPicker.launch(
+                                    PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+                                )
+                            }
+                    ) {
+                        val bannerModel: Any? = novoBannerUri ?: usuario.bannerUrl.ifBlank { null }
+                        if (bannerModel != null) {
+                            AsyncImage(
+                                model = bannerModel,
+                                contentDescription = "Banner do perfil",
+                                contentScale = ContentScale.Crop,
+                                modifier = Modifier.fillMaxSize()
+                            )
+                        }
+                        Text(
+                            text = "Toque para alterar o banner",
+                            fontSize = 12.sp,
+                            color = Color.White,
+                            modifier = Modifier
+                                .align(Alignment.BottomEnd)
+                                .background(
+                                    Color.Black.copy(alpha = 0.35f),
+                                    RoundedCornerShape(topStart = 8.dp)
+                                )
+                                .padding(horizontal = 10.dp, vertical = 4.dp)
+                        )
+                    }
                     Spacer(Modifier.weight(4f))
                 }
 
@@ -90,15 +135,38 @@ fun EditarPerfilUsuario(
                     )
                 }
 
-                // Foto de perfil centralizada
+                // Foto de perfil centralizada: toque para trocar
                 Box(
                     modifier = Modifier
                         .size(140.dp)
                         .align(Alignment.Center)
                         .offset(y = 20.dp)
-                        .background(Color.Gray, CircleShape)
                         .clip(CircleShape)
-                )
+                        .background(Color.Gray)
+                        .clickable {
+                            fotoPicker.launch(
+                                PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+                            )
+                        },
+                    contentAlignment = Alignment.Center
+                ) {
+                    val fotoModel: Any? = novaFotoUri ?: usuario.fotoUrl.ifBlank { null }
+                    if (fotoModel != null) {
+                        AsyncImage(
+                            model = fotoModel,
+                            contentDescription = "Foto de perfil",
+                            contentScale = ContentScale.Crop,
+                            modifier = Modifier.fillMaxSize()
+                        )
+                    } else {
+                        Text(
+                            text = "Toque para\nadicionar foto",
+                            fontSize = 13.sp,
+                            color = Color.White,
+                            lineHeight = 16.sp
+                        )
+                    }
+                }
             }
 
             Spacer(modifier = Modifier.height(40.dp))
@@ -144,9 +212,11 @@ fun EditarPerfilUsuario(
                 Button(
                     onClick = {
                         viewModel.salvarEdicaoPerfil(
+                            context = context,
                             novoNome = nomeInput,
-                            novaFotoUrl = usuario.fotoUrl,
                             uid = uid,
+                            novaFotoUri = novaFotoUri,
+                            novoBannerUri = novoBannerUri,
                             onSucesso = onVoltarClick
                         )
                     },

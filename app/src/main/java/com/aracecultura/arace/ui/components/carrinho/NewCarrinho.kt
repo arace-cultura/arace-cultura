@@ -5,23 +5,18 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import android.util.Log
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
@@ -47,30 +42,6 @@ fun NewCarrinho(
 ) {
     val estado by viewModel.estado.collectAsState()
     val listState = rememberLazyListState()
-
-    // ---- Instrumentação temporária do reset de scroll ----
-    DisposableEffect(Unit) {
-        Log.d("CarrinhoDebug", "Composição CRIADA (listState=${listState.hashCode()})")
-        onDispose { Log.d("CarrinhoDebug", "Composição DESCARTADA") }
-    }
-    LaunchedEffect(listState) {
-        snapshotFlow {
-            Triple(
-                listState.firstVisibleItemIndex,
-                listState.firstVisibleItemScrollOffset,
-                listState.layoutInfo.visibleItemsInfo.firstOrNull()?.key
-            )
-        }.collect { (index, offset, key) ->
-            Log.d(
-                "CarrinhoDebug",
-                "scroll: index=$index offset=$offset primeiraKey=$key " +
-                    "total=${listState.layoutInfo.totalItemsCount} " +
-                    "viewport=${listState.layoutInfo.viewportSize} " +
-                    "emProgresso=${listState.isScrollInProgress}"
-            )
-        }
-    }
-    // ------------------------------------------------------
 
     LaunchedEffect(uid) {
         if (uid.isNotBlank()) {
@@ -98,7 +69,7 @@ fun NewCarrinho(
         Column(modifier = Modifier.fillMaxSize()) {
             TituloCarrinho()
             // Mesmo padrão do Explorar: o botão é overlay e a lista
-            // rola por trás dele; o Spacer inicial em ListaItens evita
+            // rola por trás dele; o contentPadding superior da lista evita
             // que o primeiro item nasça ocluso.
             Box(modifier = Modifier.weight(1f)) {
                 ListaItens(
@@ -148,41 +119,45 @@ private fun ListaItens(
     onDiminuirQuantidade: (ItemCarrinho) -> Unit,
     onRemoverItem: (ItemCarrinho) -> Unit
 ) {
-    if (estado is EstadoCarrinho.Pronto) {
-        Log.d(
-            "CarrinhoDebug",
-            "render(listState=${listState.hashCode()}): " +
-                estado.itens.joinToString { "${it.id.takeLast(5)}=${it.quantidade}" }
-        )
-    }
-    // Espaçamento via padding dos itens em vez de Arrangement.spacedBy:
-    // a aritmética dos saltos de scroll (alvo sempre 66px antes do item
-    // visível = spacing + 24px) implicava o spacedBy na remedição
-    LazyColumn(
-        modifier = modifier,
-        state = listState,
-        contentPadding = PaddingValues(horizontal = 16.dp)
-    ) {
-        item(key = "espaco_topo") { Spacer(modifier = Modifier.height(56.dp)) }
-        when (estado) {
-            is EstadoCarrinho.Carregando -> items(3, key = { "skeleton_$it" }) {
+    // Skeleton fora da LazyColumn: evita trocar o dataset (keys skeleton↔ids)
+    // dentro da mesma lista, o que participa da aritmética de âncora
+    if (estado is EstadoCarrinho.Carregando) {
+        Column(modifier = modifier.padding(top = 56.dp, start = 16.dp, end = 16.dp)) {
+            repeat(3) {
                 Box(modifier = Modifier.padding(bottom = 16.dp)) {
                     ProdutoCardItem(produto = null)
                 }
             }
-            is EstadoCarrinho.Pronto -> items(
-                items = estado.itens,
-                key = { it.id }
-            ) { item ->
-                Box(modifier = Modifier.padding(bottom = 16.dp)) {
-                    ProdutoCardItem(
-                        produto = item.produto,
-                        quantidade = item.quantidade,
-                        onIncreaseClick = { onAumentarQuantidade(item) },
-                        onDecreaseClick = { onDiminuirQuantidade(item) },
-                        onDeleteClick = { onRemoverItem(item) }
-                    )
-                }
+        }
+        return
+    }
+
+    val itens = (estado as EstadoCarrinho.Pronto).itens
+
+    // O espaço do topo (botão Ordenar em overlay) é contentPadding, não um
+    // item: um item-fantasma no índice 0 entra no cálculo de âncora do lazy
+    // layout e estava implicado nos saltos de scroll pós-mudança de estado
+    LazyColumn(
+        modifier = modifier,
+        state = listState,
+        // bottom=176dp: a "correção" interna do lazy layout proíbe repouso
+        // nos últimos ~441px (168dp) da lista — exatamente a altura das
+        // barras abaixo dela. Com o padding, o último cartão fica totalmente
+        // visível antes dessa fronteira e a correção só consome espaço vazio
+        contentPadding = PaddingValues(start = 16.dp, end = 16.dp, top = 56.dp, bottom = 176.dp)
+    ) {
+        items(
+            items = itens,
+            key = { it.id }
+        ) { item ->
+            Box(modifier = Modifier.padding(bottom = 16.dp)) {
+                ProdutoCardItem(
+                    produto = item.produto,
+                    quantidade = item.quantidade,
+                    onIncreaseClick = { onAumentarQuantidade(item) },
+                    onDecreaseClick = { onDiminuirQuantidade(item) },
+                    onDeleteClick = { onRemoverItem(item) }
+                )
             }
         }
     }

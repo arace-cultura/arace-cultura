@@ -12,6 +12,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.ComposeView
 import com.aracecultura.arace.ui.components.explorar.TelaConfiguracoes
 import com.aracecultura.arace.ui.components.perfil.cliente.EditarPerfilUsuario
+import com.aracecultura.arace.ui.components.perfil.cliente.MeusDados
 import com.aracecultura.arace.ui.components.perfil.cliente.PerfilCliente
 import com.aracecultura.arace.ui.theme.AraceTheme
 import com.google.firebase.auth.FirebaseAuth
@@ -19,7 +20,8 @@ import com.google.firebase.auth.FirebaseAuth
 private enum class TelaPerfil {
     PERFIL,
     EDITAR,
-    CONFIGURACOES
+    CONFIGURACOES,
+    MEUS_DADOS
 }
 
 class PerfilClienteFragment : Fragment() {
@@ -48,11 +50,18 @@ class PerfilClienteFragment : Fragment() {
                     TelaPerfil.CONFIGURACOES -> {
                         TelaConfiguracoes(
                             onBackClick = { telaAtual = TelaPerfil.PERFIL },
-                            onMeusDadosClick = { telaAtual = TelaPerfil.EDITAR },
+                            onMeusDadosClick = { telaAtual = TelaPerfil.MEUS_DADOS },
                             onSairClick = {
                                 FirebaseAuth.getInstance().signOut()
                                 requireActivity().supportFragmentManager.setFragmentResult("logout_request", Bundle())
                             }
+                        )
+                    }
+                    TelaPerfil.MEUS_DADOS -> {
+                        MeusDados(
+                            uid = uid,
+                            onVoltarClick = { telaAtual = TelaPerfil.CONFIGURACOES },
+                            onEditarClick = { telaAtual = TelaPerfil.EDITAR }
                         )
                     }
                     TelaPerfil.PERFIL -> {

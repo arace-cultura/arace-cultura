@@ -137,6 +137,30 @@
                     android:textColor="@color/texto" />
             </com.google.android.material.textfield.TextInputLayout>
 
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                android:hint="Senha da loja"
+                app:boxCornerRadiusBottomEnd="15dp"
+                app:boxCornerRadiusBottomStart="15dp"
+                app:boxCornerRadiusTopEnd="15dp"
+                app:boxCornerRadiusTopStart="15dp"
+                app:boxStrokeColor="@color/arace_blue"
+                app:hintTextColor="@color/arace_blue"
+                app:passwordToggleEnabled="true"
+                app:helperText="Outras contas usarão o nome e esta senha para entrar na loja">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etSenhaLoja"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/google_sans_flex_variable_font"
+                    android:inputType="textPassword"
+                    android:textColor="@color/texto" />
+            </com.google.android.material.textfield.TextInputLayout>
+
             <Button
                 android:id="@+id/btnSelecionarBanner"
                 android:layout_width="match_parent"

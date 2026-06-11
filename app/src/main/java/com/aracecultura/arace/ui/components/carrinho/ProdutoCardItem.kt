@@ -1,6 +1,7 @@
 package com.aracecultura.arace.ui.components.carrinho
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -19,15 +20,11 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
-import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
@@ -200,20 +197,12 @@ private fun ControlesQuantidade(
 
         Spacer(modifier = Modifier.weight(1f))
 
-        // rememberUpdatedState: pointerInput(Unit) roda uma vez e capturaria a
-        // lambda da primeira composição para sempre — cliques chamariam um
-        // callback velho (com item/quantidade defasados)
-        val onDeleteAtual by rememberUpdatedState(onDeleteClick)
         Icon(
             painter = painterResource(id = R.drawable.ic_deletar),
             contentDescription = "Remover do carrinho",
             modifier = Modifier
                 .size(24.dp)
-                // pointerInput em vez de clickable: gesto puro, sem foco nem
-                // semântica de press — o press do clickable estava rolando a lista
-                .pointerInput(Unit) {
-                    detectTapGestures(onTap = { onDeleteAtual() })
-                },
+                .clickable(onClick = onDeleteClick),
             tint = Color.Black
         )
     }
@@ -224,20 +213,12 @@ private fun BotaoControle(
     onClick: () -> Unit,
     content: @Composable () -> Unit
 ) {
-    // rememberUpdatedState: pointerInput(Unit) roda uma vez e capturaria a
-    // lambda da primeira composição para sempre — cliques chamariam um
-    // callback velho (com item/quantidade defasados)
-    val onClickAtual by rememberUpdatedState(onClick)
     Box(
         modifier = Modifier
             .size(26.dp)
             .clip(CircleShape)
             .background(CorBotaoControle)
-            // pointerInput em vez de clickable: gesto puro, sem foco nem
-            // semântica de press — o press do clickable estava rolando a lista
-            .pointerInput(Unit) {
-                detectTapGestures(onTap = { onClickAtual() })
-            },
+            .clickable(onClick = onClick),
         contentAlignment = Alignment.Center
     ) {
         content()
