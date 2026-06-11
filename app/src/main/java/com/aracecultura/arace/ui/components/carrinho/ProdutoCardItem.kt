@@ -21,7 +21,9 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -169,7 +171,7 @@ private fun ControlesQuantidade(
     ) {
         BotaoControle(onClick = onIncreaseClick) {
             Icon(
-                imageVector = Icons.Default.Add,
+                painter = painterResource(R.drawable.ic_adicionar),
                 contentDescription = "Aumentar quantidade",
                 tint = Color.White,
                 modifier = Modifier.size(18.dp)
@@ -198,6 +200,10 @@ private fun ControlesQuantidade(
 
         Spacer(modifier = Modifier.weight(1f))
 
+        // rememberUpdatedState: pointerInput(Unit) roda uma vez e capturaria a
+        // lambda da primeira composição para sempre — cliques chamariam um
+        // callback velho (com item/quantidade defasados)
+        val onDeleteAtual by rememberUpdatedState(onDeleteClick)
         Icon(
             painter = painterResource(id = R.drawable.ic_deletar),
             contentDescription = "Remover do carrinho",
@@ -206,7 +212,7 @@ private fun ControlesQuantidade(
                 // pointerInput em vez de clickable: gesto puro, sem foco nem
                 // semântica de press — o press do clickable estava rolando a lista
                 .pointerInput(Unit) {
-                    detectTapGestures(onTap = { onDeleteClick() })
+                    detectTapGestures(onTap = { onDeleteAtual() })
                 },
             tint = Color.Black
         )
@@ -218,6 +224,10 @@ private fun BotaoControle(
     onClick: () -> Unit,
     content: @Composable () -> Unit
 ) {
+    // rememberUpdatedState: pointerInput(Unit) roda uma vez e capturaria a
+    // lambda da primeira composição para sempre — cliques chamariam um
+    // callback velho (com item/quantidade defasados)
+    val onClickAtual by rememberUpdatedState(onClick)
     Box(
         modifier = Modifier
             .size(26.dp)
@@ -226,7 +236,7 @@ private fun BotaoControle(
             // pointerInput em vez de clickable: gesto puro, sem foco nem
             // semântica de press — o press do clickable estava rolando a lista
             .pointerInput(Unit) {
-                detectTapGestures(onTap = { onClick() })
+                detectTapGestures(onTap = { onClickAtual() })
             },
         contentAlignment = Alignment.Center
     ) {

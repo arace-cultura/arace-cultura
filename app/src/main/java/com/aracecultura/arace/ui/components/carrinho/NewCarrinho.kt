@@ -2,7 +2,6 @@ package com.aracecultura.arace.ui.components.carrinho
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -156,29 +155,34 @@ private fun ListaItens(
                 estado.itens.joinToString { "${it.id.takeLast(5)}=${it.quantidade}" }
         )
     }
+    // Espaçamento via padding dos itens em vez de Arrangement.spacedBy:
+    // a aritmética dos saltos de scroll (alvo sempre 66px antes do item
+    // visível = spacing + 24px) implicava o spacedBy na remedição
     LazyColumn(
         modifier = modifier,
         state = listState,
-        contentPadding = PaddingValues(horizontal = 16.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+        contentPadding = PaddingValues(horizontal = 16.dp)
     ) {
-        // 40dp + 16dp do spacedBy = 56dp, igual ao Explorar
-        item(key = "espaco_topo") { Spacer(modifier = Modifier.height(40.dp)) }
+        item(key = "espaco_topo") { Spacer(modifier = Modifier.height(56.dp)) }
         when (estado) {
             is EstadoCarrinho.Carregando -> items(3, key = { "skeleton_$it" }) {
-                ProdutoCardItem(produto = null)
+                Box(modifier = Modifier.padding(bottom = 16.dp)) {
+                    ProdutoCardItem(produto = null)
+                }
             }
             is EstadoCarrinho.Pronto -> items(
                 items = estado.itens,
                 key = { it.id }
             ) { item ->
-                ProdutoCardItem(
-                    produto = item.produto,
-                    quantidade = item.quantidade,
-                    onIncreaseClick = { onAumentarQuantidade(item) },
-                    onDecreaseClick = { onDiminuirQuantidade(item) },
-                    onDeleteClick = { onRemoverItem(item) }
-                )
+                Box(modifier = Modifier.padding(bottom = 16.dp)) {
+                    ProdutoCardItem(
+                        produto = item.produto,
+                        quantidade = item.quantidade,
+                        onIncreaseClick = { onAumentarQuantidade(item) },
+                        onDecreaseClick = { onDiminuirQuantidade(item) },
+                        onDeleteClick = { onRemoverItem(item) }
+                    )
+                }
             }
         }
     }

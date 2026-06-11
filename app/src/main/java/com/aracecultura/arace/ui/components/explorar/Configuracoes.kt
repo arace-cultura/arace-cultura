@@ -7,14 +7,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
-import androidx.compose.material.icons.automirrored.outlined.ExitToApp
-import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material.icons.outlined.Info
-import androidx.compose.material.icons.outlined.Notifications
-import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
@@ -23,12 +15,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.aracecultura.arace.ui.theme.bgDefault
 import com.aracecultura.arace.ui.theme.btColor
+import com.aracecultura.arace.R
 
 @Composable
 fun TelaConfiguracoes(
@@ -63,15 +57,8 @@ fun TelaConfiguracoes(
             ) {
                 IconButton(onClick = onBackClick) {
                     Icon(
-                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                        painter = painterResource(R.drawable.ic_arrow_left),
                         contentDescription = "Voltar",
-                        tint = Color.DarkGray
-                    )
-                }
-                IconButton(onClick = onMenuClick) {
-                    Icon(
-                        imageVector = Icons.Default.Menu,
-                        contentDescription = "Menu",
                         tint = Color.DarkGray
                     )
                 }
@@ -93,14 +80,14 @@ fun TelaConfiguracoes(
 
 
         ConfiguracaoItem(
-            icon = Icons.Outlined.Person,
+            icon = painterResource(R.drawable.ic_user_data),
             text = "Meus dados",
             onClick = onMeusDadosClick
         )
 
 
         ConfiguracaoSwitchItem(
-            icon = Icons.Outlined.Notifications,
+            icon = painterResource(R.drawable.ic_notificacoes),
             text = "Notificações",
             checked = notificationsEnabledState.value,
             onCheckedChange = { newValue ->
@@ -111,21 +98,15 @@ fun TelaConfiguracoes(
 
 
         ConfiguracaoItem(
-            icon = Icons.Outlined.Info,
+            icon = painterResource(R.drawable.ic_info),
             text = "Acessibilidade",
             onClick = onAcessibilidadeClick
         )
         ConfiguracaoItem(
-            icon = Icons.Outlined.Info,
+            icon = painterResource(R.drawable.ic_info),
             text = "Sobre",
             onClick = onSobreClick
         )
-        ConfiguracaoItem(
-            icon = Icons.AutoMirrored.Outlined.ExitToApp,
-            text = "Sair",
-            onClick = onSairClick
-        )
-
 
         Spacer(modifier = Modifier.height(32.dp))
     }
@@ -133,7 +114,7 @@ fun TelaConfiguracoes(
 
 @Composable
 fun ConfiguracaoSwitchItem(
-    icon: ImageVector,
+    icon: Painter,
     text: String,
     checked: Boolean,
     onCheckedChange: (Boolean) -> Unit
@@ -153,7 +134,7 @@ fun ConfiguracaoSwitchItem(
             contentAlignment = Alignment.Center
         ) {
             Icon(
-                imageVector = icon,
+                painter = icon,
                 contentDescription = null,
                 tint = Color(0xFF4A7D59)
             )
@@ -185,7 +166,7 @@ fun ConfiguracaoSwitchItem(
 
 @Composable
 fun ConfiguracaoItem(
-    icon: ImageVector,
+    icon: Painter,
     text: String,
     onClick: () -> Unit
 ) {
@@ -204,7 +185,7 @@ fun ConfiguracaoItem(
             contentAlignment = Alignment.Center
         ) {
             Icon(
-                imageVector = icon,
+                painter = icon,
                 contentDescription = null,
                 tint = Color(0xFF4A7D59)
             )
@@ -223,7 +204,7 @@ fun ConfiguracaoItem(
 
 
         Icon(
-            imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
+            painter = painterResource(R.drawable.ic_chevron_right),
             contentDescription = null,
             tint = Color.LightGray
         )

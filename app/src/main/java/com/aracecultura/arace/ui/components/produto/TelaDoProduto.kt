@@ -15,8 +15,6 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
@@ -33,6 +31,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import coil.compose.AsyncImage
+import com.aracecultura.arace.R
 import com.aracecultura.arace.ui.components.CarregamentoContainer
 import com.aracecultura.arace.ui.components.sombraInferior
 import com.aracecultura.arace.ui.theme.bgDefault
@@ -202,7 +201,7 @@ fun TelaDoProduto(
                 .zIndex(2f)
         ) {
             Icon(
-                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                painter = painterResource(R.drawable.ic_arrow_left),
                 contentDescription = "Voltar",
                 tint = androidx.compose.ui.graphics.Color.Black
             )
