@@ -140,7 +140,8 @@ class CadastroProdutorTela3 : Fragment(R.layout.fragment_cadastro_produtor_tela3
                 viewModel.resultado.collect { resultado ->
                     when (resultado) {
                         is ResultadoCadastro.Sucesso -> {
-                            parentFragmentManager.setFragmentResult(
+                            // Barramento único: sinais entre telas sempre no FM da activity
+                            requireActivity().supportFragmentManager.setFragmentResult(
                                 "cadastro_produtor_request",
                                 bundleOf("sucesso" to true)
                             )

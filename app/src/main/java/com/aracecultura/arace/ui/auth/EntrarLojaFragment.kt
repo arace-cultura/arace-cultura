@@ -44,8 +44,9 @@ class EntrarLojaFragment : Fragment(R.layout.fragment_entrar_loja) {
                         senha = etSenha.text.toString()
                     )
                     // Mesmo sinal do cadastro concluído: troca o footer para
-                    // produtor e volta à navegação principal
-                    parentFragmentManager.setFragmentResult(
+                    // produtor e volta à navegação principal.
+                    // Barramento único: sinais entre telas sempre no FM da activity
+                    requireActivity().supportFragmentManager.setFragmentResult(
                         "cadastro_produtor_request",
                         bundleOf("sucesso" to true)
                     )

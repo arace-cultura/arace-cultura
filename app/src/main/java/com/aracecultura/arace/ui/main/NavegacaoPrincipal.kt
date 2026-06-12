@@ -15,7 +15,6 @@ import com.aracecultura.arace.databinding.FragmentNavegacaoPrincipalBinding
 import com.aracecultura.arace.ui.main.jetpack.Modo
 import com.aracecultura.arace.ui.main.jetpack.SeletorModoBottomSheet
 import android.util.Log
-import androidx.fragment.app.setFragmentResultListener
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.google.firebase.auth.FirebaseAuth
@@ -63,49 +62,49 @@ class NavegacaoPrincipal : Fragment() {
              bottomSheet.show(childFragmentManager, "SeletorModo")
          }
 
-        // Verificação do cadastro de produtor bem sucedido!
+        // ── Barramento único de sinais entre telas ──────────────────────
+        // Todos os fragment results do app trafegam pelo FragmentManager da
+        // ACTIVITY. Motivo: fragments em NavHosts aninhados não compartilham
+        // parentFragmentManager (cada NavHost tem seu próprio childFM), então
+        // o FM da activity é o único alcançável por todas as telas via
+        // requireActivity(). Quem emite deve usar
+        // requireActivity().supportFragmentManager.setFragmentResult(...).
+        //
+        // Regras do mecanismo (FragmentResult API):
+        //  - 1 listener por chave por FM; registrar de novo SUBSTITUI o anterior
+        //  - o resultado fica guardado no FM até um listener STARTED consumi-lo
+        //  - com viewLifecycleOwner, o listener morre junto com a view (sem leak)
+        val barramento = requireActivity().supportFragmentManager
 
-        setFragmentResultListener("cadastro_produtor_request") { _, bundle ->
-            val cadastroConcluido = bundle.getBoolean("sucesso", false)
-
-            if (cadastroConcluido) {
-                // Se o cadastro deu certo, troca o footer para o modo produtor automaticamente
-                Log.d("ModoArace", "Ouvinte disparado: Cadastro concluído. Trocando footer.")
+        // Cadastro de loja concluído ou entrada em loja existente:
+        // troca o footer para o modo produtor
+        barramento.setFragmentResultListener(
+            "cadastro_produtor_request",
+            viewLifecycleOwner
+        ) { _, bundle ->
+            if (bundle.getBoolean("sucesso", false)) {
+                Log.d("ModoArace", "Cadastro/entrada de loja concluído. Trocando footer.")
                 configurarMenuProdutor()
             }
         }
 
-        requireActivity().supportFragmentManager.setFragmentResultListener(
+        // Pedido de troca de modo vindo dos botões "Visualização" dos perfis
+        barramento.setFragmentResultListener(
             "mudanca_modo_request",
             viewLifecycleOwner
         ) { _, bundle ->
-
-            val isProdutor = bundle.getBoolean("isProdutor", false)
-
-            // Converte o booleano do Firebase/Compose para o seu Enum (Modo)
-            val modoSelecionado = if (isProdutor) Modo.PRODUTOR else Modo.CLIENTE
-
-            quandoModoMudar(modoSelecionado)
+            val modo = if (bundle.getBoolean("isProdutor", false)) Modo.PRODUTOR else Modo.CLIENTE
+            quandoModoMudar(modo)
         }
 
-        setFragmentResultListener("mudanca_modo_request") { _, bundle ->
-            val querSerProdutor = bundle.getBoolean("isProdutor", false)
-
-            val modoSelecionado = if (querSerProdutor) Modo.PRODUTOR else Modo.CLIENTE
-            quandoModoMudar(modoSelecionado)
-        }
-
-        // Dentro do onViewCreated de NavegacaoPrincipal.kt
-
-        requireActivity().supportFragmentManager.setFragmentResultListener(
+        // Logout disparado pelas telas de perfil/configurações
+        barramento.setFragmentResultListener(
             "logout_request",
             viewLifecycleOwner
         ) { _, _ ->
-            // A NavegacaoPrincipal está no root, então ela ENCONTRA a action sem dar crash!
+            // A NavegacaoPrincipal está no grafo raiz, então encontra a action
             findNavController().navigate(R.id.action_main_to_auth)
         }
-
-
     }
 
     // Função de verificar a mudança no Logcat

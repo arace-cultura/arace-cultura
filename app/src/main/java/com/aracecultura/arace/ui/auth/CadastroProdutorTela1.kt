@@ -30,10 +30,10 @@ class CadastroProdutorTela1 : Fragment(R.layout.fragment_cadastro_produtor_tela1
                 R.id.action_tela1_to_tela2,
                 Bundle().apply { putParcelable("produtorData", produtor) }
             )
+        }
 
-            view.findViewById<TextView>(R.id.btnVoltar).setOnClickListener {
-                findNavController().popBackStack()
-            }
+        view.findViewById<TextView>(R.id.btnVoltar).setOnClickListener {
+            findNavController().popBackStack()
         }
     }
 }
