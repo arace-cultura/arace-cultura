@@ -11,6 +11,11 @@ import com.aracecultura.arace.R
 val GoogleSans = FontFamily(
     Font(
         R.font.google_sans_flex_variable_font,
+        weight = FontWeight.ExtraLight,
+        variationSettings = FontVariation.Settings(FontVariation.weight(200))
+    ),
+    Font(
+        R.font.google_sans_flex_variable_font,
         weight = FontWeight.Light,
         variationSettings = FontVariation.Settings(FontVariation.weight(300))
     ),

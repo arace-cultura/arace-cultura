@@ -2,6 +2,7 @@ package com.aracecultura.arace.ui.components.produto
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -10,10 +11,14 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -24,6 +29,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -35,6 +42,7 @@ import com.aracecultura.arace.R
 import com.aracecultura.arace.ui.components.CarregamentoContainer
 import com.aracecultura.arace.ui.components.sombraInferior
 import com.aracecultura.arace.ui.theme.bgDefault
+import com.aracecultura.arace.ui.theme.btColor
 
 @Composable
 fun TelaDoProduto(
@@ -56,6 +64,7 @@ fun TelaDoProduto(
         )
         val produto by viewModel.produto.collectAsState() // by = desempacota o State automaticamente
         val produtoAtual = produto
+        val produtor by viewModel.produtor.collectAsState()
         val scrollState = rememberScrollState()
 
         Column(modifier = Modifier
@@ -163,22 +172,49 @@ fun TelaDoProduto(
                         }
                     }
                     Column(Modifier.padding(top = 20.dp).fillMaxWidth().weight(1f).padding(10.dp, 5.dp)){
-                        /*Row(Modifier.fillMaxWidth().background(bgDefault).padding(horizontal = 20.dp), verticalAlignment = Alignment.CenterVertically){
+                        // Produtor (loja) responsável: foto circular com borda
+                        // btColor + nome à direita
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .background(bgDefault)
+                                .padding(horizontal = 15.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
                             Box(
                                 modifier = Modifier
-                                    .size(80.dp)
-                                    .clip(RoundedCornerShape(40.dp))
-                                    .background(btColor)
-                            )
+                                    .size(64.dp)
+                                    .border(2.dp, btColor, CircleShape)
+                            ) {
+                                Box(
+                                    modifier = Modifier
+                                        .fillMaxSize()
+                                        .padding(2.dp)
+                                        .clip(CircleShape)
+                                        .background(Color(0xFFD9D9D9))
+                                ) {
+                                    val fotoLoja = produtor?.fotoLoja
+                                    if (!fotoLoja.isNullOrBlank()) {
+                                        AsyncImage(
+                                            model = fotoLoja,
+                                            contentDescription = "Foto do produtor",
+                                            contentScale = ContentScale.Crop,
+                                            modifier = Modifier.fillMaxSize()
+                                        )
+                                    }
+                                }
+                            }
 
+                            val nomeProdutor = produtor?.let {
+                                it.nomeLoja.ifBlank { it.nomeCompleto }
+                            }.orEmpty().ifBlank { "Produtor" }
                             Text(
-                                "Paneleiras capixabas",
+                                text = nomeProdutor,
                                 modifier = Modifier.padding(start = 15.dp),
                                 fontSize = 22.sp,
                                 fontWeight = FontWeight.Normal
-
                             )
-                        }*/
+                        }
                         Box(Modifier.fillMaxWidth().padding(top = 20.dp).background(bgDefault)) {
                             Text(
                                 produtoAtual.descricao,
@@ -192,12 +228,13 @@ fun TelaDoProduto(
                 }
             }
         }
-
         IconButton(
             onClick = onBackClick,
             modifier = Modifier
                 .align(Alignment.TopStart)
                 .padding(12.dp)
+                .clip(CircleShape)
+                .background(bgDefault)
                 .zIndex(2f)
         ) {
             Icon(

@@ -85,6 +85,13 @@ class ExplorarProdutoViewmodel : ViewModel() {
         }
     }
 
+    // Tela de categoria: fixa o filtro em uma única categoria. O painel de
+    // filtros dessa tela não expõe a seção de Categorias, então o conjunto
+    // permanece imutável durante a navegação.
+    fun fixarCategoria(categoria: String) {
+        _categoriasSelecionadas.value = setOf(categoria)
+    }
+
     fun setOrdenacao(novaOrdem: String) {
         _ordenacao.value = novaOrdem
     }

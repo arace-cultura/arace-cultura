@@ -27,7 +27,9 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import com.aracecultura.arace.R
+import com.aracecultura.arace.ui.components.AppButton
 import com.aracecultura.arace.ui.theme.bgDefault
+import com.aracecultura.arace.ui.theme.btColor
 
 @Composable
 fun EditarPerfilUsuario(
@@ -81,7 +83,8 @@ fun EditarPerfilUsuario(
                     .weight(2f)
             ) {
                 Column(Modifier.fillMaxSize()) {
-                    // Banner: toque para trocar
+                    // Banner: toque para trocar. Scrim 0.3 + ícone de edição
+                    // sempre visíveis indicam a afordância de troca.
                     Box(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -91,7 +94,8 @@ fun EditarPerfilUsuario(
                                 bannerPicker.launch(
                                     PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
                                 )
-                            }
+                            },
+                        contentAlignment = Alignment.Center
                     ) {
                         val bannerModel: Any? = novoBannerUri ?: usuario.bannerUrl.ifBlank { null }
                         if (bannerModel != null) {
@@ -102,17 +106,15 @@ fun EditarPerfilUsuario(
                                 modifier = Modifier.fillMaxSize()
                             )
                         }
-                        Text(
-                            text = "Toque para alterar o banner",
-                            fontSize = 12.sp,
-                            color = Color.White,
+                        Box(
                             modifier = Modifier
-                                .align(Alignment.BottomEnd)
-                                .background(
-                                    Color.Black.copy(alpha = 0.35f),
-                                    RoundedCornerShape(topStart = 8.dp)
-                                )
-                                .padding(horizontal = 10.dp, vertical = 4.dp)
+                                .fillMaxSize()
+                                .background(Color.Black.copy(alpha = 0.3f))
+                        )
+                        Image(
+                            painter = painterResource(R.drawable.ic_editar_imagem),
+                            contentDescription = "Alterar banner",
+                            modifier = Modifier.size(56.dp)
                         )
                     }
                     Spacer(Modifier.weight(4f))
@@ -135,7 +137,8 @@ fun EditarPerfilUsuario(
                     )
                 }
 
-                // Foto de perfil centralizada: toque para trocar
+                // Foto de perfil centralizada: toque para trocar. Mesmo
+                // padrão do banner — scrim 0.3 + ícone sempre presentes.
                 Box(
                     modifier = Modifier
                         .size(140.dp)
@@ -158,14 +161,17 @@ fun EditarPerfilUsuario(
                             contentScale = ContentScale.Crop,
                             modifier = Modifier.fillMaxSize()
                         )
-                    } else {
-                        Text(
-                            text = "Toque para\nadicionar foto",
-                            fontSize = 13.sp,
-                            color = Color.White,
-                            lineHeight = 16.sp
-                        )
                     }
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .background(Color.Black.copy(alpha = 0.3f))
+                    )
+                    Image(
+                        painter = painterResource(R.drawable.ic_editar_imagem),
+                        contentDescription = "Alterar foto de perfil",
+                        modifier = Modifier.size(48.dp)
+                    )
                 }
             }
 
@@ -209,7 +215,8 @@ fun EditarPerfilUsuario(
                 Spacer(modifier = Modifier.weight(1f))
 
                 // Botão Salvar
-                Button(
+                AppButton(
+                    text = "Salvar Alterações",
                     onClick = {
                         viewModel.salvarEdicaoPerfil(
                             context = context,
@@ -220,21 +227,13 @@ fun EditarPerfilUsuario(
                             onSucesso = onVoltarClick
                         )
                     },
+                    textColor = Color.White,
+                    containerColor = btColor,
+                    fontSize = 16.sp,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(50.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = Color(0xFFD66027)
-                    ),
-                    shape = RoundedCornerShape(8.dp)
-                ) {
-                    Text(
-                        text = "Salvar Alterações",
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = Color.White
-                    )
-                }
+                        .height(50.dp)
+                )
             }
         }
     }

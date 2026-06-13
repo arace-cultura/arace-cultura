@@ -112,21 +112,22 @@ class Cadastro : Fragment() {
                         "isProdutor" to false
                     )
 
+                    // Grava o documento e sobe as imagens em segundo plano.
+                    // A navegação NÃO espera o ack do servidor: a conta já
+                    // existe e o cache offline do Firestore reflete a escrita
+                    // localmente, então a home já lê os dados.
                     this.db.collection("Usuarios")
                         .document(userUID)
                         .set(novoUsuario)
-                        .addOnSuccessListener {
-                            enviarImagensPerfil(userUID)
-                            findNavController().navigate(R.id.action_global_to_main)
-                        }
                         .addOnFailureListener {
-                            Toast
-                                .makeText(
-                                    requireContext(),
-                                    "Houve um erro ao salvar os dados.",
-                                    Toast.LENGTH_SHORT
-                                ).show()
+                            android.util.Log.e("Cadastro", "Falha ao salvar dados do usuário", it)
                         }
+
+                    // Precisa ser chamado enquanto o fragment está anexado
+                    // (captura o contexto); o upload em si roda no escopo da activity
+                    enviarImagensPerfil(userUID)
+
+                    findNavController().navigate(R.id.action_global_to_main)
                 }
             }
         }.addOnFailureListener { exception ->

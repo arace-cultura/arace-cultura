@@ -50,7 +50,8 @@ import kotlinx.coroutines.isActive
 @Composable
 fun TelaHome(
     viewmodel: TelaHomeViewmodel = viewModel(),
-    onProdutoClick: (String) -> Unit = {}
+    onProdutoClick: (String) -> Unit = {},
+    onCategoriaClick: (String) -> Unit = {}
 ) {
     val produtos by viewmodel.produtos.collectAsState()
     val scrollState = rememberScrollState()
@@ -78,7 +79,7 @@ fun TelaHome(
 
             TituloSecao("Categorias")
             Spacer(modifier = Modifier.height(15.dp))
-            SecaoCategorias()
+            SecaoCategorias(onCategoriaClick = onCategoriaClick)
             Spacer(modifier = Modifier.height(15.dp))
 
             TituloSecao("Produtos em destaque")

@@ -8,10 +8,12 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.aracecultura.arace.R
-import com.aracecultura.arace.ui.components.home.TelaHome
+import com.aracecultura.arace.ui.components.explorar.TelaCategoria
 import com.aracecultura.arace.ui.theme.AraceTheme
+import com.google.firebase.auth.FirebaseAuth
 
-class HomePageFragment : Fragment() {
+class CategoriaFragment : Fragment() {
+
     private lateinit var composeView: ComposeView
 
     override fun onCreateView(
@@ -26,21 +28,21 @@ class HomePageFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        val uid = FirebaseAuth.getInstance().currentUser?.uid ?: ""
+        val categoria = arguments?.getString("categoria").orEmpty()
+
         composeView.setContent {
             AraceTheme {
-                TelaHome(
-                    onProdutoClick = { produtoId ->
-                        val action = HomePageFragmentDirections
-                            .actionHomePageToProdutoFragment(produtoId)
-                        findNavController().navigate(action)
-                    },
-                    onCategoriaClick = { categoria ->
-                        val bundle = Bundle().apply { putString("categoria", categoria) }
-                        findNavController().navigate(R.id.action_homePage_to_categoria, bundle)
+                TelaCategoria(
+                    categoria = categoria,
+                    uid = uid,
+                    onBack = { findNavController().popBackStack() },
+                    onNavigateToProduto = { produtoId ->
+                        val bundle = Bundle().apply { putString("produtoId", produtoId) }
+                        findNavController().navigate(R.id.action_categoria_to_produto, bundle)
                     }
                 )
             }
         }
     }
-
 }
