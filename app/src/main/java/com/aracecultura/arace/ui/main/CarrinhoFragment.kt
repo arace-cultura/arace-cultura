@@ -6,8 +6,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.compose.ui.platform.ComposeView
+import androidx.navigation.fragment.findNavController
+import com.aracecultura.arace.R
 import com.aracecultura.arace.ui.components.carrinho.NewCarrinho
-import com.google.firebase.auth.FirebaseAuth // Importe o FirebaseAuth
+import com.aracecultura.arace.ui.theme.AraceTheme
+import com.google.firebase.auth.FirebaseAuth
 
 class CarrinhoFragment : Fragment() {
     private lateinit var composeView: ComposeView
@@ -29,7 +32,14 @@ class CarrinhoFragment : Fragment() {
         val uid = FirebaseAuth.getInstance().currentUser?.uid ?: ""
 
         composeView.setContent {
-            NewCarrinho(uid = uid)
+            AraceTheme {
+                NewCarrinho(
+                    uid = uid,
+                    onFinalizarClick = {
+                        findNavController().navigate(R.id.action_carrinho_to_finalizarCompraFragment)
+                    }
+                )
+            }
         }
     }
 }

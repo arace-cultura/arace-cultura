@@ -1,7 +1,9 @@
 <resources>
 
     <style name="Base.Theme.Arace" parent="Theme.Material3.Light.NoActionBar">
-
+        <item name="android:statusBarColor">@color/bg_default</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:navigationBarColor">@color/bg_default</item>
     </style>
 
     <style name="Theme.Arace.Splash" parent="Theme.SplashScreen">

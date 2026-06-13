@@ -5,6 +5,7 @@ import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.aracecultura.arace.supabase
+import com.aracecultura.arace.data.LojaRepository
 import com.aracecultura.arace.data.model.Produto
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
@@ -49,6 +50,11 @@ class ProdutoViewModel : ViewModel() {
             _uiState.value = ProdutoUiState.Loading
 
             try {
+                // O produto pertence à LOJA vinculada à conta (compartilhável
+                // entre contas), não ao usuário individual
+                val lojaId = LojaRepository.resolverLojaId(userUid)
+                    ?: throw Exception("Conta sem loja vinculada.")
+
                 // 1. Converter a URI local em ByteArray
                 val imageBytes = context.contentResolver.openInputStream(imageUri)?.readBytes()
                     ?: throw Exception("Não foi possível processar a imagem.")
@@ -74,7 +80,7 @@ class ProdutoViewModel : ViewModel() {
                     descricao = descricao,
                     preco = precoFormatado,
                     imagens = listOf(imageUrl), // Envolvido em lista
-                    produtorId = userUid,
+                    produtorId = lojaId,
                     avaliacao = 0.0 // Valor padrão inicial
                 )
 

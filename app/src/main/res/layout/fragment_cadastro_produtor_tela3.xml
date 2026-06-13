@@ -95,7 +95,7 @@
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="32dp"
+                android:layout_marginBottom="12dp"
                 app:boxCornerRadiusBottomEnd="15dp"
                 app:boxCornerRadiusBottomStart="15dp"
                 app:boxCornerRadiusTopEnd="15dp"
@@ -112,6 +112,154 @@
                     android:fontFamily="@font/google_sans_flex_variable_font"
                     android:textColor="@color/texto" />
             </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                android:hint="Historia da loja (opcional)"
+                app:boxCornerRadiusBottomEnd="15dp"
+                app:boxCornerRadiusBottomStart="15dp"
+                app:boxCornerRadiusTopEnd="15dp"
+                app:boxCornerRadiusTopStart="15dp"
+                app:boxStrokeColor="@color/arace_blue"
+                app:hintTextColor="@color/arace_blue">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etHistoria"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/google_sans_flex_variable_font"
+                    android:gravity="top"
+                    android:inputType="textMultiLine"
+                    android:minLines="3"
+                    android:textColor="@color/texto" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                android:hint="Senha da loja"
+                app:boxCornerRadiusBottomEnd="15dp"
+                app:boxCornerRadiusBottomStart="15dp"
+                app:boxCornerRadiusTopEnd="15dp"
+                app:boxCornerRadiusTopStart="15dp"
+                app:boxStrokeColor="@color/arace_blue"
+                app:hintTextColor="@color/arace_blue"
+                app:passwordToggleEnabled="true"
+                app:helperText="Outras contas usarão o nome e esta senha para entrar na loja">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etSenhaLoja"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/google_sans_flex_variable_font"
+                    android:inputType="textPassword"
+                    android:textColor="@color/texto" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <Button
+                android:id="@+id/btnSelecionarBanner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="4dp"
+                android:backgroundTint="@color/arace_blue"
+                android:fontFamily="@font/google_sans_flex_variable_font"
+                android:text="Selecionar banner (opcional)"
+                android:textColor="@color/white" />
+
+            <TextView
+                android:id="@+id/tvBannerSelecionado"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                android:fontFamily="@font/google_sans_flex_variable_font"
+                android:text="Nenhum banner selecionado"
+                android:textColor="@color/texto"
+                android:textSize="14sp" />
+
+            <Button
+                android:id="@+id/btnSelecionarFotoLoja"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="4dp"
+                android:backgroundTint="@color/arace_blue"
+                android:fontFamily="@font/google_sans_flex_variable_font"
+                android:text="Selecionar foto da loja (opcional)"
+                android:textColor="@color/white" />
+
+            <TextView
+                android:id="@+id/tvFotoLojaSelecionada"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                android:fontFamily="@font/google_sans_flex_variable_font"
+                android:text="Nenhuma foto selecionada"
+                android:textColor="@color/texto"
+                android:textSize="14sp" />
+
+            <Button
+                android:id="@+id/btnSelecionarFotosHistoria"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="4dp"
+                android:backgroundTint="@color/arace_blue"
+                android:fontFamily="@font/google_sans_flex_variable_font"
+                android:text="Selecionar fotos da historia (opcional)"
+                android:textColor="@color/white" />
+
+            <TextView
+                android:id="@+id/tvFotosHistoriaSelecionadas"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:fontFamily="@font/google_sans_flex_variable_font"
+                android:text="Nenhuma foto selecionada"
+                android:textColor="@color/texto"
+                android:textSize="14sp" />
+
+            <LinearLayout
+                android:id="@+id/llPreviewHistoria"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:layout_marginBottom="24dp"
+                android:orientation="horizontal"
+                android:weightSum="3"
+                android:visibility="gone">
+
+                <ImageView
+                    android:id="@+id/ivHistoria1"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="4dp"
+                    android:scaleType="centerCrop"
+                    android:background="@color/arace_blue"
+                    android:contentDescription="Foto história 1" />
+
+                <ImageView
+                    android:id="@+id/ivHistoria2"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="4dp"
+                    android:scaleType="centerCrop"
+                    android:background="@color/arace_blue"
+                    android:contentDescription="Foto história 2" />
+
+                <ImageView
+                    android:id="@+id/ivHistoria3"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:scaleType="centerCrop"
+                    android:background="@color/arace_blue"
+                    android:contentDescription="Foto história 3" />
+
+            </LinearLayout>
 
             <Button
                 android:id="@+id/btnFinalizar"

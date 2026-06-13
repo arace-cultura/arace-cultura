@@ -8,6 +8,7 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.aracecultura.arace.ui.components.home.TelaHome
+import com.aracecultura.arace.ui.theme.AraceTheme
 
 class HomePageFragment : Fragment() {
     private lateinit var composeView: ComposeView
@@ -25,13 +26,15 @@ class HomePageFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         composeView.setContent {
-            TelaHome(
-                onProdutoClick = { produtoId ->
-                    val action = HomePageFragmentDirections
-                        .actionHomePageToProdutoFragment(produtoId)
-                    findNavController().navigate(action)
-                }
-            )
+            AraceTheme {
+                TelaHome(
+                    onProdutoClick = { produtoId ->
+                        val action = HomePageFragmentDirections
+                            .actionHomePageToProdutoFragment(produtoId)
+                        findNavController().navigate(action)
+                    }
+                )
+            }
         }
     }
 

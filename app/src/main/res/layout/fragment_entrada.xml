@@ -5,49 +5,127 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.auth.Entrada"
-    android:background="@drawable/f_entrada">
+    android:background="#0F171E" tools:context=".ui.auth.Entrada">
+
+
+    <ImageView
+        android:id="@+id/bg_montagem_fotos"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:src="@drawable/img_entrada"
+        android:scaleType="centerCrop"
+        app:layout_constraintDimensionRatio="H,1:1" app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_card"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.42" />
+
+
+
 
     <LinearLayout
-        android:layout_width="350dp"
+        android:id="@+id/logo"
+        android:layout_width="90dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="120dp"
-        android:gravity="center_horizontal"
+        android:layout_marginBottom="50dp"
         android:orientation="vertical"
-        android:padding="10dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/card_container"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.491"
+        app:layout_constraintStart_toStartOf="parent">
+
+
+        <ImageView
+            android:layout_width="75dp"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="15dp"
+            android:src="@drawable/logo" />
+
+
+        <ImageView
+            android:layout_width="90dp"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            android:src="@drawable/arace" />
+    </LinearLayout>
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/card_container"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@drawable/bg_bottom_card"
+        android:clipToOutline="true" app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        >
+        app:layout_constraintTop_toBottomOf="@id/guideline_card">
 
-        <Button
-            android:id="@+id/goLogin_btn"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:backgroundTint="@color/arace_blue"
-            android:text="Login"
-            android:textColor="@color/white"
-            android:textSize="20sp" />
 
-        <Button
-            android:id="@+id/goCadastro_btn"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
-            android:backgroundTint="@color/arace_blue"
-            android:text="Criar Conta"
-            android:textColor="@color/white"
-            android:textSize="20sp" />
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:text="Conheça produtos que vão te apaixonar!"
-            android:textAlignment="textStart"
-            android:textColor="@color/white"
-            android:textSize="16sp" />
-    </LinearLayout>
-</androidx.constraintlayout.widget.ConstraintLayout>
+            android:id="@+id/texto1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="48dp"
+            android:fontFamily="@font/google_sans_flex_variable_font"
+            android:gravity="center"
+            android:text="Conectando você\nà cultura material\ncapixaba."
+            android:textColor="#333333"
+            android:textFontWeight="700"
+            android:textSize="26sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintWidth_percent="0.842" />
 
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/goCadastro_btn"
+            android:layout_width="0dp"
+            android:layout_height="60dp"
+            android:layout_marginTop="40dp"
+            android:backgroundTint="@color/arace_blue"
+            android:fontFamily="@font/google_sans_flex_variable_font"
+            android:text="criar conta"
+            android:textAllCaps="false"
+            android:textColor="@android:color/white"
+            android:textSize="20sp"
+            app:cornerRadius="30dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/texto1"
+            app:layout_constraintWidth_percent="0.842" />
+
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/goLogin_btn"
+            android:layout_width="0dp"
+            android:layout_height="60dp"
+            android:layout_marginTop="16dp"
+            android:backgroundTint="@android:color/transparent"
+            android:fontFamily="@font/google_sans_flex_variable_font"
+            android:text="entrar"
+            android:textAllCaps="false"
+            android:textColor="#333333"
+            android:textSize="20sp"
+            app:cornerRadius="30dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/goCadastro_btn"
+            app:layout_constraintWidth_percent="0.842"
+            app:strokeColor="#333333"
+            app:strokeWidth="1dp" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.aracecultura.arace.R
 import com.aracecultura.arace.ui.components.explorar.ExplorarProduto
+import com.aracecultura.arace.ui.theme.AraceTheme
 import com.google.firebase.auth.FirebaseAuth
 
 class ExplorarProdutoFragment : Fragment() {
@@ -32,16 +33,17 @@ class ExplorarProdutoFragment : Fragment() {
         val uid = FirebaseAuth.getInstance().currentUser?.uid ?: ""
 
         composeView.setContent {
-            ExplorarProduto(
-                uid = uid,
-                onNavigateToProduto = { produtoId ->
-                    // 1. Navega para a tela do produto passando o ID no Bundle
-                    val bundle = Bundle().apply {
-                        putString("produtoId", produtoId)
+            AraceTheme {
+                ExplorarProduto(
+                    uid = uid,
+                    onNavigateToProduto = { produtoId ->
+                        val bundle = Bundle().apply {
+                            putString("produtoId", produtoId)
+                        }
+                        findNavController().navigate(R.id.action_explorar_to_produto, bundle)
                     }
-                    findNavController().navigate(R.id.action_explorar_to_produto, bundle)
-                }
-            )
+                )
+            }
         }
     }
 }

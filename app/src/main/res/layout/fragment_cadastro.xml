@@ -174,6 +174,46 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <Button
+            android:id="@+id/btnSelecionarFotoPerfil"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="4dp"
+            android:backgroundTint="@color/arace_blue"
+            android:fontFamily="@font/google_sans_flex_variable_font"
+            android:text="Selecionar foto de perfil (opcional)"
+            android:textColor="@color/white" />
+
+        <TextView
+            android:id="@+id/tvFotoPerfilSelecionada"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"
+            android:fontFamily="@font/google_sans_flex_variable_font"
+            android:text="Nenhuma foto selecionada"
+            android:textColor="@color/texto"
+            android:textSize="14sp" />
+
+        <Button
+            android:id="@+id/btnSelecionarBannerPerfil"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="4dp"
+            android:backgroundTint="@color/arace_blue"
+            android:fontFamily="@font/google_sans_flex_variable_font"
+            android:text="Selecionar banner (opcional)"
+            android:textColor="@color/white" />
+
+        <TextView
+            android:id="@+id/tvBannerPerfilSelecionado"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp"
+            android:fontFamily="@font/google_sans_flex_variable_font"
+            android:text="Nenhum banner selecionado"
+            android:textColor="@color/texto"
+            android:textSize="14sp" />
+
+        <Button
             android:id="@+id/cadastro_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

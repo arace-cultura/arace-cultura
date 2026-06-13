@@ -28,8 +28,17 @@
         android:name="com.aracecultura.arace.ui.main.PerfilClienteFragment"/>
 
     <fragment
+        android:id="@+id/perfilprodutor"
+        android:name="com.aracecultura.arace.ui.main.PerfilProdutorFragment"/>
+
+    <fragment
         android:id="@+id/carrinho"
-        android:name="com.aracecultura.arace.ui.main.CarrinhoFragment" />
+        android:name="com.aracecultura.arace.ui.main.CarrinhoFragment">
+
+        <action
+            android:id="@+id/action_carrinho_to_finalizarCompraFragment"
+            app:destination="@id/finalizarCompraFragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/explorar"
@@ -43,4 +52,8 @@
     <fragment
         android:id="@+id/adicionar"
         android:name="com.aracecultura.arace.ui.main.CriarProdutoFragment" />
+
+    <fragment
+        android:id="@+id/finalizarCompraFragment"
+        android:name="com.aracecultura.arace.ui.main.FinalizarCompraFragment" />
 </navigation>

@@ -15,6 +15,8 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -29,14 +31,15 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import coil.compose.AsyncImage
+import com.aracecultura.arace.R
 import com.aracecultura.arace.ui.components.CarregamentoContainer
 import com.aracecultura.arace.ui.components.sombraInferior
-import com.aracecultura.arace.ui.theme.GoogleSans
 import com.aracecultura.arace.ui.theme.bgDefault
 
 @Composable
 fun TelaDoProduto(
-    viewModel: TelaDoProdutoViewmodel
+    viewModel: TelaDoProdutoViewmodel,
+    onBackClick: () -> Unit = {}
 ) {
     Box(
         modifier = Modifier
@@ -76,7 +79,7 @@ fun TelaDoProduto(
                     ) {
                         if (listaDeImagens.isEmpty()) {
                             Image(
-                                painter = painterResource(id = com.aracecultura.arace.R.drawable.placeholder),
+                                painter = painterResource(id = com.aracecultura.arace.R.drawable.img_placeholder),
                                 contentDescription = "Produto sem imagem",
                                 contentScale = ContentScale.Crop,
                                 modifier = Modifier.fillMaxSize()
@@ -133,7 +136,6 @@ fun TelaDoProduto(
                             Column {
                                 Text(
                                     text = produtoAtual.nome,
-                                    fontFamily = GoogleSans,
                                     fontSize = 26.sp,
                                     //fontWeight = FontWeight.Bold
                                 )
@@ -149,7 +151,6 @@ fun TelaDoProduto(
                         Row(Modifier.fillMaxWidth()) {
                             Text(
                                 text = "R$${produtoAtual.preco}",
-                                fontFamily = GoogleSans,
                                 fontWeight = FontWeight.Bold,
                                 fontSize = 20.sp
                             )
@@ -157,7 +158,6 @@ fun TelaDoProduto(
                             Text(
                                 text = "${produtoAtual.avaliacao}",
                                 fontSize = 16.sp,
-                                fontFamily = GoogleSans,
                                 fontWeight = FontWeight.Normal
                             )
                         }
@@ -175,7 +175,6 @@ fun TelaDoProduto(
                                 "Paneleiras capixabas",
                                 modifier = Modifier.padding(start = 15.dp),
                                 fontSize = 22.sp,
-                                fontFamily = GoogleSans,
                                 fontWeight = FontWeight.Normal
 
                             )
@@ -185,7 +184,6 @@ fun TelaDoProduto(
                                 produtoAtual.descricao,
                                 modifier = Modifier.padding(horizontal = 15.dp),
                                 fontSize = 20.sp,
-                                fontFamily = GoogleSans,
                                 fontWeight = FontWeight.Normal
                             )
                         }
@@ -193,6 +191,20 @@ fun TelaDoProduto(
 
                 }
             }
+        }
+
+        IconButton(
+            onClick = onBackClick,
+            modifier = Modifier
+                .align(Alignment.TopStart)
+                .padding(12.dp)
+                .zIndex(2f)
+        ) {
+            Icon(
+                painter = painterResource(R.drawable.ic_arrow_left),
+                contentDescription = "Voltar",
+                tint = androidx.compose.ui.graphics.Color.Black
+            )
         }
     }
 }

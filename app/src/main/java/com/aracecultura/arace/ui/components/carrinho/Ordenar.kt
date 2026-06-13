@@ -1,6 +1,7 @@
 package com.aracecultura.arace.ui.components.carrinho
 
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentWidth
@@ -21,6 +22,9 @@ import com.aracecultura.arace.ui.theme.btColor
 fun Ordenar() {
     AppButton(
         modifier = Modifier
+            // -1dp sobrepõe a junção com o elemento acima e elimina o
+            // fio transparente causado por antialiasing na fronteira
+            .offset(y = (-1).dp)
             .width(140.dp)
             .height(40.dp),
         text = "Ordenar por",

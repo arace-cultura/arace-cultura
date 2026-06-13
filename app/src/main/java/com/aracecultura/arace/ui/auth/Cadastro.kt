@@ -1,5 +1,6 @@
 package com.aracecultura.arace.ui.auth
 
+import android.net.Uri
 import android.os.Bundle
 import android.util.Patterns
 import androidx.fragment.app.Fragment
@@ -7,8 +8,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.aracecultura.arace.R
+import com.aracecultura.arace.data.ImagemRepository
 import com.aracecultura.arace.databinding.FragmentCadastroBinding
 import com.google.firebase.Firebase
 import com.google.firebase.FirebaseNetworkException
@@ -16,7 +21,9 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.auth.FirebaseAuthUserCollisionException
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException
+import com.google.firebase.firestore.SetOptions
 import com.google.firebase.firestore.firestore
+import kotlinx.coroutines.launch
 
 class Cadastro : Fragment() {
     private var _binding: FragmentCadastroBinding? = null
@@ -24,6 +31,25 @@ class Cadastro : Fragment() {
 
     private val auth by lazy { FirebaseAuth.getInstance() }
     private val db = Firebase.firestore
+
+    private var fotoPerfilUri: Uri? = null
+    private var bannerUri: Uri? = null
+
+    private val fotoPerfilPicker = registerForActivityResult(
+        ActivityResultContracts.PickVisualMedia()
+    ) { uri ->
+        fotoPerfilUri = uri
+        binding.tvFotoPerfilSelecionada.text =
+            if (uri == null) "Nenhuma foto selecionada" else "Foto de perfil selecionada"
+    }
+
+    private val bannerPicker = registerForActivityResult(
+        ActivityResultContracts.PickVisualMedia()
+    ) { uri ->
+        bannerUri = uri
+        binding.tvBannerPerfilSelecionado.text =
+            if (uri == null) "Nenhum banner selecionado" else "Banner selecionado"
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -46,6 +72,18 @@ class Cadastro : Fragment() {
 
         binding.cadastroBtn.setOnClickListener {
             this.cadastrar()
+        }
+
+        binding.btnSelecionarFotoPerfil.setOnClickListener {
+            fotoPerfilPicker.launch(
+                PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+            )
+        }
+
+        binding.btnSelecionarBannerPerfil.setOnClickListener {
+            bannerPicker.launch(
+                PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+            )
         }
     }
 
@@ -78,6 +116,7 @@ class Cadastro : Fragment() {
                         .document(userUID)
                         .set(novoUsuario)
                         .addOnSuccessListener {
+                            enviarImagensPerfil(userUID)
                             findNavController().navigate(R.id.action_global_to_main)
                         }
                         .addOnFailureListener {
@@ -105,6 +144,36 @@ class Cadastro : Fragment() {
                     mensagemErro,
                     Toast.LENGTH_SHORT
                 ).show()
+        }
+    }
+
+    // Upload em segundo plano: a navegação não espera as imagens — se algum
+    // upload falhar, o usuário segue com o perfil sem imagem e pode adicionar
+    // depois pela edição de perfil
+    private fun enviarImagensPerfil(uid: String) {
+        val foto = fotoPerfilUri
+        val banner = bannerUri
+        if (foto == null && banner == null) return
+
+        // lifecycleScope do fragment morre na navegação; o escopo da activity
+        // sobrevive, e o applicationContext é capturado antes do detach
+        val appContext = requireContext().applicationContext
+        requireActivity().lifecycleScope.launch {
+            try {
+                val updates = mutableMapOf<String, Any>()
+                foto?.let {
+                    updates["fotoUrl"] = ImagemRepository.upload(appContext, uid, "perfil", it)
+                }
+                banner?.let {
+                    updates["bannerUrl"] = ImagemRepository.upload(appContext, uid, "banner", it)
+                }
+                if (updates.isNotEmpty()) {
+                    db.collection("Usuarios").document(uid)
+                        .set(updates, SetOptions.merge())
+                }
+            } catch (_: Exception) {
+                // sem imagem: estado válido; edição de perfil cobre depois
+            }
         }
     }
 
