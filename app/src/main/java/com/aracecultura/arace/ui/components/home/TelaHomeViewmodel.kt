@@ -5,44 +5,48 @@ import androidx.lifecycle.viewModelScope
 import com.aracecultura.arace.data.model.Produto
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.asExecutor
+import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.tasks.await
-import kotlinx.coroutines.withContext
 
 class TelaHomeViewmodel : ViewModel() {
     private val db by lazy { FirebaseFirestore.getInstance() }
 
-    init {
-    }
     private val _produtos = MutableStateFlow<List<Produto>>(emptyList())
     val produtos: StateFlow<List<Produto>> = _produtos
 
     init {
-        getProducts()
+        observarProdutos()
     }
 
-    private fun getProducts() {
+    // (A) Tempo real: snapshot listener no lugar do get() único, então a Home
+    // mostra produtos novos/editados assim que o Firestore muda, sem depender
+    // de a tela ser recriada para re-consultar.
+    private fun observarProdutos() {
         viewModelScope.launch {
-            val result: List<Produto> = withContext(Dispatchers.IO){
-                getAllProducts()
-            }
-            _produtos.value = result
+            produtosFlow()
+                .catch { _produtos.value = emptyList() }
+                .collect { lista -> _produtos.value = lista }
         }
     }
 
-    private suspend fun getAllProducts():List<Produto>{
-        return try{
-            db.collection("Produtos")
-                .get()
-                .await()
-                .documents
-                .mapNotNull { snapshot ->
-                    snapshot.toObject(Produto::class.java)
+    private fun produtosFlow(): Flow<List<Produto>> = callbackFlow {
+        val registro = db.collection("Produtos")
+            .addSnapshotListener(Dispatchers.IO.asExecutor()) { snapshot, erro ->
+                if (erro != null) {
+                    close(erro)
+                    return@addSnapshotListener
                 }
-        }catch (e: Exception){
-            emptyList()
-        }
+                val lista = snapshot?.documents?.mapNotNull { doc ->
+                    doc.toObject(Produto::class.java)
+                } ?: emptyList()
+                trySend(lista)
+            }
+        awaitClose { registro.remove() }
     }
 }

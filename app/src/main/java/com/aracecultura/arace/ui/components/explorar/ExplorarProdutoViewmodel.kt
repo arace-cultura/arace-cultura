@@ -10,15 +10,18 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.SetOptions
 import com.google.firebase.firestore.firestore
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.asExecutor
+import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.tasks.await
-import kotlinx.coroutines.withContext
 
 class ExplorarProdutoViewmodel : ViewModel() {
     private var db: FirebaseFirestore = Firebase.firestore
@@ -51,32 +54,39 @@ class ExplorarProdutoViewmodel : ViewModel() {
     }.stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
 
     init {
-        getProducts()
+        observarProdutos()
     }
 
-    private fun getProducts() {
+    // (A) Tempo real: em vez de um get() único (uma fotografia congelada na
+    // entrada da tela), um snapshot listener empurra a coleção Produtos sempre
+    // que ela muda — sua escrita ou a de outro membro da loja. O Explorar
+    // reflete na hora, sem refetch manual nem truque de navegação.
+    private fun observarProdutos() {
         viewModelScope.launch {
-            _isLoading.value = true
-            val result: List<Produto> = withContext(Dispatchers.IO) {
-                getAllProducts()
-            }
-            _produtos.value = result
-            _isLoading.value = false
+            produtosFlow()
+                .catch { _isLoading.value = false }
+                .collect { lista ->
+                    _produtos.value = lista
+                    _isLoading.value = false
+                }
         }
     }
 
-    private suspend fun getAllProducts(): List<Produto> {
-        return try {
-            db.collection("Produtos")
-                .get()
-                .await()
-                .documents
-                .mapNotNull { snapshot ->
-                    snapshot.toObject(Produto::class.java)
+    // O listener é registrado num executor de IO (mapeamento fora da main) e
+    // removido em awaitClose quando o viewModelScope morre — sem vazamento.
+    private fun produtosFlow(): Flow<List<Produto>> = callbackFlow {
+        val registro = db.collection("Produtos")
+            .addSnapshotListener(Dispatchers.IO.asExecutor()) { snapshot, erro ->
+                if (erro != null) {
+                    close(erro)
+                    return@addSnapshotListener
                 }
-        } catch (e: Exception) {
-            emptyList()
-        }
+                val lista = snapshot?.documents?.mapNotNull { doc ->
+                    doc.toObject(Produto::class.java)
+                } ?: emptyList()
+                trySend(lista)
+            }
+        awaitClose { registro.remove() }
     }
 
     fun toggleCategoria(categoria: String) {
@@ -106,6 +116,9 @@ class ExplorarProdutoViewmodel : ViewModel() {
             "nome" to produto.nome,
             "preco" to produto.preco,
             "imagens" to if (produto.imagens.isNotEmpty()) listOf(produto.imagens[0]) else emptyList<String>(),
+            // Denormalizado para o checkout agrupar "um Pix por produtor"
+            "produtorId" to produto.produtorId,
+            "chavePix" to produto.chavePix,
             "quantidade" to FieldValue.increment(1)
         )
 

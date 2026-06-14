@@ -38,7 +38,8 @@ class ProdutoViewModel : ViewModel() {
         nome: String,
         categoria: String,
         descricao: String,
-        precoStr: String
+        precoStr: String,
+        chavePix: String
     ) {
         val userUid = Firebase.auth.currentUser?.uid
         if (userUid == null) {
@@ -81,7 +82,8 @@ class ProdutoViewModel : ViewModel() {
                     preco = precoFormatado,
                     imagens = listOf(imageUrl), // Envolvido em lista
                     produtorId = lojaId,
-                    avaliacao = 0.0 // Valor padrão inicial
+                    avaliacao = 0.0, // Valor padrão inicial
+                    chavePix = chavePix.trim()
                 )
 
                 // 5. Salvar o objeto diretamente no Firestore

@@ -13,7 +13,6 @@ import com.aracecultura.arace.R
 import com.aracecultura.arace.data.LojaRepository
 import com.aracecultura.arace.databinding.FragmentNavegacaoPrincipalBinding
 import com.aracecultura.arace.ui.main.jetpack.Modo
-import com.aracecultura.arace.ui.main.jetpack.SeletorModoBottomSheet
 import android.util.Log
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -53,14 +52,6 @@ class NavegacaoPrincipal : Fragment() {
             this.binding.bnvMenuInferiorNavegacao.visibility =
                 if (esconderFooter) View.GONE else View.VISIBLE
         }
-
-        this.binding.btnMenuModo.setOnClickListener {
-             val bottomSheet = SeletorModoBottomSheet()
-             bottomSheet.onModoSelecionado = { modoSelecionado ->
-                 quandoModoMudar(modoSelecionado)
-             }
-             bottomSheet.show(childFragmentManager, "SeletorModo")
-         }
 
         // ── Barramento único de sinais entre telas ──────────────────────
         // Todos os fragment results do app trafegam pelo FragmentManager da

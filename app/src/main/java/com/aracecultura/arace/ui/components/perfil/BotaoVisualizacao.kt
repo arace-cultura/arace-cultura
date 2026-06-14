@@ -41,7 +41,7 @@ fun BotaoVisualizacao(
             text = "Visualização",
             textColor = Color.Black,
             containerColor = bgDefault,
-            borderColor = btColor,
+            borderColor = bgDefault,
             shape = RoundedCornerShape(
                 topStart = 0.dp,
                 topEnd = 0.dp,

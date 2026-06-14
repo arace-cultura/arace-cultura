@@ -29,18 +29,8 @@
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/topAppBar"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize">
+            android:layout_height="?attr/actionBarSize" />
 
-            <ImageButton
-                android:id="@+id/btnMenuModo"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="start"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:padding="16dp"
-                android:src="@drawable/ic_menu"/>
-
-        </com.google.android.material.appbar.MaterialToolbar>
     </com.google.android.material.appbar.AppBarLayout>
 
     <!--

@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.aracecultura.arace.data.ImagemRepository
 import com.aracecultura.arace.data.LojaRepository
+import com.aracecultura.arace.data.SenhaIncorretaException
 import com.aracecultura.arace.data.model.Produtor
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
@@ -107,6 +108,30 @@ class PerfilViewModel : ViewModel() {
             }
         }
     }
+    // Troca a senha da loja. Distingue "senha atual incorreta" (onSenhaIncorreta)
+    // dos demais erros, para a UI mostrar o texto vermelho no campo certo.
+    fun alterarSenhaLoja(
+        uid: String,
+        senhaAtual: String,
+        senhaNova: String,
+        onSucesso: () -> Unit,
+        onSenhaIncorreta: () -> Unit,
+        onErro: (String) -> Unit
+    ) {
+        viewModelScope.launch {
+            try {
+                withContext(Dispatchers.IO) {
+                    LojaRepository.alterarSenhaLoja(uid, senhaAtual, senhaNova)
+                }
+                onSucesso()
+            } catch (e: SenhaIncorretaException) {
+                onSenhaIncorreta()
+            } catch (e: Exception) {
+                onErro(e.message ?: "Não foi possível alterar a senha.")
+            }
+        }
+    }
+
     // Atualiza os dados editados; URIs novas (foto/banner) são enviadas ao
     // storage antes de persistir as URLs
     fun salvarEdicaoPerfil(

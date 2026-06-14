@@ -14,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -36,6 +37,7 @@ fun PerfilCliente(
 ) {
     val usuario by viewModel.usuario.collectAsState()
     val scrollState = rememberScrollState()
+    val screenWidth = LocalConfiguration.current.screenWidthDp.dp
 
     LaunchedEffect(uid) {
         if (uid.isNotBlank()) {
@@ -52,12 +54,16 @@ fun PerfilCliente(
             alpha = 0.3f
         )
 
+        // verticalScroll dá altura "infinita": weight no nível do scroll não
+        // distribui espaço e o conteúdo nunca transborda (não rola). Por isso o
+        // bloco superior tem altura FIXA (proporcional à tela) — weight só
+        // sobrevive lá dentro, onde a altura é limitada.
         Column(modifier = Modifier.fillMaxSize().verticalScroll(scrollState)) {
 
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .weight(2f)
+                    .height(screenWidth * 0.85f)
             ) {
                 Column(Modifier.fillMaxSize()) {
                     Box(
@@ -96,7 +102,10 @@ fun PerfilCliente(
                 }
 
                 BotaoVisualizacao(
-                    modoAtualIsProdutor = usuario.isProdutor,
+                    // Estar nesta tela = modo cliente. O radio reflete a tela
+                    // atual, não usuario.isProdutor (que indica "tem loja" e
+                    // ficaria preso em Produtor para contas produtoras).
+                    modoAtualIsProdutor = false,
                     onModoChanged = { isProdutor ->
                         viewModel.alterarModoVisualizacao(isProdutor, uid)
                         onModoChanged(isProdutor)
@@ -155,20 +164,19 @@ fun PerfilCliente(
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            // Seção de informações
+            // Seção de informações — altura natural (wrap) para o scroll
+            // funcionar; sem weight, que seria ignorado dentro do scroll.
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .weight(3f)
                     .background(bgDefault)
                     .padding(20.dp)
             ) {
                 InfoRow(label = "Nome", value = usuario.nome.ifEmpty { "Usuário" })
                 Spacer(modifier = Modifier.height(16.dp))
                 InfoRow(label = "Email", value = usuario.email.ifEmpty { "carregando..." })
-                Spacer(modifier = Modifier.height(32.dp))
 
-                Spacer(Modifier.weight(1f))
+                Spacer(modifier = Modifier.height(48.dp))
 
                 Text(
                     text = "Configurações",

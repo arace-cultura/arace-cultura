@@ -1,16 +1,20 @@
 package com.aracecultura.arace.ui.components.perfil.produtor
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -22,12 +26,14 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
+import com.aracecultura.arace.R
 import com.aracecultura.arace.data.model.Produto
 import com.aracecultura.arace.data.model.Produtor
 import com.aracecultura.arace.ui.components.CarregamentoContainer
@@ -40,7 +46,8 @@ import com.aracecultura.arace.ui.theme.verdePrincipal
 fun PerfilProdutor(
     uid: String,
     viewModel: PerfilProdutorViewModel = viewModel(),
-    onModoChanged: (Boolean) -> Unit = {}
+    onModoChanged: (Boolean) -> Unit = {},
+    onEditarProdutos: () -> Unit = {}
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
@@ -54,7 +61,8 @@ fun PerfilProdutor(
         uiState.produtor != null -> PerfilProdutorContent(
             produtor = uiState.produtor!!,
             produtos = uiState.produtos,
-            onModoChanged = onModoChanged
+            onModoChanged = onModoChanged,
+            onEditarProdutos = onEditarProdutos
         )
     }
 }
@@ -160,7 +168,8 @@ private fun PerfilProdutorErro(message: String) {
 private fun PerfilProdutorContent(
     produtor: Produtor,
     produtos: List<Produto>,
-    onModoChanged: (Boolean) -> Unit = {}
+    onModoChanged: (Boolean) -> Unit = {},
+    onEditarProdutos: () -> Unit = {}
 ) {
     val screenWidth = LocalConfiguration.current.screenWidthDp.dp
     val loja = produtor.nomeLoja.ifBlank { produtor.nomeCompleto }
@@ -207,7 +216,7 @@ private fun PerfilProdutorContent(
                 BotaoVisualizacao(
                     modoAtualIsProdutor = true,
                     onModoChanged = onModoChanged,
-                    modifier = Modifier.align(Alignment.TopEnd)
+                    modifier = Modifier.align(Alignment.TopEnd).offset(y = (-2).dp)
                 )
 
                 Box(
@@ -267,6 +276,10 @@ private fun PerfilProdutorContent(
         }
 
         item {
+            BotaoEditarProdutos(onClick = onEditarProdutos)
+        }
+
+        item {
             NossaHistoriaSection(
                 brandColor = btColor,
                 produtor = produtor
@@ -286,5 +299,39 @@ private fun PerfilProdutorContent(
                 produtor = produtor
             )
         }
+    }
+}
+
+// Botão "editar produtos": pílula laranja com o ícone (ic_editar_produto) e a
+// legenda abaixo. Leva à tela de edição de produtos.
+@Composable
+private fun BotaoEditarProdutos(onClick: () -> Unit) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 8.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Box(
+            modifier = Modifier
+                .clip(RoundedCornerShape(50))
+                .background(btColor)
+                .clickable { onClick() }
+                .padding(horizontal = 56.dp, vertical = 18.dp),
+            contentAlignment = Alignment.Center
+        ) {
+            Icon(
+                painter = painterResource(R.drawable.ic_editar_produto),
+                contentDescription = "Editar produtos",
+                tint = Color.White,
+                modifier = Modifier.size(32.dp)
+            )
+        }
+        Spacer(Modifier.height(8.dp))
+        Text(
+            text = "editar produtos",
+            fontSize = 16.sp,
+            fontWeight = FontWeight.Medium
+        )
     }
 }

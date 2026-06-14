@@ -23,8 +23,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.Font
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
@@ -44,11 +42,11 @@ fun CriarProduto(
     viewModel: ProdutoViewModel = viewModel()
 ) {
     val context = LocalContext.current
-    val libreCaslonDisplay = FontFamily(Font(R.font.librecaslondisplay_regular))
 
     var textName by remember { mutableStateOf("") }
     var textDesc1 by remember { mutableStateOf("") }
     var textPreco by remember { mutableStateOf("") }
+    var textPix by remember { mutableStateOf("") }
 
     val categorias = CategoriasProduto.TODAS
     var expandedCategoria by remember { mutableStateOf(false) }
@@ -73,6 +71,7 @@ fun CriarProduto(
                 textName = ""
                 textDesc1 = ""
                 textPreco = ""
+                textPix = ""
                 selectedCategoria = ""
             }
             is ProdutoUiState.Error -> {
@@ -105,15 +104,18 @@ fun CriarProduto(
                 .fillMaxSize()
                 .verticalScroll(scrollState)
         ) {
+            // Mesmo cabeçalho de "Descubra" e "Carrinho": GoogleSans (default
+            // do tema), 36sp, centralizado, fundo bgDefault. Sem quebra de linha.
             Text(
                 "Adicionar Produto",
-                Modifier.width(200.dp),
-                fontFamily = libreCaslonDisplay,
-                fontSize = 50.sp,
-                lineHeight = 40.sp,
-                textAlign = TextAlign.Center
+                fontSize = 36.sp,
+                textAlign = TextAlign.Center,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(bgDefault)
+                    .padding(vertical = 10.dp)
             )
-            Spacer(Modifier.height(50.dp))
+            Spacer(Modifier.height(20.dp))
 
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -267,6 +269,23 @@ fun CriarProduto(
 
                 Spacer(Modifier.height(20.dp))
 
+                // Chave Pix do produtor: o checkout exibe esse código para o
+                // comprador pagar direto ao produtor (modelo vitrine).
+                FixedTextField(
+                    text = textPix,
+                    onTextChange = { textPix = it },
+                    placeholder = { Text("Chave Pix", color = btColor) },
+                    focusedContainerColor = bgDefault,
+                    unfocusedContainerColor = bgDefault,
+                    focusedBorderColor = btColor,
+                    unfocusedBorderColor = btColor,
+                    focusedTextColor = Color.Black,
+                    unfocusedTextColor = Color.Black,
+                    modifier = Modifier.fillMaxWidth(0.83f),
+                )
+
+                Spacer(Modifier.height(20.dp))
+
                 // --- NOVO: Botão Adicionar reativo ao estado ---
                 if (uiState is ProdutoUiState.Loading) {
                     CircularProgressIndicator(color = btColor)
@@ -286,7 +305,8 @@ fun CriarProduto(
                                     nome = textName,
                                     categoria = selectedCategoria,
                                     descricao = textDesc1,
-                                    precoStr = textPreco
+                                    precoStr = textPreco,
+                                    chavePix = textPix
                                 )
                             }
                         },
