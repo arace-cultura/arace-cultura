@@ -7,13 +7,6 @@
     android:layout_height="match_parent"
     tools:context=".ui.main.NavegacaoPrincipal">
 
-    <!--
-        A AppBarLayout é responsável pelo commportamento esperado do container da
-        MaterialToolbar. Como, por exemplo, elevação e interação ao scroll.
-
-        O ImageButton foi preciso para colocaar o botão na direita.
-
-    -->
 
     <com.google.android.material.appbar.AppBarLayout
         android:elevation="8dp"

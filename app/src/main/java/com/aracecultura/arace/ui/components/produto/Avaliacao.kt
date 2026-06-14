@@ -5,6 +5,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import com.aracecultura.arace.R
 
 @Composable
@@ -33,7 +34,7 @@ fun Avaliacao(
         repeat(estrelasCheias) {
             Icon(
                 painter = painterResource(id = R.drawable.ic_estrela1),
-                contentDescription = "Estrela cheia"
+                contentDescription = stringResource(R.string.cd_estrela_cheia)
             )
         }
 
@@ -41,7 +42,7 @@ fun Avaliacao(
         if (temEstrelaMeioCheia) {
             Icon(
                 painter = painterResource(id = R.drawable.ic_estrela0_5),
-                contentDescription = "Estrela meia cheia"
+                contentDescription = stringResource(R.string.cd_estrela_meia)
             )
         }
 
@@ -49,7 +50,7 @@ fun Avaliacao(
         repeat(estrelasVazias) {
             Icon(
                 painter = painterResource(id = R.drawable.ic_estrela0),
-                contentDescription = "Estrela vazia"
+                contentDescription = stringResource(R.string.cd_estrela_vazia)
             )
         }
     }

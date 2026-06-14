@@ -20,6 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.SubcomposeAsyncImage
@@ -46,7 +47,7 @@ fun ProdutoNavegar (
         .padding(12.dp)) {
         SubcomposeAsyncImage(
             model = produto.imagens.firstOrNull()?.let(Uri::decode),
-            contentDescription = "Produto",
+            contentDescription = stringResource(R.string.cd_produto),
             contentScale = ContentScale.Crop,
             modifier = Modifier
                 .height(screenWidth * 0.45f)
@@ -83,7 +84,7 @@ fun ProdutoNavegar (
             Avaliacao(produto.avaliacao)
             Spacer(modifier = Modifier.height(8.dp))
             Row(verticalAlignment = Alignment.Top){
-                Text("R$ ", fontSize = 12.sp)
+                Text(stringResource(R.string.prefixo_real), fontSize = 12.sp)
                 Text(
                     text = "${produto.preco}",
                     fontSize = 18.sp,
@@ -91,7 +92,7 @@ fun ProdutoNavegar (
                 )
             }
             AppButton(
-                text = "Adicionar ao carrinho",
+                text = stringResource(R.string.adicionar_ao_carrinho),
                 fontSize = 16.sp,
                 textColor = bgDefault,
                 containerColor = btColor,

@@ -66,6 +66,7 @@ class CadastroProdutorTela3 : Fragment(R.layout.fragment_cadastro_produtor_tela3
         val etTipoArt  = view.findViewById<TextInputEditText>(R.id.etTipoArtesanato)
         val acCategoria = view.findViewById<AutoCompleteTextView>(R.id.acCategoria)
         val etHistoria = view.findViewById<TextInputEditText>(R.id.etHistoria)
+        val etChavePix = view.findViewById<TextInputEditText>(R.id.etChavePix)
         val etSenhaLoja = view.findViewById<TextInputEditText>(R.id.etSenhaLoja)
 
         // Pré-preenche a partir do rascunho compartilhado
@@ -75,6 +76,7 @@ class CadastroProdutorTela3 : Fragment(R.layout.fragment_cadastro_produtor_tela3
             etTipoArt.setText(d.tipoArtesanato)
             acCategoria.setText(d.categoriaProduto, false)
             etHistoria.setText(d.historia)
+            etChavePix.setText(d.chavePix)
         }
         etSenhaLoja.setText(viewModel.senhaLoja.value)
 
@@ -123,7 +125,8 @@ class CadastroProdutorTela3 : Fragment(R.layout.fragment_cadastro_produtor_tela3
                     endereco         = etEndereco.text.toString(),
                     tipoArtesanato   = etTipoArt.text.toString(),
                     categoriaProduto = acCategoria.text.toString(),
-                    historia         = etHistoria.text.toString()
+                    historia         = etHistoria.text.toString(),
+                    chavePix         = etChavePix.text.toString().trim()
                 )
             }
             viewModel.atualizarSenha(etSenhaLoja.text.toString())
@@ -131,7 +134,7 @@ class CadastroProdutorTela3 : Fragment(R.layout.fragment_cadastro_produtor_tela3
 
         view.findViewById<Button>(R.id.btnFinalizar).setOnClickListener {
             if (etSenhaLoja.text.toString().length < 4) {
-                etSenhaLoja.error = "A senha da loja deve ter pelo menos 4 caracteres"
+                etSenhaLoja.error = getString(R.string.erro_senha_loja_curta)
                 etSenhaLoja.requestFocus()
                 return@setOnClickListener
             }
@@ -173,22 +176,22 @@ class CadastroProdutorTela3 : Fragment(R.layout.fragment_cadastro_produtor_tela3
 
     private fun atualizarTextoSelecao() {
         tvBannerSelecionado?.text = if (viewModel.bannerUri == null) {
-            "Nenhum banner selecionado"
+            getString(R.string.nenhum_banner)
         } else {
-            "Banner selecionado"
+            getString(R.string.banner_selecionado)
         }
 
         tvFotoLojaSelecionada?.text = if (viewModel.fotoLojaUri == null) {
-            "Nenhuma foto selecionada"
+            getString(R.string.nenhuma_foto)
         } else {
-            "Foto da loja selecionada"
+            getString(R.string.foto_loja_selecionada)
         }
 
         val historia = viewModel.fotosHistoriaUris
         tvFotosHistoriaSelecionadas?.text = when (historia.size) {
-            0 -> "Nenhuma foto selecionada"
-            1 -> "1 foto selecionada"
-            else -> "${historia.size} fotos selecionadas"
+            0 -> getString(R.string.nenhuma_foto)
+            1 -> getString(R.string.uma_foto_selecionada)
+            else -> resources.getQuantityString(R.plurals.fotos_selecionadas, historia.size, historia.size)
         }
 
         val previews = listOf(ivHistoria1, ivHistoria2, ivHistoria3)

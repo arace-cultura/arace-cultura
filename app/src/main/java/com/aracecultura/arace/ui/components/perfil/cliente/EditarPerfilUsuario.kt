@@ -22,6 +22,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
@@ -40,6 +41,8 @@ fun EditarPerfilUsuario(
     onVoltarClick: () -> Unit = {}
 ) {
     val context = LocalContext.current
+    val mensagemPreenchaSenhas = stringResource(R.string.preencha_senhas)
+    val mensagemSenhaAtualIncorreta = stringResource(R.string.senha_atual_incorreta)
     val usuario by viewModel.usuario.collectAsState()
     val produtor by viewModel.produtor.collectAsState()
     val scrollState = rememberScrollState()
@@ -115,7 +118,7 @@ fun EditarPerfilUsuario(
                     if (bannerModel != null) {
                         AsyncImage(
                             model = bannerModel,
-                            contentDescription = "Banner do perfil",
+                            contentDescription = stringResource(R.string.cd_banner_perfil),
                             contentScale = ContentScale.Crop,
                             modifier = Modifier.fillMaxSize()
                         )
@@ -127,7 +130,7 @@ fun EditarPerfilUsuario(
                     )
                     Image(
                         painter = painterResource(R.drawable.ic_editar_imagem),
-                        contentDescription = "Alterar banner",
+                        contentDescription = stringResource(R.string.cd_alterar_banner),
                         modifier = Modifier.size(56.dp)
                     )
                 }
@@ -144,7 +147,7 @@ fun EditarPerfilUsuario(
                 ) {
                     Icon(
                         painter = painterResource(R.drawable.ic_arrow_left),
-                        contentDescription = "Voltar",
+                        contentDescription = stringResource(R.string.voltar),
                         tint = Color.White
                     )
                 }
@@ -167,7 +170,7 @@ fun EditarPerfilUsuario(
                     if (fotoModel != null) {
                         AsyncImage(
                             model = fotoModel,
-                            contentDescription = "Foto de perfil",
+                            contentDescription = stringResource(R.string.cd_foto_perfil),
                             contentScale = ContentScale.Crop,
                             modifier = Modifier.fillMaxSize()
                         )
@@ -179,7 +182,7 @@ fun EditarPerfilUsuario(
                     )
                     Image(
                         painter = painterResource(R.drawable.ic_editar_imagem),
-                        contentDescription = "Alterar foto de perfil",
+                        contentDescription = stringResource(R.string.cd_alterar_foto_perfil),
                         modifier = Modifier.size(48.dp)
                     )
                 }
@@ -196,7 +199,7 @@ fun EditarPerfilUsuario(
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 Text(
-                    text = "Alterar Informações",
+                    text = stringResource(R.string.alterar_informacoes),
                     fontSize = 22.sp,
                     fontWeight = FontWeight.Medium,
                     color = Color(0xFF1F2937)
@@ -206,7 +209,7 @@ fun EditarPerfilUsuario(
                 OutlinedTextField(
                     value = nomeInput,
                     onValueChange = { nomeInput = it },
-                    label = { Text("Nome Completo") },
+                    label = { Text(stringResource(R.string.label_nome_completo)) },
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(8.dp)
                 )
@@ -216,7 +219,7 @@ fun EditarPerfilUsuario(
                     value = usuario.email,
                     onValueChange = {},
                     enabled = false,
-                    label = { Text("E-mail (Não alterável)") },
+                    label = { Text(stringResource(R.string.label_email_nao_alteravel)) },
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(8.dp)
                 )
@@ -224,7 +227,7 @@ fun EditarPerfilUsuario(
                 // Troca de senha da loja — só para contas produtoras
                 if (produtor != null) {
                     Text(
-                        text = "Senha da loja",
+                        text = stringResource(R.string.senha_loja),
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Medium,
                         color = Color(0xFF1F2937)
@@ -233,7 +236,7 @@ fun EditarPerfilUsuario(
                         OutlinedTextField(
                             value = senhaAtual,
                             onValueChange = { senhaAtual = it; erroSenha = null },
-                            label = { Text("Senha atual") },
+                            label = { Text(stringResource(R.string.label_senha_atual)) },
                             visualTransformation = PasswordVisualTransformation(),
                             isError = erroSenha != null,
                             singleLine = true,
@@ -252,7 +255,7 @@ fun EditarPerfilUsuario(
                     OutlinedTextField(
                         value = senhaNova,
                         onValueChange = { senhaNova = it },
-                        label = { Text("Nova senha") },
+                        label = { Text(stringResource(R.string.label_nova_senha)) },
                         visualTransformation = PasswordVisualTransformation(),
                         singleLine = true,
                         modifier = Modifier.fillMaxWidth(),
@@ -265,13 +268,13 @@ fun EditarPerfilUsuario(
                 // Botão Salvar — se os campos de senha estiverem preenchidos,
                 // a troca de senha é validada antes de salvar o resto.
                 AppButton(
-                    text = "Salvar Alterações",
+                    text = stringResource(R.string.salvar_alteracoes),
                     onClick = {
                         erroSenha = null
                         val querTrocarSenha = senhaAtual.isNotBlank() || senhaNova.isNotBlank()
                         when {
                             querTrocarSenha && (senhaAtual.isBlank() || senhaNova.isBlank()) -> {
-                                erroSenha = "Preencha a senha atual e a nova."
+                                erroSenha = mensagemPreenchaSenhas
                             }
                             querTrocarSenha -> {
                                 viewModel.alterarSenhaLoja(
@@ -288,7 +291,7 @@ fun EditarPerfilUsuario(
                                             onSucesso = onVoltarClick
                                         )
                                     },
-                                    onSenhaIncorreta = { erroSenha = "Senha atual incorreta." },
+                                    onSenhaIncorreta = { erroSenha = mensagemSenhaAtualIncorreta },
                                     onErro = { erroSenha = it }
                                 )
                             }

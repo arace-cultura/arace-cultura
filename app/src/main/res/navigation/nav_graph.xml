@@ -88,18 +88,4 @@
         android:id="@+id/action_global_cadastroProdutorFragment"
         app:destination="@id/fluxo_cadastro_produtor" />
 
-    <fragment
-        android:id="@+id/finalizarCompraFragment"
-        android:name="com.aracecultura.arace.ui.main.FinalizarCompraFragment"
-        tools:layout="@layout/fragment_finalizar_compra">
-        <action
-            android:id="@+id/action_pagamento_to_confirmacao"
-            app:destination="@id/confirmacaoPagamentoFragment" />
-    </fragment>
-
-    <fragment
-        android:id="@+id/confirmacaoPagamentoFragment"
-        android:name="com.aracecultura.arace.ui.main.ConfirmacaoPagamentoFragment"
-        tools:layout="@layout/fragment_confirmacao_pagamento" />
-
 </navigation>

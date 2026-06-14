@@ -23,6 +23,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
@@ -42,11 +43,11 @@ fun CriarProduto(
     viewModel: ProdutoViewModel = viewModel()
 ) {
     val context = LocalContext.current
+    val mensagemCamposObrigatorios = stringResource(R.string.criar_campos_obrigatorios)
 
     var textName by remember { mutableStateOf("") }
     var textDesc1 by remember { mutableStateOf("") }
     var textPreco by remember { mutableStateOf("") }
-    var textPix by remember { mutableStateOf("") }
 
     val categorias = CategoriasProduto.TODAS
     var expandedCategoria by remember { mutableStateOf(false) }
@@ -65,13 +66,12 @@ fun CriarProduto(
     LaunchedEffect(uiState) {
         when (uiState) {
             is ProdutoUiState.Success -> {
-                Toast.makeText(context, (uiState as ProdutoUiState.Success).message, Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, context.getString(R.string.criar_sucesso), Toast.LENGTH_SHORT).show()
                 viewModel.resetState()
                 selectedImageUri = null
                 textName = ""
                 textDesc1 = ""
                 textPreco = ""
-                textPix = ""
                 selectedCategoria = ""
             }
             is ProdutoUiState.Error -> {
@@ -132,7 +132,7 @@ fun CriarProduto(
                     if (selectedImageUri != null) {
                         AsyncImage(
                             model = selectedImageUri,
-                            contentDescription = "Imagem selecionada",
+                            contentDescription = stringResource(R.string.cd_imagem_selecionada),
                             contentScale = ContentScale.Crop,
                             modifier = Modifier
                                 .fillMaxWidth(0.83f)
@@ -161,13 +161,13 @@ fun CriarProduto(
                         ) {
                             Icon(
                                 painter = painterResource(id = R.drawable.ic_image),
-                                contentDescription = "Editar Perfil",
+                                contentDescription = stringResource(R.string.cd_editar_perfil),
                                 tint = Color.White,
                                 modifier = Modifier.size(80.dp)
                             )
                             Spacer(Modifier.height(10.dp))
                             Text(
-                                text = "escolher\nimagem",
+                                text = stringResource(R.string.criar_escolher_imagem),
                                 fontSize = 20.sp,
                                 fontWeight = FontWeight.Medium,
                                 lineHeight = 20.sp,
@@ -183,8 +183,13 @@ fun CriarProduto(
 
                 FixedTextField(
                     text = textName,
-                    onTextChange = { textName = it },
-                    placeholder = { Text("Nome", color = bgDefault) },
+                    onTextChange = { textName = limitarNomeProdutoDigitado(it) },
+                    placeholder = {
+                        Text(
+                            stringResource(R.string.criar_nome_limite, LIMITE_NOME_PRODUTO),
+                            color = bgDefault
+                        )
+                    },
                     unfocusedContainerColor = btColor,
                     focusedContainerColor = btColor,
                     unfocusedBorderColor = btColor,
@@ -203,7 +208,7 @@ fun CriarProduto(
                         value = selectedCategoria,
                         onValueChange = {},
                         readOnly = true,
-                        placeholder = { Text("Categoria", color = btColor) },
+                        placeholder = { Text(stringResource(R.string.criar_placeholder_categoria), color = btColor) },
                         trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expandedCategoria) },
                         modifier = Modifier
                             .fillMaxWidth(0.83f)
@@ -239,7 +244,7 @@ fun CriarProduto(
                 ExpandingTextField(
                     text = textDesc1,
                     onTextChange = { textDesc1 = it },
-                    placeholder = { Text("Descrição", color = btColor) },
+                    placeholder = { Text(stringResource(R.string.criar_placeholder_descricao), color = btColor) },
                     unfocusedContainerColor = bgDefault,
                     focusedContainerColor = bgDefault,
                     unfocusedBorderColor = btColor,
@@ -256,7 +261,7 @@ fun CriarProduto(
                             textPreco = novoPreco
                         }
                     },
-                    placeholder = { Text("Preço (R$)", color = btColor) },
+                    placeholder = { Text(stringResource(R.string.criar_placeholder_preco), color = btColor) },
                     focusedContainerColor = bgDefault,
                     unfocusedContainerColor = bgDefault,
                     focusedBorderColor = btColor,
@@ -269,35 +274,23 @@ fun CriarProduto(
 
                 Spacer(Modifier.height(20.dp))
 
-                // Chave Pix do produtor: o checkout exibe esse código para o
-                // comprador pagar direto ao produtor (modelo vitrine).
-                FixedTextField(
-                    text = textPix,
-                    onTextChange = { textPix = it },
-                    placeholder = { Text("Chave Pix", color = btColor) },
-                    focusedContainerColor = bgDefault,
-                    unfocusedContainerColor = bgDefault,
-                    focusedBorderColor = btColor,
-                    unfocusedBorderColor = btColor,
-                    focusedTextColor = Color.Black,
-                    unfocusedTextColor = Color.Black,
-                    modifier = Modifier.fillMaxWidth(0.83f),
-                )
-
-                Spacer(Modifier.height(20.dp))
-
                 // --- NOVO: Botão Adicionar reativo ao estado ---
                 if (uiState is ProdutoUiState.Loading) {
                     CircularProgressIndicator(color = btColor)
                 } else {
                     AppButton(
-                        text = "Adicionar",
+                        text = stringResource(R.string.criar_adicionar),
                         textColor = bgDefault,
                         containerColor = btColor,
                         borderColor = btColor,
                         onClick = {
-                            if (selectedImageUri == null || textName.isEmpty() || selectedCategoria.isEmpty() || textPreco.isEmpty()) {
-                                Toast.makeText(context, "Preencha todos os campos e selecione uma imagem", Toast.LENGTH_SHORT).show()
+                            if (
+                                selectedImageUri == null ||
+                                normalizarNomeProduto(textName).isEmpty() ||
+                                selectedCategoria.isEmpty() ||
+                                textPreco.isEmpty()
+                            ) {
+                                Toast.makeText(context, mensagemCamposObrigatorios, Toast.LENGTH_SHORT).show()
                             } else {
                                 viewModel.salvarProduto(
                                     context = context,
@@ -305,8 +298,7 @@ fun CriarProduto(
                                     nome = textName,
                                     categoria = selectedCategoria,
                                     descricao = textDesc1,
-                                    precoStr = textPreco,
-                                    chavePix = textPix
+                                    precoStr = textPreco
                                 )
                             }
                         },

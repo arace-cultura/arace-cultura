@@ -16,6 +16,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -75,7 +76,7 @@ fun PerfilCliente(
                         if (usuario.bannerUrl.isNotBlank()) {
                             AsyncImage(
                                 model = usuario.bannerUrl,
-                                contentDescription = "Banner do perfil",
+                                contentDescription = stringResource(R.string.cd_banner_perfil),
                                 contentScale = ContentScale.Crop,
                                 modifier = Modifier.fillMaxSize()
                             )
@@ -96,7 +97,7 @@ fun PerfilCliente(
                 ) {
                     Icon(
                         painter = painterResource(id = R.drawable.ic_editar_perfil),
-                        contentDescription = "Editar Perfil",
+                        contentDescription = stringResource(R.string.cd_editar_perfil),
                         tint = Color.White
                     )
                 }
@@ -123,13 +124,13 @@ fun PerfilCliente(
                         .padding(vertical = 10.dp)
                 ) {
                     Text(
-                        text = usuario.nome.ifEmpty { "Usuário" },
+                        text = usuario.nome.ifEmpty { stringResource(R.string.usuario) },
                         fontSize = 30.sp,
                         fontWeight = FontWeight.Medium,
                         color = Color(0xFF1F2937)
                     )
                     Text(
-                        text = usuario.email.ifEmpty { "carregando..." },
+                        text = usuario.email.ifEmpty { stringResource(R.string.carregando) },
                         fontSize = 16.sp,
                         color = Color.Gray
                     )
@@ -147,7 +148,7 @@ fun PerfilCliente(
                     if (usuario.fotoUrl.isNotBlank()) {
                         AsyncImage(
                             model = usuario.fotoUrl,
-                            contentDescription = "Foto de perfil",
+                            contentDescription = stringResource(R.string.cd_foto_perfil),
                             contentScale = ContentScale.Crop,
                             modifier = Modifier.fillMaxSize()
                         )
@@ -172,14 +173,20 @@ fun PerfilCliente(
                     .background(bgDefault)
                     .padding(20.dp)
             ) {
-                InfoRow(label = "Nome", value = usuario.nome.ifEmpty { "Usuário" })
+                InfoRow(
+                    label = stringResource(R.string.nome),
+                    value = usuario.nome.ifEmpty { stringResource(R.string.usuario) }
+                )
                 Spacer(modifier = Modifier.height(16.dp))
-                InfoRow(label = "Email", value = usuario.email.ifEmpty { "carregando..." })
+                InfoRow(
+                    label = stringResource(R.string.email),
+                    value = usuario.email.ifEmpty { stringResource(R.string.carregando) }
+                )
 
                 Spacer(modifier = Modifier.height(48.dp))
 
                 Text(
-                    text = "Configurações",
+                    text = stringResource(R.string.configuracoes),
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Medium,
                     color = Color.Black,
@@ -191,7 +198,7 @@ fun PerfilCliente(
 
                 // --- BOTÃO SAIR ---
                 Text(
-                    text = "Sair",
+                    text = stringResource(R.string.sair),
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Medium,
                     color = Color.Black,

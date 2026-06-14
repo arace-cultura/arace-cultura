@@ -9,74 +9,90 @@ import com.google.firebase.Firebase
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.firestore
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.asExecutor
+import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
-import kotlinx.coroutines.withContext
 
 class NewCarrinhoViewModel : ViewModel() {
 
     private val db: FirebaseFirestore = Firebase.firestore
+    private var uidObservado: String? = null
 
-    private val _estado = MutableStateFlow<EstadoCarrinho>(EstadoCarrinho.Carregando)
-    val estado: StateFlow<EstadoCarrinho> = _estado.asStateFlow()
+    // null = ainda carregando (distingue de carrinho vazio)
+    private val _itens = MutableStateFlow<List<ItemCarrinho>?>(null)
+
+    // Ordenação local do carrinho (Nome / Preço). Antes vivia num objeto global
+    // (OrderBy.Ordem); agora é estado por-ViewModel, com o ciclo de vida da tela.
+    private val _ordenacao = MutableStateFlow("nome")
+    val ordenacao: StateFlow<String> = _ordenacao.asStateFlow()
+
+    // Estado da UI: combina os itens (tempo-real) com a ordenação escolhida.
+    val estado: StateFlow<EstadoCarrinho> = combine(_itens, _ordenacao) { itens, ordem ->
+        if (itens == null) EstadoCarrinho.Carregando
+        else EstadoCarrinho.Pronto(ordenar(itens, ordem))
+    }.stateIn(viewModelScope, SharingStarted.Eagerly, EstadoCarrinho.Carregando)
 
     fun carregarCarrinho(uid: String) {
+        if (uid.isBlank() || uid == uidObservado) return
+        uidObservado = uid
         viewModelScope.launch {
-            // Só mostra skeleton se ainda não há conteúdo: recargas com a tela
-            // já populada atualizam silenciosamente, sem resetar o scroll
-            if (_estado.value !is EstadoCarrinho.Pronto) {
-                _estado.value = EstadoCarrinho.Carregando
-            }
-            val itens = withContext(Dispatchers.IO) { buscarItensDoCarrinho(uid) }
-            _estado.value = EstadoCarrinho.Pronto(itens)
+            itensFlow(uid)
+                .catch { _itens.value = emptyList() }
+                .collect { _itens.value = it }
         }
     }
 
-    private suspend fun buscarItensDoCarrinho(uid: String): List<ItemCarrinho> {
-        return try {
-            val snapshot = db.collection("Carrinho")
-                .document(uid)
-                .collection("Produtos")
-                .get()
-                .await()
-
-            snapshot.documents.mapNotNull { doc ->
-                val produto = doc.toObject(Produto::class.java) ?: run {
-                    Log.e("Carrinho", "Documento ${doc.id} não pôde ser mapeado como Produto")
-                    return@mapNotNull null
+    // Tempo real: um snapshot listener no carrinho. Alterar quantidade ou
+    // remover item reflete na hora (a persistência offline do Firestore dispara
+    // o listener já na escrita local), então não há mais update otimista manual.
+    private fun itensFlow(uid: String): Flow<List<ItemCarrinho>> = callbackFlow {
+        val registro = db.collection("Carrinho").document(uid)
+            .collection("Produtos")
+            .addSnapshotListener(Dispatchers.IO.asExecutor()) { snapshot, erro ->
+                if (erro != null) {
+                    close(erro)
+                    return@addSnapshotListener
                 }
-                ItemCarrinho(
-                    id = doc.id,
-                    produto = produto,
-                    quantidade = doc.getLong("quantidade")?.toInt() ?: 1
-                )
+                val itens = snapshot?.documents?.mapNotNull { doc ->
+                    val produto = doc.toObject(Produto::class.java) ?: return@mapNotNull null
+                    ItemCarrinho(
+                        id = doc.id,
+                        produto = produto,
+                        quantidade = (doc.getLong("quantidade") ?: 1L).toInt()
+                    )
+                } ?: emptyList()
+                trySend(itens)
             }
-        } catch (e: Exception) {
-            Log.e("Carrinho", "Falha ao buscar carrinho", e)
-            emptyList()
+        awaitClose { registro.remove() }
+    }
+
+    private fun ordenar(itens: List<ItemCarrinho>, ordem: String): List<ItemCarrinho> =
+        when (ordem) {
+            "preco_asc" -> itens.sortedBy { it.produto.preco }
+            "preco_desc" -> itens.sortedByDescending { it.produto.preco }
+            else -> itens.sortedBy { it.produto.nome.lowercase() }
         }
+
+    fun setOrdenacao(novaOrdem: String) {
+        _ordenacao.value = novaOrdem
     }
 
     fun removerItem(item: ItemCarrinho, uid: String) {
         viewModelScope.launch {
             try {
-                withContext(Dispatchers.IO) {
-                    db.collection("Carrinho")
-                        .document(uid)
-                        .collection("Produtos")
-                        .document(item.id)
-                        .delete()
-                        .await()
-                }
-                val estadoAtual = _estado.value
-                if (estadoAtual is EstadoCarrinho.Pronto) {
-                    _estado.value = EstadoCarrinho.Pronto(
-                        estadoAtual.itens.filter { it.id != item.id }
-                    )
-                }
+                db.collection("Carrinho").document(uid)
+                    .collection("Produtos").document(item.id)
+                    .delete().await()
             } catch (e: Exception) {
                 Log.e("Carrinho", "Erro ao remover item ${item.id}", e)
             }
@@ -88,34 +104,14 @@ class NewCarrinhoViewModel : ViewModel() {
             removerItem(item, uid)
             return
         }
-
-        val estadoAnterior = _estado.value
-        atualizarQuantidadeLocal(item.id, novaQuantidade)
-
         viewModelScope.launch {
             try {
-                withContext(Dispatchers.IO) {
-                    db.collection("Carrinho")
-                        .document(uid)
-                        .collection("Produtos")
-                        .document(item.id)
-                        .update("quantidade", novaQuantidade)
-                        .await()
-                }
+                db.collection("Carrinho").document(uid)
+                    .collection("Produtos").document(item.id)
+                    .update("quantidade", novaQuantidade).await()
             } catch (e: Exception) {
-                _estado.value = estadoAnterior
                 Log.e("Carrinho", "Erro ao alterar quantidade do item ${item.id}", e)
             }
-        }
-    }
-
-    private fun atualizarQuantidadeLocal(itemId: String, novaQuantidade: Int) {
-        val estadoAtual = _estado.value
-        if (estadoAtual is EstadoCarrinho.Pronto) {
-            val novaLista = estadoAtual.itens.map { item ->
-                if (item.id == itemId) item.copy(quantidade = novaQuantidade) else item
-            }
-            _estado.value = EstadoCarrinho.Pronto(novaLista)
         }
     }
 }

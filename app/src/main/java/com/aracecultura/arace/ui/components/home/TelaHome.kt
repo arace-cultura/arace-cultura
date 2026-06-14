@@ -34,6 +34,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -172,7 +173,7 @@ private fun CartaoProduto(
     Column(modifier = Modifier.clickable(onClick = onClick)) {
         SubcomposeAsyncImage(
             model = produto.imagens.firstOrNull(),
-            contentDescription = "Imagem de ${produto.nome}",
+            contentDescription = stringResource(R.string.cd_imagem_de, produto.nome),
             contentScale = ContentScale.Crop,
             modifier = Modifier
                 .fillMaxWidth()
@@ -208,7 +209,7 @@ private fun RodapeCartaoProduto(produto: Produto) {
             )
             Spacer(modifier = Modifier.weight(1f))
             Text(
-                text = "R$${produto.preco}",
+                text = stringResource(R.string.preco_reais, produto.preco),
                 fontWeight = FontWeight.SemiBold,
                 fontSize = 20.sp,
                 color = Color.White,

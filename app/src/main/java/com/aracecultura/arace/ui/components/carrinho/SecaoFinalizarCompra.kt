@@ -17,9 +17,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
+import com.aracecultura.arace.R
 import com.aracecultura.arace.data.model.ItemCarrinho
 import com.aracecultura.arace.ui.components.DirecaoSombra
 import com.aracecultura.arace.ui.components.sombraInferior
@@ -61,7 +63,7 @@ fun SecaoFinalizarCompra(
         ) {
             Column {
                 Text(
-                    text = "Total",
+                    text = stringResource(R.string.carrinho_total),
                     fontSize = 14.sp,
                     color = Color.Gray
                 )
@@ -80,7 +82,7 @@ fun SecaoFinalizarCompra(
                 contentPadding = PaddingValues(horizontal = 32.dp, vertical = 12.dp)
             ) {
                 Text(
-                    text = "Finalizar",
+                    text = stringResource(R.string.finalizar),
                     fontSize = 18.sp,
                     color = Color.White
                 )

@@ -21,11 +21,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
+import com.aracecultura.arace.R
 import com.aracecultura.arace.data.model.Produtor
 import com.aracecultura.arace.ui.components.AppButton
 import com.aracecultura.arace.ui.theme.btColor
@@ -35,8 +37,7 @@ fun NossaHistoriaSection(
     brandColor: Color,
     produtor: Produtor
 ) {
-    val nome = produtor.nomeLoja.ifBlank { produtor.nomeCompleto }.ifBlank { "Este produtor" }
-    val historia = produtor.historia.ifBlank { "Historia ainda não cadastrada." }
+    val historia = produtor.historia.ifBlank { stringResource(R.string.historia_nao_cadastrada) }
     var historiaExpandida by remember { mutableStateOf(false) }
 
     Column(
@@ -45,7 +46,7 @@ fun NossaHistoriaSection(
             .padding(16.dp)
     ) {
         Text(
-            text = "Nossa história",
+            text = stringResource(R.string.nossa_historia),
             fontSize = 18.sp,
             fontWeight = FontWeight.Medium,
             modifier = Modifier.padding(bottom = 12.dp)
@@ -94,7 +95,7 @@ fun NossaHistoriaSection(
         )
 
         AppButton(
-            text = if (historiaExpandida) "Ler menos" else "Ler mais",
+            text = stringResource(if (historiaExpandida) R.string.ler_menos else R.string.ler_mais),
             onClick = { historiaExpandida = !historiaExpandida },
             fontSize = 18.sp,
             modifier = Modifier

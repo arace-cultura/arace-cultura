@@ -27,6 +27,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -44,15 +45,20 @@ import com.aracecultura.arace.ui.theme.verdePrincipal
 
 @Composable
 fun PerfilProdutor(
-    uid: String,
+    uid: String = "",
+    lojaId: String? = null,
+    somenteLeitura: Boolean = false,
     viewModel: PerfilProdutorViewModel = viewModel(),
     onModoChanged: (Boolean) -> Unit = {},
-    onEditarProdutos: () -> Unit = {}
+    onEditarProdutos: () -> Unit = {},
+    onBack: (() -> Unit)? = null
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
-    LaunchedEffect(uid) {
-        viewModel.carregarPerfil(uid)
+    // lojaId != null → visão do cliente (perfil de outra loja, somente leitura).
+    LaunchedEffect(uid, lojaId) {
+        if (lojaId != null) viewModel.carregarPerfilPorLoja(lojaId)
+        else viewModel.carregarPerfil(uid)
     }
 
     when {
@@ -61,8 +67,10 @@ fun PerfilProdutor(
         uiState.produtor != null -> PerfilProdutorContent(
             produtor = uiState.produtor!!,
             produtos = uiState.produtos,
+            somenteLeitura = somenteLeitura,
             onModoChanged = onModoChanged,
-            onEditarProdutos = onEditarProdutos
+            onEditarProdutos = onEditarProdutos,
+            onBack = onBack
         )
     }
 }
@@ -168,8 +176,10 @@ private fun PerfilProdutorErro(message: String) {
 private fun PerfilProdutorContent(
     produtor: Produtor,
     produtos: List<Produto>,
+    somenteLeitura: Boolean = false,
     onModoChanged: (Boolean) -> Unit = {},
-    onEditarProdutos: () -> Unit = {}
+    onEditarProdutos: () -> Unit = {},
+    onBack: (() -> Unit)? = null
 ) {
     val screenWidth = LocalConfiguration.current.screenWidthDp.dp
     val loja = produtor.nomeLoja.ifBlank { produtor.nomeCompleto }
@@ -213,11 +223,33 @@ private fun PerfilProdutorContent(
                         .background(bgDefault)
                 )
 
-                BotaoVisualizacao(
-                    modoAtualIsProdutor = true,
-                    onModoChanged = onModoChanged,
-                    modifier = Modifier.align(Alignment.TopEnd).offset(y = (-2).dp)
-                )
+                // Na visão do cliente não há troca de modo nem edição.
+                if (!somenteLeitura) {
+                    BotaoVisualizacao(
+                        modoAtualIsProdutor = true,
+                        onModoChanged = onModoChanged,
+                        modifier = Modifier.align(Alignment.TopEnd).offset(y = (-2).dp)
+                    )
+                }
+
+                if (onBack != null) {
+                    Box(
+                        modifier = Modifier
+                            .padding(12.dp)
+                            .size(44.dp)
+                            .align(Alignment.TopStart)
+                            .clip(CircleShape)
+                            .background(bgDefault)
+                            .clickable { onBack() },
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Icon(
+                            painter = painterResource(R.drawable.ic_arrow_left),
+                            contentDescription = stringResource(R.string.voltar),
+                            tint = Color.Black
+                        )
+                    }
+                }
 
                 Box(
                     modifier = Modifier
@@ -237,7 +269,7 @@ private fun PerfilProdutorContent(
                     } else {
                         AsyncImage(
                             model = produtor.fotoLoja,
-                            contentDescription = "Foto da loja",
+                            contentDescription = stringResource(R.string.cd_foto_loja),
                             contentScale = ContentScale.Crop,
                             modifier = Modifier.fillMaxSize()
                         )
@@ -262,7 +294,7 @@ private fun PerfilProdutorContent(
                 )
 
                 Text(
-                    text = "Nossos produtos em destaque",
+                    text = stringResource(R.string.nossos_produtos_destaque),
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Medium,
                     modifier = Modifier
@@ -275,8 +307,10 @@ private fun PerfilProdutorContent(
             }
         }
 
-        item {
-            BotaoEditarProdutos(onClick = onEditarProdutos)
+        if (!somenteLeitura) {
+            item {
+                BotaoEditarProdutos(onClick = onEditarProdutos)
+            }
         }
 
         item {
@@ -322,14 +356,14 @@ private fun BotaoEditarProdutos(onClick: () -> Unit) {
         ) {
             Icon(
                 painter = painterResource(R.drawable.ic_editar_produto),
-                contentDescription = "Editar produtos",
+                contentDescription = stringResource(R.string.editar_produtos),
                 tint = Color.White,
                 modifier = Modifier.size(32.dp)
             )
         }
         Spacer(Modifier.height(8.dp))
         Text(
-            text = "editar produtos",
+            text = stringResource(R.string.editar_produtos_botao),
             fontSize = 16.sp,
             fontWeight = FontWeight.Medium
         )

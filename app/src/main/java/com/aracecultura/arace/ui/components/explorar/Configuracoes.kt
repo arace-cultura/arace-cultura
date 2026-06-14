@@ -17,6 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -27,12 +28,7 @@ import com.aracecultura.arace.R
 @Composable
 fun TelaConfiguracoes(
     onBackClick: () -> Unit = {},
-    onMenuClick: () -> Unit = {},
-    onMeusDadosClick: () -> Unit = {},
-    onAcessibilidadeClick: () -> Unit = {},
-    onSobreClick: () -> Unit = {},
-    onSairClick: () -> Unit = {},
-    notificationsEnabledState: MutableState<Boolean> = remember { mutableStateOf(true) }
+    onMeusDadosClick: () -> Unit = {}
 ) {
     val scrollState = rememberScrollState()
 
@@ -58,7 +54,7 @@ fun TelaConfiguracoes(
                 IconButton(onClick = onBackClick) {
                     Icon(
                         painter = painterResource(R.drawable.ic_arrow_left),
-                        contentDescription = "Voltar",
+                        contentDescription = stringResource(R.string.voltar),
                         tint = Color.DarkGray
                     )
                 }
@@ -66,7 +62,7 @@ fun TelaConfiguracoes(
 
 
             Text(
-                text = "Configurações",
+                text = stringResource(R.string.configuracoes),
                 fontSize = 32.sp,
                 fontWeight = FontWeight.Medium,
                 color = Color.Black,
@@ -81,86 +77,11 @@ fun TelaConfiguracoes(
 
         ConfiguracaoItem(
             icon = painterResource(R.drawable.ic_user_data),
-            text = "Meus dados",
+            text = stringResource(R.string.meus_dados),
             onClick = onMeusDadosClick
         )
 
-
-        ConfiguracaoSwitchItem(
-            icon = painterResource(R.drawable.ic_notificacoes),
-            text = "Notificações",
-            checked = notificationsEnabledState.value,
-            onCheckedChange = { newValue ->
-                notificationsEnabledState.value = newValue
-
-            }
-        )
-
-
-        ConfiguracaoItem(
-            icon = painterResource(R.drawable.ic_info),
-            text = "Acessibilidade",
-            onClick = onAcessibilidadeClick
-        )
-        ConfiguracaoItem(
-            icon = painterResource(R.drawable.ic_info),
-            text = "Sobre",
-            onClick = onSobreClick
-        )
-
         Spacer(modifier = Modifier.height(32.dp))
-    }
-}
-
-@Composable
-fun ConfiguracaoSwitchItem(
-    icon: Painter,
-    text: String,
-    checked: Boolean,
-    onCheckedChange: (Boolean) -> Unit
-) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable { onCheckedChange(!checked) }
-            .padding(horizontal = 24.dp, vertical = 16.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-
-        Box(
-            modifier = Modifier
-                .size(48.dp)
-                .background(Color(0xFFF0F5F2), CircleShape),
-            contentAlignment = Alignment.Center
-        ) {
-            Icon(
-                painter = icon,
-                contentDescription = null,
-                tint = Color(0xFF4A7D59)
-            )
-        }
-
-        Spacer(modifier = Modifier.width(20.dp))
-
-
-        Text(
-            text = text,
-            fontSize = 18.sp,
-            fontWeight = FontWeight.Medium,
-            color = Color.Black,
-            modifier = Modifier.weight(1f)
-        )
-
-        Switch(
-            checked = checked,
-            onCheckedChange = onCheckedChange,
-            colors = SwitchDefaults.colors(
-                checkedTrackColor = btColor,
-                uncheckedTrackColor = Color.LightGray,
-                checkedThumbColor = Color.White,
-                uncheckedThumbColor = Color.White
-            )
-        )
     }
 }
 

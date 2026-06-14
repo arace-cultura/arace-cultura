@@ -40,12 +40,12 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.aracecultura.arace.ui.components.AppButton
-import com.aracecultura.arace.ui.components.SearchBar
 import com.aracecultura.arace.R
 import com.aracecultura.arace.data.model.CategoriasProduto
 import com.aracecultura.arace.ui.theme.bgDefault
@@ -64,7 +64,7 @@ fun ExplorarProduto(
         mostrarFiltroCategorias = true,
         header = {
             Text(
-                "Descubra",
+                stringResource(R.string.explorar_titulo),
                 fontSize = 36.sp,
                 textAlign = TextAlign.Center,
                 modifier = Modifier
@@ -89,18 +89,16 @@ fun ConteudoExplorar(
     onNavigateToProduto: (String) -> Unit,
     mostrarFiltroCategorias: Boolean,
     header: @Composable () -> Unit,
-    textoBotaoFiltros: String = "Filtros"
+    textoBotaoFiltros: String? = null
 ) {
-    val ordenacaoOpcoes = remember {
-        listOf(
-            "Nome" to "nome",
-            "Menor preço" to "preco_asc",
-            "Maior preço" to "preco_desc",
-            "Avaliação" to "avaliacao"
-        )
-    }
+    val textoFiltros = textoBotaoFiltros ?: stringResource(R.string.filtros)
+    val ordenacaoOpcoes = listOf(
+        stringResource(R.string.ordenar_nome) to "nome",
+        stringResource(R.string.ordenar_menor_preco) to "preco_asc",
+        stringResource(R.string.ordenar_maior_preco) to "preco_desc",
+        stringResource(R.string.ordenar_avaliacao) to "avaliacao"
+    )
 
-    var textPesquisarMu by remember { mutableStateOf("") }
     var mostrarPainel by remember { mutableStateOf(false) }
 
     val produtos by viewmodel.produtosFiltrados.collectAsState()
@@ -133,7 +131,7 @@ fun ConteudoExplorar(
                         }
                         produtos.isEmpty() -> item {
                             Text(
-                                text = "Nenhum produto encontrado.",
+                                text = stringResource(R.string.nenhum_produto_encontrado),
                                 fontSize = 16.sp,
                                 color = Color.Gray,
                                 textAlign = TextAlign.Center,
@@ -162,7 +160,7 @@ fun ConteudoExplorar(
                         .offset(y = (-1).dp)
                         .wrapContentWidth()
                         .height(40.dp),
-                    text = textoBotaoFiltros,
+                    text = textoFiltros,
                     textColor = bgDefault,
                     containerColor = btColor,
                     borderColor = btColor,
@@ -183,8 +181,6 @@ fun ConteudoExplorar(
             ordenacaoOpcoes = ordenacaoOpcoes,
             ordenacaoAtual = ordenacaoAtual,
             categoriasSelecionadas = categoriasSelecionadas,
-            textMunicipio = textPesquisarMu,
-            onTextMunicipioChange = { textPesquisarMu = it },
             onOrdenacao = viewmodel::setOrdenacao,
             onToggleCategoria = viewmodel::toggleCategoria,
             onFechar = { mostrarPainel = false }
@@ -199,8 +195,6 @@ private fun BoxScope.PainelFiltros(
     ordenacaoOpcoes: List<Pair<String, String>>,
     ordenacaoAtual: String,
     categoriasSelecionadas: Set<String>,
-    textMunicipio: String,
-    onTextMunicipioChange: (String) -> Unit,
     onOrdenacao: (String) -> Unit,
     onToggleCategoria: (String) -> Unit,
     onFechar: () -> Unit
@@ -244,7 +238,7 @@ private fun BoxScope.PainelFiltros(
             Spacer(modifier = Modifier.height(10.dp))
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(
-                    text = "Ordenar por",
+                    text = stringResource(R.string.ordenar_por),
                     fontSize = 20.sp,
                     modifier = Modifier
                         .width(130.dp)
@@ -255,7 +249,7 @@ private fun BoxScope.PainelFiltros(
                     var ordenacaoExpandida by remember { mutableStateOf(false) }
                     val labelAtual = ordenacaoOpcoes
                         .firstOrNull { it.second == ordenacaoAtual }?.first
-                        ?: "Selecione uma ordem..."
+                        ?: stringResource(R.string.selecionar_ordem)
 
                     Text(
                         text = labelAtual,
@@ -288,32 +282,11 @@ private fun BoxScope.PainelFiltros(
                     }
                 }
             }
-            Spacer(modifier = Modifier.height(10.dp))
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Text(
-                    text = "Município",
-                    fontSize = 20.sp,
-                    modifier = Modifier
-                        .width(130.dp)
-                        .padding(start = 8.dp, end = 8.dp)
-                        .background(bgDefault)
-                )
-                Spacer(modifier = Modifier.height(20.dp).width(3.dp).background(btColor))
-                SearchBar(
-                    modifier = Modifier.weight(1f),
-                    text = textMunicipio,
-                    textColor = Color.Black,
-                    onTextChange = onTextMunicipioChange,
-                    containerColor = bgDefault,
-                    placeholder = "Pesquise um município"
-                )
-            }
-
             // Seção de Categorias: ausente na tela de categoria (filtro fixo)
             if (mostrarCategorias) {
                 Spacer(modifier = Modifier.height(10.dp))
                 Text(
-                    text = "Categorias:",
+                    text = stringResource(R.string.categorias_label),
                     fontSize = 20.sp,
                     modifier = Modifier.padding(start = 8.dp)
                 )

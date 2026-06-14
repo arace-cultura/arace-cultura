@@ -18,10 +18,12 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
+import com.aracecultura.arace.R
 import kotlin.math.absoluteValue
 
 @Composable
@@ -37,7 +39,7 @@ fun ImageCarousel(
             contentAlignment = Alignment.Center
         ) {
             Text(
-                text = "Nenhum produto em destaque",
+                text = stringResource(R.string.nenhum_produto_destaque),
                 fontSize = 14.sp,
                 color = Color.Gray,
                 textAlign = TextAlign.Center
@@ -64,7 +66,7 @@ fun ImageCarousel(
             Column {
                 AsyncImage(
                     model = imageUrls[page],
-                    contentDescription = "Imagem do produto",
+                    contentDescription = stringResource(R.string.cd_imagem_produto),
                     contentScale = ContentScale.Crop,
                     modifier = Modifier
                         .fillMaxWidth()

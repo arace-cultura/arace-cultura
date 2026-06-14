@@ -10,13 +10,19 @@ import com.aracecultura.arace.data.SenhaIncorretaException
 import com.aracecultura.arace.data.model.Produtor
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.SetOptions
 import com.google.firebase.firestore.firestore
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.asExecutor
+import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
@@ -41,55 +47,87 @@ class PerfilViewModel : ViewModel() {
     private val _produtor = MutableStateFlow<Produtor?>(null)
     val produtor: StateFlow<Produtor?> = _produtor.asStateFlow()
 
+    // Guards: evitam empilhar listeners ao recompor (cada um observa uma vez).
+    private var uidUsuarioObservado: String? = null
+    private var uidProdutorObservado: String? = null
+
     fun carregarDadosProdutor(uid: String) {
+        if (uid.isBlank() || uid == uidProdutorObservado) return
+        uidProdutorObservado = uid
         viewModelScope.launch {
-            try {
-                _produtor.value = withContext(Dispatchers.IO) {
-                    val lojaId = LojaRepository.resolverLojaId(uid) ?: return@withContext null
-                    db.collection("Produtores").document(lojaId).get().await()
-                        .toObject(Produtor::class.java)
-                }
+            val lojaId = try {
+                withContext(Dispatchers.IO) { LojaRepository.resolverLojaId(uid) }
             } catch (e: Exception) {
-                e.printStackTrace()
+                null
             }
+            if (lojaId == null) {
+                _produtor.value = null
+                return@launch
+            }
+            // Tempo real: o cadastro da loja reflete edições na hora.
+            produtorDocFlow(lojaId)
+                .catch { _produtor.value = null }
+                .collect { _produtor.value = it }
         }
     }
 
-    // Busca os dados do usuário no Firestore ao abrir o perfil
+    // Observa os dados do usuário em tempo real ao abrir o perfil.
     fun carregarDadosUsuario(uid: String) {
+        if (uid.isBlank() || uid == uidUsuarioObservado) return
+        uidUsuarioObservado = uid
         viewModelScope.launch {
-            try {
-                val document = withContext(Dispatchers.IO) {
-                    db.collection("Usuarios").document(uid).get().await()
-                }
-                val possuiCadastroProdutor = withContext(Dispatchers.IO) {
-                    LojaRepository.resolverLojaId(uid) != null
-                }
-                val emailAutenticado = FirebaseAuth.getInstance().currentUser?.email.orEmpty()
-
-                // Mapeia o documento para o objeto, adicionando também o ID do documento por segurança
-                val userData = document.toObject(Usuario::class.java)
-                    ?.copy(id = document.id, isProdutor = possuiCadastroProdutor)
-
-                if (userData != null) {
-                    _usuario.value = userData.copy(
-                        email = userData.email.ifBlank { emailAutenticado }
-                    )
-                    if (possuiCadastroProdutor && document.getBoolean("isProdutor") != true) {
-                        withContext(Dispatchers.IO) {
-                            db.collection("Usuarios")
-                                .document(uid)
-                                .set(mapOf("isProdutor" to true), SetOptions.merge())
-                                .await()
-                        }
+            usuarioDocFlow(uid)
+                .catch { it.printStackTrace() }
+                .collect { document ->
+                    val possuiCadastroProdutor = withContext(Dispatchers.IO) {
+                        LojaRepository.resolverLojaId(uid) != null
                     }
-                } else {
-                    _usuario.value = Usuario(id = uid, nome = "Usuário", email = emailAutenticado, isProdutor = possuiCadastroProdutor)
+                    val emailAutenticado = FirebaseAuth.getInstance().currentUser?.email.orEmpty()
+
+                    val userData = document.toObject(Usuario::class.java)
+                        ?.copy(id = document.id, isProdutor = possuiCadastroProdutor)
+
+                    if (userData != null) {
+                        _usuario.value = userData.copy(
+                            email = userData.email.ifBlank { emailAutenticado }
+                        )
+                        if (possuiCadastroProdutor && document.getBoolean("isProdutor") != true) {
+                            withContext(Dispatchers.IO) {
+                                db.collection("Usuarios")
+                                    .document(uid)
+                                    .set(mapOf("isProdutor" to true), SetOptions.merge())
+                                    .await()
+                            }
+                        }
+                    } else {
+                        _usuario.value = Usuario(id = uid, nome = "Usuário", email = emailAutenticado, isProdutor = possuiCadastroProdutor)
+                    }
                 }
-            } catch (e: Exception) {
-                e.printStackTrace() // Ajuda a debugar no Logcat caso dê erro
-            }
         }
+    }
+
+    private fun produtorDocFlow(lojaId: String): Flow<Produtor?> = callbackFlow {
+        val registro = db.collection("Produtores").document(lojaId)
+            .addSnapshotListener(Dispatchers.IO.asExecutor()) { snapshot, erro ->
+                if (erro != null) {
+                    close(erro)
+                    return@addSnapshotListener
+                }
+                trySend(snapshot?.toObject(Produtor::class.java))
+            }
+        awaitClose { registro.remove() }
+    }
+
+    private fun usuarioDocFlow(uid: String): Flow<DocumentSnapshot> = callbackFlow {
+        val registro = db.collection("Usuarios").document(uid)
+            .addSnapshotListener { snapshot, erro ->
+                if (erro != null) {
+                    close(erro)
+                    return@addSnapshotListener
+                }
+                if (snapshot != null) trySend(snapshot)
+            }
+        awaitClose { registro.remove() }
     }
 
     // Altera o modo de visualização entre Cliente e Produtor

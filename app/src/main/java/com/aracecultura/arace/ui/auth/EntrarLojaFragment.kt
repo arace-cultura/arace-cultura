@@ -28,7 +28,7 @@ class EntrarLojaFragment : Fragment(R.layout.fragment_entrar_loja) {
         btnConfirmar.setOnClickListener {
             val uid = FirebaseAuth.getInstance().currentUser?.uid
             if (uid == null) {
-                tvErro.text = "Usuário não autenticado."
+                tvErro.setText(R.string.erro_usuario_nao_autenticado)
                 tvErro.isVisible = true
                 return@setOnClickListener
             }
@@ -52,7 +52,7 @@ class EntrarLojaFragment : Fragment(R.layout.fragment_entrar_loja) {
                     )
                     findNavController().navigate(R.id.action_entrada_concluida)
                 } catch (e: Exception) {
-                    tvErro.text = e.message ?: "Não foi possível entrar na loja."
+                    tvErro.text = e.message ?: getString(R.string.erro_entrar_loja)
                     tvErro.isVisible = true
                     btnConfirmar.isEnabled = true
                 }

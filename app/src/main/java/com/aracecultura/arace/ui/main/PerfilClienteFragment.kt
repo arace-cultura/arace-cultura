@@ -50,11 +50,7 @@ class PerfilClienteFragment : Fragment() {
                     TelaPerfil.CONFIGURACOES -> {
                         TelaConfiguracoes(
                             onBackClick = { telaAtual = TelaPerfil.PERFIL },
-                            onMeusDadosClick = { telaAtual = TelaPerfil.MEUS_DADOS },
-                            onSairClick = {
-                                FirebaseAuth.getInstance().signOut()
-                                requireActivity().supportFragmentManager.setFragmentResult("logout_request", Bundle())
-                            }
+                            onMeusDadosClick = { telaAtual = TelaPerfil.MEUS_DADOS }
                         )
                     }
                     TelaPerfil.MEUS_DADOS -> {

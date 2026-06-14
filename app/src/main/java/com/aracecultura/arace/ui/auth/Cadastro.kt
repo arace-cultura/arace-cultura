@@ -40,7 +40,7 @@ class Cadastro : Fragment() {
     ) { uri ->
         fotoPerfilUri = uri
         binding.tvFotoPerfilSelecionada.text =
-            if (uri == null) "Nenhuma foto selecionada" else "Foto de perfil selecionada"
+            if (uri == null) getString(R.string.nenhuma_foto) else getString(R.string.foto_perfil_selecionada)
     }
 
     private val bannerPicker = registerForActivityResult(
@@ -48,7 +48,7 @@ class Cadastro : Fragment() {
     ) { uri ->
         bannerUri = uri
         binding.tvBannerPerfilSelecionado.text =
-            if (uri == null) "Nenhum banner selecionado" else "Banner selecionado"
+            if (uri == null) getString(R.string.nenhum_banner) else getString(R.string.banner_selecionado)
     }
 
     override fun onCreateView(
@@ -96,7 +96,7 @@ class Cadastro : Fragment() {
             Toast
                 .makeText(
                     requireContext(),
-                    "Preencha todos os dados corretamente.",
+                    getString(R.string.erro_preencha_dados),
                     Toast.LENGTH_SHORT
                 ).show()
             return
@@ -132,11 +132,11 @@ class Cadastro : Fragment() {
             }
         }.addOnFailureListener { exception ->
             val mensagemErro = when(exception) {
-                is FirebaseAuthWeakPasswordException -> "Digite uma senha com no mínimo 6 caracteres"
-                is FirebaseAuthInvalidCredentialsException -> "Digite um e-mail válido"
-                is FirebaseAuthUserCollisionException -> "Conta já cadastrada. Faça login"
-                is FirebaseNetworkException -> "Verifique sua conexão com a internet e tente novamente!"
-                else -> "Erro ao cadastrar usuário"
+                is FirebaseAuthWeakPasswordException -> getString(R.string.erro_senha_fraca)
+                is FirebaseAuthInvalidCredentialsException -> getString(R.string.erro_email_invalido)
+                is FirebaseAuthUserCollisionException -> getString(R.string.erro_conta_existente)
+                is FirebaseNetworkException -> getString(R.string.erro_conexao)
+                else -> getString(R.string.erro_cadastro_usuario)
             }
 
             Toast

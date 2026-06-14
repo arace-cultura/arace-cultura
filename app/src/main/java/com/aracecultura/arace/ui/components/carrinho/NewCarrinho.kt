@@ -20,6 +20,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -87,7 +88,7 @@ fun NewCarrinho(
                         onDeleteClick(item)
                     }
                 )
-                Ordenar()
+                Ordenar(onSelecionar = viewModel::setOrdenacao)
             }
             SecaoFinalizarCompra(
                 produtos = (estado as? EstadoCarrinho.Pronto)?.itens ?: emptyList(),
@@ -100,7 +101,7 @@ fun NewCarrinho(
 @Composable
 private fun TituloCarrinho() {
     Text(
-        text = "Carrinho",
+        text = stringResource(R.string.carrinho_titulo),
         fontSize = 36.sp,
         modifier = Modifier
             .fillMaxWidth()

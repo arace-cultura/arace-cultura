@@ -25,6 +25,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -74,14 +75,14 @@ fun MeusDados(
                 IconButton(onClick = onVoltarClick) {
                     Icon(
                         painter = painterResource(R.drawable.ic_arrow_left),
-                        contentDescription = "Voltar",
+                        contentDescription = stringResource(R.string.voltar),
                         tint = Color.DarkGray
                     )
                 }
             }
 
             Text(
-                text = "Meus dados",
+                text = stringResource(R.string.meus_dados),
                 fontSize = 32.sp,
                 fontWeight = FontWeight.Medium,
                 color = Color.Black,
@@ -97,30 +98,30 @@ fun MeusDados(
                 .padding(horizontal = 24.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            SecaoDados(titulo = "Conta") {
-                InfoRow(label = "Nome", value = usuario.nome.ifBlank { "—" })
-                InfoRow(label = "E-mail", value = usuario.email.ifBlank { "—" })
+            SecaoDados(titulo = stringResource(R.string.mdados_conta)) {
+                InfoRow(label = stringResource(R.string.nome), value = usuario.nome.ifBlank { "—" })
+                InfoRow(label = stringResource(R.string.e_mail), value = usuario.email.ifBlank { "—" })
             }
 
             produtor?.let { dados ->
-                SecaoDados(titulo = "Cadastro de produtor") {
-                    InfoRow(label = "Loja", value = dados.nomeLoja.ifBlank { "—" })
+                SecaoDados(titulo = stringResource(R.string.mdados_cadastro_produtor)) {
+                    InfoRow(label = stringResource(R.string.mdados_loja), value = dados.nomeLoja.ifBlank { "—" })
                     if (dados.razaoSocial.isNotBlank()) {
-                        InfoRow(label = "Razão social", value = dados.razaoSocial)
+                        InfoRow(label = stringResource(R.string.mdados_razao_social), value = dados.razaoSocial)
                     }
                     if (dados.cnpj.isNotBlank()) {
-                        InfoRow(label = "CNPJ", value = dados.cnpj)
+                        InfoRow(label = stringResource(R.string.mdados_cnpj), value = dados.cnpj)
                     }
-                    InfoRow(label = "Telefone", value = dados.telefone.ifBlank { "—" })
-                    InfoRow(label = "CEP", value = dados.cep.ifBlank { "—" })
-                    InfoRow(label = "Endereço", value = dados.endereco.ifBlank { "—" })
-                    InfoRow(label = "Artesanato", value = dados.tipoArtesanato.ifBlank { "—" })
-                    InfoRow(label = "Categoria", value = dados.categoriaProduto.ifBlank { "—" })
+                    InfoRow(label = stringResource(R.string.mdados_telefone), value = dados.telefone.ifBlank { "—" })
+                    InfoRow(label = stringResource(R.string.cad_cep), value = dados.cep.ifBlank { "—" })
+                    InfoRow(label = stringResource(R.string.cad_endereco), value = dados.endereco.ifBlank { "—" })
+                    InfoRow(label = stringResource(R.string.mdados_artesanato), value = dados.tipoArtesanato.ifBlank { "—" })
+                    InfoRow(label = stringResource(R.string.mdados_categoria), value = dados.categoriaProduto.ifBlank { "—" })
                 }
             }
 
             AppButton(
-                text = "Editar dados",
+                text = stringResource(R.string.editar_dados),
                 onClick = onEditarClick,
                 containerColor = btColor,
                 modifier = Modifier

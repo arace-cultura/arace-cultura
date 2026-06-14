@@ -38,6 +38,19 @@
         <argument
             android:name="produtoId"
             app:argType="string" />
+
+        <action
+            android:id="@+id/action_produto_to_produtorPublico"
+            app:destination="@id/produtorPublico" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/produtorPublico"
+        android:name="com.aracecultura.arace.ui.main.ProdutorPublicoFragment">
+
+        <argument
+            android:name="lojaId"
+            app:argType="string" />
     </fragment>
 
     <fragment

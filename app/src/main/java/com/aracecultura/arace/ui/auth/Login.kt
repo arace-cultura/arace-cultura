@@ -56,7 +56,7 @@ class Login : Fragment() {
         if (!validarCredenciais(email, senha)) {
             Toast.makeText(
                 requireContext(),
-                "Há erro nos dados.",
+                getString(R.string.erro_dados_login),
                 Toast.LENGTH_SHORT
             ).show()
             return
@@ -70,7 +70,7 @@ class Login : Fragment() {
             }.addOnFailureListener {
                 Toast.makeText(
                     requireContext(),
-                    "Falha no login, tente novamente.",
+                    getString(R.string.erro_falha_login),
                     Toast.LENGTH_SHORT
                 ).show()
             }

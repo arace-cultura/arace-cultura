@@ -38,9 +38,10 @@ class NavegacaoPrincipal : Fragment() {
         binding.bnvMenuInferiorNavegacao.itemIconTintList = null
         super.onViewCreated(view, savedInstanceState)
 
-        // getFragment é necessário pois o acesso ao navcontroller é da
-        // fragment dentro do fcvNavegacaoPrincipal, que é, na verdade,
-        // uma view que pertence à main activity.
+        // getFragment é necessário pois é só uma view (um componente visual);
+        // o comportamento de permanência e navegação é administrado pelo
+        // NavHostFragment (fragment_navegacao_principal, embora apareça só na view
+
         val navController = this.binding.fcvNavegacaoPrincipal.getFragment<NavHostFragment>().navController
 
         this.binding.bnvMenuInferiorNavegacao.setupWithNavController(navController)
