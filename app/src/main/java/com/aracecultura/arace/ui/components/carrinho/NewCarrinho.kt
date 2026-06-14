@@ -144,7 +144,7 @@ private fun ListaItens(
         // nos últimos ~441px (168dp) da lista — exatamente a altura das
         // barras abaixo dela. Com o padding, o último cartão fica totalmente
         // visível antes dessa fronteira e a correção só consome espaço vazio
-        contentPadding = PaddingValues(start = 16.dp, end = 16.dp, top = 56.dp, bottom = 176.dp)
+        contentPadding = PaddingValues(start = 16.dp, end = 16.dp, top = 56.dp, bottom = 30.dp)
     ) {
         items(
             items = itens,

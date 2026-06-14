@@ -17,7 +17,7 @@
             android:layout_marginBottom="12dp"
             android:fontFamily="@font/google_sans_flex_variable_font"
             android:gravity="center_horizontal"
-            android:text="Modo Produtor"
+            android:text="@string/escolha_modo_produtor"
             android:textColor="@color/texto"
             android:textFontWeight="500"
             android:textSize="28sp" />
@@ -28,7 +28,7 @@
             android:layout_marginBottom="40dp"
             android:fontFamily="@font/google_sans_flex_variable_font"
             android:gravity="center_horizontal"
-            android:text="Sua conta ainda não está vinculada a uma loja."
+            android:text="@string/escolha_sem_loja"
             android:textColor="@color/texto"
             android:textSize="16sp" />
 
@@ -40,7 +40,7 @@
             android:backgroundTint="@color/arace_blue"
             android:fontFamily="@font/google_sans_flex_variable_font"
             android:paddingVertical="14dp"
-            android:text="Cadastrar nova loja"
+            android:text="@string/escolha_cadastrar_nova_loja"
             android:textColor="@color/white"
             android:textSize="16sp" />
 
@@ -52,7 +52,7 @@
             android:backgroundTint="@color/verdeArace"
             android:fontFamily="@font/google_sans_flex_variable_font"
             android:paddingVertical="14dp"
-            android:text="Entrar em loja existente"
+            android:text="@string/entrar_loja_existente"
             android:textColor="@color/white"
             android:textSize="16sp" />
 
@@ -61,7 +61,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/google_sans_flex_variable_font"
-            android:text="Voltar"
+            android:text="@string/voltar"
             android:textColor="@color/black"
             android:textSize="16sp" />
 

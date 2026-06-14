@@ -46,7 +46,6 @@ fun CriarProduto(
     var textName by remember { mutableStateOf("") }
     var textDesc1 by remember { mutableStateOf("") }
     var textPreco by remember { mutableStateOf("") }
-    var textPix by remember { mutableStateOf("") }
 
     val categorias = CategoriasProduto.TODAS
     var expandedCategoria by remember { mutableStateOf(false) }
@@ -71,7 +70,6 @@ fun CriarProduto(
                 textName = ""
                 textDesc1 = ""
                 textPreco = ""
-                textPix = ""
                 selectedCategoria = ""
             }
             is ProdutoUiState.Error -> {
@@ -269,23 +267,6 @@ fun CriarProduto(
 
                 Spacer(Modifier.height(20.dp))
 
-                // Chave Pix do produtor: o checkout exibe esse código para o
-                // comprador pagar direto ao produtor (modelo vitrine).
-                FixedTextField(
-                    text = textPix,
-                    onTextChange = { textPix = it },
-                    placeholder = { Text("Chave Pix", color = btColor) },
-                    focusedContainerColor = bgDefault,
-                    unfocusedContainerColor = bgDefault,
-                    focusedBorderColor = btColor,
-                    unfocusedBorderColor = btColor,
-                    focusedTextColor = Color.Black,
-                    unfocusedTextColor = Color.Black,
-                    modifier = Modifier.fillMaxWidth(0.83f),
-                )
-
-                Spacer(Modifier.height(20.dp))
-
                 // --- NOVO: Botão Adicionar reativo ao estado ---
                 if (uiState is ProdutoUiState.Loading) {
                     CircularProgressIndicator(color = btColor)
@@ -305,8 +286,7 @@ fun CriarProduto(
                                     nome = textName,
                                     categoria = selectedCategoria,
                                     descricao = textDesc1,
-                                    precoStr = textPreco,
-                                    chavePix = textPix
+                                    precoStr = textPreco
                                 )
                             }
                         },

@@ -23,7 +23,7 @@
                 android:layout_marginBottom="24dp"
                 android:fontFamily="@font/google_sans_flex_variable_font"
                 android:gravity="center_horizontal"
-                android:text="Finalizar Cadastro"
+                android:text="@string/cad_finalizar_titulo"
                 android:textColor="@color/texto"
                 android:textSize="24sp"
                 android:textFontWeight="500" />
@@ -39,7 +39,7 @@
                 app:boxCornerRadiusTopStart="15dp"
                 app:boxStrokeColor="@color/arace_blue"
                 app:hintTextColor="@color/arace_blue"
-                android:hint="CEP">
+                android:hint="@string/cad_cep">
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etCep"
                     android:layout_width="match_parent"
@@ -60,7 +60,7 @@
                 app:boxCornerRadiusTopStart="15dp"
                 app:boxStrokeColor="@color/arace_blue"
                 app:hintTextColor="@color/arace_blue"
-                android:hint="Endereço">
+                android:hint="@string/cad_endereco">
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etEndereco"
                     android:layout_width="match_parent"
@@ -81,7 +81,7 @@
                 app:boxCornerRadiusTopStart="15dp"
                 app:boxStrokeColor="@color/arace_blue"
                 app:hintTextColor="@color/arace_blue"
-                android:hint="Tipo de Artesanato">
+                android:hint="@string/cad_tipo_artesanato">
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etTipoArtesanato"
                     android:layout_width="match_parent"
@@ -102,7 +102,7 @@
                 app:boxCornerRadiusTopStart="15dp"
                 app:boxStrokeColor="@color/arace_blue"
                 app:hintTextColor="@color/arace_blue"
-                android:hint="Categoria de Produto">
+                android:hint="@string/cad_categoria_produto">
 
                 <AutoCompleteTextView
                     android:id="@+id/acCategoria"
@@ -118,7 +118,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="12dp"
-                android:hint="Historia da loja (opcional)"
+                android:hint="@string/cad_historia_loja"
                 app:boxCornerRadiusBottomEnd="15dp"
                 app:boxCornerRadiusBottomStart="15dp"
                 app:boxCornerRadiusTopEnd="15dp"
@@ -142,7 +142,30 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="12dp"
-                android:hint="Senha da loja"
+                app:boxCornerRadiusBottomEnd="15dp"
+                app:boxCornerRadiusBottomStart="15dp"
+                app:boxCornerRadiusTopEnd="15dp"
+                app:boxCornerRadiusTopStart="15dp"
+                app:boxStrokeColor="@color/arace_blue"
+                app:hintTextColor="@color/arace_blue"
+                app:helperText="@string/cad_pix_helper"
+                android:hint="@string/cad_chave_pix">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etChavePix"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/google_sans_flex_variable_font"
+                    android:inputType="text"
+                    android:textColor="@color/texto" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                android:hint="@string/senha_loja"
                 app:boxCornerRadiusBottomEnd="15dp"
                 app:boxCornerRadiusBottomStart="15dp"
                 app:boxCornerRadiusTopEnd="15dp"
@@ -150,7 +173,7 @@
                 app:boxStrokeColor="@color/arace_blue"
                 app:hintTextColor="@color/arace_blue"
                 app:passwordToggleEnabled="true"
-                app:helperText="Outras contas usarão o nome e esta senha para entrar na loja">
+                app:helperText="@string/cad_senha_loja_helper">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etSenhaLoja"
@@ -168,7 +191,7 @@
                 android:layout_marginBottom="4dp"
                 android:backgroundTint="@color/arace_blue"
                 android:fontFamily="@font/google_sans_flex_variable_font"
-                android:text="Selecionar banner (opcional)"
+                android:text="@string/selecionar_banner"
                 android:textColor="@color/white" />
 
             <TextView
@@ -177,7 +200,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="12dp"
                 android:fontFamily="@font/google_sans_flex_variable_font"
-                android:text="Nenhum banner selecionado"
+                android:text="@string/nenhum_banner"
                 android:textColor="@color/texto"
                 android:textSize="14sp" />
 
@@ -188,7 +211,7 @@
                 android:layout_marginBottom="4dp"
                 android:backgroundTint="@color/arace_blue"
                 android:fontFamily="@font/google_sans_flex_variable_font"
-                android:text="Selecionar foto da loja (opcional)"
+                android:text="@string/cad_selecionar_foto_loja"
                 android:textColor="@color/white" />
 
             <TextView
@@ -197,7 +220,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="12dp"
                 android:fontFamily="@font/google_sans_flex_variable_font"
-                android:text="Nenhuma foto selecionada"
+                android:text="@string/nenhuma_foto"
                 android:textColor="@color/texto"
                 android:textSize="14sp" />
 
@@ -208,7 +231,7 @@
                 android:layout_marginBottom="4dp"
                 android:backgroundTint="@color/arace_blue"
                 android:fontFamily="@font/google_sans_flex_variable_font"
-                android:text="Selecionar fotos da historia (opcional)"
+                android:text="@string/cad_selecionar_fotos_historia"
                 android:textColor="@color/white" />
 
             <TextView
@@ -217,7 +240,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
                 android:fontFamily="@font/google_sans_flex_variable_font"
-                android:text="Nenhuma foto selecionada"
+                android:text="@string/nenhuma_foto"
                 android:textColor="@color/texto"
                 android:textSize="14sp" />
 
@@ -238,7 +261,7 @@
                     android:layout_marginEnd="4dp"
                     android:scaleType="centerCrop"
                     android:background="@color/arace_blue"
-                    android:contentDescription="Foto história 1" />
+                    android:contentDescription="@string/cad_foto_historia_1" />
 
                 <ImageView
                     android:id="@+id/ivHistoria2"
@@ -248,7 +271,7 @@
                     android:layout_marginEnd="4dp"
                     android:scaleType="centerCrop"
                     android:background="@color/arace_blue"
-                    android:contentDescription="Foto história 2" />
+                    android:contentDescription="@string/cad_foto_historia_2" />
 
                 <ImageView
                     android:id="@+id/ivHistoria3"
@@ -257,7 +280,7 @@
                     android:layout_weight="1"
                     android:scaleType="centerCrop"
                     android:background="@color/arace_blue"
-                    android:contentDescription="Foto história 3" />
+                    android:contentDescription="@string/cad_foto_historia_3" />
 
             </LinearLayout>
 
@@ -269,7 +292,7 @@
                 android:fontFamily="@font/google_sans_flex_variable_font"
                 android:paddingHorizontal="40dp"
                 android:paddingVertical="12dp"
-                android:text="Cadastrar produtor"
+                android:text="@string/cad_cadastrar_produtor"
                 android:textColor="@color/white"
                 android:textSize="18sp" />
 
@@ -279,7 +302,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:fontFamily="@font/google_sans_flex_variable_font"
-                android:text="Voltar"
+                android:text="@string/voltar"
                 android:textColor="@color/black"
                 android:textSize="16sp" />
 

@@ -116,9 +116,8 @@ class ExplorarProdutoViewmodel : ViewModel() {
             "nome" to produto.nome,
             "preco" to produto.preco,
             "imagens" to if (produto.imagens.isNotEmpty()) listOf(produto.imagens[0]) else emptyList<String>(),
-            // Denormalizado para o checkout agrupar "um Pix por produtor"
+            // Denormalizado para o checkout agrupar o pagamento por loja
             "produtorId" to produto.produtorId,
-            "chavePix" to produto.chavePix,
             "quantidade" to FieldValue.increment(1)
         )
 

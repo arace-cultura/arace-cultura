@@ -13,8 +13,5 @@ data class Produto(
     val descricao: String = "",
     val produtorId: String = "",
     val avaliacao: Double = 0.0,
-    val preco: Double = 0.0,
-    // Chave Pix do produtor responsável. Denormalizada no produto para que o
-    // checkout monte "um Pix por produtor" sem buscar a loja de cada item.
-    val chavePix: String = ""
+    val preco: Double = 0.0
 )

@@ -23,7 +23,7 @@
                 android:layout_marginBottom="24dp"
                 android:fontFamily="@font/google_sans_flex_variable_font"
                 android:gravity="center_horizontal"
-                android:text="Cadastro do produtor"
+                android:text="@string/cad_produtor_titulo"
                 android:textColor="@color/texto"
                 android:textSize="24sp"
                 android:textFontWeight="500" />
@@ -39,7 +39,7 @@
                 app:boxCornerRadiusTopStart="15dp"
                 app:boxStrokeColor="@color/arace_blue"
                 app:hintTextColor="@color/arace_blue"
-                android:hint="Razão Social">
+                android:hint="@string/cad_razao_social">
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etRazaoSocial"
                     android:layout_width="match_parent"
@@ -60,7 +60,7 @@
                 app:boxCornerRadiusTopStart="15dp"
                 app:boxStrokeColor="@color/arace_blue"
                 app:hintTextColor="@color/arace_blue"
-                android:hint="CNPJ / CPF">
+                android:hint="@string/cad_cnpj_cpf">
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etCnpj"
                     android:layout_width="match_parent"
@@ -81,7 +81,7 @@
                 app:boxCornerRadiusTopStart="15dp"
                 app:boxStrokeColor="@color/arace_blue"
                 app:hintTextColor="@color/arace_blue"
-                android:hint="Número de telefone">
+                android:hint="@string/cad_numero_telefone">
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etTelefone"
                     android:layout_width="match_parent"
@@ -99,7 +99,7 @@
                 android:fontFamily="@font/google_sans_flex_variable_font"
                 android:paddingHorizontal="40dp"
                 android:paddingVertical="12dp"
-                android:text="Próximo"
+                android:text="@string/proximo"
                 android:textColor="@color/white"
                 android:textSize="18sp" />
 
@@ -109,7 +109,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:fontFamily="@font/google_sans_flex_variable_font"
-                android:text="Voltar"
+                android:text="@string/voltar"
                 android:textColor="@color/black"
                 android:textSize="16sp" />
 

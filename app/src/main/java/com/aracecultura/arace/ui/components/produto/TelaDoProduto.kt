@@ -3,6 +3,7 @@ package com.aracecultura.arace.ui.components.produto
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -47,7 +48,8 @@ import com.aracecultura.arace.ui.theme.btColor
 @Composable
 fun TelaDoProduto(
     viewModel: TelaDoProdutoViewmodel,
-    onBackClick: () -> Unit = {}
+    onBackClick: () -> Unit = {},
+    onProdutorClick: (String) -> Unit = {}
 ) {
     Box(
         modifier = Modifier
@@ -173,10 +175,14 @@ fun TelaDoProduto(
                     }
                     Column(Modifier.padding(top = 20.dp).fillMaxWidth().weight(1f).padding(10.dp, 5.dp)){
                         // Produtor (loja) responsável: foto circular com borda
-                        // btColor + nome à direita
+                        // btColor + nome à direita. Clicável → perfil da loja
+                        // na visão do cliente (somente leitura).
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
+                                .clickable(enabled = produtoAtual.produtorId.isNotBlank()) {
+                                    onProdutorClick(produtoAtual.produtorId)
+                                }
                                 .background(bgDefault)
                                 .padding(horizontal = 15.dp),
                             verticalAlignment = Alignment.CenterVertically

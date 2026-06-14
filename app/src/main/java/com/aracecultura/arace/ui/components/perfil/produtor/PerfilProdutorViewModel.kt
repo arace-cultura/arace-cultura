@@ -27,19 +27,30 @@ class PerfilProdutorViewModel : ViewModel() {
     private val _uiState = MutableStateFlow(PerfilProdutorUiState(isLoading = true))
     val uiState: StateFlow<PerfilProdutorUiState> = _uiState.asStateFlow()
 
+    /** Perfil da loja vinculada à conta logada (visão do próprio produtor). */
     fun carregarPerfil(uid: String) {
         if (uid.isBlank()) {
             _uiState.value = PerfilProdutorUiState(errorMessage = "Usuario nao autenticado")
             return
         }
+        carregar { LojaRepository.resolverLojaId(uid) }
+    }
 
+    /** Perfil de uma loja específica pelo id (visão do cliente, somente leitura). */
+    fun carregarPerfilPorLoja(lojaId: String) {
+        if (lojaId.isBlank()) {
+            _uiState.value = PerfilProdutorUiState(errorMessage = "Loja nao encontrada")
+            return
+        }
+        carregar { lojaId }
+    }
+
+    private fun carregar(resolverLojaId: suspend () -> String?) {
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(isLoading = true, errorMessage = null)
             try {
                 val (produtor, produtos) = withContext(Dispatchers.IO) {
-                    // O perfil exibido é o da LOJA vinculada à conta, que pode
-                    // ser compartilhada entre várias contas
-                    val lojaId = LojaRepository.resolverLojaId(uid)
+                    val lojaId = resolverLojaId()
                         ?: return@withContext null to emptyList<Produto>()
 
                     val produtorSnapshot = db.collection("Produtores").document(lojaId).get().await()

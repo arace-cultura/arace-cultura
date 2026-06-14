@@ -66,6 +66,7 @@ class CadastroProdutorTela3 : Fragment(R.layout.fragment_cadastro_produtor_tela3
         val etTipoArt  = view.findViewById<TextInputEditText>(R.id.etTipoArtesanato)
         val acCategoria = view.findViewById<AutoCompleteTextView>(R.id.acCategoria)
         val etHistoria = view.findViewById<TextInputEditText>(R.id.etHistoria)
+        val etChavePix = view.findViewById<TextInputEditText>(R.id.etChavePix)
         val etSenhaLoja = view.findViewById<TextInputEditText>(R.id.etSenhaLoja)
 
         // Pré-preenche a partir do rascunho compartilhado
@@ -75,6 +76,7 @@ class CadastroProdutorTela3 : Fragment(R.layout.fragment_cadastro_produtor_tela3
             etTipoArt.setText(d.tipoArtesanato)
             acCategoria.setText(d.categoriaProduto, false)
             etHistoria.setText(d.historia)
+            etChavePix.setText(d.chavePix)
         }
         etSenhaLoja.setText(viewModel.senhaLoja.value)
 
@@ -123,7 +125,8 @@ class CadastroProdutorTela3 : Fragment(R.layout.fragment_cadastro_produtor_tela3
                     endereco         = etEndereco.text.toString(),
                     tipoArtesanato   = etTipoArt.text.toString(),
                     categoriaProduto = acCategoria.text.toString(),
-                    historia         = etHistoria.text.toString()
+                    historia         = etHistoria.text.toString(),
+                    chavePix         = etChavePix.text.toString().trim()
                 )
             }
             viewModel.atualizarSenha(etSenhaLoja.text.toString())
