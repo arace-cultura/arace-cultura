@@ -186,7 +186,7 @@ private fun ControlesQuantidade(
 
         BotaoControle(onClick = onDecreaseClick) {
             Icon(
-                painter = painterResource(R.drawable.ic_deletar),
+                painter = painterResource(R.drawable.ic_menos),
                 contentDescription = stringResource(R.string.cd_diminuir_qtd),
                 tint = Color.White,
                 modifier = Modifier.size(18.dp)

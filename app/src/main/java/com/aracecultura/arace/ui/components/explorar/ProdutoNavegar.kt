@@ -101,7 +101,7 @@ fun ProdutoNavegar (
                 modifier = Modifier
                     .padding(top = 8.dp)
                     .width(screenWidth * 0.5f)
-                    .height(30.dp)
+                    .height(35.dp)
             )
 
         }
