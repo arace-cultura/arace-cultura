@@ -89,10 +89,6 @@ fun EditarPerfilUsuario(
 
         Column(modifier = Modifier.fillMaxSize().verticalScroll(scrollState)) {
 
-            // Bloco superior SEM cascata: o banner tem altura PRÓPRIA e a foto
-            // sobrepõe a borda inferior dele. A altura do hero é só banner +
-            // metade da foto — sem vão vazio. Ajuste os dois multiplicadores
-            // de forma independente (banner e foto não se arrastam mais juntos).
             val alturaBanner = screenWidth * 0.45f
             val tamanhoFoto = screenWidth * 0.34f
             Box(
@@ -205,7 +201,6 @@ fun EditarPerfilUsuario(
                     color = Color(0xFF1F2937)
                 )
 
-                // OutlinedTextField padrão
                 OutlinedTextField(
                     value = nomeInput,
                     onValueChange = { nomeInput = it },

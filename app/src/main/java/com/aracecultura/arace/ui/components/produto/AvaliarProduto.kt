@@ -42,8 +42,6 @@ fun BotaoAvaliarProduto(
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    // Só o botão "Avaliar"; a seleção de nota é feita no diálogo. A fileira de
-    // estrelas vazias daqui era redundante com as estrelas da média logo acima.
     Column(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally

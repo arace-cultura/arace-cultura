@@ -336,8 +336,6 @@ private fun PerfilProdutorContent(
     }
 }
 
-// Botão "editar produtos": pílula laranja com o ícone (ic_editar_produto) e a
-// legenda abaixo. Leva à tela de edição de produtos.
 @Composable
 private fun BotaoEditarProdutos(onClick: () -> Unit) {
     Column(

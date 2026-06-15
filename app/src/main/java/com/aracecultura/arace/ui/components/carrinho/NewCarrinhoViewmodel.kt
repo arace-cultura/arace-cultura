@@ -15,7 +15,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.combine
@@ -31,10 +30,8 @@ class NewCarrinhoViewModel : ViewModel() {
     // null = ainda carregando (distingue de carrinho vazio)
     private val _itens = MutableStateFlow<List<ItemCarrinho>?>(null)
 
-    // Ordenação local do carrinho (Nome / Preço). Antes vivia num objeto global
-    // (OrderBy.Ordem); agora é estado por-ViewModel, com o ciclo de vida da tela.
+    // Ordenação local do carrinho (Nome / Preço)
     private val _ordenacao = MutableStateFlow("nome")
-    val ordenacao: StateFlow<String> = _ordenacao.asStateFlow()
 
     // Estado da UI: combina os itens (tempo-real) com a ordenação escolhida.
     val estado: StateFlow<EstadoCarrinho> = combine(_itens, _ordenacao) { itens, ordem ->

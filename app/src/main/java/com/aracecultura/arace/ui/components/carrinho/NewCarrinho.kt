@@ -120,8 +120,6 @@ private fun ListaItens(
     onDiminuirQuantidade: (ItemCarrinho) -> Unit,
     onRemoverItem: (ItemCarrinho) -> Unit
 ) {
-    // Skeleton fora da LazyColumn: evita trocar o dataset (keys skeleton↔ids)
-    // dentro da mesma lista, o que participa da aritmética de âncora
     if (estado is EstadoCarrinho.Carregando) {
         Column(modifier = modifier.padding(top = 56.dp, start = 16.dp, end = 16.dp)) {
             repeat(3) {
@@ -135,16 +133,9 @@ private fun ListaItens(
 
     val itens = (estado as EstadoCarrinho.Pronto).itens
 
-    // O espaço do topo (botão Ordenar em overlay) é contentPadding, não um
-    // item: um item-fantasma no índice 0 entra no cálculo de âncora do lazy
-    // layout e estava implicado nos saltos de scroll pós-mudança de estado
     LazyColumn(
         modifier = modifier,
         state = listState,
-        // bottom=176dp: a "correção" interna do lazy layout proíbe repouso
-        // nos últimos ~441px (168dp) da lista — exatamente a altura das
-        // barras abaixo dela. Com o padding, o último cartão fica totalmente
-        // visível antes dessa fronteira e a correção só consome espaço vazio
         contentPadding = PaddingValues(start = 16.dp, end = 16.dp, top = 56.dp, bottom = 30.dp)
     ) {
         items(

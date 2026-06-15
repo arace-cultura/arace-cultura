@@ -67,9 +67,6 @@ fun ProdutoCardItem(
             if (produto == null) {
                 CarregamentoContainer(modifier = imagemModifier)
             } else {
-                // AsyncImage (sem subcomposição) no lugar de SubcomposeAsyncImage:
-                // a subcomposição durante a medição da LazyColumn estava
-                // envolvida na reescrita da posição de scroll a cada clique
                 AsyncImage(
                     model = produto.imagens.firstOrNull(),
                     contentDescription = produto.nome,

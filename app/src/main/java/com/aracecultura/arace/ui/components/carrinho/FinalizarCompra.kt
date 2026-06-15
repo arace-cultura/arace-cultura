@@ -170,8 +170,6 @@ fun CheckoutPaymentScreen(
     }
 }
 
-// Cartão de pagamento de UMA loja: tabela de itens, total da loja, chave Pix
-// copiável (borda tracejada) e o botão que finaliza só o pagamento dela.
 @Composable
 private fun LojaCheckoutCard(
     loja: LojaCheckout,

@@ -117,11 +117,4 @@ class CadastroProdutorViewModel : ViewModel() {
         return bucket.publicUrl(caminhoSeguro)
     }
 
-    suspend fun isProdutor(uid: String): Boolean {
-        return try {
-            LojaRepository.resolverLojaId(uid) != null
-        } catch (e: Exception) {
-            false
-        }
-    }
 }

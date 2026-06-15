@@ -22,8 +22,6 @@ import com.aracecultura.arace.ui.components.AppButton
 import com.aracecultura.arace.ui.theme.bgDefault
 import com.aracecultura.arace.ui.theme.btColor
 
-// Ordenação do carrinho (sem filtro de categorias). As chaves batem com as do
-// Explorar: "nome", "preco_asc", "preco_desc".
 @Composable
 fun Ordenar(onSelecionar: (String) -> Unit) {
     var expanded by remember { mutableStateOf(false) }

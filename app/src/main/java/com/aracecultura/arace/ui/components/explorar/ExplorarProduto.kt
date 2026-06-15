@@ -214,7 +214,7 @@ private fun BoxScope.PainelFiltros(
 
     AnimatedVisibility(
         visible = visible,
-        // slideIn anima só a translação (GPU), sem re-medir o painel a cada frame
+        // slideIn anima só a translação, sem re-medir o painel a cada frame
         enter = slideInVertically(
             initialOffsetY = { -it },
             animationSpec = tween(durationMillis = 300)

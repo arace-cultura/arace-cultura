@@ -24,9 +24,6 @@ class TelaHomeViewmodel : ViewModel() {
         observarProdutos()
     }
 
-    // (A) Tempo real: snapshot listener no lugar do get() único, então a Home
-    // mostra produtos novos/editados assim que o Firestore muda, sem depender
-    // de a tela ser recriada para re-consultar.
     private fun observarProdutos() {
         viewModelScope.launch {
             produtosFlow()

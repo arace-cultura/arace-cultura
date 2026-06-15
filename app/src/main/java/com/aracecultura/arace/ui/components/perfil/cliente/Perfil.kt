@@ -55,12 +55,7 @@ fun PerfilCliente(
             alpha = 0.3f
         )
 
-        // verticalScroll dá altura "infinita": weight no nível do scroll não
-        // distribui espaço e o conteúdo nunca transborda (não rola). Por isso o
-        // bloco superior tem altura FIXA (proporcional à tela) — weight só
-        // sobrevive lá dentro, onde a altura é limitada.
         Column(modifier = Modifier.fillMaxSize().verticalScroll(scrollState)) {
-
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -165,8 +160,7 @@ fun PerfilCliente(
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            // Seção de informações — altura natural (wrap) para o scroll
-            // funcionar; sem weight, que seria ignorado dentro do scroll.
+            // Seção de informações
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -196,7 +190,6 @@ fun PerfilCliente(
                 )
                 Spacer(modifier = Modifier.height(8.dp))
 
-                // --- BOTÃO SAIR ---
                 Text(
                     text = stringResource(R.string.sair),
                     fontSize = 18.sp,

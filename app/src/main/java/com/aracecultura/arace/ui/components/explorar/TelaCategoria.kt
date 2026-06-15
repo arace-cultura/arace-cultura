@@ -61,8 +61,6 @@ private fun BannerCategoria(
     categoria: String,
     onBack: () -> Unit
 ) {
-    // TODO(cores): banner verde provisório — trocar quando a paleta final
-    // de categorias for definida
     Box(
         modifier = Modifier
             .fillMaxWidth()

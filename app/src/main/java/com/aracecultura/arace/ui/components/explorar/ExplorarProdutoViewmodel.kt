@@ -57,10 +57,6 @@ class ExplorarProdutoViewmodel : ViewModel() {
         observarProdutos()
     }
 
-    // (A) Tempo real: em vez de um get() único (uma fotografia congelada na
-    // entrada da tela), um snapshot listener empurra a coleção Produtos sempre
-    // que ela muda — sua escrita ou a de outro membro da loja. O Explorar
-    // reflete na hora, sem refetch manual nem truque de navegação.
     private fun observarProdutos() {
         viewModelScope.launch {
             produtosFlow()
@@ -95,9 +91,7 @@ class ExplorarProdutoViewmodel : ViewModel() {
         }
     }
 
-    // Tela de categoria: fixa o filtro em uma única categoria. O painel de
-    // filtros dessa tela não expõe a seção de Categorias, então o conjunto
-    // permanece imutável durante a navegação.
+
     fun fixarCategoria(categoria: String) {
         _categoriasSelecionadas.value = setOf(categoria)
     }

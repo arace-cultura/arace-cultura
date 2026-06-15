@@ -56,7 +56,7 @@ fun ExpandingTextField(
         maxLines = Int.MAX_VALUE,
         modifier = modifier
             .fillMaxWidth(0.83f)
-            .heightIn(min = 56.dp) // <--- Define a altura mínima do Material Design
+            .heightIn(min = 56.dp) // Define a altura mínima
             .onFocusChanged { isFocused = it.isFocused }
             .clip(RoundedCornerShape(15.dp))
             .background(currentContainerColor)

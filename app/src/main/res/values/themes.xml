@@ -8,8 +8,6 @@
 
     <style name="Theme.Arace.Splash" parent="Theme.SplashScreen">
         <item name="windowSplashScreenBackground">@color/splash_background</item>
-        <!-- Foreground-only (não o ic_launcher inteiro): senão o plate de
-             fundo do ícone se fundiria ao splash_background e sumiria. -->
         <item name="windowSplashScreenAnimatedIcon">@drawable/ic_launcher_foreground</item>
         <item name="postSplashScreenTheme">@style/Theme.Arace</item>
     </style>

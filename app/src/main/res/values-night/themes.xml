@@ -1,9 +1,7 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- O app não tem tema escuro próprio: o modo noturno espelha o claro.
-         Sem estas linhas, o dark mode usava o statusBarColor default (roxo). -->
     <style name="Base.Theme.Arace" parent="Theme.Material3.Light.NoActionBar">
-        <item name="android:statusBarColor">@color/bg_default</item>
-        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:statusBarColor">@color/texto</item>
+        <item name="android:windowLightStatusBar">false</item>
         <item name="android:navigationBarColor">@color/bg_default</item>
     </style>
 </resources>

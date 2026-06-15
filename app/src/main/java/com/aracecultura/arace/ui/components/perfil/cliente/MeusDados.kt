@@ -59,7 +59,6 @@ fun MeusDados(
             .background(bgDefault)
             .verticalScroll(scrollState)
     ) {
-        // Header no padrão da TelaConfiguracoes
         Box(
             modifier = Modifier
                 .fillMaxWidth()

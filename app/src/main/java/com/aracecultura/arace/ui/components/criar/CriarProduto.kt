@@ -44,6 +44,7 @@ fun CriarProduto(
 ) {
     val context = LocalContext.current
     val mensagemCamposObrigatorios = stringResource(R.string.criar_campos_obrigatorios)
+    val mensagemSucesso = stringResource(R.string.criar_sucesso)
 
     var textName by remember { mutableStateOf("") }
     var textDesc1 by remember { mutableStateOf("") }
@@ -66,7 +67,7 @@ fun CriarProduto(
     LaunchedEffect(uiState) {
         when (uiState) {
             is ProdutoUiState.Success -> {
-                Toast.makeText(context, context.getString(R.string.criar_sucesso), Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, mensagemSucesso, Toast.LENGTH_SHORT).show()
                 viewModel.resetState()
                 selectedImageUri = null
                 textName = ""
@@ -104,8 +105,6 @@ fun CriarProduto(
                 .fillMaxSize()
                 .verticalScroll(scrollState)
         ) {
-            // Mesmo cabeçalho de "Descubra" e "Carrinho": GoogleSans (default
-            // do tema), 36sp, centralizado, fundo bgDefault. Sem quebra de linha.
             Text(
                 "Adicionar Produto",
                 fontSize = 36.sp,
@@ -274,7 +273,6 @@ fun CriarProduto(
 
                 Spacer(Modifier.height(20.dp))
 
-                // --- NOVO: Botão Adicionar reativo ao estado ---
                 if (uiState is ProdutoUiState.Loading) {
                     CircularProgressIndicator(color = btColor)
                 } else {
