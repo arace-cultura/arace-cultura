@@ -42,6 +42,10 @@ class Login : Fragment() {
         binding.loginBtn.setOnClickListener {
             this.login()
         }
+
+        binding.loginRecuperarSenha.setOnClickListener {
+            findNavController().navigate(R.id.action_login_to_recuperarSenha)
+        }
     }
 
     private fun login() {

@@ -62,17 +62,7 @@ fun ExplorarProduto(
         uid = uid,
         onNavigateToProduto = onNavigateToProduto,
         mostrarFiltroCategorias = true,
-        header = {
-            Text(
-                stringResource(R.string.explorar_titulo),
-                fontSize = 36.sp,
-                textAlign = TextAlign.Center,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(bgDefault)
-                    .padding(vertical = 10.dp)
-            )
-        }
+        header = { CabecalhoExplorar(viewmodel) }
     )
 }
 

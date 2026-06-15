@@ -4,7 +4,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.aracecultura.arace.data.model.Produto
 import com.aracecultura.arace.data.model.Produtor
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.SetOptions
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -121,8 +123,21 @@ class FinalizarCompraViewModel : ViewModel() {
         viewModelScope.launch {
             try {
                 withContext(Dispatchers.IO) {
-                    val col = db.collection("Carrinho").document(uid).collection("Produtos")
-                    loja.cartItemIds.forEach { id -> col.document(id).delete().await() }
+                    val carrinhoRef = db.collection("Carrinho").document(uid)
+                    val produtosRef = carrinhoRef.collection("Produtos")
+                    db.runBatch { batch ->
+                        loja.cartItemIds.forEach { id ->
+                            batch.delete(produtosRef.document(id))
+                        }
+                        batch.set(
+                            carrinhoRef,
+                            mapOf(
+                                "usuarioId" to uid,
+                                "atualizadoEm" to FieldValue.serverTimestamp()
+                            ),
+                            SetOptions.merge()
+                        )
+                    }.await()
                 }
             } catch (_: Exception) {
                 // Persistência offline reenvia quando voltar a conexão.

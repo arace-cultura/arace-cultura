@@ -125,6 +125,18 @@
                 android:textColor="@color/texto" />
         </com.google.android.material.textfield.TextInputLayout>
 
+        <TextView
+            android:id="@+id/loginRecuperarSenha"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"
+            android:fontFamily="@font/google_sans_flex_variable_font"
+            android:gravity="end"
+            android:paddingVertical="8dp"
+            android:text="@string/login_esqueci_senha"
+            android:textColor="@color/arace_blue"
+            android:textSize="15sp" />
+
         <Button
             android:id="@+id/loginBtn"
             android:layout_width="wrap_content"

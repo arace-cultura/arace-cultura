@@ -22,10 +22,15 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.text.Normalizer
+import java.util.Locale
 
 class ExplorarProdutoViewmodel : ViewModel() {
     private var db: FirebaseFirestore = Firebase.firestore
     private val _produtos = MutableStateFlow<List<Produto>>(emptyList())
+
+    private val _textoBusca = MutableStateFlow("")
+    val textoBusca: StateFlow<String> = _textoBusca
 
     private val _categoriasSelecionadas = MutableStateFlow<Set<String>>(emptySet())
     val categoriasSelecionadas: StateFlow<Set<String>> = _categoriasSelecionadas
@@ -37,14 +42,36 @@ class ExplorarProdutoViewmodel : ViewModel() {
     val isLoading: StateFlow<Boolean> = _isLoading
 
     val produtosFiltrados: StateFlow<List<Produto>> = combine(
-        _produtos, _categoriasSelecionadas, _ordenacao
-    ) { todos, categorias, ordem ->
-        val filtrados = if (categorias.isEmpty()) todos
-                        else todos.filter { p ->
-                            p.categorias.any { cat ->
-                                categorias.any { it.equals(cat.trim(), ignoreCase = true) }
-                            }
-                        }
+        _produtos, _categoriasSelecionadas, _ordenacao, _textoBusca
+    ) { todos, categorias, ordem, textoBusca ->
+        val filtradosPorCategoria = if (categorias.isEmpty()) todos
+        else todos.filter { produto ->
+            produto.categorias.any { categoriaProduto ->
+                categorias.any {
+                    it.equals(categoriaProduto.trim(), ignoreCase = true)
+                }
+            }
+        }
+
+        val termosBusca = textoBusca.normalizarParaBusca()
+            .split(' ')
+            .filter(String::isNotBlank)
+
+        val filtrados = if (termosBusca.isEmpty()) filtradosPorCategoria
+        else filtradosPorCategoria.filter { produto ->
+            val conteudoPesquisavel = buildString {
+                append(produto.nome)
+                append(' ')
+                append(produto.descricao)
+                append(' ')
+                append(produto.categorias.joinToString(" "))
+            }.normalizarParaBusca()
+
+            termosBusca.all { termo ->
+                conteudoPesquisavel.contains(termo)
+            }
+        }
+
         when (ordem) {
             "preco_asc" -> filtrados.sortedBy { it.preco }
             "preco_desc" -> filtrados.sortedByDescending { it.preco }
@@ -91,6 +118,9 @@ class ExplorarProdutoViewmodel : ViewModel() {
         }
     }
 
+    fun setTextoBusca(texto: String) {
+        _textoBusca.value = texto
+    }
 
     fun fixarCategoria(categoria: String) {
         _categoriasSelecionadas.value = setOf(categoria)
@@ -115,13 +145,30 @@ class ExplorarProdutoViewmodel : ViewModel() {
             "quantidade" to FieldValue.increment(1)
         )
 
-        db.collection("Carrinho")
-            .document(uid)
-            .collection("Produtos")
-            .document(produto.id)
-            .set(itemCarrinho, SetOptions.merge())
+        val carrinhoRef = db.collection("Carrinho").document(uid)
+        val produtoRef = carrinhoRef.collection("Produtos").document(produto.id)
+
+        db.runBatch { batch ->
+            batch.set(
+                carrinhoRef,
+                mapOf(
+                    "usuarioId" to uid,
+                    "atualizadoEm" to FieldValue.serverTimestamp()
+                ),
+                SetOptions.merge()
+            )
+            batch.set(produtoRef, itemCarrinho, SetOptions.merge())
+        }
             .addOnFailureListener { e ->
                 Log.e("Carrinho", "Erro ao adicionar produto", e)
             }
     }
 }
+
+private val marcasDiacriticas = "\\p{Mn}+".toRegex()
+
+private fun String.normalizarParaBusca(): String =
+    Normalizer.normalize(this, Normalizer.Form.NFD)
+        .replace(marcasDiacriticas, "")
+        .lowercase(Locale.ROOT)
+        .trim()

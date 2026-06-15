@@ -6,7 +6,9 @@ import androidx.lifecycle.viewModelScope
 import com.aracecultura.arace.data.model.ItemCarrinho
 import com.aracecultura.arace.data.model.Produto
 import com.google.firebase.Firebase
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.SetOptions
 import com.google.firebase.firestore.firestore
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.asExecutor
@@ -43,9 +45,26 @@ class NewCarrinhoViewModel : ViewModel() {
         if (uid.isBlank() || uid == uidObservado) return
         uidObservado = uid
         viewModelScope.launch {
+            registrarDocumentoCarrinho(uid)
             itensFlow(uid)
                 .catch { _itens.value = emptyList() }
                 .collect { _itens.value = it }
+        }
+    }
+
+    private suspend fun registrarDocumentoCarrinho(uid: String) {
+        try {
+            db.collection("Carrinho").document(uid)
+                .set(
+                    mapOf(
+                        "usuarioId" to uid,
+                        "atualizadoEm" to FieldValue.serverTimestamp()
+                    ),
+                    SetOptions.merge()
+                )
+                .await()
+        } catch (e: Exception) {
+            Log.e("Carrinho", "Erro ao registrar documento do carrinho", e)
         }
     }
 
@@ -87,9 +106,19 @@ class NewCarrinhoViewModel : ViewModel() {
     fun removerItem(item: ItemCarrinho, uid: String) {
         viewModelScope.launch {
             try {
-                db.collection("Carrinho").document(uid)
-                    .collection("Produtos").document(item.id)
-                    .delete().await()
+                val carrinhoRef = db.collection("Carrinho").document(uid)
+                val produtoRef = carrinhoRef.collection("Produtos").document(item.id)
+                db.runBatch { batch ->
+                    batch.delete(produtoRef)
+                    batch.set(
+                        carrinhoRef,
+                        mapOf(
+                            "usuarioId" to uid,
+                            "atualizadoEm" to FieldValue.serverTimestamp()
+                        ),
+                        SetOptions.merge()
+                    )
+                }.await()
             } catch (e: Exception) {
                 Log.e("Carrinho", "Erro ao remover item ${item.id}", e)
             }
@@ -103,9 +132,19 @@ class NewCarrinhoViewModel : ViewModel() {
         }
         viewModelScope.launch {
             try {
-                db.collection("Carrinho").document(uid)
-                    .collection("Produtos").document(item.id)
-                    .update("quantidade", novaQuantidade).await()
+                val carrinhoRef = db.collection("Carrinho").document(uid)
+                val produtoRef = carrinhoRef.collection("Produtos").document(item.id)
+                db.runBatch { batch ->
+                    batch.update(produtoRef, "quantidade", novaQuantidade)
+                    batch.set(
+                        carrinhoRef,
+                        mapOf(
+                            "usuarioId" to uid,
+                            "atualizadoEm" to FieldValue.serverTimestamp()
+                        ),
+                        SetOptions.merge()
+                    )
+                }.await()
             } catch (e: Exception) {
                 Log.e("Carrinho", "Erro ao alterar quantidade do item ${item.id}", e)
             }
