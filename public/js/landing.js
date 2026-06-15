@@ -1,180 +1,26 @@
-const ROTAS = {
-  produtos: '/arace-produtos',
-  carrinho: '/arace-carrinho',
-  favoritos: '/usuario/arace-favoritos',
-  perfil: '/usuario/arace-perfil',
-};
-
-const PRODUTOS_DESTAQUE = [
-  {
-    id: 'panela-barro',
-    nome: 'Panela de barro',
-    artesao: 'Espirito das Pedras',
-    categoria: 'ceramica',
-    preco: 245,
-    avaliacoes: 24,
-    estrelas: 4.5,
-    favorito: false,
-    cor: '#C1734A',
-  },
-  {
-    id: 'preguica-madeira',
-    nome: 'Preguica de machao',
-    artesao: 'Atelier Capixaba',
-    categoria: 'madeira',
-    preco: 290,
-    avaliacoes: 11,
-    estrelas: 4,
-    favorito: false,
-    cor: '#8F5E35',
-  },
-  {
-    id: 'panela-barro-2',
-    nome: 'Panela de barro n. 2',
-    artesao: 'Arte Local',
-    categoria: 'ceramica',
-    preco: 180,
-    avaliacoes: 38,
-    estrelas: 5,
-    favorito: true,
-    cor: '#D28A4D',
-  },
-  {
-    id: 'prato-barro',
-    nome: 'Prato de barro',
-    artesao: 'Casa do Barro',
-    categoria: 'ceramica',
-    preco: 170,
-    avaliacoes: 42,
-    estrelas: 5,
-    favorito: false,
-    cor: '#B45A3C',
-  },
-  {
-    id: 'bolsa-arace',
-    nome: 'Bolsa Arace',
-    artesao: 'Arte Arace',
-    categoria: 'pintura',
-    preco: 310,
-    avaliacoes: 19,
-    estrelas: 4.5,
-    favorito: false,
-    cor: '#25518f',
-  },
-  {
-    id: 'escultura-madeira',
-    nome: 'Escultura em madeira',
-    artesao: 'Madeira Capixaba',
-    categoria: 'madeira',
-    preco: 195,
-    avaliacoes: 3,
-    estrelas: 3,
-    favorito: false,
-    cor: '#478632',
-  },
-];
-
-const PRODUTORES_DESTAQUE = [
-  { nome: 'Espirito das Pedras', iniciais: 'EP', produtos: 12 },
-  { nome: 'Arte Arace', iniciais: 'AA', produtos: 8 },
-  { nome: 'Nativo Pottery', iniciais: 'NP', produtos: 21 },
-  { nome: 'Serra Pinturas', iniciais: 'SP', produtos: 5 },
-  { nome: 'Madeira Viva', iniciais: 'MV', produtos: 17 },
-  { nome: 'Joias Capixabas', iniciais: 'JC', produtos: 9 },
-];
-
-let produtosAtuais = [...PRODUTOS_DESTAQUE];
-
-function formatarMoeda(valor) {
-  return valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-}
-
-function escaparHTML(valor) {
-  return String(valor).replace(/[&<>"']/g, caractere => ({
-    '&': '&amp;',
-    '<': '&lt;',
-    '>': '&gt;',
-    '"': '&quot;',
-    "'": '&#039;',
-  }[caractere]));
-}
-
-function renderStars(nota) {
-  return [1, 2, 3, 4, 5].map(indice => {
-    const icon = indice <= Math.floor(nota)
-      ? 'star'
-      : indice - nota <= 0.5
-        ? 'star-half'
-        : 'star';
-    const apagada = indice > Math.ceil(nota) ? ' style="opacity:.3"' : '';
-    return `<i data-lucide="${icon}"${apagada}></i>`;
-  }).join('');
-}
-
-function produtoTemplate(produto) {
-  const favorito = window.AraceState ? window.AraceState.isFavorite(produto.id) : produto.favorito;
-  return `
-    <article class="produto" data-cat="${escaparHTML(produto.categoria)}" data-produto-id="${escaparHTML(produto.id)}">
-      <div class="produto-img" style="background:${escaparHTML(produto.cor)}">
-        <button class="fav ${favorito ? 'active' : ''}" type="button" aria-label="Favoritar produto">
-          <i data-lucide="heart"></i>
-        </button>
-      </div>
-      <div class="produto-info">
-        <span class="artesao">${escaparHTML(produto.artesao)}</span>
-        <a href="/produto/detalhes?id=${encodeURIComponent(produto.id)}" class="nome">${escaparHTML(produto.nome)}</a>
-        <div class="stars">
-          ${renderStars(produto.estrelas)}
-          <span>(${produto.avaliacoes})</span>
-        </div>
-        <div class="preco"><strong>${formatarMoeda(produto.preco)}</strong></div>
-        <button class="add-cart" type="button" data-produto-id="${escaparHTML(produto.id)}">
-          <i data-lucide="shopping-cart"></i> Adicionar ao carrinho
-        </button>
-      </div>
-    </article>`;
-}
-
-function renderProdutos(lista) {
-  const grid = document.getElementById('produtosGrid');
-  if (!grid) return;
-
-  grid.innerHTML = lista.map(produtoTemplate).join('');
-  lucide.createIcons();
-}
-
-function renderProdutores() {
-  const grid = document.getElementById('produtoresGrid');
-  if (!grid) return;
-
-  grid.innerHTML = PRODUTORES_DESTAQUE.map(produtor => `
-    <article class="produtor">
-      <div class="avatar">${escaparHTML(produtor.iniciais)}</div>
-      <span class="p-nome">${escaparHTML(produtor.nome)}</span>
-      <span class="p-qtd">${produtor.produtos} produtos</span>
-    </article>`).join('');
-}
-
-async function carregarProdutos() {
-  // Firestore/API: buscar produtos aqui e substituir PRODUTOS_DESTAQUE.
-  // Exemplo futuro: const snapshot = await getDocs(collection(db, 'produtos'));
-  // Campos esperados: {{nome_produto}}, {{preco_produto}}, {{imagem_produto}}, {{categoria_produto}}.
-  produtosAtuais = [...PRODUTOS_DESTAQUE];
-  renderProdutos(produtosAtuais);
+function produtoDoCard(card) {
+  return {
+    id: card.dataset.produtoId,
+    nome: card.dataset.nome,
+    artesao: card.dataset.artesao,
+    preco: Number(card.dataset.preco || 0),
+    categoria: card.dataset.categoria,
+    cor: card.dataset.cor || '#b5a898',
+  };
 }
 
 function configurarFiltros() {
+  const cards = Array.from(document.querySelectorAll('.produto'));
+
   document.querySelectorAll('.filter').forEach(btn => {
     btn.addEventListener('click', () => {
       document.querySelectorAll('.filter').forEach(item => item.classList.remove('active'));
       btn.classList.add('active');
 
       const filtro = btn.dataset.filter;
-      const lista = filtro === 'all'
-        ? produtosAtuais
-        : produtosAtuais.filter(produto => produto.categoria === filtro);
-
-      renderProdutos(lista);
+      cards.forEach(card => {
+        card.hidden = filtro !== 'all' && card.dataset.cat !== filtro;
+      });
     });
   });
 }
@@ -183,15 +29,19 @@ function configurarAcoesProdutos() {
   const grid = document.getElementById('produtosGrid');
   if (!grid) return;
 
+  grid.querySelectorAll('.produto').forEach(card => {
+    const fav = card.querySelector('.fav');
+    if (fav && window.AraceState?.isFavorite(card.dataset.produtoId)) {
+      fav.classList.add('active');
+    }
+  });
+
   grid.addEventListener('click', event => {
     const favorito = event.target.closest('.fav');
     if (favorito) {
       const card = favorito.closest('.produto');
-      const produto = produtosAtuais.find(item => item.id === card?.dataset.produtoId);
-      if (!produto) return;
-
       const ativo = window.AraceState
-        ? window.AraceState.toggleFavorite(produto)
+        ? window.AraceState.toggleFavorite(produtoDoCard(card))
         : !favorito.classList.contains('active');
       favorito.classList.toggle('active', ativo);
       return;
@@ -278,8 +128,6 @@ function configurarMapa() {
 
 document.addEventListener('DOMContentLoaded', () => {
   lucide.createIcons();
-  carregarProdutos();
-  renderProdutores();
   configurarFiltros();
   configurarAcoesProdutos();
   configurarHeroCarousel();
