@@ -18,30 +18,34 @@
 
     <p class="subtitle item-animado atraso-1">Comece a vender seus produtos</p>
 
-    <form id="formCadastro" action="/cadastro/produtor-loja" method="get" novalidate>
+    <?php if (session('erro')): ?>
+      <p class="erro-campo" style="display:block"><?= esc(session('erro')) ?></p>
+    <?php endif; ?>
+
+    <form id="formCadastro" action="/cadastro/produtores" method="post" novalidate>
 
       <div class="input-group-custom item-animado atraso-2">
-        <i data-lucide="store"></i> <input type="text" id="nome" placeholder="Nome da loja" required />
+        <i data-lucide="store"></i> <input type="text" id="nome" name="nomeLoja" placeholder="Nome da loja" required />
       </div>
 
       <div class="input-group-custom item-animado atraso-2">
         <i data-lucide="file-text"></i>
-        <input type="text" id="cnpj" placeholder="CNPJ (opcional)" />
+        <input type="text" id="cnpj" name="cnpj" placeholder="CNPJ (opcional)" />
       </div>
 
       <div class="input-group-custom item-animado atraso-3">
         <i data-lucide="mail"></i>
-        <input type="email" id="email" placeholder="E-mail comercial" required />
+        <input type="email" id="email" name="email" placeholder="E-mail comercial" required />
       </div>
 
       <div class="input-group-custom item-animado atraso-3">
         <i data-lucide="phone"></i>
-        <input type="tel" id="telefone" placeholder="Telefone / WhatsApp comercial" required />
+        <input type="tel" id="telefone" name="telefone" placeholder="Telefone / WhatsApp comercial" required />
       </div>
 
       <div class="input-group-custom item-animado atraso-4">
         <i data-lucide="tags"></i>
-        <select id="categoria" required>
+        <select id="categoria" name="categoria" required>
           <option value="" disabled selected>Categoria principal</option>
           <option value="artesanato">Artesanato</option>
           <option value="ceramica">Cerâmica</option>
@@ -53,22 +57,27 @@
 
       <div class="input-group-custom item-animado atraso-4">
         <i data-lucide="map-pin"></i>
-        <select id="distritos" required>
+        <select id="distritos" name="distritoId" required>
           <option value="" disabled selected>Distrito da loja</option>
+          <option value="vitoria">Vitoria</option>
+          <option value="vila-velha">Vila Velha</option>
+          <option value="serra">Serra</option>
+          <option value="cariacica">Cariacica</option>
+          <option value="guarapari">Guarapari</option>
         </select>
       </div>
       <span id="distritos-erro" class="erro-campo" style="display:none">Selecione um distrito</span>
 
       <div class="item-animado atraso-5">
         <label class="permanecer">
-          <input type="checkbox" id="termos" required />
+          <input type="checkbox" id="termos" name="termosAceitos" value="1" required />
           Aceito os <a href="#" target="_blank">termos de uso</a>
         </label>
 
         <button type="submit" class="btn-login">Criar conta da loja</button>
 
         <div class="links-rodape">
-          <a href="<?= url_to('auth_cadastro_producter_arace') ?>" class="voltar">Voltar</a>
+          <a href="/cadastro/produtora-arace" class="voltar">Voltar</a>
         </div>
       </div>
 
@@ -77,6 +86,5 @@
 
   <script src="https://unpkg.com/lucide@latest"></script>
   <script>lucide.createIcons();</script>
-  <script src="/js/cadastro-loja.js"></script>
 </body>
 </html>
