@@ -47,6 +47,7 @@ Vagrantfile
 firebase-credentials/
 *service-account*.json
 keyfile.json
+arace-cultura-firebase-adminsdk-fbsvc-e152abf953.json
 
 #-------------------------
 # Temporary Files

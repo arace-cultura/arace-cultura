@@ -101,10 +101,9 @@ final class AraceFirestore
 
     public function createCustomer(array $payload): array
     {
-        $payload['tipo']          = 'cliente';
-        $payload['createdAt']     = date(DATE_ATOM);
-        $payload['nome_cliente']  = $payload['nome'];
-        $payload['email_cliente'] = $payload['email'];
+        if (isset($payload['senha'])) {
+            $payload['senha'] = password_hash((string) $payload['senha'], PASSWORD_DEFAULT);
+        }
 
         return $this->entityPayload($this->collection(CustomerCollection::class)->add($payload));
     }
