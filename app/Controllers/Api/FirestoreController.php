@@ -36,11 +36,12 @@ final class FirestoreController extends ResourceController
     public function createCustomer(): ResponseInterface
     {
         $payload = $this->request->getJSON(true) ?? $this->request->getPost();
-        $payload = $this->cleanPayload($payload, ['nome', 'email', 'telefone', 'termosAceitos']);
+        $payload = $this->cleanPayload($payload, ['nome', 'email', 'senha']);
 
         if (! $this->validateData($payload, [
             'nome'  => 'required|min_length[2]|max_length[120]',
             'email' => 'required|valid_email',
+            'senha' => 'required|min_length[6]',
         ])) {
             return $this->failValidationErrors($this->validator->getErrors());
         }

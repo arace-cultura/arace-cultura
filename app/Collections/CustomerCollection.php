@@ -13,5 +13,6 @@ final class CustomerCollection extends Collection
     protected $validationRules = [
         'nome'  => 'required|min_length[2]|max_length[120]',
         'email' => 'required|valid_email',
+        'senha' => 'required',
     ];
 }

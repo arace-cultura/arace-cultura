@@ -22,21 +22,23 @@
       <p class="erro-campo" style="display:block"><?= esc(session('erro')) ?></p>
     <?php endif; ?>
 
+    <?php if (session('erros')): ?>
+      <ul class="erro-campo" style="display:block">
+        <?php foreach (session('erros') as $erro): ?>
+          <li><?= esc($erro) ?></li>
+        <?php endforeach; ?>
+      </ul>
+    <?php endif; ?>
+
     <form id="formCadastro" action="/cadastro/clientes" method="post" novalidate>
-  
       <div class="input-group-custom item-animado atraso-2">
         <i data-lucide="user"></i>
-        <input type="text" id="nome" name="nome" placeholder="Nome completo" required />
+        <input type="text" id="nome" name="nome" placeholder="Nome completo" value="<?= esc(old('nome')) ?>" required />
       </div>
 
       <div class="input-group-custom item-animado atraso-2">
         <i data-lucide="mail"></i>
-        <input type="email" id="email" name="email" placeholder="E-mail" required />
-      </div>
-
-      <div class="input-group-custom item-animado atraso-3">
-        <i data-lucide="phone"></i>
-        <input type="tel" id="telefone" name="telefone" placeholder="Telefone" />
+        <input type="email" id="email" name="email" placeholder="E-mail" value="<?= esc(old('email')) ?>" required />
       </div>
 
       <div class="input-group-custom item-animado atraso-3">
@@ -47,21 +49,7 @@
         </button>
       </div>
 
-      <div class="input-group-custom item-animado atraso-4">
-        <i data-lucide="lock-keyhole"></i>
-        <input type="password" id="confirmarSenha" name="confirmarSenha" placeholder="Confirmar senha" required />
-        <button type="button" class="toggle-senha" onclick="alternarSenha('confirmarSenha', 'icone-olho-2')">
-          <i id="icone-olho-2" data-lucide="eye"></i>
-        </button>
-      </div>
-
       <div class="item-animado atraso-5">
-        <label class="permanecer">
-          <input type="checkbox" id="termos" name="termosAceitos" value="1" required />
-          Aceito os <a href="#" target="_blank">termos de uso</a>
-        </label>
-        <span id="erro-senha" class="erro-campo" style="display:none">As senhas nao conferem</span>
-
         <button type="submit" class="btn-login">Criar conta</button>
 
         <div class="links-rodape">
@@ -74,6 +62,17 @@
 
   <script src="https://unpkg.com/lucide@latest"></script>
   <script>lucide.createIcons();</script>
-  <script src="/js/cadastro.js"></script>
+  <script>
+    function alternarSenha(campoId, iconeId) {
+      const campo = document.getElementById(campoId);
+      const icone = document.getElementById(iconeId);
+
+      if (!campo || !icone) return;
+
+      campo.type = campo.type === 'password' ? 'text' : 'password';
+      icone.setAttribute('data-lucide', campo.type === 'password' ? 'eye' : 'eye-off');
+      lucide.createIcons();
+    }
+  </script>
 </body>
 </html>
