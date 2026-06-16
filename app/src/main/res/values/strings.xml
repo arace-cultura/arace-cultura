@@ -62,6 +62,12 @@
     <string name="login_subtitulo">Leve parte desse lugar</string>
     <string name="login_entrar_titulo">Entrar no Aracê</string>
     <string name="login_botao_entrar">Entrar</string>
+    <string name="login_esqueci_senha">Esqueci minha senha</string>
+    <string name="recuperar_titulo">Recuperar conta</string>
+    <string name="recuperar_instrucao">Informe seu e-mail para receber o link de redefinição de senha.</string>
+    <string name="recuperar_botao">Enviar link</string>
+    <string name="recuperar_email_enviado">E-mail de recuperação enviado.</string>
+    <string name="erro_recuperar_senha">Não foi possível enviar o e-mail de recuperação.</string>
     <string name="cadastro_titulo">Comece no Aracê</string>
     <string name="cadastro_subtitulo">Cadastre-se nesse acervo capixaba</string>
     <string name="confirme_senha">Confirme sua senha</string>
@@ -159,6 +165,9 @@
     <string name="ordenar_nome">Nome</string>
     <string name="ordenar_preco">Preço</string>
     <string name="explorar_titulo">Descubra</string>
+    <string name="abrir_busca">Buscar produtos</string>
+    <string name="buscar_produtos">Buscar produtos...</string>
+    <string name="fechar_busca">Fechar busca</string>
     <string name="filtros">Filtros</string>
     <string name="ordenar_menor_preco">Menor preço</string>
     <string name="ordenar_maior_preco">Maior preço</string>

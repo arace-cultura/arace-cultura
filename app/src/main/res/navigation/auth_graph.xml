@@ -22,7 +22,17 @@
         android:id="@+id/login"
         android:name="com.aracecultura.arace.ui.auth.Login"
         android:label="fragment_login"
-        tools:layout="@layout/fragment_login" />
+        tools:layout="@layout/fragment_login">
+        <action
+            android:id="@+id/action_login_to_recuperarSenha"
+            app:destination="@id/recuperarSenha" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/recuperarSenha"
+        android:name="com.aracecultura.arace.ui.auth.RecuperarSenha"
+        android:label="fragment_recuperar_senha"
+        tools:layout="@layout/fragment_recuperar_senha" />
 
     <fragment
         android:id="@+id/cadastro"

@@ -2,6 +2,6 @@
     <style name="Base.Theme.Arace" parent="Theme.Material3.Light.NoActionBar">
         <item name="android:statusBarColor">@color/texto</item>
         <item name="android:windowLightStatusBar">false</item>
-        <item name="android:navigationBarColor">@color/bg_default</item>
+        <item name="android:navigationBarColor">@color/texto</item>
     </style>
 </resources>
