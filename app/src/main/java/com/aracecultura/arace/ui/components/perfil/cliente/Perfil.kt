@@ -39,11 +39,51 @@ fun PerfilCliente(
     val usuario by viewModel.usuario.collectAsState()
     val scrollState = rememberScrollState()
     val screenWidth = LocalConfiguration.current.screenWidthDp.dp
+    var showLogoutDialog by remember { mutableStateOf(false) }
 
     LaunchedEffect(uid) {
         if (uid.isNotBlank()) {
             viewModel.carregarDadosUsuario(uid)
         }
+    }
+
+    if (showLogoutDialog) {
+        AlertDialog(
+            onDismissRequest = { showLogoutDialog = false },
+            containerColor = Color(0xFFFAF7F2),
+            title = {
+                Text(
+                    text = stringResource(R.string.sair_conta_titulo),
+                    color = Color(0xFF2E2B27),
+                    fontWeight = FontWeight.Bold
+                )
+            },
+            text = {
+                Text(
+                    text = stringResource(R.string.sair_conta_msg),
+                    color = Color(0xFF7A7168)
+                )
+            },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        showLogoutDialog = false
+                        onLogoutClick()
+                    }
+                ) {
+                    Text(
+                        text = stringResource(R.string.sim_sair),
+                        color = Color(0xFFCE5A14),
+                        fontWeight = FontWeight.SemiBold
+                    )
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showLogoutDialog = false }) {
+                    Text(stringResource(R.string.voltar), color = Color(0xFF7A7168))
+                }
+            }
+        )
     }
 
     Box(Modifier.background(bgDefault)) {
@@ -196,7 +236,7 @@ fun PerfilCliente(
                     fontWeight = FontWeight.Medium,
                     color = Color.Black,
                     modifier = Modifier
-                        .clickable { onLogoutClick() }
+                        .clickable { showLogoutDialog = true }
                         .padding(8.dp) // Área de clique levemente maior
                 )
             }

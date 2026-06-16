@@ -24,11 +24,13 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -150,6 +152,7 @@ private fun ProdutoEditavelCard(
     }
     var imagemUri by remember(produto.id) { mutableStateOf<Uri?>(null) }
     var descricaoExpandida by remember(produto.id) { mutableStateOf(false) }
+    var showExcluirDialog by remember(produto.id) { mutableStateOf(false) }
 
     val picker = rememberLauncherForActivityResult(
         ActivityResultContracts.PickVisualMedia()
@@ -160,6 +163,45 @@ private fun ProdutoEditavelCard(
         unfocusedBorderColor = Laranja,
         cursorColor = Laranja
     )
+
+    if (showExcluirDialog) {
+        AlertDialog(
+            onDismissRequest = { showExcluirDialog = false },
+            containerColor = Color(0xFFFAF7F2),
+            title = {
+                Text(
+                    text = stringResource(R.string.excluir_produto_titulo),
+                    color = Color(0xFF2E2B27),
+                    fontWeight = FontWeight.Bold
+                )
+            },
+            text = {
+                Text(
+                    text = stringResource(R.string.excluir_produto_msg),
+                    color = Color(0xFF7A7168)
+                )
+            },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        showExcluirDialog = false
+                        onExcluir()
+                    }
+                ) {
+                    Text(
+                        text = stringResource(R.string.sim_excluir_produto),
+                        color = Color(0xFFCE5A14),
+                        fontWeight = FontWeight.SemiBold
+                    )
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showExcluirDialog = false }) {
+                    Text(stringResource(R.string.voltar), color = Color(0xFF7A7168))
+                }
+            }
+        )
+    }
 
     Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
 
@@ -211,7 +253,7 @@ private fun ProdutoEditavelCard(
                     .height(44.dp)
                     .clip(RoundedCornerShape(50))
                     .border(1.dp, Color.LightGray, RoundedCornerShape(50))
-                    .clickable { onExcluir() },
+                    .clickable { showExcluirDialog = true },
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Center
             ) {

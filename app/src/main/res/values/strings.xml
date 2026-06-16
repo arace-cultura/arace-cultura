@@ -83,12 +83,12 @@
     <string name="cad_endereco">Endereço</string>
     <string name="cad_tipo_artesanato">Tipo de Artesanato</string>
     <string name="cad_categoria_produto">Categoria de Produto</string>
-    <string name="cad_historia_loja">Historia da loja (opcional)</string>
+    <string name="cad_historia_loja">História da loja (opcional)</string>
     <string name="cad_chave_pix">Chave Pix</string>
     <string name="cad_pix_helper">Os clientes pagarão por aqui ao finalizar a compra</string>
     <string name="cad_senha_loja_helper">Outras contas usarão o nome e esta senha para entrar na loja</string>
     <string name="cad_selecionar_foto_loja">Selecionar foto da loja (opcional)</string>
-    <string name="cad_selecionar_fotos_historia">Selecionar fotos da historia (opcional)</string>
+    <string name="cad_selecionar_fotos_historia">Selecionar fotos da história (opcional)</string>
     <string name="cad_foto_historia_1">Foto história 1</string>
     <string name="cad_foto_historia_2">Foto história 2</string>
     <string name="cad_foto_historia_3">Foto história 3</string>
@@ -133,6 +133,9 @@
     <string name="editar_produtos_botao">editar produtos</string>
     <string name="editar_produtos_vazio">Nenhum produto cadastrado.</string>
     <string name="excluir_produto">Excluir produto</string>
+    <string name="excluir_produto_titulo">Excluir produto?</string>
+    <string name="excluir_produto_msg">Essa ação remove o produto da loja e não poderá ser desfeita.</string>
+    <string name="sim_excluir_produto">Sim, excluir</string>
     <string name="salvar_edicoes">Salvar edições</string>
     <string name="cd_recolher">Recolher</string>
     <string name="cd_expandir">Expandir</string>
@@ -225,4 +228,21 @@
     <string name="checkout_confirmacao">Confirmação</string>
     <string name="checkout_obrigado">Agradecemos a aquisição!</string>
     <string name="checkout_continue_comprando">Continue comprando</string>
+    <!-- Conta / saída -->
+    <string name="deletar_conta">Deletar conta</string>
+    <string name="cd_deletar_conta">Deletar conta</string>
+    <string name="deletar_conta_titulo">Deletar conta?</string>
+    <string name="deletar_conta_msg">Essa ação remove sua conta e não poderá ser desfeita.</string>
+    <string name="sim_deletar_conta">Sim, deletar</string>
+    <string name="sair_conta_titulo">Sair da conta?</string>
+    <string name="sair_conta_msg">Você voltará para a tela de entrada do Aracê.</string>
+    <string name="sim_sair">Sim, sair</string>
+    <string name="sair_loja">Sair da loja</string>
+    <string name="cd_sair_loja">Sair da loja</string>
+    <string name="sair_loja_titulo">Sair da loja?</string>
+    <string name="sair_loja_msg">Sua conta deixará de acessar esta loja como produtor.</string>
+    <string name="sim_sair_loja">Sim, sair</string>
+    <string name="erro_deletar_conta">Não foi possível deletar a conta.</string>
+    <string name="erro_deletar_conta_login_recente">Entre novamente e tente deletar a conta em seguida.</string>
+    <string name="erro_sair_loja">Não foi possível sair da loja.</string>
 </resources>

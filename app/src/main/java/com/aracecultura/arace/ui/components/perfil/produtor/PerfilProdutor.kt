@@ -15,11 +15,16 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -51,6 +56,7 @@ fun PerfilProdutor(
     viewModel: PerfilProdutorViewModel = viewModel(),
     onModoChanged: (Boolean) -> Unit = {},
     onEditarProdutos: () -> Unit = {},
+    onSairLojaClick: () -> Unit = {},
     onBack: (() -> Unit)? = null
 ) {
     val uiState by viewModel.uiState.collectAsState()
@@ -70,6 +76,7 @@ fun PerfilProdutor(
             somenteLeitura = somenteLeitura,
             onModoChanged = onModoChanged,
             onEditarProdutos = onEditarProdutos,
+            onSairLojaClick = onSairLojaClick,
             onBack = onBack
         )
     }
@@ -179,11 +186,52 @@ private fun PerfilProdutorContent(
     somenteLeitura: Boolean = false,
     onModoChanged: (Boolean) -> Unit = {},
     onEditarProdutos: () -> Unit = {},
+    onSairLojaClick: () -> Unit = {},
     onBack: (() -> Unit)? = null
 ) {
     val screenWidth = LocalConfiguration.current.screenWidthDp.dp
     val loja = produtor.nomeLoja.ifBlank { produtor.nomeCompleto }
     val nomeExibicao = loja.ifBlank { "Produtor" }
+    var showSairLojaDialog by remember { mutableStateOf(false) }
+
+    if (showSairLojaDialog) {
+        AlertDialog(
+            onDismissRequest = { showSairLojaDialog = false },
+            containerColor = Color(0xFFFAF7F2),
+            title = {
+                Text(
+                    text = stringResource(R.string.sair_loja_titulo),
+                    color = Color(0xFF2E2B27),
+                    fontWeight = FontWeight.Bold
+                )
+            },
+            text = {
+                Text(
+                    text = stringResource(R.string.sair_loja_msg),
+                    color = Color(0xFF7A7168)
+                )
+            },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        showSairLojaDialog = false
+                        onSairLojaClick()
+                    }
+                ) {
+                    Text(
+                        text = stringResource(R.string.sim_sair_loja),
+                        color = Color(0xFFCE5A14),
+                        fontWeight = FontWeight.SemiBold
+                    )
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showSairLojaDialog = false }) {
+                    Text(stringResource(R.string.voltar), color = Color(0xFF7A7168))
+                }
+            }
+        )
+    }
 
     LazyColumn(
         modifier = Modifier
@@ -246,6 +294,23 @@ private fun PerfilProdutorContent(
                         Icon(
                             painter = painterResource(R.drawable.ic_arrow_left),
                             contentDescription = stringResource(R.string.voltar),
+                            tint = Color.Black
+                        )
+                    }
+                } else if (!somenteLeitura) {
+                    Box(
+                        modifier = Modifier
+                            .padding(12.dp)
+                            .size(44.dp)
+                            .align(Alignment.TopStart)
+                            .clip(CircleShape)
+                            .background(bgDefault)
+                            .clickable { showSairLojaDialog = true },
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Icon(
+                            painter = painterResource(R.drawable.ic_log_out),
+                            contentDescription = stringResource(R.string.cd_sair_loja),
                             tint = Color.Black
                         )
                     }

@@ -28,9 +28,50 @@ import com.aracecultura.arace.R
 @Composable
 fun TelaConfiguracoes(
     onBackClick: () -> Unit = {},
-    onMeusDadosClick: () -> Unit = {}
+    onMeusDadosClick: () -> Unit = {},
+    onDeletarContaClick: () -> Unit = {}
 ) {
     val scrollState = rememberScrollState()
+    val showDeletarContaDialog = remember { mutableStateOf(false) }
+
+    if (showDeletarContaDialog.value) {
+        AlertDialog(
+            onDismissRequest = { showDeletarContaDialog.value = false },
+            containerColor = Color(0xFFFAF7F2),
+            title = {
+                Text(
+                    text = stringResource(R.string.deletar_conta_titulo),
+                    color = Color(0xFF2E2B27),
+                    fontWeight = FontWeight.Bold
+                )
+            },
+            text = {
+                Text(
+                    text = stringResource(R.string.deletar_conta_msg),
+                    color = Color(0xFF7A7168)
+                )
+            },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        showDeletarContaDialog.value = false
+                        onDeletarContaClick()
+                    }
+                ) {
+                    Text(
+                        text = stringResource(R.string.sim_deletar_conta),
+                        color = Color(0xFFCE5A14),
+                        fontWeight = FontWeight.SemiBold
+                    )
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showDeletarContaDialog.value = false }) {
+                    Text(stringResource(R.string.voltar), color = Color(0xFF7A7168))
+                }
+            }
+        )
+    }
 
     Column(
         modifier = Modifier
@@ -81,6 +122,14 @@ fun TelaConfiguracoes(
             onClick = onMeusDadosClick
         )
 
+        ConfiguracaoItem(
+            icon = painterResource(R.drawable.ic_deletar_conta),
+            text = stringResource(R.string.deletar_conta),
+            onClick = { showDeletarContaDialog.value = true },
+            iconTint = Color(0xFFCE5A14),
+            textColor = Color(0xFFCE5A14)
+        )
+
         Spacer(modifier = Modifier.height(32.dp))
     }
 }
@@ -89,7 +138,9 @@ fun TelaConfiguracoes(
 fun ConfiguracaoItem(
     icon: Painter,
     text: String,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    iconTint: Color = Color(0xFF4A7D59),
+    textColor: Color = Color.Black
 ) {
     Row(
         modifier = Modifier
@@ -108,7 +159,7 @@ fun ConfiguracaoItem(
             Icon(
                 painter = icon,
                 contentDescription = null,
-                tint = Color(0xFF4A7D59)
+                tint = iconTint
             )
         }
 
@@ -119,7 +170,7 @@ fun ConfiguracaoItem(
             text = text,
             fontSize = 18.sp,
             fontWeight = FontWeight.Medium,
-            color = Color.Black,
+            color = textColor,
             modifier = Modifier.weight(1f)
         )
 

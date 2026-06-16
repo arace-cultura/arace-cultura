@@ -131,6 +131,28 @@ object LojaRepository {
             .await()
     }
 
+    /** Remove o vínculo da conta atual com a loja, mantendo a loja cadastrada. */
+    suspend fun sairDaLoja(uid: String) {
+        if (uid.isBlank()) return
+        val lojaId = resolverLojaId(uid) ?: return
+
+        val lote = db.batch()
+        lote.set(
+            db.collection("Produtores").document(lojaId),
+            mapOf("membros" to FieldValue.arrayRemove(uid)),
+            SetOptions.merge()
+        )
+        lote.set(
+            db.collection("Usuarios").document(uid),
+            mapOf(
+                "lojaId" to FieldValue.delete(),
+                "isProdutor" to false
+            ),
+            SetOptions.merge()
+        )
+        lote.commit().await()
+    }
+
     private suspend fun vincularUsuario(uid: String, lojaId: String) {
         db.collection("Usuarios")
             .document(uid)
