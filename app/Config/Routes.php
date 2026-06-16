@@ -7,8 +7,8 @@ use CodeIgniter\Router\RouteCollection;
 // ============================================================================
 // 1. HOME / ENTRADA PRINCIPAL
 // ============================================================================
-// Define que a raiz do site abre o index que redireciona para a landing page
-$routes->view('/', 'main/index', ['as' => 'home']);
+// Define que a raiz do site abre a landing page
+$routes->get('/', 'LandingController::index', ['as' => 'home']);
 
 
 // ============================================================================
@@ -27,7 +27,7 @@ $routes->view('cadastro/produtora-arace', 'authentication/cadastro-producter-ara
 // ============================================================================
 // 3. PÁGINAS PRINCIPAIS DA LOJA (main/)
 // ============================================================================
-$routes->view('landing-page', 'main/arace-landing', ['as' => 'landing-page']);
+$routes->get('landing-page', 'LandingController::index', ['as' => 'landing-page']);
 $routes->view('arace-produtos', 'main/arace-produto', ['as' => 'arace_produtos']);
 $routes->view('produto/detalhes', 'main/arace-produto', ['as' => 'main_produto_detalhes']);
 $routes->view('pesquisa', 'main/arace-search', ['as' => 'main_pesquisa']);
@@ -62,3 +62,23 @@ $routes->view('produtor/perfil', 'user-producter/arace-producer-profile', ['as' 
 $routes->view('produtor/perfil-loja', 'user-producter/arace-producer-profile-loja', ['as' => 'produtor_perfil_loja']);
 $routes->view('produtor/configuracao', 'user-producter/arace-producer-config', ['as' => 'produtor_config']);
 $routes->view('produtor/configuracao-loja', 'user-producter/arace-producer-config-loja', ['as' => 'produtor_config_loja']);
+
+
+// ============================================================================
+// 6. CADASTROS
+// ============================================================================
+$routes->post('cadastro/clientes', 'RegistrationController::customer');
+$routes->post('cadastro/produtor/dono', 'RegistrationController::producerOwner');
+$routes->post('cadastro/produtores', 'RegistrationController::producerStore');
+
+
+// ============================================================================
+// 7. API FIRESTORE
+// ============================================================================
+$routes->group('api', static function ($routes) {
+    $routes->get('products', 'Api\FirestoreController::products');
+    $routes->get('products/(:segment)', 'Api\FirestoreController::product/$1');
+    $routes->get('producers', 'Api\FirestoreController::producers');
+    $routes->post('customers', 'Api\FirestoreController::createCustomer');
+    $routes->post('producers', 'Api\FirestoreController::createProducer');
+});

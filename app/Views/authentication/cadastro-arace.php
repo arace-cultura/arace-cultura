@@ -18,26 +18,30 @@
 
     <p class="subtitle item-animado atraso-1">Crie sua conta</p>
 
-    <form id="formCadastro" novalidate>
+    <?php if (session('erro')): ?>
+      <p class="erro-campo" style="display:block"><?= esc(session('erro')) ?></p>
+    <?php endif; ?>
+
+    <form id="formCadastro" action="/cadastro/clientes" method="post" novalidate>
   
       <div class="input-group-custom item-animado atraso-2">
         <i data-lucide="user"></i>
-        <input type="text" id="nome" placeholder="Nome completo" required />
+        <input type="text" id="nome" name="nome" placeholder="Nome completo" required />
       </div>
 
       <div class="input-group-custom item-animado atraso-2">
         <i data-lucide="mail"></i>
-        <input type="email" id="email" placeholder="E-mail" required />
+        <input type="email" id="email" name="email" placeholder="E-mail" required />
       </div>
 
       <div class="input-group-custom item-animado atraso-3">
         <i data-lucide="phone"></i>
-        <input type="tel" id="telefone" placeholder="Telefone" />
+        <input type="tel" id="telefone" name="telefone" placeholder="Telefone" />
       </div>
 
       <div class="input-group-custom item-animado atraso-3">
         <i data-lucide="lock"></i>
-        <input type="password" id="senha" placeholder="Senha" required />
+        <input type="password" id="senha" name="senha" placeholder="Senha" required />
         <button type="button" class="toggle-senha" onclick="alternarSenha('senha', 'icone-olho-1')">
           <i id="icone-olho-1" data-lucide="eye"></i>
         </button>
@@ -45,7 +49,7 @@
 
       <div class="input-group-custom item-animado atraso-4">
         <i data-lucide="lock-keyhole"></i>
-        <input type="password" id="confirmarSenha" placeholder="Confirmar senha" required />
+        <input type="password" id="confirmarSenha" name="confirmarSenha" placeholder="Confirmar senha" required />
         <button type="button" class="toggle-senha" onclick="alternarSenha('confirmarSenha', 'icone-olho-2')">
           <i id="icone-olho-2" data-lucide="eye"></i>
         </button>
@@ -53,11 +57,12 @@
 
       <div class="item-animado atraso-5">
         <label class="permanecer">
-          <input type="checkbox" id="termos" required />
+          <input type="checkbox" id="termos" name="termosAceitos" value="1" required />
           Aceito os <a href="#" target="_blank">termos de uso</a>
         </label>
+        <span id="erro-senha" class="erro-campo" style="display:none">As senhas nao conferem</span>
 
-        <button type="submit" class="btn-login"><a href="/usuario/arace-perfil">Criar conta</a></button>
+        <button type="submit" class="btn-login">Criar conta</button>
 
         <div class="links-rodape">
           <a href="login" class="esqueceu">Já tenho uma conta</a>
