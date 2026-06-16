@@ -8,14 +8,18 @@ final class RegistrationController extends BaseController
 {
     public function customer()
     {
-        $payload = $this->request->getPost(['nome', 'email', 'telefone']);
-        $payload['termosAceitos'] = (bool) $this->request->getPost('termosAceitos');
+        $payload = $this->request->getPost(['nome', 'email', 'senha']);
 
         if (! $this->validateData($payload, [
             'nome'  => 'required|min_length[2]|max_length[120]',
             'email' => 'required|valid_email',
+            'senha' => 'required|min_length[6]',
         ])) {
-            return redirect()->back()->withInput()->with('erro', 'Confira os dados do cadastro.');
+            return redirect()
+                ->back()
+                ->withInput()
+                ->with('erro', 'Confira os dados do cadastro.')
+                ->with('erros', $this->validator->getErrors());
         }
 
         try {
