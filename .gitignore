@@ -44,6 +44,9 @@ $RECYCLE.BIN/
 .env
 .vagrant
 Vagrantfile
+firebase-credentials/
+*service-account*.json
+keyfile.json
 
 #-------------------------
 # Temporary Files
