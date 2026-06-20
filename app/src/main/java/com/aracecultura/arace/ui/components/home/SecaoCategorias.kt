@@ -36,7 +36,9 @@ private val visuais: Map<String, VisualCategoria> = mapOf(
 private val visualFallback = VisualCategoria(btColor, R.drawable.ic_artesanato)
 
 @Composable
-fun SecaoCategorias() {
+fun SecaoCategorias(
+    onCategoriaClick: (String) -> Unit = {}
+) {
     Column(
         modifier = Modifier
             .wrapContentHeight()
@@ -54,7 +56,8 @@ fun SecaoCategorias() {
                         visual.cor,
                         visual.icone,
                         categoria,
-                        modifier = Modifier.weight(1f)
+                        modifier = Modifier.weight(1f),
+                        onClick = { onCategoriaClick(categoria) }
                     )
                 }
                 // Mantém o alinhamento quando a última linha não está completa

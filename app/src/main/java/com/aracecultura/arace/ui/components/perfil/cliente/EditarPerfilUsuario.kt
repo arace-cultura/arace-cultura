@@ -19,15 +19,20 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import com.aracecultura.arace.R
+import com.aracecultura.arace.ui.components.AppButton
 import com.aracecultura.arace.ui.theme.bgDefault
+import com.aracecultura.arace.ui.theme.btColor
 
 @Composable
 fun EditarPerfilUsuario(
@@ -36,12 +41,21 @@ fun EditarPerfilUsuario(
     onVoltarClick: () -> Unit = {}
 ) {
     val context = LocalContext.current
+    val mensagemPreenchaSenhas = stringResource(R.string.preencha_senhas)
+    val mensagemSenhaAtualIncorreta = stringResource(R.string.senha_atual_incorreta)
     val usuario by viewModel.usuario.collectAsState()
+    val produtor by viewModel.produtor.collectAsState()
     val scrollState = rememberScrollState()
+    val screenWidth = LocalConfiguration.current.screenWidthDp.dp
 
     var nomeInput by remember { mutableStateOf("") }
     var novaFotoUri by remember { mutableStateOf<Uri?>(null) }
     var novoBannerUri by remember { mutableStateOf<Uri?>(null) }
+
+    // Troca de senha da loja (só para contas produtoras)
+    var senhaAtual by remember { mutableStateOf("") }
+    var senhaNova by remember { mutableStateOf("") }
+    var erroSenha by remember { mutableStateOf<String?>(null) }
 
     val fotoPicker = rememberLauncherForActivityResult(
         ActivityResultContracts.PickVisualMedia()
@@ -54,6 +68,7 @@ fun EditarPerfilUsuario(
     LaunchedEffect(uid) {
         if (uid.isNotBlank()) {
             viewModel.carregarDadosUsuario(uid)
+            viewModel.carregarDadosProdutor(uid)
         }
     }
 
@@ -74,48 +89,46 @@ fun EditarPerfilUsuario(
 
         Column(modifier = Modifier.fillMaxSize().verticalScroll(scrollState)) {
 
-            // Bloco Superior
+            val alturaBanner = screenWidth * 0.45f
+            val tamanhoFoto = screenWidth * 0.34f
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .weight(2f)
+                    .height(alturaBanner + tamanhoFoto / 2)
             ) {
-                Column(Modifier.fillMaxSize()) {
-                    // Banner: toque para trocar
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .weight(3f)
-                            .background(Color(0xFFD66027))
-                            .clickable {
-                                bannerPicker.launch(
-                                    PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
-                                )
-                            }
-                    ) {
-                        val bannerModel: Any? = novoBannerUri ?: usuario.bannerUrl.ifBlank { null }
-                        if (bannerModel != null) {
-                            AsyncImage(
-                                model = bannerModel,
-                                contentDescription = "Banner do perfil",
-                                contentScale = ContentScale.Crop,
-                                modifier = Modifier.fillMaxSize()
+                // Banner: toque para trocar. Scrim 0.3 + ícone de edição.
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(alturaBanner)
+                        .align(Alignment.TopCenter)
+                        .background(Color(0xFFD66027))
+                        .clickable {
+                            bannerPicker.launch(
+                                PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
                             )
-                        }
-                        Text(
-                            text = "Toque para alterar o banner",
-                            fontSize = 12.sp,
-                            color = Color.White,
-                            modifier = Modifier
-                                .align(Alignment.BottomEnd)
-                                .background(
-                                    Color.Black.copy(alpha = 0.35f),
-                                    RoundedCornerShape(topStart = 8.dp)
-                                )
-                                .padding(horizontal = 10.dp, vertical = 4.dp)
+                        },
+                    contentAlignment = Alignment.Center
+                ) {
+                    val bannerModel: Any? = novoBannerUri ?: usuario.bannerUrl.ifBlank { null }
+                    if (bannerModel != null) {
+                        AsyncImage(
+                            model = bannerModel,
+                            contentDescription = stringResource(R.string.cd_banner_perfil),
+                            contentScale = ContentScale.Crop,
+                            modifier = Modifier.fillMaxSize()
                         )
                     }
-                    Spacer(Modifier.weight(4f))
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .background(Color.Black.copy(alpha = 0.3f))
+                    )
+                    Image(
+                        painter = painterResource(R.drawable.ic_editar_imagem),
+                        contentDescription = stringResource(R.string.cd_alterar_banner),
+                        modifier = Modifier.size(56.dp)
+                    )
                 }
 
                 // Botão de Voltar
@@ -130,17 +143,16 @@ fun EditarPerfilUsuario(
                 ) {
                     Icon(
                         painter = painterResource(R.drawable.ic_arrow_left),
-                        contentDescription = "Voltar",
+                        contentDescription = stringResource(R.string.voltar),
                         tint = Color.White
                     )
                 }
 
-                // Foto de perfil centralizada: toque para trocar
+                // Foto: sobrepõe a borda inferior do banner. Scrim 0.3 + ícone.
                 Box(
                     modifier = Modifier
-                        .size(140.dp)
-                        .align(Alignment.Center)
-                        .offset(y = 20.dp)
+                        .size(tamanhoFoto)
+                        .align(Alignment.BottomCenter)
                         .clip(CircleShape)
                         .background(Color.Gray)
                         .clickable {
@@ -154,44 +166,45 @@ fun EditarPerfilUsuario(
                     if (fotoModel != null) {
                         AsyncImage(
                             model = fotoModel,
-                            contentDescription = "Foto de perfil",
+                            contentDescription = stringResource(R.string.cd_foto_perfil),
                             contentScale = ContentScale.Crop,
                             modifier = Modifier.fillMaxSize()
                         )
-                    } else {
-                        Text(
-                            text = "Toque para\nadicionar foto",
-                            fontSize = 13.sp,
-                            color = Color.White,
-                            lineHeight = 16.sp
-                        )
                     }
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .background(Color.Black.copy(alpha = 0.3f))
+                    )
+                    Image(
+                        painter = painterResource(R.drawable.ic_editar_imagem),
+                        contentDescription = stringResource(R.string.cd_alterar_foto_perfil),
+                        modifier = Modifier.size(48.dp)
+                    )
                 }
             }
 
-            Spacer(modifier = Modifier.height(40.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
 
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .weight(3f)
                     .background(bgDefault)
                     .padding(20.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 Text(
-                    text = "Alterar Informações",
+                    text = stringResource(R.string.alterar_informacoes),
                     fontSize = 22.sp,
                     fontWeight = FontWeight.Medium,
                     color = Color(0xFF1F2937)
                 )
 
-                // OutlinedTextField padrão
                 OutlinedTextField(
                     value = nomeInput,
                     onValueChange = { nomeInput = it },
-                    label = { Text("Nome Completo") },
+                    label = { Text(stringResource(R.string.label_nome_completo)) },
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(8.dp)
                 )
@@ -201,40 +214,101 @@ fun EditarPerfilUsuario(
                     value = usuario.email,
                     onValueChange = {},
                     enabled = false,
-                    label = { Text("E-mail (Não alterável)") },
+                    label = { Text(stringResource(R.string.label_email_nao_alteravel)) },
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(8.dp)
                 )
 
-                Spacer(modifier = Modifier.weight(1f))
-
-                // Botão Salvar
-                Button(
-                    onClick = {
-                        viewModel.salvarEdicaoPerfil(
-                            context = context,
-                            novoNome = nomeInput,
-                            uid = uid,
-                            novaFotoUri = novaFotoUri,
-                            novoBannerUri = novoBannerUri,
-                            onSucesso = onVoltarClick
-                        )
-                    },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(50.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = Color(0xFFD66027)
-                    ),
-                    shape = RoundedCornerShape(8.dp)
-                ) {
+                // Troca de senha da loja — só para contas produtoras
+                if (produtor != null) {
                     Text(
-                        text = "Salvar Alterações",
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = Color.White
+                        text = stringResource(R.string.senha_loja),
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Medium,
+                        color = Color(0xFF1F2937)
+                    )
+                    Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                        OutlinedTextField(
+                            value = senhaAtual,
+                            onValueChange = { senhaAtual = it; erroSenha = null },
+                            label = { Text(stringResource(R.string.label_senha_atual)) },
+                            visualTransformation = PasswordVisualTransformation(),
+                            isError = erroSenha != null,
+                            singleLine = true,
+                            modifier = Modifier.fillMaxWidth(),
+                            shape = RoundedCornerShape(8.dp)
+                        )
+                        if (erroSenha != null) {
+                            Text(
+                                text = erroSenha!!,
+                                color = Color.Red,
+                                fontSize = 13.sp,
+                                modifier = Modifier.padding(start = 4.dp)
+                            )
+                        }
+                    }
+                    OutlinedTextField(
+                        value = senhaNova,
+                        onValueChange = { senhaNova = it },
+                        label = { Text(stringResource(R.string.label_nova_senha)) },
+                        visualTransformation = PasswordVisualTransformation(),
+                        singleLine = true,
+                        modifier = Modifier.fillMaxWidth(),
+                        shape = RoundedCornerShape(8.dp)
                     )
                 }
+
+                Spacer(modifier = Modifier.height(24.dp))
+
+                // Botão Salvar — se os campos de senha estiverem preenchidos,
+                // a troca de senha é validada antes de salvar o resto.
+                AppButton(
+                    text = stringResource(R.string.salvar_alteracoes),
+                    onClick = {
+                        erroSenha = null
+                        val querTrocarSenha = senhaAtual.isNotBlank() || senhaNova.isNotBlank()
+                        when {
+                            querTrocarSenha && (senhaAtual.isBlank() || senhaNova.isBlank()) -> {
+                                erroSenha = mensagemPreenchaSenhas
+                            }
+                            querTrocarSenha -> {
+                                viewModel.alterarSenhaLoja(
+                                    uid = uid,
+                                    senhaAtual = senhaAtual,
+                                    senhaNova = senhaNova,
+                                    onSucesso = {
+                                        viewModel.salvarEdicaoPerfil(
+                                            context = context,
+                                            novoNome = nomeInput,
+                                            uid = uid,
+                                            novaFotoUri = novaFotoUri,
+                                            novoBannerUri = novoBannerUri,
+                                            onSucesso = onVoltarClick
+                                        )
+                                    },
+                                    onSenhaIncorreta = { erroSenha = mensagemSenhaAtualIncorreta },
+                                    onErro = { erroSenha = it }
+                                )
+                            }
+                            else -> {
+                                viewModel.salvarEdicaoPerfil(
+                                    context = context,
+                                    novoNome = nomeInput,
+                                    uid = uid,
+                                    novaFotoUri = novaFotoUri,
+                                    novoBannerUri = novoBannerUri,
+                                    onSucesso = onVoltarClick
+                                )
+                            }
+                        }
+                    },
+                    textColor = Color.White,
+                    containerColor = btColor,
+                    fontSize = 16.sp,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(50.dp)
+                )
             }
         }
     }

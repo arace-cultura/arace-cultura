@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import com.aracecultura.arace.R
 import com.aracecultura.arace.ui.components.home.TelaHome
 import com.aracecultura.arace.ui.theme.AraceTheme
 
@@ -32,6 +33,10 @@ class HomePageFragment : Fragment() {
                         val action = HomePageFragmentDirections
                             .actionHomePageToProdutoFragment(produtoId)
                         findNavController().navigate(action)
+                    },
+                    onCategoriaClick = { categoria ->
+                        val bundle = Bundle().apply { putString("categoria", categoria) }
+                        findNavController().navigate(R.id.action_homePage_to_categoria, bundle)
                     }
                 )
             }

@@ -28,6 +28,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -66,9 +67,6 @@ fun ProdutoCardItem(
             if (produto == null) {
                 CarregamentoContainer(modifier = imagemModifier)
             } else {
-                // AsyncImage (sem subcomposição) no lugar de SubcomposeAsyncImage:
-                // a subcomposição durante a medição da LazyColumn estava
-                // envolvida na reescrita da posição de scroll a cada clique
                 AsyncImage(
                     model = produto.imagens.firstOrNull(),
                     contentDescription = produto.nome,
@@ -127,7 +125,7 @@ private fun ConteudoProdutoCardItem(
 
     Column {
         Text(
-            text = produto.nome.ifEmpty { "Produto" },
+            text = produto.nome.ifEmpty { stringResource(R.string.cd_produto) },
             fontWeight = FontWeight.SemiBold,
             fontSize = 18.sp,
             color = Color.Black,
@@ -135,13 +133,13 @@ private fun ConteudoProdutoCardItem(
         )
         Spacer(modifier = Modifier.height(4.dp))
         Text(
-            text = "Valor: R$ $precoFormatado",
+            text = stringResource(R.string.carrinho_valor, precoFormatado),
             fontSize = 15.sp,
             color = Color.Black
         )
         Spacer(modifier = Modifier.height(4.dp))
         Text(
-            text = "Quantidade:",
+            text = stringResource(R.string.carrinho_quantidade),
             fontSize = 13.sp,
             color = Color.Gray
         )
@@ -169,7 +167,7 @@ private fun ControlesQuantidade(
         BotaoControle(onClick = onIncreaseClick) {
             Icon(
                 painter = painterResource(R.drawable.ic_adicionar),
-                contentDescription = "Aumentar quantidade",
+                contentDescription = stringResource(R.string.cd_aumentar_qtd),
                 tint = Color.White,
                 modifier = Modifier.size(18.dp)
             )
@@ -188,8 +186,8 @@ private fun ControlesQuantidade(
 
         BotaoControle(onClick = onDecreaseClick) {
             Icon(
-                painter = painterResource(R.drawable.ic_deletar),
-                contentDescription = "Diminuir quantidade",
+                painter = painterResource(R.drawable.ic_menos),
+                contentDescription = stringResource(R.string.cd_diminuir_qtd),
                 tint = Color.White,
                 modifier = Modifier.size(18.dp)
             )
@@ -199,7 +197,7 @@ private fun ControlesQuantidade(
 
         Icon(
             painter = painterResource(id = R.drawable.ic_deletar),
-            contentDescription = "Remover do carrinho",
+            contentDescription = stringResource(R.string.cd_remover_carrinho),
             modifier = Modifier
                 .size(24.dp)
                 .clickable(onClick = onDeleteClick),

@@ -13,5 +13,7 @@ data class Produto(
     val descricao: String = "",
     val produtorId: String = "",
     val avaliacao: Double = 0.0,
+    val somaAvaliacoes: Double = 0.0,
+    val quantidadeAvaliacoes: Int = 0,
     val preco: Double = 0.0
 )

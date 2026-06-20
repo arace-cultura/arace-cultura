@@ -20,23 +20,31 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
+    <!-- ScrollView com fillViewport: ao abrir o teclado (adjustResize), o
+         conteúdo rola em vez de comprimir. A imagem decorativa tem altura
+         fixa (o ConstraintLayout match_parent anterior colapsava para ~1dp). -->
+    <ScrollView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:fillViewport="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@android:color/transparent"
         android:gravity="center_horizontal"
         android:orientation="vertical"
-        android:padding="40dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        android:padding="40dp">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fontFamily="@font/google_sans_flex_variable_font"
-            android:text="Um espaço da cultura capixaba"
+            android:text="@string/login_titulo"
             android:textColor="@color/texto"
             android:gravity="center_horizontal"
             android:textSize="20sp"
@@ -47,42 +55,23 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
             android:fontFamily="@font/google_sans_flex_variable_font"
-            android:text="Leve parte desse lugar"
+            android:text="@string/login_subtitulo"
             android:gravity="center_horizontal"
             android:textColor="@color/texto"
             android:textSize="24sp"
             android:textFontWeight="500" />
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginBottom="30dp">
-
-            <FrameLayout
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                app:layout_constraintWidth_percent="0.5"
-                app:layout_constraintDimensionRatio="1:1"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                android:id="@+id/Frame"
-                >
-
-                <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:src="@drawable/panela_barro" />
-
-            </FrameLayout>
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
+        <ImageView
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_marginBottom="30dp"
+            android:src="@drawable/panela_barro" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fontFamily="@font/google_sans_flex_variable_font"
-            android:text="Entrar no Aracê"
+            android:text="@string/login_entrar_titulo"
             android:textColor="@color/texto"
             android:textSize="18sp"
             android:textFontWeight="400"/>
@@ -95,7 +84,7 @@
             android:layout_marginBottom="12dp"
             app:boxStrokeColor="@color/arace_blue"
             app:hintTextColor="@color/arace_blue"
-            android:hint="Email"
+            android:hint="@string/email"
             app:boxCornerRadiusTopStart="15dp"
             app:boxCornerRadiusTopEnd="15dp"
             app:boxCornerRadiusBottomStart="15dp"
@@ -121,7 +110,7 @@
             app:hintTextColor="@color/arace_blue"
             app:endIconMode="password_toggle"
             app:endIconTint="@color/hint_gray"
-            android:hint="Senha"
+            android:hint="@string/senha"
             app:boxCornerRadiusTopStart="15dp"
             app:boxCornerRadiusTopEnd="15dp"
             app:boxCornerRadiusBottomStart="15dp"
@@ -136,6 +125,18 @@
                 android:textColor="@color/texto" />
         </com.google.android.material.textfield.TextInputLayout>
 
+        <TextView
+            android:id="@+id/loginRecuperarSenha"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"
+            android:fontFamily="@font/google_sans_flex_variable_font"
+            android:gravity="end"
+            android:paddingVertical="8dp"
+            android:text="@string/login_esqueci_senha"
+            android:textColor="@color/arace_blue"
+            android:textSize="15sp" />
+
         <Button
             android:id="@+id/loginBtn"
             android:layout_width="wrap_content"
@@ -144,7 +145,7 @@
             android:fontFamily="@font/google_sans_flex_variable_font"
             android:paddingHorizontal="40dp"
             android:paddingVertical="12dp"
-            android:text="Entrar"
+            android:text="@string/login_botao_entrar"
             android:textColor="@color/white"
             android:textSize="18sp" />
 
@@ -154,10 +155,11 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:fontFamily="@font/google_sans_flex_variable_font"
-            android:text="Voltar"
+            android:text="@string/voltar"
             android:textColor="@color/black"
             android:textSize="16sp" />
 
     </LinearLayout>
+    </ScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -22,8 +22,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.aracecultura.arace.R
 import com.aracecultura.arace.ui.components.AppButton
 import com.aracecultura.arace.ui.theme.bgDefault
 import com.aracecultura.arace.ui.theme.btColor
@@ -38,10 +40,10 @@ fun BotaoVisualizacao(
 
     Box(modifier = modifier) {
         AppButton(
-            text = "Visualização",
+            text = stringResource(R.string.visualizacao),
             textColor = Color.Black,
             containerColor = bgDefault,
-            borderColor = btColor,
+            borderColor = bgDefault,
             shape = RoundedCornerShape(
                 topStart = 0.dp,
                 topEnd = 0.dp,
@@ -69,7 +71,7 @@ fun BotaoVisualizacao(
                             )
                         )
                         Spacer(modifier = Modifier.width(8.dp))
-                        Text("Cliente", fontSize = 16.sp)
+                        Text(stringResource(R.string.modo_cliente), fontSize = 16.sp)
                     }
                 },
                 onClick = {
@@ -89,7 +91,7 @@ fun BotaoVisualizacao(
                             )
                         )
                         Spacer(modifier = Modifier.width(8.dp))
-                        Text("Produtor", fontSize = 16.sp)
+                        Text(stringResource(R.string.modo_produtor), fontSize = 16.sp)
                     }
                 },
                 onClick = {

@@ -19,9 +19,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.aracecultura.arace.R
 import com.aracecultura.arace.data.model.Produto
 import java.util.Locale
 
@@ -43,12 +45,12 @@ fun TodosProdutosSection(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = "Todos produtos",
+                text = stringResource(R.string.todos_produtos),
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Medium
             )
             Text(
-                text = "Ordenar por: nome",
+                text = stringResource(R.string.ordenar_por_nome),
                 fontSize = 12.sp,
                 color = Color.DarkGray
             )
@@ -56,7 +58,7 @@ fun TodosProdutosSection(
 
         if (produtos.isEmpty()) {
             Text(
-                text = "Nenhum produto cadastrado ainda.",
+                text = stringResource(R.string.nenhum_produto_cadastrado),
                 fontSize = 14.sp,
                 color = Color.DarkGray
             )

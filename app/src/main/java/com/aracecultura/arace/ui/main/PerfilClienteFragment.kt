@@ -1,6 +1,7 @@
 package com.aracecultura.arace.ui.main
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -10,12 +11,18 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.ComposeView
+import androidx.lifecycle.lifecycleScope
 import com.aracecultura.arace.ui.components.explorar.TelaConfiguracoes
 import com.aracecultura.arace.ui.components.perfil.cliente.EditarPerfilUsuario
 import com.aracecultura.arace.ui.components.perfil.cliente.MeusDados
 import com.aracecultura.arace.ui.components.perfil.cliente.PerfilCliente
 import com.aracecultura.arace.ui.theme.AraceTheme
+import com.aracecultura.arace.R
+import com.google.firebase.auth.FirebaseAuthRecentLoginRequiredException
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 
 private enum class TelaPerfil {
     PERFIL,
@@ -51,10 +58,7 @@ class PerfilClienteFragment : Fragment() {
                         TelaConfiguracoes(
                             onBackClick = { telaAtual = TelaPerfil.PERFIL },
                             onMeusDadosClick = { telaAtual = TelaPerfil.MEUS_DADOS },
-                            onSairClick = {
-                                FirebaseAuth.getInstance().signOut()
-                                requireActivity().supportFragmentManager.setFragmentResult("logout_request", Bundle())
-                            }
+                            onDeletarContaClick = { deletarContaAtual() }
                         )
                     }
                     TelaPerfil.MEUS_DADOS -> {
@@ -85,6 +89,39 @@ class PerfilClienteFragment : Fragment() {
                     }
                 }
                 } // AraceTheme
+            }
+        }
+    }
+
+    private fun deletarContaAtual() {
+        val auth = FirebaseAuth.getInstance()
+        val usuario = auth.currentUser ?: return
+        val uid = usuario.uid
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            try {
+                usuario.delete().await()
+                runCatching {
+                    FirebaseFirestore.getInstance()
+                        .collection("Usuarios")
+                        .document(uid)
+                        .delete()
+                        .await()
+                }
+                auth.signOut()
+                requireActivity().supportFragmentManager.setFragmentResult("logout_request", Bundle())
+            } catch (e: FirebaseAuthRecentLoginRequiredException) {
+                Toast.makeText(
+                    requireContext(),
+                    getString(R.string.erro_deletar_conta_login_recente),
+                    Toast.LENGTH_LONG
+                ).show()
+            } catch (e: Exception) {
+                Toast.makeText(
+                    requireContext(),
+                    getString(R.string.erro_deletar_conta),
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         }
     }

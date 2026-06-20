@@ -2,6 +2,7 @@ package com.aracecultura.arace.ui.components.home
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -25,7 +26,8 @@ fun IconCategoria(
     backgroundColor: Color,
     imagem: Int,
     legenda: String,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit = {}
 ) {
 
     Column(
@@ -35,6 +37,7 @@ fun IconCategoria(
         Box(modifier = Modifier
             .clip(RoundedCornerShape(15.dp))
             .background(backgroundColor)
+            .clickable { onClick() }
             .padding(10.dp)
         ){
             Image(

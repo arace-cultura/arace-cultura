@@ -13,9 +13,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.aracecultura.arace.R
 import com.aracecultura.arace.data.model.Produtor
 
 @Composable
@@ -32,7 +34,7 @@ fun FooterSection(
     ) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             Text(
-                text = "Informações",
+                text = stringResource(R.string.informacoes),
                 color = Color.White,
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Medium
@@ -44,10 +46,13 @@ fun FooterSection(
             )
         }
 
-        FooterRow(label = "Endereço", value = produtor.endereco.ifBlank { produtor.cep })
+        FooterRow(label = stringResource(R.string.endereco), value = produtor.endereco.ifBlank { produtor.cep })
         Spacer(modifier = Modifier.height(12.dp))
-        FooterRow(label = "Telefone", value = produtor.telefone.ifBlank { "Não informado." })
+        FooterRow(
+            label = stringResource(R.string.telefone),
+            value = produtor.telefone.ifBlank { stringResource(R.string.nao_informado) }
+        )
         Spacer(modifier = Modifier.height(12.dp))
-        FooterRow(label = "Avaliação média", value = produtor.cnpj.ifBlank { produtor.tipoPessoa })
+        FooterRow(label = stringResource(R.string.avaliacao_media), value = produtor.cnpj.ifBlank { produtor.tipoPessoa })
     }
 }

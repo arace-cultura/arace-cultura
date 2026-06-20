@@ -1,4 +1,257 @@
 <resources>
     <string name="app_name">Aracê</string>
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <!-- Genéricos / reutilizados -->
+    <string name="voltar">Voltar</string>
+    <string name="proximo">Próximo</string>
+    <string name="cancelar">Cancelar</string>
+    <string name="finalizar">Finalizar</string>
+    <string name="email">Email</string>
+    <string name="senha">Senha</string>
+    <string name="senha_loja">Senha da loja</string>
+    <string name="nome">Nome</string>
+    <string name="usuario">Usuário</string>
+    <string name="carregando">Carregando…</string>
+    <string name="configuracoes">Configurações</string>
+    <string name="sair">Sair</string>
+    <string name="meus_dados">Meus dados</string>
+    <string name="selecionar_banner">Selecionar banner (opcional)</string>
+    <string name="nenhum_banner">Nenhum banner selecionado</string>
+    <string name="nenhuma_foto">Nenhuma foto selecionada</string>
+    <string name="banner_selecionado">Banner selecionado</string>
+    <string name="foto_perfil_selecionada">Foto de perfil selecionada</string>
+    <string name="foto_loja_selecionada">Foto da loja selecionada</string>
+    <string name="uma_foto_selecionada">1 foto selecionada</string>
+    <plurals name="fotos_selecionadas">
+        <item quantity="one">%1$d foto selecionada</item>
+        <item quantity="other">%1$d fotos selecionadas</item>
+    </plurals>
+    <string name="entrar_loja_existente">Entrar em loja existente</string>
+    <string name="prefixo_real">R$ </string>
+    <string name="preco_reais">R$%1$s</string>
+
+    <!-- Content descriptions -->
+    <string name="cd_produto">Produto</string>
+    <string name="cd_imagem_produto">Imagem do produto</string>
+    <string name="cd_trocar_imagem">Trocar imagem</string>
+    <string name="cd_imagem_selecionada">Imagem selecionada</string>
+    <string name="cd_editar_perfil">Editar Perfil</string>
+    <string name="cd_produto_sem_imagem">Produto sem imagem</string>
+    <string name="cd_imagem_carrossel">Imagem do carrossel</string>
+    <string name="cd_foto_produtor">Foto do produtor</string>
+    <string name="cd_foto_loja">Foto da loja</string>
+    <string name="cd_estrela_cheia">Estrela cheia</string>
+    <string name="cd_estrela_meia">Estrela meia cheia</string>
+    <string name="cd_estrela_vazia">Estrela vazia</string>
+    <string name="cd_aumentar_qtd">Aumentar quantidade</string>
+    <string name="cd_diminuir_qtd">Diminuir quantidade</string>
+    <string name="cd_remover_carrinho">Remover do carrinho</string>
+    <string name="cd_banner_perfil">Banner do perfil</string>
+    <string name="cd_foto_perfil">Foto de perfil</string>
+    <string name="cd_alterar_banner">Alterar banner</string>
+    <string name="cd_alterar_foto_perfil">Alterar foto de perfil</string>
+    <string name="cd_copiar">Copiar</string>
+    <string name="cd_compra_confirmada">Compra confirmada</string>
+    <string name="cd_imagem_de">Imagem de %1$s</string>
+
+    <!-- Login / Entrada / Cadastro (auth) -->
+    <string name="entrada_slogan">Conectando você\nà cultura material\ncapixaba.</string>
+    <string name="entrada_criar_conta">criar conta</string>
+    <string name="entrada_entrar">entrar</string>
+    <string name="login_titulo">Um espaço da cultura capixaba</string>
+    <string name="login_subtitulo">Leve parte desse lugar</string>
+    <string name="login_entrar_titulo">Entrar no Aracê</string>
+    <string name="login_botao_entrar">Entrar</string>
+    <string name="login_esqueci_senha">Esqueci minha senha</string>
+    <string name="recuperar_titulo">Recuperar conta</string>
+    <string name="recuperar_instrucao">Informe seu e-mail para receber o link de redefinição de senha.</string>
+    <string name="recuperar_botao">Enviar link</string>
+    <string name="recuperar_email_enviado">E-mail de recuperação enviado.</string>
+    <string name="erro_recuperar_senha">Não foi possível enviar o e-mail de recuperação.</string>
+    <string name="cadastro_titulo">Comece no Aracê</string>
+    <string name="cadastro_subtitulo">Cadastre-se nesse acervo capixaba</string>
+    <string name="confirme_senha">Confirme sua senha</string>
+    <string name="selecionar_foto_perfil">Selecionar foto de perfil (opcional)</string>
+    <string name="concluir">Concluir</string>
+
+    <!-- Cadastro do produtor -->
+    <string name="cad_produtor_titulo">Cadastro do produtor</string>
+    <string name="cad_nome_completo">Nome completo</string>
+    <string name="cad_nome_loja_empresa">Nome da loja/empresa</string>
+    <string name="cad_voce_e">Você é:</string>
+    <string name="cad_pessoa_fisica">Pessoa Física</string>
+    <string name="cad_pessoa_juridica">Pessoa Jurídica</string>
+    <string name="cad_razao_social">Razão Social</string>
+    <string name="cad_cnpj_cpf">CNPJ / CPF</string>
+    <string name="cad_numero_telefone">Número de telefone</string>
+    <string name="cad_finalizar_titulo">Finalizar Cadastro</string>
+    <string name="cad_cep">CEP</string>
+    <string name="cad_endereco">Endereço</string>
+    <string name="cad_tipo_artesanato">Tipo de Artesanato</string>
+    <string name="cad_categoria_produto">Categoria de Produto</string>
+    <string name="cad_historia_loja">História da loja (opcional)</string>
+    <string name="cad_chave_pix">Chave Pix</string>
+    <string name="cad_pix_helper">Os clientes pagarão por aqui ao finalizar a compra</string>
+    <string name="cad_senha_loja_helper">Outras contas usarão o nome e esta senha para entrar na loja</string>
+    <string name="cad_selecionar_foto_loja">Selecionar foto da loja (opcional)</string>
+    <string name="cad_selecionar_fotos_historia">Selecionar fotos da história (opcional)</string>
+    <string name="cad_foto_historia_1">Foto história 1</string>
+    <string name="cad_foto_historia_2">Foto história 2</string>
+    <string name="cad_foto_historia_3">Foto história 3</string>
+    <string name="cad_cadastrar_produtor">Cadastrar produtor</string>
+
+    <!-- Escolha / Entrar em loja -->
+    <string name="escolha_modo_produtor">Modo Produtor</string>
+    <string name="escolha_sem_loja">Sua conta ainda não está vinculada a uma loja.</string>
+    <string name="escolha_cadastrar_nova_loja">Cadastrar nova loja</string>
+    <string name="entrar_loja_nome">Nome da loja</string>
+    <string name="entrar_na_loja">Entrar na loja</string>
+
+    <!-- Conta / Configurações -->
+    <string name="minha_conta">Minha conta</string>
+    <string name="editar_dados">Editar dados</string>
+
+    <!-- Editar perfil do usuário -->
+    <string name="alterar_informacoes">Alterar Informações</string>
+    <string name="label_nome_completo">Nome Completo</string>
+    <string name="label_email_nao_alteravel">E-mail (Não alterável)</string>
+    <string name="label_senha_atual">Senha atual</string>
+    <string name="label_nova_senha">Nova senha</string>
+    <string name="salvar_alteracoes">Salvar Alterações</string>
+    <string name="preencha_senhas">Preencha a senha atual e a nova.</string>
+    <string name="senha_atual_incorreta">Senha atual incorreta.</string>
+
+    <!-- Criar produto -->
+    <string name="criar_escolher_imagem">escolher\nimagem</string>
+    <string name="criar_placeholder_categoria">Categoria</string>
+    <string name="criar_placeholder_descricao">Descrição</string>
+    <string name="criar_placeholder_preco">Preço (R$)</string>
+    <string name="criar_adicionar">Adicionar</string>
+    <string name="criar_sucesso">Produto criado!</string>
+    <string name="ordenar_preco_menor">Menor preço</string>
+    <string name="ordenar_preco_maior">Maior preço</string>
+    <string name="criar_campos_obrigatorios">Preencha todos os campos e selecione uma imagem</string>
+    <string name="criar_nome_limite">Nome (máx. %1$d caracteres)</string>
+    <string name="criar_nome_obrigatorio">Informe um nome válido para o produto.</string>
+
+    <!-- Editar produtos -->
+    <string name="editar_produtos">Editar produtos</string>
+    <string name="editar_produtos_botao">editar produtos</string>
+    <string name="editar_produtos_vazio">Nenhum produto cadastrado.</string>
+    <string name="excluir_produto">Excluir produto</string>
+    <string name="excluir_produto_titulo">Excluir produto?</string>
+    <string name="excluir_produto_msg">Essa ação remove o produto da loja e não poderá ser desfeita.</string>
+    <string name="sim_excluir_produto">Sim, excluir</string>
+    <string name="salvar_edicoes">Salvar edições</string>
+    <string name="cd_recolher">Recolher</string>
+    <string name="cd_expandir">Expandir</string>
+
+    <!-- Meus dados (rótulos) -->
+    <string name="e_mail">E-mail</string>
+    <string name="mdados_conta">Conta</string>
+    <string name="mdados_cadastro_produtor">Cadastro de produtor</string>
+    <string name="mdados_loja">Loja</string>
+    <string name="mdados_razao_social">Razão social</string>
+    <string name="mdados_cnpj">CNPJ</string>
+    <string name="mdados_telefone">Telefone</string>
+    <string name="mdados_artesanato">Artesanato</string>
+    <string name="mdados_categoria">Categoria</string>
+
+    <!-- Explorar / Navegar -->
+    <string name="adicionar_ao_carrinho">Adicionar ao carrinho</string>
+    <string name="nenhum_produto_encontrado">Nenhum produto encontrado.</string>
+    <string name="ordenar_por">Ordenar por</string>
+    <string name="categorias_label">Categorias:</string>
+    <string name="ordenar_nome">Nome</string>
+    <string name="ordenar_preco">Preço</string>
+    <string name="explorar_titulo">Descubra</string>
+    <string name="abrir_busca">Buscar produtos</string>
+    <string name="buscar_produtos">Buscar produtos...</string>
+    <string name="fechar_busca">Fechar busca</string>
+    <string name="filtros">Filtros</string>
+    <string name="ordenar_menor_preco">Menor preço</string>
+    <string name="ordenar_maior_preco">Maior preço</string>
+    <string name="ordenar_avaliacao">Avaliação</string>
+    <string name="selecionar_ordem">Selecione uma ordem…</string>
+
+    <!-- Perfil do produtor -->
+    <string name="nossa_historia">Nossa história</string>
+    <string name="nossos_produtos_destaque">Nossos produtos em destaque</string>
+    <string name="nenhum_produto_destaque">Nenhum produto em destaque</string>
+    <string name="todos_produtos">Todos produtos</string>
+    <string name="ordenar_por_nome">Ordenar por: nome</string>
+    <string name="nenhum_produto_cadastrado">Nenhum produto cadastrado ainda.</string>
+    <string name="informacoes">Informações</string>
+    <string name="endereco">Endereço</string>
+    <string name="telefone">Telefone</string>
+    <string name="avaliacao_media">Avaliação média</string>
+    <string name="nao_informado">Não informado.</string>
+    <string name="este_produtor">Este produtor</string>
+    <string name="historia_nao_cadastrada">História ainda não cadastrada.</string>
+    <string name="ler_mais">Ler mais</string>
+    <string name="ler_menos">Ler menos</string>
+    <string name="avaliar">Avaliar</string>
+    <string name="avaliar_produto">Avaliar produto</string>
+    <string name="avaliar_instrucao">Clique em um dos números abaixo</string>
+
+    <!-- Visualização (cliente/produtor) -->
+    <string name="visualizacao">Visualização</string>
+    <string name="modo_cliente">Cliente</string>
+    <string name="modo_produtor">Produtor</string>
+
+    <!-- Carrinho -->
+    <string name="carrinho_titulo">Carrinho</string>
+    <string name="carrinho_total">Total</string>
+    <string name="carrinho_valor">Valor: R$ %1$s</string>
+    <string name="carrinho_quantidade">Quantidade:</string>
+
+    <!-- Mensagens -->
+    <string name="erro_usuario_nao_autenticado">Usuário não autenticado.</string>
+    <string name="erro_entrar_loja">Não foi possível entrar na loja.</string>
+    <string name="erro_preencha_dados">Preencha todos os dados corretamente.</string>
+    <string name="erro_senha_fraca">Digite uma senha com no mínimo 6 caracteres</string>
+    <string name="erro_email_invalido">Digite um e-mail válido</string>
+    <string name="erro_conta_existente">Conta já cadastrada. Faça login</string>
+    <string name="erro_conexao">Verifique sua conexão com a internet e tente novamente!</string>
+    <string name="erro_cadastro_usuario">Erro ao cadastrar usuário</string>
+    <string name="erro_dados_login">Há erro nos dados.</string>
+    <string name="erro_falha_login">Falha no login, tente novamente.</string>
+    <string name="erro_senha_loja_curta">A senha da loja deve ter pelo menos 4 caracteres</string>
+    <string name="erro_salvar_avaliacao">Não foi possível salvar a avaliação.</string>
+
+    <!-- Checkout / Finalizar compra -->
+    <string name="checkout_titulo">Finalizar Compra</string>
+    <string name="checkout_vazio">Tudo certo! Não há mais nada a finalizar.</string>
+    <string name="checkout_apos_pagar">Após pagar, clique em \"Finalizar essa compra\"</string>
+    <string name="checkout_col_produto">produto</string>
+    <string name="checkout_col_quantidade">quantidade</string>
+    <string name="checkout_col_preco">preço</string>
+    <string name="checkout_total">TOTAL: %1$s</string>
+    <string name="checkout_sem_pix">Esta loja ainda não cadastrou uma chave Pix.</string>
+    <string name="checkout_copie_pix">Copie o código abaixo para pagar via Pix\nem qualquer aplicativo habilitado</string>
+    <string name="checkout_finalizar_loja">Finalizar essa compra</string>
+    <string name="checkout_codigo_copiado">Código copiado!</string>
+    <string name="checkout_cancelar_titulo">Cancelar pedido?</string>
+    <string name="checkout_cancelar_msg">Tem certeza que deseja cancelar esta compra?</string>
+    <string name="checkout_sim_cancelar">Sim, cancelar</string>
+    <string name="checkout_confirmacao">Confirmação</string>
+    <string name="checkout_obrigado">Agradecemos a aquisição!</string>
+    <string name="checkout_continue_comprando">Continue comprando</string>
+    <!-- Conta / saída -->
+    <string name="deletar_conta">Deletar conta</string>
+    <string name="cd_deletar_conta">Deletar conta</string>
+    <string name="deletar_conta_titulo">Deletar conta?</string>
+    <string name="deletar_conta_msg">Essa ação remove sua conta e não poderá ser desfeita.</string>
+    <string name="sim_deletar_conta">Sim, deletar</string>
+    <string name="sair_conta_titulo">Sair da conta?</string>
+    <string name="sair_conta_msg">Você voltará para a tela de entrada do Aracê.</string>
+    <string name="sim_sair">Sim, sair</string>
+    <string name="sair_loja">Sair da loja</string>
+    <string name="cd_sair_loja">Sair da loja</string>
+    <string name="sair_loja_titulo">Sair da loja?</string>
+    <string name="sair_loja_msg">Sua conta deixará de acessar esta loja como produtor.</string>
+    <string name="sim_sair_loja">Sim, sair</string>
+    <string name="erro_deletar_conta">Não foi possível deletar a conta.</string>
+    <string name="erro_deletar_conta_login_recente">Entre novamente e tente deletar a conta em seguida.</string>
+    <string name="erro_sair_loja">Não foi possível sair da loja.</string>
 </resources>

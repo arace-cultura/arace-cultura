@@ -17,9 +17,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.withFrameNanos
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -33,6 +38,12 @@ sealed interface EstadoCarrinho {
     data class Pronto(val itens: List<ItemCarrinho>) : EstadoCarrinho
 }
 
+private data class AncoraScrollCarrinho(
+    val itemId: String?,
+    val indice: Int,
+    val deslocamento: Int
+)
+
 @Composable
 fun NewCarrinho(
     viewModel: NewCarrinhoViewModel = viewModel(),
@@ -42,11 +53,40 @@ fun NewCarrinho(
 ) {
     val estado by viewModel.estado.collectAsState()
     val listState = rememberLazyListState()
+    val itens = (estado as? EstadoCarrinho.Pronto)?.itens
+    var ancoraPendente by remember { mutableStateOf<AncoraScrollCarrinho?>(null) }
 
     LaunchedEffect(uid) {
         if (uid.isNotBlank()) {
             viewModel.carregarCarrinho(uid)
         }
+    }
+
+    LaunchedEffect(itens) {
+        val ancora = ancoraPendente ?: return@LaunchedEffect
+        if (itens.isNullOrEmpty()) {
+            ancoraPendente = null
+            return@LaunchedEffect
+        }
+
+        val indiceDaAncora = ancora.itemId
+            ?.let { id -> itens.indexOfFirst { it.id == id } }
+            ?.takeIf { it >= 0 }
+            ?: ancora.indice.coerceIn(itens.indices)
+
+        // Aguarda a LazyColumn medir a lista atualizada antes de desfazer
+        // a correção automática de âncora aplicada perto do fim do conteúdo.
+        withFrameNanos { }
+        listState.scrollToItem(indiceDaAncora, ancora.deslocamento)
+        ancoraPendente = null
+    }
+
+    fun guardarAncoraScroll() {
+        ancoraPendente = AncoraScrollCarrinho(
+            itemId = listState.layoutInfo.visibleItemsInfo.firstOrNull()?.key as? String,
+            indice = listState.firstVisibleItemIndex,
+            deslocamento = listState.firstVisibleItemScrollOffset
+        )
     }
 
     Box(
@@ -77,17 +117,20 @@ fun NewCarrinho(
                     listState = listState,
                     modifier = Modifier.fillMaxSize(),
                     onAumentarQuantidade = { item ->
+                        guardarAncoraScroll()
                         viewModel.alterarQuantidade(item, uid, item.quantidade + 1)
                     },
                     onDiminuirQuantidade = { item ->
+                        guardarAncoraScroll()
                         viewModel.alterarQuantidade(item, uid, item.quantidade - 1)
                     },
                     onRemoverItem = { item ->
+                        guardarAncoraScroll()
                         viewModel.removerItem(item, uid)
                         onDeleteClick(item)
                     }
                 )
-                Ordenar()
+                Ordenar(onSelecionar = viewModel::setOrdenacao)
             }
             SecaoFinalizarCompra(
                 produtos = (estado as? EstadoCarrinho.Pronto)?.itens ?: emptyList(),
@@ -100,7 +143,7 @@ fun NewCarrinho(
 @Composable
 private fun TituloCarrinho() {
     Text(
-        text = "Carrinho",
+        text = stringResource(R.string.carrinho_titulo),
         fontSize = 36.sp,
         modifier = Modifier
             .fillMaxWidth()
@@ -119,8 +162,6 @@ private fun ListaItens(
     onDiminuirQuantidade: (ItemCarrinho) -> Unit,
     onRemoverItem: (ItemCarrinho) -> Unit
 ) {
-    // Skeleton fora da LazyColumn: evita trocar o dataset (keys skeleton↔ids)
-    // dentro da mesma lista, o que participa da aritmética de âncora
     if (estado is EstadoCarrinho.Carregando) {
         Column(modifier = modifier.padding(top = 56.dp, start = 16.dp, end = 16.dp)) {
             repeat(3) {
@@ -134,17 +175,17 @@ private fun ListaItens(
 
     val itens = (estado as EstadoCarrinho.Pronto).itens
 
-    // O espaço do topo (botão Ordenar em overlay) é contentPadding, não um
-    // item: um item-fantasma no índice 0 entra no cálculo de âncora do lazy
-    // layout e estava implicado nos saltos de scroll pós-mudança de estado
     LazyColumn(
         modifier = modifier,
         state = listState,
-        // bottom=176dp: a "correção" interna do lazy layout proíbe repouso
-        // nos últimos ~441px (168dp) da lista — exatamente a altura das
-        // barras abaixo dela. Com o padding, o último cartão fica totalmente
-        // visível antes dessa fronteira e a correção só consome espaço vazio
-        contentPadding = PaddingValues(start = 16.dp, end = 16.dp, top = 56.dp, bottom = 176.dp)
+        // Mantém os últimos cartões fora da zona em que o LazyColumn corrige
+        // a âncora após uma atualização de quantidade e desloca o scroll.
+        contentPadding = PaddingValues(
+            start = 16.dp,
+            end = 16.dp,
+            top = 56.dp,
+            bottom = 176.dp
+        )
     ) {
         items(
             items = itens,

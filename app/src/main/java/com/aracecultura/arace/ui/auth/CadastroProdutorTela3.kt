@@ -1,6 +1,5 @@
 package com.aracecultura.arace.ui.auth
 
-import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -16,42 +15,38 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.navGraphViewModels
 import com.aracecultura.arace.R
 import com.aracecultura.arace.data.model.CategoriasProduto
-import com.aracecultura.arace.data.model.Produtor
 import com.google.android.material.textfield.TextInputEditText
 import kotlinx.coroutines.launch
 
 class CadastroProdutorTela3 : Fragment(R.layout.fragment_cadastro_produtor_tela3) {
 
-    private val viewModel: CadastroProdutorViewModel by viewModels()
-    private var bannerUri: Uri? = null
-    private var fotoLojaUri: Uri? = null
-    private var fotosHistoriaUris: List<Uri> = emptyList()
+    private val viewModel: CadastroProdutorViewModel by navGraphViewModels(R.id.fluxo_cadastro_produtor)
 
     private val bannerPicker = registerForActivityResult(
         ActivityResultContracts.PickVisualMedia()
     ) { uri ->
-        bannerUri = uri
+        viewModel.bannerUri = uri
         atualizarTextoSelecao()
     }
 
     private val fotoLojaPicker = registerForActivityResult(
         ActivityResultContracts.PickVisualMedia()
     ) { uri ->
-        fotoLojaUri = uri
+        viewModel.fotoLojaUri = uri
         atualizarTextoSelecao()
     }
 
     private val fotosHistoriaPicker = registerForActivityResult(
         ActivityResultContracts.PickMultipleVisualMedia(3)
     ) { uris ->
-        fotosHistoriaUris = uris
+        viewModel.fotosHistoriaUris = uris
         atualizarTextoSelecao()
     }
 
@@ -66,14 +61,24 @@ class CadastroProdutorTela3 : Fragment(R.layout.fragment_cadastro_produtor_tela3
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val produtorRecebido = arguments?.getParcelable<Produtor>("produtorData") ?: Produtor()
-
         val etCep      = view.findViewById<TextInputEditText>(R.id.etCep)
         val etEndereco = view.findViewById<TextInputEditText>(R.id.etEndereco)
         val etTipoArt  = view.findViewById<TextInputEditText>(R.id.etTipoArtesanato)
         val acCategoria = view.findViewById<AutoCompleteTextView>(R.id.acCategoria)
         val etHistoria = view.findViewById<TextInputEditText>(R.id.etHistoria)
+        val etChavePix = view.findViewById<TextInputEditText>(R.id.etChavePix)
         val etSenhaLoja = view.findViewById<TextInputEditText>(R.id.etSenhaLoja)
+
+        // Pré-preenche a partir do rascunho compartilhado
+        viewModel.draft.value.let { d ->
+            etCep.setText(d.cep)
+            etEndereco.setText(d.endereco)
+            etTipoArt.setText(d.tipoArtesanato)
+            acCategoria.setText(d.categoriaProduto, false)
+            etHistoria.setText(d.historia)
+            etChavePix.setText(d.chavePix)
+        }
+        etSenhaLoja.setText(viewModel.senhaLoja.value)
 
         tvBannerSelecionado = view.findViewById(R.id.tvBannerSelecionado)
         tvFotoLojaSelecionada = view.findViewById(R.id.tvFotoLojaSelecionada)
@@ -82,6 +87,9 @@ class CadastroProdutorTela3 : Fragment(R.layout.fragment_cadastro_produtor_tela3
         ivHistoria1 = view.findViewById(R.id.ivHistoria1)
         ivHistoria2 = view.findViewById(R.id.ivHistoria2)
         ivHistoria3 = view.findViewById(R.id.ivHistoria3)
+
+        // Restaura os textos/previews de imagem ao reabrir a tela (volta)
+        atualizarTextoSelecao()
 
         acCategoria.setAdapter(
             ArrayAdapter(
@@ -109,29 +117,33 @@ class CadastroProdutorTela3 : Fragment(R.layout.fragment_cadastro_produtor_tela3
             )
         }
 
+        // Grava os campos desta tela no rascunho (usado ao finalizar e ao voltar)
+        fun salvarCampos() {
+            viewModel.atualizarDraft {
+                it.copy(
+                    cep              = etCep.text.toString(),
+                    endereco         = etEndereco.text.toString(),
+                    tipoArtesanato   = etTipoArt.text.toString(),
+                    categoriaProduto = acCategoria.text.toString(),
+                    historia         = etHistoria.text.toString(),
+                    chavePix         = etChavePix.text.toString().trim()
+                )
+            }
+            viewModel.atualizarSenha(etSenhaLoja.text.toString())
+        }
+
         view.findViewById<Button>(R.id.btnFinalizar).setOnClickListener {
             if (etSenhaLoja.text.toString().length < 4) {
-                etSenhaLoja.error = "A senha da loja deve ter pelo menos 4 caracteres"
+                etSenhaLoja.error = getString(R.string.erro_senha_loja_curta)
                 etSenhaLoja.requestFocus()
                 return@setOnClickListener
             }
-            viewModel.salvarProdutor(
-                context = requireContext(),
-                produtorRecebido.copy(
-                    cep             = etCep.text.toString(),
-                    endereco        = etEndereco.text.toString(),
-                    tipoArtesanato  = etTipoArt.text.toString(),
-                    categoriaProduto = acCategoria.text.toString(),
-                    historia = etHistoria.text.toString()
-                ),
-                senhaLoja = etSenhaLoja.text.toString(),
-                bannerUri = bannerUri,
-                fotoLojaUri = fotoLojaUri,
-                fotosHistoriaUris = fotosHistoriaUris
-            )
+            salvarCampos()
+            viewModel.salvarProdutor(requireContext())
         }
 
         view.findViewById<TextView>(R.id.btnVoltar3).setOnClickListener {
+            salvarCampos()
             findNavController().popBackStack()
         }
 
@@ -163,34 +175,29 @@ class CadastroProdutorTela3 : Fragment(R.layout.fragment_cadastro_produtor_tela3
     }
 
     private fun atualizarTextoSelecao() {
-        tvBannerSelecionado?.text = if (bannerUri == null) {
-            "Nenhum banner selecionado"
+        tvBannerSelecionado?.text = if (viewModel.bannerUri == null) {
+            getString(R.string.nenhum_banner)
         } else {
-            "Banner selecionado"
+            getString(R.string.banner_selecionado)
         }
 
-        tvFotoLojaSelecionada?.text = if (fotoLojaUri == null) {
-            "Nenhuma foto selecionada"
+        tvFotoLojaSelecionada?.text = if (viewModel.fotoLojaUri == null) {
+            getString(R.string.nenhuma_foto)
         } else {
-            "Foto da loja selecionada"
+            getString(R.string.foto_loja_selecionada)
         }
 
-        tvFotosHistoriaSelecionadas?.text = when (fotosHistoriaUris.size) {
-            0 -> "Nenhuma foto selecionada"
-            1 -> "1 foto selecionada"
-            else -> "${fotosHistoriaUris.size} fotos selecionadas"
+        val historia = viewModel.fotosHistoriaUris
+        tvFotosHistoriaSelecionadas?.text = when (historia.size) {
+            0 -> getString(R.string.nenhuma_foto)
+            1 -> getString(R.string.uma_foto_selecionada)
+            else -> resources.getQuantityString(R.plurals.fotos_selecionadas, historia.size, historia.size)
         }
 
         val previews = listOf(ivHistoria1, ivHistoria2, ivHistoria3)
-        val temFotos = fotosHistoriaUris.isNotEmpty()
-        llPreviewHistoria?.isVisible = temFotos
+        llPreviewHistoria?.isVisible = historia.isNotEmpty()
         previews.forEachIndexed { index, imageView ->
-            val uri = fotosHistoriaUris.getOrNull(index)
-            if (uri != null) {
-                imageView?.setImageURI(uri)
-            } else {
-                imageView?.setImageURI(null)
-            }
+            imageView?.setImageURI(historia.getOrNull(index))
         }
     }
 }

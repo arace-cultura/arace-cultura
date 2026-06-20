@@ -17,6 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -27,14 +28,50 @@ import com.aracecultura.arace.R
 @Composable
 fun TelaConfiguracoes(
     onBackClick: () -> Unit = {},
-    onMenuClick: () -> Unit = {},
     onMeusDadosClick: () -> Unit = {},
-    onAcessibilidadeClick: () -> Unit = {},
-    onSobreClick: () -> Unit = {},
-    onSairClick: () -> Unit = {},
-    notificationsEnabledState: MutableState<Boolean> = remember { mutableStateOf(true) }
+    onDeletarContaClick: () -> Unit = {}
 ) {
     val scrollState = rememberScrollState()
+    val showDeletarContaDialog = remember { mutableStateOf(false) }
+
+    if (showDeletarContaDialog.value) {
+        AlertDialog(
+            onDismissRequest = { showDeletarContaDialog.value = false },
+            containerColor = Color(0xFFFAF7F2),
+            title = {
+                Text(
+                    text = stringResource(R.string.deletar_conta_titulo),
+                    color = Color(0xFF2E2B27),
+                    fontWeight = FontWeight.Bold
+                )
+            },
+            text = {
+                Text(
+                    text = stringResource(R.string.deletar_conta_msg),
+                    color = Color(0xFF7A7168)
+                )
+            },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        showDeletarContaDialog.value = false
+                        onDeletarContaClick()
+                    }
+                ) {
+                    Text(
+                        text = stringResource(R.string.sim_deletar_conta),
+                        color = Color(0xFFCE5A14),
+                        fontWeight = FontWeight.SemiBold
+                    )
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showDeletarContaDialog.value = false }) {
+                    Text(stringResource(R.string.voltar), color = Color(0xFF7A7168))
+                }
+            }
+        )
+    }
 
     Column(
         modifier = Modifier
@@ -58,7 +95,7 @@ fun TelaConfiguracoes(
                 IconButton(onClick = onBackClick) {
                     Icon(
                         painter = painterResource(R.drawable.ic_arrow_left),
-                        contentDescription = "Voltar",
+                        contentDescription = stringResource(R.string.voltar),
                         tint = Color.DarkGray
                     )
                 }
@@ -66,7 +103,7 @@ fun TelaConfiguracoes(
 
 
             Text(
-                text = "Configurações",
+                text = stringResource(R.string.configuracoes),
                 fontSize = 32.sp,
                 fontWeight = FontWeight.Medium,
                 color = Color.Black,
@@ -81,31 +118,16 @@ fun TelaConfiguracoes(
 
         ConfiguracaoItem(
             icon = painterResource(R.drawable.ic_user_data),
-            text = "Meus dados",
+            text = stringResource(R.string.meus_dados),
             onClick = onMeusDadosClick
         )
 
-
-        ConfiguracaoSwitchItem(
-            icon = painterResource(R.drawable.ic_notificacoes),
-            text = "Notificações",
-            checked = notificationsEnabledState.value,
-            onCheckedChange = { newValue ->
-                notificationsEnabledState.value = newValue
-
-            }
-        )
-
-
         ConfiguracaoItem(
-            icon = painterResource(R.drawable.ic_info),
-            text = "Acessibilidade",
-            onClick = onAcessibilidadeClick
-        )
-        ConfiguracaoItem(
-            icon = painterResource(R.drawable.ic_info),
-            text = "Sobre",
-            onClick = onSobreClick
+            icon = painterResource(R.drawable.ic_deletar_conta),
+            text = stringResource(R.string.deletar_conta),
+            onClick = { showDeletarContaDialog.value = true },
+            iconTint = Color(0xFFCE5A14),
+            textColor = Color(0xFFCE5A14)
         )
 
         Spacer(modifier = Modifier.height(32.dp))
@@ -113,62 +135,12 @@ fun TelaConfiguracoes(
 }
 
 @Composable
-fun ConfiguracaoSwitchItem(
-    icon: Painter,
-    text: String,
-    checked: Boolean,
-    onCheckedChange: (Boolean) -> Unit
-) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable { onCheckedChange(!checked) }
-            .padding(horizontal = 24.dp, vertical = 16.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-
-        Box(
-            modifier = Modifier
-                .size(48.dp)
-                .background(Color(0xFFF0F5F2), CircleShape),
-            contentAlignment = Alignment.Center
-        ) {
-            Icon(
-                painter = icon,
-                contentDescription = null,
-                tint = Color(0xFF4A7D59)
-            )
-        }
-
-        Spacer(modifier = Modifier.width(20.dp))
-
-
-        Text(
-            text = text,
-            fontSize = 18.sp,
-            fontWeight = FontWeight.Medium,
-            color = Color.Black,
-            modifier = Modifier.weight(1f)
-        )
-
-        Switch(
-            checked = checked,
-            onCheckedChange = onCheckedChange,
-            colors = SwitchDefaults.colors(
-                checkedTrackColor = btColor,
-                uncheckedTrackColor = Color.LightGray,
-                checkedThumbColor = Color.White,
-                uncheckedThumbColor = Color.White
-            )
-        )
-    }
-}
-
-@Composable
 fun ConfiguracaoItem(
     icon: Painter,
     text: String,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    iconTint: Color = Color(0xFF4A7D59),
+    textColor: Color = Color.Black
 ) {
     Row(
         modifier = Modifier
@@ -187,7 +159,7 @@ fun ConfiguracaoItem(
             Icon(
                 painter = icon,
                 contentDescription = null,
-                tint = Color(0xFF4A7D59)
+                tint = iconTint
             )
         }
 
@@ -198,7 +170,7 @@ fun ConfiguracaoItem(
             text = text,
             fontSize = 18.sp,
             fontWeight = FontWeight.Medium,
-            color = Color.Black,
+            color = textColor,
             modifier = Modifier.weight(1f)
         )
 

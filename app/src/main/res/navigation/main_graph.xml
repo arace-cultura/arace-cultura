@@ -12,6 +12,23 @@
         <action
             android:id="@+id/action_homePage_to_produtoFragment"
             app:destination="@id/produto" />
+
+        <action
+            android:id="@+id/action_homePage_to_categoria"
+            app:destination="@id/categoria" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/categoria"
+        android:name="com.aracecultura.arace.ui.main.CategoriaFragment">
+
+        <argument
+            android:name="categoria"
+            app:argType="string" />
+
+        <action
+            android:id="@+id/action_categoria_to_produto"
+            app:destination="@id/produto" />
     </fragment>
 
     <fragment
@@ -20,6 +37,19 @@
 
         <argument
             android:name="produtoId"
+            app:argType="string" />
+
+        <action
+            android:id="@+id/action_produto_to_produtorPublico"
+            app:destination="@id/produtorPublico" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/produtorPublico"
+        android:name="com.aracecultura.arace.ui.main.ProdutorPublicoFragment">
+
+        <argument
+            android:name="lojaId"
             app:argType="string" />
     </fragment>
 

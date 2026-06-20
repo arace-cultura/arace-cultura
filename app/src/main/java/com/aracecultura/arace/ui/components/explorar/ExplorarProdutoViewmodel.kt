@@ -10,19 +10,27 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.SetOptions
 import com.google.firebase.firestore.firestore
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.asExecutor
+import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.tasks.await
-import kotlinx.coroutines.withContext
+import java.text.Normalizer
+import java.util.Locale
 
 class ExplorarProdutoViewmodel : ViewModel() {
     private var db: FirebaseFirestore = Firebase.firestore
     private val _produtos = MutableStateFlow<List<Produto>>(emptyList())
+
+    private val _textoBusca = MutableStateFlow("")
+    val textoBusca: StateFlow<String> = _textoBusca
 
     private val _categoriasSelecionadas = MutableStateFlow<Set<String>>(emptySet())
     val categoriasSelecionadas: StateFlow<Set<String>> = _categoriasSelecionadas
@@ -34,14 +42,36 @@ class ExplorarProdutoViewmodel : ViewModel() {
     val isLoading: StateFlow<Boolean> = _isLoading
 
     val produtosFiltrados: StateFlow<List<Produto>> = combine(
-        _produtos, _categoriasSelecionadas, _ordenacao
-    ) { todos, categorias, ordem ->
-        val filtrados = if (categorias.isEmpty()) todos
-                        else todos.filter { p ->
-                            p.categorias.any { cat ->
-                                categorias.any { it.equals(cat.trim(), ignoreCase = true) }
-                            }
-                        }
+        _produtos, _categoriasSelecionadas, _ordenacao, _textoBusca
+    ) { todos, categorias, ordem, textoBusca ->
+        val filtradosPorCategoria = if (categorias.isEmpty()) todos
+        else todos.filter { produto ->
+            produto.categorias.any { categoriaProduto ->
+                categorias.any {
+                    it.equals(categoriaProduto.trim(), ignoreCase = true)
+                }
+            }
+        }
+
+        val termosBusca = textoBusca.normalizarParaBusca()
+            .split(' ')
+            .filter(String::isNotBlank)
+
+        val filtrados = if (termosBusca.isEmpty()) filtradosPorCategoria
+        else filtradosPorCategoria.filter { produto ->
+            val conteudoPesquisavel = buildString {
+                append(produto.nome)
+                append(' ')
+                append(produto.descricao)
+                append(' ')
+                append(produto.categorias.joinToString(" "))
+            }.normalizarParaBusca()
+
+            termosBusca.all { termo ->
+                conteudoPesquisavel.contains(termo)
+            }
+        }
+
         when (ordem) {
             "preco_asc" -> filtrados.sortedBy { it.preco }
             "preco_desc" -> filtrados.sortedByDescending { it.preco }
@@ -51,38 +81,49 @@ class ExplorarProdutoViewmodel : ViewModel() {
     }.stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
 
     init {
-        getProducts()
+        observarProdutos()
     }
 
-    private fun getProducts() {
+    private fun observarProdutos() {
         viewModelScope.launch {
-            _isLoading.value = true
-            val result: List<Produto> = withContext(Dispatchers.IO) {
-                getAllProducts()
-            }
-            _produtos.value = result
-            _isLoading.value = false
+            produtosFlow()
+                .catch { _isLoading.value = false }
+                .collect { lista ->
+                    _produtos.value = lista
+                    _isLoading.value = false
+                }
         }
     }
 
-    private suspend fun getAllProducts(): List<Produto> {
-        return try {
-            db.collection("Produtos")
-                .get()
-                .await()
-                .documents
-                .mapNotNull { snapshot ->
-                    snapshot.toObject(Produto::class.java)
+    // O listener é registrado num executor de IO (mapeamento fora da main) e
+    // removido em awaitClose quando o viewModelScope morre — sem vazamento.
+    private fun produtosFlow(): Flow<List<Produto>> = callbackFlow {
+        val registro = db.collection("Produtos")
+            .addSnapshotListener(Dispatchers.IO.asExecutor()) { snapshot, erro ->
+                if (erro != null) {
+                    close(erro)
+                    return@addSnapshotListener
                 }
-        } catch (e: Exception) {
-            emptyList()
-        }
+                val lista = snapshot?.documents?.mapNotNull { doc ->
+                    doc.toObject(Produto::class.java)
+                } ?: emptyList()
+                trySend(lista)
+            }
+        awaitClose { registro.remove() }
     }
 
     fun toggleCategoria(categoria: String) {
         _categoriasSelecionadas.update { atual ->
             if (categoria in atual) atual - categoria else atual + categoria
         }
+    }
+
+    fun setTextoBusca(texto: String) {
+        _textoBusca.value = texto
+    }
+
+    fun fixarCategoria(categoria: String) {
+        _categoriasSelecionadas.value = setOf(categoria)
     }
 
     fun setOrdenacao(novaOrdem: String) {
@@ -99,19 +140,35 @@ class ExplorarProdutoViewmodel : ViewModel() {
             "nome" to produto.nome,
             "preco" to produto.preco,
             "imagens" to if (produto.imagens.isNotEmpty()) listOf(produto.imagens[0]) else emptyList<String>(),
+            // Denormalizado para o checkout agrupar o pagamento por loja
+            "produtorId" to produto.produtorId,
             "quantidade" to FieldValue.increment(1)
         )
 
-        db.collection("Carrinho")
-            .document(uid)
-            .collection("Produtos")
-            .document(produto.id)
-            .set(itemCarrinho, SetOptions.merge())
-            .addOnSuccessListener {
-                Log.d("Carrinho", "Produto ${produto.nome} adicionado com sucesso!")
-            }
+        val carrinhoRef = db.collection("Carrinho").document(uid)
+        val produtoRef = carrinhoRef.collection("Produtos").document(produto.id)
+
+        db.runBatch { batch ->
+            batch.set(
+                carrinhoRef,
+                mapOf(
+                    "usuarioId" to uid,
+                    "atualizadoEm" to FieldValue.serverTimestamp()
+                ),
+                SetOptions.merge()
+            )
+            batch.set(produtoRef, itemCarrinho, SetOptions.merge())
+        }
             .addOnFailureListener { e ->
                 Log.e("Carrinho", "Erro ao adicionar produto", e)
             }
     }
 }
+
+private val marcasDiacriticas = "\\p{Mn}+".toRegex()
+
+private fun String.normalizarParaBusca(): String =
+    Normalizer.normalize(this, Normalizer.Form.NFD)
+        .replace(marcasDiacriticas, "")
+        .lowercase(Locale.ROOT)
+        .trim()

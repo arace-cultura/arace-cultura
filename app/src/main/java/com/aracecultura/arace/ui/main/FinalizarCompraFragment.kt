@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.aracecultura.arace.ui.components.carrinho.CheckoutPaymentScreen
 import com.aracecultura.arace.ui.theme.AraceTheme
+import com.google.firebase.auth.FirebaseAuth
 
 class FinalizarCompraFragment : Fragment() {
 
@@ -20,7 +21,11 @@ class FinalizarCompraFragment : Fragment() {
         return ComposeView(requireContext()).apply {
             setContent {
                 AraceTheme {
-                    CheckoutPaymentScreen(navController = findNavController())
+                    val uid = FirebaseAuth.getInstance().currentUser?.uid.orEmpty()
+                    CheckoutPaymentScreen(
+                        navController = findNavController(),
+                        uid = uid
+                    )
                 }
             }
         }

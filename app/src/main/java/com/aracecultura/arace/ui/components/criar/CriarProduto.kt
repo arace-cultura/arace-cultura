@@ -23,8 +23,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.Font
-import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
@@ -44,7 +43,8 @@ fun CriarProduto(
     viewModel: ProdutoViewModel = viewModel()
 ) {
     val context = LocalContext.current
-    val libreCaslonDisplay = FontFamily(Font(R.font.librecaslondisplay_regular))
+    val mensagemCamposObrigatorios = stringResource(R.string.criar_campos_obrigatorios)
+    val mensagemSucesso = stringResource(R.string.criar_sucesso)
 
     var textName by remember { mutableStateOf("") }
     var textDesc1 by remember { mutableStateOf("") }
@@ -67,7 +67,7 @@ fun CriarProduto(
     LaunchedEffect(uiState) {
         when (uiState) {
             is ProdutoUiState.Success -> {
-                Toast.makeText(context, (uiState as ProdutoUiState.Success).message, Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, mensagemSucesso, Toast.LENGTH_SHORT).show()
                 viewModel.resetState()
                 selectedImageUri = null
                 textName = ""
@@ -107,13 +107,14 @@ fun CriarProduto(
         ) {
             Text(
                 "Adicionar Produto",
-                Modifier.width(200.dp),
-                fontFamily = libreCaslonDisplay,
-                fontSize = 50.sp,
-                lineHeight = 40.sp,
-                textAlign = TextAlign.Center
+                fontSize = 36.sp,
+                textAlign = TextAlign.Center,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(bgDefault)
+                    .padding(vertical = 10.dp)
             )
-            Spacer(Modifier.height(50.dp))
+            Spacer(Modifier.height(20.dp))
 
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -130,7 +131,7 @@ fun CriarProduto(
                     if (selectedImageUri != null) {
                         AsyncImage(
                             model = selectedImageUri,
-                            contentDescription = "Imagem selecionada",
+                            contentDescription = stringResource(R.string.cd_imagem_selecionada),
                             contentScale = ContentScale.Crop,
                             modifier = Modifier
                                 .fillMaxWidth(0.83f)
@@ -159,13 +160,13 @@ fun CriarProduto(
                         ) {
                             Icon(
                                 painter = painterResource(id = R.drawable.ic_image),
-                                contentDescription = "Editar Perfil",
+                                contentDescription = stringResource(R.string.cd_editar_perfil),
                                 tint = Color.White,
                                 modifier = Modifier.size(80.dp)
                             )
                             Spacer(Modifier.height(10.dp))
                             Text(
-                                text = "escolher\nimagem",
+                                text = stringResource(R.string.criar_escolher_imagem),
                                 fontSize = 20.sp,
                                 fontWeight = FontWeight.Medium,
                                 lineHeight = 20.sp,
@@ -181,8 +182,13 @@ fun CriarProduto(
 
                 FixedTextField(
                     text = textName,
-                    onTextChange = { textName = it },
-                    placeholder = { Text("Nome", color = bgDefault) },
+                    onTextChange = { textName = limitarNomeProdutoDigitado(it) },
+                    placeholder = {
+                        Text(
+                            stringResource(R.string.criar_nome_limite, LIMITE_NOME_PRODUTO),
+                            color = bgDefault
+                        )
+                    },
                     unfocusedContainerColor = btColor,
                     focusedContainerColor = btColor,
                     unfocusedBorderColor = btColor,
@@ -201,7 +207,7 @@ fun CriarProduto(
                         value = selectedCategoria,
                         onValueChange = {},
                         readOnly = true,
-                        placeholder = { Text("Categoria", color = btColor) },
+                        placeholder = { Text(stringResource(R.string.criar_placeholder_categoria), color = btColor) },
                         trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expandedCategoria) },
                         modifier = Modifier
                             .fillMaxWidth(0.83f)
@@ -237,7 +243,7 @@ fun CriarProduto(
                 ExpandingTextField(
                     text = textDesc1,
                     onTextChange = { textDesc1 = it },
-                    placeholder = { Text("Descrição", color = btColor) },
+                    placeholder = { Text(stringResource(R.string.criar_placeholder_descricao), color = btColor) },
                     unfocusedContainerColor = bgDefault,
                     focusedContainerColor = bgDefault,
                     unfocusedBorderColor = btColor,
@@ -254,7 +260,7 @@ fun CriarProduto(
                             textPreco = novoPreco
                         }
                     },
-                    placeholder = { Text("Preço (R$)", color = btColor) },
+                    placeholder = { Text(stringResource(R.string.criar_placeholder_preco), color = btColor) },
                     focusedContainerColor = bgDefault,
                     unfocusedContainerColor = bgDefault,
                     focusedBorderColor = btColor,
@@ -267,18 +273,22 @@ fun CriarProduto(
 
                 Spacer(Modifier.height(20.dp))
 
-                // --- NOVO: Botão Adicionar reativo ao estado ---
                 if (uiState is ProdutoUiState.Loading) {
                     CircularProgressIndicator(color = btColor)
                 } else {
                     AppButton(
-                        text = "Adicionar",
+                        text = stringResource(R.string.criar_adicionar),
                         textColor = bgDefault,
                         containerColor = btColor,
                         borderColor = btColor,
                         onClick = {
-                            if (selectedImageUri == null || textName.isEmpty() || selectedCategoria.isEmpty() || textPreco.isEmpty()) {
-                                Toast.makeText(context, "Preencha todos os campos e selecione uma imagem", Toast.LENGTH_SHORT).show()
+                            if (
+                                selectedImageUri == null ||
+                                normalizarNomeProduto(textName).isEmpty() ||
+                                selectedCategoria.isEmpty() ||
+                                textPreco.isEmpty()
+                            ) {
+                                Toast.makeText(context, mensagemCamposObrigatorios, Toast.LENGTH_SHORT).show()
                             } else {
                                 viewModel.salvarProduto(
                                     context = context,

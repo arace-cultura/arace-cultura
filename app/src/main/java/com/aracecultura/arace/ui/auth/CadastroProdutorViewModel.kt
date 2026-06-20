@@ -32,18 +32,37 @@ class CadastroProdutorViewModel : ViewModel() {
     private val _resultado = MutableStateFlow<ResultadoCadastro>(ResultadoCadastro.Idle)
     val resultado: StateFlow<ResultadoCadastro> = _resultado.asStateFlow()
 
-    fun salvarProdutor(
-        context: Context,
-        produtor: Produtor,
-        senhaLoja: String,
-        bannerUri: Uri? = null,
-        fotoLojaUri: Uri? = null,
-        fotosHistoriaUris: List<Uri> = emptyList()
-    ) {
+    // Rascunho compartilhado pelas telas do cadastro. Como o ViewModel é
+    // escopado ao nav graph do fluxo (navGraphViewModels), voltar entre as
+    // telas não perde nada: cada tela lê o rascunho ao abrir e grava ao sair.
+    private val _draft = MutableStateFlow(Produtor())
+    val draft: StateFlow<Produtor> = _draft.asStateFlow()
+
+    private val _senhaLoja = MutableStateFlow("")
+    val senhaLoja: StateFlow<String> = _senhaLoja.asStateFlow()
+
+    // Imagens escolhidas: guardadas no ViewModel (e não no fragment) para
+    // sobreviverem à navegação de volta entre as telas.
+    var bannerUri: Uri? = null
+    var fotoLojaUri: Uri? = null
+    var fotosHistoriaUris: List<Uri> = emptyList()
+
+    fun atualizarDraft(transform: (Produtor) -> Produtor) {
+        _draft.value = transform(_draft.value)
+    }
+
+    fun atualizarSenha(senha: String) {
+        _senhaLoja.value = senha
+    }
+
+    fun salvarProdutor(context: Context) {
         val uid = FirebaseAuth.getInstance().currentUser?.uid ?: run {
             _resultado.value = ResultadoCadastro.Erro("Usuário não autenticado")
             return
         }
+
+        val produtor = _draft.value
+        val senhaLoja = _senhaLoja.value
 
         viewModelScope.launch {
             _resultado.value = ResultadoCadastro.Salvando
@@ -98,11 +117,4 @@ class CadastroProdutorViewModel : ViewModel() {
         return bucket.publicUrl(caminhoSeguro)
     }
 
-    suspend fun isProdutor(uid: String): Boolean {
-        return try {
-            LojaRepository.resolverLojaId(uid) != null
-        } catch (e: Exception) {
-            false
-        }
-    }
 }

@@ -23,7 +23,7 @@
                 android:layout_marginBottom="24dp"
                 android:fontFamily="@font/google_sans_flex_variable_font"
                 android:gravity="center_horizontal"
-                android:text="Entrar em loja existente"
+                android:text="@string/entrar_loja_existente"
                 android:textColor="@color/texto"
                 android:textFontWeight="500"
                 android:textSize="24sp" />
@@ -33,7 +33,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="12dp"
-                android:hint="Nome da loja"
+                android:hint="@string/entrar_loja_nome"
                 app:boxCornerRadiusBottomEnd="15dp"
                 app:boxCornerRadiusBottomStart="15dp"
                 app:boxCornerRadiusTopEnd="15dp"
@@ -55,7 +55,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
-                android:hint="Senha da loja"
+                android:hint="@string/senha_loja"
                 app:boxCornerRadiusBottomEnd="15dp"
                 app:boxCornerRadiusBottomStart="15dp"
                 app:boxCornerRadiusTopEnd="15dp"
@@ -91,7 +91,7 @@
                 android:backgroundTint="@color/arace_blue"
                 android:fontFamily="@font/google_sans_flex_variable_font"
                 android:paddingVertical="14dp"
-                android:text="Entrar na loja"
+                android:text="@string/entrar_na_loja"
                 android:textColor="@color/white"
                 android:textSize="16sp" />
 
@@ -100,7 +100,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/google_sans_flex_variable_font"
-                android:text="Voltar"
+                android:text="@string/voltar"
                 android:textColor="@color/black"
                 android:textSize="16sp" />
 

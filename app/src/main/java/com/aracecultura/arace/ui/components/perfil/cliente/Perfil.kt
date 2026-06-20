@@ -14,7 +14,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -36,11 +38,52 @@ fun PerfilCliente(
 ) {
     val usuario by viewModel.usuario.collectAsState()
     val scrollState = rememberScrollState()
+    val screenWidth = LocalConfiguration.current.screenWidthDp.dp
+    var showLogoutDialog by remember { mutableStateOf(false) }
 
     LaunchedEffect(uid) {
         if (uid.isNotBlank()) {
             viewModel.carregarDadosUsuario(uid)
         }
+    }
+
+    if (showLogoutDialog) {
+        AlertDialog(
+            onDismissRequest = { showLogoutDialog = false },
+            containerColor = Color(0xFFFAF7F2),
+            title = {
+                Text(
+                    text = stringResource(R.string.sair_conta_titulo),
+                    color = Color(0xFF2E2B27),
+                    fontWeight = FontWeight.Bold
+                )
+            },
+            text = {
+                Text(
+                    text = stringResource(R.string.sair_conta_msg),
+                    color = Color(0xFF7A7168)
+                )
+            },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        showLogoutDialog = false
+                        onLogoutClick()
+                    }
+                ) {
+                    Text(
+                        text = stringResource(R.string.sim_sair),
+                        color = Color(0xFFCE5A14),
+                        fontWeight = FontWeight.SemiBold
+                    )
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showLogoutDialog = false }) {
+                    Text(stringResource(R.string.voltar), color = Color(0xFF7A7168))
+                }
+            }
+        )
     }
 
     Box(Modifier.background(bgDefault)) {
@@ -53,11 +96,10 @@ fun PerfilCliente(
         )
 
         Column(modifier = Modifier.fillMaxSize().verticalScroll(scrollState)) {
-
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .weight(2f)
+                    .height(screenWidth * 0.85f)
             ) {
                 Column(Modifier.fillMaxSize()) {
                     Box(
@@ -69,7 +111,7 @@ fun PerfilCliente(
                         if (usuario.bannerUrl.isNotBlank()) {
                             AsyncImage(
                                 model = usuario.bannerUrl,
-                                contentDescription = "Banner do perfil",
+                                contentDescription = stringResource(R.string.cd_banner_perfil),
                                 contentScale = ContentScale.Crop,
                                 modifier = Modifier.fillMaxSize()
                             )
@@ -90,13 +132,16 @@ fun PerfilCliente(
                 ) {
                     Icon(
                         painter = painterResource(id = R.drawable.ic_editar_perfil),
-                        contentDescription = "Editar Perfil",
+                        contentDescription = stringResource(R.string.cd_editar_perfil),
                         tint = Color.White
                     )
                 }
 
                 BotaoVisualizacao(
-                    modoAtualIsProdutor = usuario.isProdutor,
+                    // Estar nesta tela = modo cliente. O radio reflete a tela
+                    // atual, não usuario.isProdutor (que indica "tem loja" e
+                    // ficaria preso em Produtor para contas produtoras).
+                    modoAtualIsProdutor = false,
                     onModoChanged = { isProdutor ->
                         viewModel.alterarModoVisualizacao(isProdutor, uid)
                         onModoChanged(isProdutor)
@@ -114,13 +159,13 @@ fun PerfilCliente(
                         .padding(vertical = 10.dp)
                 ) {
                     Text(
-                        text = usuario.nome.ifEmpty { "Usuário" },
+                        text = usuario.nome.ifEmpty { stringResource(R.string.usuario) },
                         fontSize = 30.sp,
                         fontWeight = FontWeight.Medium,
                         color = Color(0xFF1F2937)
                     )
                     Text(
-                        text = usuario.email.ifEmpty { "carregando..." },
+                        text = usuario.email.ifEmpty { stringResource(R.string.carregando) },
                         fontSize = 16.sp,
                         color = Color.Gray
                     )
@@ -138,7 +183,7 @@ fun PerfilCliente(
                     if (usuario.fotoUrl.isNotBlank()) {
                         AsyncImage(
                             model = usuario.fotoUrl,
-                            contentDescription = "Foto de perfil",
+                            contentDescription = stringResource(R.string.cd_foto_perfil),
                             contentScale = ContentScale.Crop,
                             modifier = Modifier.fillMaxSize()
                         )
@@ -159,19 +204,23 @@ fun PerfilCliente(
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .weight(3f)
                     .background(bgDefault)
                     .padding(20.dp)
             ) {
-                InfoRow(label = "Nome", value = usuario.nome.ifEmpty { "Usuário" })
+                InfoRow(
+                    label = stringResource(R.string.nome),
+                    value = usuario.nome.ifEmpty { stringResource(R.string.usuario) }
+                )
                 Spacer(modifier = Modifier.height(16.dp))
-                InfoRow(label = "Email", value = usuario.email.ifEmpty { "carregando..." })
-                Spacer(modifier = Modifier.height(32.dp))
+                InfoRow(
+                    label = stringResource(R.string.email),
+                    value = usuario.email.ifEmpty { stringResource(R.string.carregando) }
+                )
 
-                Spacer(Modifier.weight(1f))
+                Spacer(modifier = Modifier.height(48.dp))
 
                 Text(
-                    text = "Configurações",
+                    text = stringResource(R.string.configuracoes),
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Medium,
                     color = Color.Black,
@@ -181,14 +230,13 @@ fun PerfilCliente(
                 )
                 Spacer(modifier = Modifier.height(8.dp))
 
-                // --- BOTÃO SAIR ---
                 Text(
-                    text = "Sair",
+                    text = stringResource(R.string.sair),
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Medium,
                     color = Color.Black,
                     modifier = Modifier
-                        .clickable { onLogoutClick() }
+                        .clickable { showLogoutDialog = true }
                         .padding(8.dp) // Área de clique levemente maior
                 )
             }

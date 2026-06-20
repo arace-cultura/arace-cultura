@@ -1,33 +1,45 @@
 package com.aracecultura.arace.ui.components.perfil.produtor
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Icon
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
+import com.aracecultura.arace.R
 import com.aracecultura.arace.data.model.Produto
 import com.aracecultura.arace.data.model.Produtor
 import com.aracecultura.arace.ui.components.CarregamentoContainer
@@ -38,14 +50,21 @@ import com.aracecultura.arace.ui.theme.verdePrincipal
 
 @Composable
 fun PerfilProdutor(
-    uid: String,
+    uid: String = "",
+    lojaId: String? = null,
+    somenteLeitura: Boolean = false,
     viewModel: PerfilProdutorViewModel = viewModel(),
-    onModoChanged: (Boolean) -> Unit = {}
+    onModoChanged: (Boolean) -> Unit = {},
+    onEditarProdutos: () -> Unit = {},
+    onSairLojaClick: () -> Unit = {},
+    onBack: (() -> Unit)? = null
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
-    LaunchedEffect(uid) {
-        viewModel.carregarPerfil(uid)
+    // lojaId != null → visão do cliente (perfil de outra loja, somente leitura).
+    LaunchedEffect(uid, lojaId) {
+        if (lojaId != null) viewModel.carregarPerfilPorLoja(lojaId)
+        else viewModel.carregarPerfil(uid)
     }
 
     when {
@@ -54,7 +73,11 @@ fun PerfilProdutor(
         uiState.produtor != null -> PerfilProdutorContent(
             produtor = uiState.produtor!!,
             produtos = uiState.produtos,
-            onModoChanged = onModoChanged
+            somenteLeitura = somenteLeitura,
+            onModoChanged = onModoChanged,
+            onEditarProdutos = onEditarProdutos,
+            onSairLojaClick = onSairLojaClick,
+            onBack = onBack
         )
     }
 }
@@ -160,11 +183,55 @@ private fun PerfilProdutorErro(message: String) {
 private fun PerfilProdutorContent(
     produtor: Produtor,
     produtos: List<Produto>,
-    onModoChanged: (Boolean) -> Unit = {}
+    somenteLeitura: Boolean = false,
+    onModoChanged: (Boolean) -> Unit = {},
+    onEditarProdutos: () -> Unit = {},
+    onSairLojaClick: () -> Unit = {},
+    onBack: (() -> Unit)? = null
 ) {
     val screenWidth = LocalConfiguration.current.screenWidthDp.dp
     val loja = produtor.nomeLoja.ifBlank { produtor.nomeCompleto }
     val nomeExibicao = loja.ifBlank { "Produtor" }
+    var showSairLojaDialog by remember { mutableStateOf(false) }
+
+    if (showSairLojaDialog) {
+        AlertDialog(
+            onDismissRequest = { showSairLojaDialog = false },
+            containerColor = Color(0xFFFAF7F2),
+            title = {
+                Text(
+                    text = stringResource(R.string.sair_loja_titulo),
+                    color = Color(0xFF2E2B27),
+                    fontWeight = FontWeight.Bold
+                )
+            },
+            text = {
+                Text(
+                    text = stringResource(R.string.sair_loja_msg),
+                    color = Color(0xFF7A7168)
+                )
+            },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        showSairLojaDialog = false
+                        onSairLojaClick()
+                    }
+                ) {
+                    Text(
+                        text = stringResource(R.string.sim_sair_loja),
+                        color = Color(0xFFCE5A14),
+                        fontWeight = FontWeight.SemiBold
+                    )
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showSairLojaDialog = false }) {
+                    Text(stringResource(R.string.voltar), color = Color(0xFF7A7168))
+                }
+            }
+        )
+    }
 
     LazyColumn(
         modifier = Modifier
@@ -204,11 +271,50 @@ private fun PerfilProdutorContent(
                         .background(bgDefault)
                 )
 
-                BotaoVisualizacao(
-                    modoAtualIsProdutor = true,
-                    onModoChanged = onModoChanged,
-                    modifier = Modifier.align(Alignment.TopEnd)
-                )
+                // Na visão do cliente não há troca de modo nem edição.
+                if (!somenteLeitura) {
+                    BotaoVisualizacao(
+                        modoAtualIsProdutor = true,
+                        onModoChanged = onModoChanged,
+                        modifier = Modifier.align(Alignment.TopEnd).offset(y = (-2).dp)
+                    )
+                }
+
+                if (onBack != null) {
+                    Box(
+                        modifier = Modifier
+                            .padding(12.dp)
+                            .size(44.dp)
+                            .align(Alignment.TopStart)
+                            .clip(CircleShape)
+                            .background(bgDefault)
+                            .clickable { onBack() },
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Icon(
+                            painter = painterResource(R.drawable.ic_arrow_left),
+                            contentDescription = stringResource(R.string.voltar),
+                            tint = Color.Black
+                        )
+                    }
+                } else if (!somenteLeitura) {
+                    Box(
+                        modifier = Modifier
+                            .padding(12.dp)
+                            .size(44.dp)
+                            .align(Alignment.TopStart)
+                            .clip(CircleShape)
+                            .background(bgDefault)
+                            .clickable { showSairLojaDialog = true },
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Icon(
+                            painter = painterResource(R.drawable.ic_log_out),
+                            contentDescription = stringResource(R.string.cd_sair_loja),
+                            tint = Color.Black
+                        )
+                    }
+                }
 
                 Box(
                     modifier = Modifier
@@ -228,7 +334,7 @@ private fun PerfilProdutorContent(
                     } else {
                         AsyncImage(
                             model = produtor.fotoLoja,
-                            contentDescription = "Foto da loja",
+                            contentDescription = stringResource(R.string.cd_foto_loja),
                             contentScale = ContentScale.Crop,
                             modifier = Modifier.fillMaxSize()
                         )
@@ -253,7 +359,7 @@ private fun PerfilProdutorContent(
                 )
 
                 Text(
-                    text = "Nossos produtos em destaque",
+                    text = stringResource(R.string.nossos_produtos_destaque),
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Medium,
                     modifier = Modifier
@@ -263,6 +369,12 @@ private fun PerfilProdutorContent(
                 )
 
                 ImageCarousel(imageUrls = produtos.flatMap { it.imagens }.take(5))
+            }
+        }
+
+        if (!somenteLeitura) {
+            item {
+                BotaoEditarProdutos(onClick = onEditarProdutos)
             }
         }
 
@@ -286,5 +398,37 @@ private fun PerfilProdutorContent(
                 produtor = produtor
             )
         }
+    }
+}
+
+@Composable
+private fun BotaoEditarProdutos(onClick: () -> Unit) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 8.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Box(
+            modifier = Modifier
+                .clip(RoundedCornerShape(50))
+                .background(btColor)
+                .clickable { onClick() }
+                .padding(horizontal = 56.dp, vertical = 18.dp),
+            contentAlignment = Alignment.Center
+        ) {
+            Icon(
+                painter = painterResource(R.drawable.ic_editar_produto),
+                contentDescription = stringResource(R.string.editar_produtos),
+                tint = Color.White,
+                modifier = Modifier.size(32.dp)
+            )
+        }
+        Spacer(Modifier.height(8.dp))
+        Text(
+            text = stringResource(R.string.editar_produtos_botao),
+            fontSize = 16.sp,
+            fontWeight = FontWeight.Medium
+        )
     }
 }

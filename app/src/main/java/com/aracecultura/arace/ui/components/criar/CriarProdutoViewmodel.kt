@@ -4,6 +4,7 @@ import android.content.Context
 import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.aracecultura.arace.R
 import com.aracecultura.arace.supabase
 import com.aracecultura.arace.data.LojaRepository
 import com.aracecultura.arace.data.model.Produto
@@ -40,6 +41,14 @@ class ProdutoViewModel : ViewModel() {
         descricao: String,
         precoStr: String
     ) {
+        val nomeNormalizado = normalizarNomeProduto(nome)
+        if (nomeNormalizado.isEmpty()) {
+            _uiState.value = ProdutoUiState.Error(
+                context.getString(R.string.criar_nome_obrigatorio)
+            )
+            return
+        }
+
         val userUid = Firebase.auth.currentUser?.uid
         if (userUid == null) {
             _uiState.value = ProdutoUiState.Error("Usuário não autenticado.")
@@ -75,13 +84,15 @@ class ProdutoViewModel : ViewModel() {
                 // 4. Instanciar a Data Class (adaptando os campos únicos para listas)
                 val novoProduto = Produto(
                     // id = "" -> Não passamos o ID, o @DocumentId diz pro Firestore gerar um automaticamente no .add()
-                    nome = nome,
+                    nome = nomeNormalizado,
                     categorias = listOf(categoria), // Envolvido em lista
                     descricao = descricao,
                     preco = precoFormatado,
                     imagens = listOf(imageUrl), // Envolvido em lista
                     produtorId = lojaId,
-                    avaliacao = 0.0 // Valor padrão inicial
+                    avaliacao = 0.0,
+                    somaAvaliacoes = 0.0,
+                    quantidadeAvaliacoes = 0
                 )
 
                 // 5. Salvar o objeto diretamente no Firestore

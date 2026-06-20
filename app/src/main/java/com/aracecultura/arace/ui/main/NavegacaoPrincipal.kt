@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
@@ -13,10 +14,10 @@ import com.aracecultura.arace.R
 import com.aracecultura.arace.data.LojaRepository
 import com.aracecultura.arace.databinding.FragmentNavegacaoPrincipalBinding
 import com.aracecultura.arace.ui.main.jetpack.Modo
-import com.aracecultura.arace.ui.main.jetpack.SeletorModoBottomSheet
 import android.util.Log
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.ui.NavigationUI
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.launch
 
@@ -39,12 +40,13 @@ class NavegacaoPrincipal : Fragment() {
         binding.bnvMenuInferiorNavegacao.itemIconTintList = null
         super.onViewCreated(view, savedInstanceState)
 
-        // getFragment é necessário pois o acesso ao navcontroller é da
-        // fragment dentro do fcvNavegacaoPrincipal, que é, na verdade,
-        // uma view que pertence à main activity.
+        // getFragment é necessário pois é só uma view (um componente visual);
+        // o comportamento de permanência e navegação é administrado pelo
+        // NavHostFragment (fragment_navegacao_principal, embora apareça só na view
+
         val navController = this.binding.fcvNavegacaoPrincipal.getFragment<NavHostFragment>().navController
 
-        this.binding.bnvMenuInferiorNavegacao.setupWithNavController(navController)
+        configurarNavegacaoInferior(navController)
 
         navController.addOnDestinationChangedListener { _, destination, _ ->
             val esconderFooter = destination.id == R.id.produto ||
@@ -53,14 +55,6 @@ class NavegacaoPrincipal : Fragment() {
             this.binding.bnvMenuInferiorNavegacao.visibility =
                 if (esconderFooter) View.GONE else View.VISIBLE
         }
-
-        this.binding.btnMenuModo.setOnClickListener {
-             val bottomSheet = SeletorModoBottomSheet()
-             bottomSheet.onModoSelecionado = { modoSelecionado ->
-                 quandoModoMudar(modoSelecionado)
-             }
-             bottomSheet.show(childFragmentManager, "SeletorModo")
-         }
 
         // ── Barramento único de sinais entre telas ──────────────────────
         // Todos os fragment results do app trafegam pelo FragmentManager da
@@ -160,6 +154,36 @@ class NavegacaoPrincipal : Fragment() {
         this._binding = null
     }
 
+    private fun configurarNavegacaoInferior(navController: NavController) {
+        val bottomNav = binding.bnvMenuInferiorNavegacao
+
+        bottomNav.setupWithNavController(navController)
+        bottomNav.setOnItemSelectedListener { item ->
+            val estavaNaCategoria = navController.currentDestination?.id == R.id.categoria
+
+            if (estavaNaCategoria) {
+                navController.popBackStack(R.id.homePage, false)
+            }
+
+            if (estavaNaCategoria && item.itemId == R.id.homePage) {
+                true
+            } else {
+                NavigationUI.onNavDestinationSelected(item, navController)
+            }
+        }
+        bottomNav.setOnItemReselectedListener { item ->
+            if (navController.currentDestination?.id == R.id.categoria) {
+                navController.popBackStack(R.id.homePage, false)
+
+                if (item.itemId != R.id.homePage) {
+                    NavigationUI.onNavDestinationSelected(item, navController)
+                }
+            } else {
+                navController.popBackStack(item.itemId, false)
+            }
+        }
+    }
+
     private fun configurarMenuCliente() {
         val bottomNav = this.binding.bnvMenuInferiorNavegacao
         val navController = this.binding.fcvNavegacaoPrincipal.getFragment<NavHostFragment>().navController
@@ -172,7 +196,7 @@ class NavegacaoPrincipal : Fragment() {
         bottomNav.inflateMenu(R.menu.bottom_nav)
 
         // 3. Reconecta o controller para ele reconhecer os "novos" botões
-        bottomNav.setupWithNavController(navController)
+        configurarNavegacaoInferior(navController)
         if (destinoAtual == R.id.perfilprodutor) {
             navController.navigate(R.id.perfilcliente)
         } else {
@@ -192,7 +216,7 @@ class NavegacaoPrincipal : Fragment() {
         bottomNav.inflateMenu(R.menu.bottom_nav_produtor)
 
         // 3. Reconecta o controller para ele reconhecer os "novos" botões
-        bottomNav.setupWithNavController(navController)
+        configurarNavegacaoInferior(navController)
         if (destinoAtual == R.id.perfilcliente) {
             navController.navigate(R.id.perfilprodutor)
         } else {
