@@ -2,7 +2,7 @@
 
 namespace App\Libraries;
 
-use App\Collections\CustomerCollection;
+use App\Collections\UsuarioCollection;
 use App\Collections\ProducerCollection;
 use App\Collections\ProductCollection;
 use RuntimeException;
@@ -99,13 +99,13 @@ final class AraceFirestore
         }
     }
 
-    public function createCustomer(array $payload): array
+    public function createUser(array $payload): array
     {
         if (isset($payload['senha'])) {
             $payload['senha'] = password_hash((string) $payload['senha'], PASSWORD_DEFAULT);
         }
 
-        return $this->entityPayload($this->collection(CustomerCollection::class)->add($payload));
+        return $this->entityPayload($this->collection(UsuarioCollection::class)->add($payload));
     }
 
     public function createProducer(array $payload): array

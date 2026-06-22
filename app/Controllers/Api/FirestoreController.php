@@ -33,7 +33,7 @@ final class FirestoreController extends ResourceController
         ]);
     }
 
-    public function createCustomer(): ResponseInterface
+    public function createUser(): ResponseInterface
     {
         $payload = $this->request->getJSON(true) ?? $this->request->getPost();
         $payload = $this->cleanPayload($payload, ['nome', 'email', 'senha']);
@@ -49,7 +49,7 @@ final class FirestoreController extends ResourceController
         try {
             return $this->respondCreated([
                 'source' => 'firestore',
-                'data'   => (new AraceFirestore())->createCustomer($payload),
+                'data'   => (new AraceFirestore())->createUser($payload),
             ]);
         } catch (\Throwable) {
             return $this->failServerError('Nao foi possivel salvar o cliente no Firestore.');

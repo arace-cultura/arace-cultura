@@ -67,7 +67,7 @@ $routes->view('produtor/configuracao-loja', 'user-producter/arace-producer-confi
 // ============================================================================
 // 6. CADASTROS
 // ============================================================================
-$routes->post('cadastro/clientes', 'RegistrationController::customer');
+$routes->post('cadastro/clientes', 'RegistrationController::user');
 $routes->post('cadastro/produtor/dono', 'RegistrationController::producerOwner');
 $routes->post('cadastro/produtores', 'RegistrationController::producerStore');
 
@@ -79,6 +79,6 @@ $routes->group('api', static function ($routes) {
     $routes->get('products', 'Api\FirestoreController::products');
     $routes->get('products/(:segment)', 'Api\FirestoreController::product/$1');
     $routes->get('producers', 'Api\FirestoreController::producers');
-    $routes->post('customers', 'Api\FirestoreController::createCustomer');
+    $routes->post('user', 'Api\FirestoreController::createUser');
     $routes->post('producers', 'Api\FirestoreController::createProducer');
 });
