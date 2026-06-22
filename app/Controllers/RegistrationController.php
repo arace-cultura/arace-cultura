@@ -6,7 +6,7 @@ use App\Libraries\AraceFirestore;
 
 final class RegistrationController extends BaseController
 {
-    public function customer()
+    public function user()
     {
         $payload = $this->request->getPost(['nome', 'email', 'senha']);
 
@@ -23,10 +23,11 @@ final class RegistrationController extends BaseController
         }
 
         try {
-            (new AraceFirestore())->createCustomer($payload);
+            (new AraceFirestore())->createUser($payload);
 
             return redirect()->to('/usuario/arace-perfil')->with('sucesso', 'Conta criada com sucesso.');
-        } catch (\Throwable) {
+        } catch (\Throwable $e) {
+            dd($e->getMessage(), $e->getTraceAsString());
             return redirect()->back()->withInput()->with('erro', 'Nao foi possivel salvar o cadastro no Firestore.');
         }
     }
