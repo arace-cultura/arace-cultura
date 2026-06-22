@@ -67,6 +67,8 @@ arace-cultura-firebase-adminsdk-fbsvc-e152abf953.json
 /writable/debugbar/*
 !/writable/debugbar/index.html
 
+writable/firebase-credentials.json
+
 php_errors.log
 
 #-------------------------
