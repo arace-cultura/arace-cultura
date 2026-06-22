@@ -10,7 +10,7 @@ final class CustomerCollection extends Collection
     public const NAME   = 'clientes';
     public const ENTITY = Customer::class;
 
-    protected $validationRules = [
+    protected array $validationRules = [
         'nome'  => 'required|min_length[2]|max_length[120]',
         'email' => 'required|valid_email',
         'senha' => 'required',
