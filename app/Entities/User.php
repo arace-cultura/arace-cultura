@@ -4,6 +4,6 @@ namespace App\Entities;
 
 use Tatter\Firebase\Firestore\Entity;
 
-final class Customer extends Entity
+final class User extends Entity
 {
 }
