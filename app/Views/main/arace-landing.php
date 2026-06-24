@@ -41,9 +41,9 @@
 <!-- HERO -->
 <section class="hero">
   <div class="hero-slides">
-    <div class="hero-slide active" style="background-image: url('/images/bahia-vitoria.jpg')"></div>
-    <div class="hero-slide" style="background-image: url('/images/baiavitoria2.jpg')"></div>
-    <div class="hero-slide" style="background-image: url('/images/convento1.jpg')"></div>
+    <div class="hero-slide active" style="background-image: url('<?= base_url('images/bahia-vitoria.jpg') ?>')"></div>
+    <div class="hero-slide" style="background-image: url('<?= base_url('images/baiavitoria2.jpg') ?>')"></div>
+    <div class="hero-slide" style="background-image: url('<?= base_url('images/convento1.jpg') ?>')"></div>
   </div>
   <div class="hero-overlay"></div>
   <div class="hero-content">

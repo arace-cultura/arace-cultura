@@ -26,7 +26,7 @@ body {
   min-height: 100vh;
   display: flex; align-items: center; justify-content: center;
   font-family: var(--body);
-  background-image: url('/images/background-authentication.png');
+  background-image: url('../images/background-authentication.png');
   background-size: cover; background-position: center;
   background-color: #141c66;
 }
@@ -97,6 +97,10 @@ body::before {
   transition: background .2s; margin-bottom: 1.25rem;
 }
 .btn-login:hover { background: #1e4080; }
+.btn-login:disabled {
+  cursor: wait;
+  opacity: .75;
+}
 
 /* Links rodapé */
 .links-rodape { display: flex; justify-content: space-between; font-size: .88rem; }
