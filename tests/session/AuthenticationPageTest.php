@@ -16,6 +16,10 @@ final class AuthenticationPageTest extends CIUnitTestCase
         $result->assertStatus(200);
         $result->assertSeeElement('#formLogin');
         $result->assertSeeElement('#btnEntrar');
+        $this->assertStringContainsString(
+            'action="' . site_url('login') . '"',
+            (string) $result->getBody(),
+        );
         $this->assertStringNotContainsString(
             '<a href="/usuario/arace-perfil">Entrar</a>',
             (string) $result->getBody(),
@@ -54,7 +58,7 @@ final class AuthenticationPageTest extends CIUnitTestCase
         $result->assertSee('Usuario Teste');
         $result->assertSee('usuario@teste.com');
         $this->assertStringContainsString(
-            '<form class="logout-form" action="/sair" method="post">',
+            '<form class="logout-form" action="' . site_url('sair') . '" method="post">',
             (string) $result->getBody(),
         );
     }

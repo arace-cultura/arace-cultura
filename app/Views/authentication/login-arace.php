@@ -24,7 +24,7 @@
       <p class="mensagem-login mensagem-sucesso" role="status"><?= esc(session('sucesso')) ?></p>
     <?php endif; ?>
 
-    <form id="formLogin" action="/login" method="post">
+    <form id="formLogin" action="<?= site_url('login') ?>" method="post">
       <div class="input-group-custom item-animado atraso-2">
         <i data-lucide="user"></i>
         <input type="email" id="email" name="email" placeholder="E-mail" autocomplete="email" value="<?= esc(old('email')) ?>" required />
@@ -47,7 +47,7 @@
         <button type="submit" class="btn-login" id="btnEntrar">Entrar</button>
 
         <div class="links-rodape">
-          <a href="/cadastro">Cadastre-se</a>
+          <a href="<?= site_url('cadastro') ?>">Cadastre-se</a>
           <a href="#" class="esqueceu">Esqueceu a senha?</a>
         </div>
       </div>

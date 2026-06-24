@@ -71,7 +71,7 @@
     <a class="nav-item" href="/arace-config#pagamento">
       <i data-lucide="hand-coins"></i> Detalhes de pagamento
     </a>
-    <form class="logout-form" action="/sair" method="post">
+    <form class="logout-form" action="<?= site_url('sair') ?>" method="post">
       <button class="nav-item logout-button" type="submit">
         <i data-lucide="log-out"></i> Sair da conta
       </button>
