@@ -5,6 +5,7 @@ namespace App\Libraries;
 use App\Collections\UsuarioCollection;
 use App\Collections\ProducerCollection;
 use App\Collections\ProductCollection;
+use DomainException;
 use RuntimeException;
 
 final class AraceFirestore
@@ -101,11 +102,82 @@ final class AraceFirestore
 
     public function createUser(array $payload): array
     {
+        $payload['email'] = mb_strtolower(trim((string) ($payload['email'] ?? '')));
+
         if (isset($payload['senha'])) {
             $payload['senha'] = password_hash((string) $payload['senha'], PASSWORD_DEFAULT);
         }
 
-        return $this->entityPayload($this->collection(UsuarioCollection::class)->add($payload));
+        $user = $this->entityPayload($this->collection(UsuarioCollection::class)->add($payload));
+        unset($user['senha']);
+
+        return $user;
+    }
+
+    /**
+     * Confere as credenciais diretamente na colecao Usuarios.
+     * Retorna somente os dados seguros que podem ir para a sessao.
+     */
+    public function authenticateUser(string $email, string $password): ?array
+    {
+        $email      = mb_strtolower(trim($email));
+        $collection = $this->collection(UsuarioCollection::class);
+        $user       = null;
+        $userEntity = null;
+
+        // Cadastros novos usam e-mail normalizado e aproveitam a consulta indexada.
+        $query = $collection->where('email', '=', $email)->limit(1);
+        foreach ($collection->list($query) as $entity) {
+            $userEntity = $entity;
+            $user       = $this->entityPayload($entity);
+            break;
+        }
+
+        // Mantem compatibilidade com contas antigas que tenham letras maiusculas.
+        if ($user === null) {
+            foreach ($collection->list() as $entity) {
+                $candidate = $this->entityPayload($entity);
+                if (mb_strtolower(trim((string) ($candidate['email'] ?? ''))) === $email) {
+                    $userEntity = $entity;
+                    $user       = $candidate;
+                    break;
+                }
+            }
+        }
+
+        if ($user === null || ! $this->passwordMatches($password, (string) ($user['senha'] ?? ''))) {
+            return null;
+        }
+
+        $status = mb_strtolower((string) ($user['status'] ?? 'ativo'));
+        if (($user['ativo'] ?? true) === false
+            || ($user['verificado'] ?? $user['emailVerificado'] ?? true) === false
+            || in_array($status, ['bloqueado', 'inativo', 'pendente'], true)) {
+            throw new DomainException('A conta ainda nao foi verificada ou esta inativa.');
+        }
+
+        // Registros antigos em texto puro sao aceitos uma unica vez e
+        // atualizados imediatamente para o mesmo hash seguro dos cadastros novos.
+        if ($userEntity !== null && password_get_info((string) $user['senha'])['algo'] === null) {
+            try {
+                $collection->update($userEntity, [
+                    'senha' => password_hash($password, PASSWORD_DEFAULT),
+                ]);
+            } catch (\Throwable) {
+                // Uma falha de migracao nao invalida credenciais ja conferidas.
+            }
+        }
+
+        return array_filter([
+            'id'       => (string) ($user['id'] ?? ''),
+            'nome'     => (string) ($user['nome'] ?? 'Usuario'),
+            'email'    => (string) ($user['email'] ?? $email),
+            'telefone' => $user['telefone'] ?? null,
+            'cidade'   => $user['cidade'] ?? null,
+            'estado'   => $user['estado'] ?? null,
+            'cpf'      => $user['cpf'] ?? null,
+            'avatar'   => $user['avatar'] ?? null,
+        ], static fn ($value): bool => $value !== null && $value !== '');
     }
 
     public function createProducer(array $payload): array
@@ -198,5 +270,18 @@ final class AraceFirestore
         $letters = array_map(static fn (string $word): string => mb_substr($word, 0, 1), array_slice($words, 0, 2));
 
         return mb_strtoupper(implode('', $letters)) ?: 'AR';
+    }
+
+    private function passwordMatches(string $plainPassword, string $storedPassword): bool
+    {
+        if ($plainPassword === '' || $storedPassword === '') {
+            return false;
+        }
+
+        // As contas criadas pela aplicacao usam password_hash(). O segundo
+        // caso permite a primeira entrada de registros legados em texto puro.
+        return password_verify($plainPassword, $storedPassword)
+            || (password_get_info($storedPassword)['algo'] === null
+                && hash_equals($storedPassword, $plainPassword));
     }
 }
