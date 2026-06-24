@@ -23,11 +23,16 @@ final class RegistrationController extends BaseController
         }
 
         try {
-            (new AraceFirestore())->createUser($payload);
+            $user = (new AraceFirestore())->createUser($payload);
+            session()->regenerate(true);
+            session()->set([
+                'arace_authenticated' => true,
+                'arace_user'          => $user,
+                'arace_remember'      => false,
+            ]);
 
             return redirect()->to('/usuario/arace-perfil')->with('sucesso', 'Conta criada com sucesso.');
         } catch (\Throwable $e) {
-            dd($e->getMessage(), $e->getTraceAsString());
             return redirect()->back()->withInput()->with('erro', 'Nao foi possivel salvar o cadastro no Firestore.');
         }
     }

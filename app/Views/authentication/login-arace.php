@@ -18,10 +18,16 @@
 
     <p class="subtitle item-animado atraso-1">Bem-vindo de volta</p>
 
-    <form id="formLogin" novalidate>
+    <?php if (session('erro')): ?>
+      <p class="mensagem-login mensagem-erro" role="alert"><?= esc(session('erro')) ?></p>
+    <?php elseif (session('sucesso')): ?>
+      <p class="mensagem-login mensagem-sucesso" role="status"><?= esc(session('sucesso')) ?></p>
+    <?php endif; ?>
+
+    <form id="formLogin" action="/login" method="post">
       <div class="input-group-custom item-animado atraso-2">
         <i data-lucide="user"></i>
-        <input type="email" id="email" name="email" placeholder="E-mail" autocomplete="email" required />
+        <input type="email" id="email" name="email" placeholder="E-mail" autocomplete="email" value="<?= esc(old('email')) ?>" required />
       </div>
 
       <div class="input-group-custom item-animado atraso-3">
@@ -34,15 +40,15 @@
 
       <div class="item-animado atraso-4">
         <label class="permanecer">
-          <input type="checkbox" id="lembrar" name="lembrar" />
+          <input type="checkbox" id="lembrar" name="lembrar" value="1" <?= old('lembrar') ? 'checked' : '' ?> />
           Permanecer conectado
         </label>
 
-        <button type="submit" class="btn-login">Entrar</button>
+        <button type="submit" class="btn-login" id="btnEntrar">Entrar</button>
 
         <div class="links-rodape">
-          <a href="cadastro">Cadastre-se</a>
-          <a href="" class="esqueceu">Esqueceu a senha?</a>
+          <a href="/cadastro">Cadastre-se</a>
+          <a href="#" class="esqueceu">Esqueceu a senha?</a>
         </div>
       </div>
     </form>
@@ -50,5 +56,6 @@
 
   <script src="https://unpkg.com/lucide@latest"></script>
   <script>lucide.createIcons();</script>
+  <script src="/js/login.js"></script>
 </body>
 </html>

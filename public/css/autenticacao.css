@@ -110,6 +110,14 @@ body::before {
   margin-top: -.5rem; margin-bottom: .75rem;
 }
 
+.mensagem-login {
+  display: none; margin-bottom: 1rem; padding: .7rem .85rem;
+  border-radius: 8px; font-size: .84rem; line-height: 1.35;
+}
+.mensagem-login:not(:empty) { display: block; }
+.mensagem-erro { color: #991b1b; background: #fee2e2; }
+.mensagem-sucesso { color: #166534; background: #dcfce7; }
+
 /* Animações */
 @keyframes fadeInUp {
   from { opacity: 0; transform: translateY(20px); }
