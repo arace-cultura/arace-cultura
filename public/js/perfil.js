@@ -5,14 +5,14 @@ function textoOuPendente(valor) {
 async function carregarPerfil() {
   // Firestore/API: buscar dados do usuario autenticado aqui.
   // Campos esperados: {{nome_usuario}}, {{email_usuario}}, {{telefone_usuario}}, {{cidade_usuario}}.
-  const user = window.AraceState ? window.AraceState.getUser() : {};
+  const user = window.ARACE_AUTH_USER || (window.AraceState ? window.AraceState.getUser() : {});
   const favoritos = window.AraceState ? window.AraceState.getFavorites().length : 0;
   return {
     nome: `${user.nome || ''} ${user.sobrenome || ''}`.trim() || 'Usuario',
     email: user.email || 'usuario@gmail.com',
     telefone: user.telefone || '',
-    localizacao: [user.cidade, user.estado].filter(Boolean).join(' - ') || 'Cariacica - ES',
-    membroDesde: user.membroDesde || 'Janeiro de 2024',
+    localizacao: [user.cidade, user.estado].filter(Boolean).join(' - '),
+    membroDesde: user.membroDesde || '',
     cpf: user.cpf || '',
     avatar: user.avatar || '',
     pedidos: 12,
