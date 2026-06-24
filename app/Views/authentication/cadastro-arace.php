@@ -18,7 +18,6 @@
 
     <p class="subtitle item-animado atraso-1">Crie sua conta</p>
 
-    <form id="formCadastro" action="/usuario/arace-perfil" method="get" novalidate>
     <?php if (session('erro')): ?>
       <p class="erro-campo" style="display:block"><?= esc(session('erro')) ?></p>
     <?php endif; ?>
@@ -54,7 +53,7 @@
         <button type="submit" class="btn-login">Criar conta</button>
 
         <div class="links-rodape">
-          <a href="login" class="esqueceu">Já tenho uma conta</a>
+          <a href="/login" class="esqueceu">Já tenho uma conta</a>
         </div>
       </div>
 

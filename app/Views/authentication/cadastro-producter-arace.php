@@ -23,7 +23,6 @@
     <?php endif; ?>
 
     <form id="formCadastroDono" action="/cadastro/produtor/dono" method="post" novalidate>
-    <form id="formCadastroDono" action="/produtor/perfil-loja" method="get" novalidate>
 
       <div class="input-group-custom item-animado atraso-2">
         <i data-lucide="user"></i>
@@ -67,4 +66,3 @@
   <script>lucide.createIcons();</script>
 </body>
 </html>
-
