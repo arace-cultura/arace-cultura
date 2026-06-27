@@ -25,6 +25,9 @@ sealed interface ResultadoCadastro {
     data class Erro(val mensagem: String) : ResultadoCadastro
 }
 
+/** Passos internos do fluxo de cadastro de produtor (uma única rota, três etapas). */
+enum class PassoCadastro { DADOS_LOJA, DADOS_FISCAIS, DETALHES }
+
 class CadastroProdutorViewModel : ViewModel() {
 
     private val db = FirebaseFirestore.getInstance()
@@ -115,6 +118,24 @@ class CadastroProdutorViewModel : ViewModel() {
         }
 
         return bucket.publicUrl(caminhoSeguro)
+    }
+
+    private val _passo = MutableStateFlow(PassoCadastro.DADOS_LOJA)
+    val passo: StateFlow<PassoCadastro> = _passo.asStateFlow()
+
+    fun proximoPasso() {
+        _passo.value = when (_passo.value) {
+            PassoCadastro.DADOS_LOJA    -> PassoCadastro.DADOS_FISCAIS
+            PassoCadastro.DADOS_FISCAIS -> PassoCadastro.DETALHES
+            PassoCadastro.DETALHES      -> PassoCadastro.DETALHES
+        }
+    }
+
+    /** Retorna false se já está no primeiro passo (aí o caller sai do fluxo). */
+    fun passoAnterior(): Boolean = when (_passo.value) {
+        PassoCadastro.DADOS_LOJA    -> false
+        PassoCadastro.DADOS_FISCAIS -> { _passo.value = PassoCadastro.DADOS_LOJA;    true }
+        PassoCadastro.DETALHES      -> { _passo.value = PassoCadastro.DADOS_FISCAIS; true }
     }
 
 }

@@ -7,9 +7,13 @@ import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
@@ -19,6 +23,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -36,6 +41,7 @@ import com.aracecultura.arace.data.model.CategoriasProduto
 import com.aracecultura.arace.ui.components.AppButton
 import com.aracecultura.arace.ui.theme.bgDefault
 import com.aracecultura.arace.ui.theme.btColor
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -54,22 +60,41 @@ fun CriarProduto(
     var expandedCategoria by remember { mutableStateOf(false) }
     var selectedCategoria by remember { mutableStateOf("") }
 
-    var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
+    var selectedImageIndex by remember { mutableStateOf(0) }
+    var selectedImageUris by remember { mutableStateOf(List<Uri?>(3) { null }) }
     val photoPickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.PickVisualMedia(),
         onResult = { uri ->
-            if (uri != null) { selectedImageUri = uri }
+            if (uri != null) {
+                selectedImageUris = selectedImageUris.toMutableList().also {
+                    it[selectedImageIndex] = uri
+                }
+            }
         }
     )
 
     val uiState by viewModel.uiState.collectAsState()
+    val selectedImageCount = selectedImageUris.count { it != null }
+    val imagePagerState = rememberPagerState(pageCount = { selectedImageUris.size })
+    val coroutineScope = rememberCoroutineScope()
+
+    LaunchedEffect(imagePagerState.currentPage) {
+        selectedImageIndex = imagePagerState.currentPage
+    }
+
+    LaunchedEffect(selectedImageIndex) {
+        if (imagePagerState.currentPage != selectedImageIndex) {
+            imagePagerState.animateScrollToPage(selectedImageIndex)
+        }
+    }
 
     LaunchedEffect(uiState) {
         when (uiState) {
             is ProdutoUiState.Success -> {
                 Toast.makeText(context, mensagemSucesso, Toast.LENGTH_SHORT).show()
                 viewModel.resetState()
-                selectedImageUri = null
+                selectedImageIndex = 0
+                selectedImageUris = List(3) { null }
                 textName = ""
                 textDesc1 = ""
                 textPreco = ""
@@ -103,7 +128,10 @@ fun CriarProduto(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
                 .fillMaxSize()
-                .verticalScroll(scrollState)
+                .verticalScroll(
+                    state = scrollState,
+                    overscrollEffect = null,
+                )
         ) {
             Text(
                 "Adicionar Produto",
@@ -128,55 +156,150 @@ fun CriarProduto(
                     modifier = Modifier.fillMaxWidth(),
                     contentAlignment = Alignment.Center
                 ) {
-                    if (selectedImageUri != null) {
-                        AsyncImage(
-                            model = selectedImageUri,
-                            contentDescription = stringResource(R.string.cd_imagem_selecionada),
-                            contentScale = ContentScale.Crop,
+                    HorizontalPager(
+                        state = imagePagerState,
+                        modifier = Modifier
+                            .fillMaxWidth(0.83f)
+                            .aspectRatio(348f / 284f)
+                            .clip(RoundedCornerShape(15.dp))
+                    ) { page ->
+                        val imageUri = selectedImageUris[page]
+                        Box(
                             modifier = Modifier
-                                .fillMaxWidth(0.83f)
-                                .aspectRatio(348f / 284f)
-                                .clip(RoundedCornerShape(15.dp))
-                        )
-                    } else {
-                        Image(
-                            painter = painterResource(id = R.drawable.img_placeholder),
-                            contentDescription = null,
-                            contentScale = ContentScale.Crop,
-                            modifier = Modifier
-                                .fillMaxWidth(0.83f)
-                                .aspectRatio(348f / 284f)
-                                .clip(RoundedCornerShape(15.dp))
-                        )
-
-                        Column(
-                            verticalArrangement = Arrangement.Center,
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            modifier = Modifier.fillMaxSize().clickable(enabled = true){
-                                photoPickerLauncher.launch(
-                                    PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
-                                )
-                            }
+                                .fillMaxSize()
+                                .clickable {
+                                    selectedImageIndex = page
+                                    photoPickerLauncher.launch(
+                                        PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+                                    )
+                                }
                         ) {
-                            Icon(
-                                painter = painterResource(id = R.drawable.ic_image),
-                                contentDescription = stringResource(R.string.cd_editar_perfil),
-                                tint = Color.White,
-                                modifier = Modifier.size(80.dp)
-                            )
-                            Spacer(Modifier.height(10.dp))
-                            Text(
-                                text = stringResource(R.string.criar_escolher_imagem),
-                                fontSize = 20.sp,
-                                fontWeight = FontWeight.Medium,
-                                lineHeight = 20.sp,
-                                color = Color.White
-                            )
-                        }
+                            if (imageUri != null) {
+                                AsyncImage(
+                                    model = imageUri,
+                                    contentDescription = stringResource(R.string.cd_imagem_selecionada),
+                                    contentScale = ContentScale.Crop,
+                                    modifier = Modifier.fillMaxSize()
+                                )
+                            } else {
+                                Image(
+                                    painter = painterResource(id = R.drawable.img_placeholder),
+                                    contentDescription = null,
+                                    contentScale = ContentScale.Crop,
+                                    modifier = Modifier.fillMaxSize()
+                                )
 
+                                Column(
+                                    verticalArrangement = Arrangement.Center,
+                                    horizontalAlignment = Alignment.CenterHorizontally,
+                                    modifier = Modifier.fillMaxSize()
+                                ) {
+                                    Icon(
+                                        painter = painterResource(id = R.drawable.ic_image),
+                                        contentDescription = stringResource(R.string.cd_editar_perfil),
+                                        tint = Color.White,
+                                        modifier = Modifier.size(80.dp)
+                                    )
+                                    Spacer(Modifier.height(10.dp))
+                                    Text(
+                                        text = stringResource(R.string.criar_escolher_imagem),
+                                        fontSize = 20.sp,
+                                        fontWeight = FontWeight.Medium,
+                                        lineHeight = 20.sp,
+                                        color = Color.White
+                                    )
+                                }
+                            }
+                        }
                     }
 
+                    Surface(
+                        shape = CircleShape,
+                        color = bgDefault,
+                        shadowElevation = 6.dp,
+                        modifier = Modifier
+                            .align(Alignment.CenterStart)
+                            .padding(start = 24.dp)
+                            .size(58.dp)
+                            .clickable {
+                                val previous = if (selectedImageIndex == 0) {
+                                    selectedImageUris.lastIndex
+                                } else {
+                                    selectedImageIndex - 1
+                                }
+                                coroutineScope.launch {
+                                    imagePagerState.animateScrollToPage(previous)
+                                }
+                            }
+                    ) {
+                        Box(contentAlignment = Alignment.Center) {
+                            Icon(
+                                painter = painterResource(id = R.drawable.ic_chevron_right),
+                                contentDescription = stringResource(R.string.cd_imagem_anterior),
+                                tint = Color.Black,
+                                modifier = Modifier
+                                    .size(34.dp)
+                                    .rotate(180f)
+                            )
+                        }
+                    }
+
+                    Surface(
+                        shape = CircleShape,
+                        color = bgDefault,
+                        shadowElevation = 6.dp,
+                        modifier = Modifier
+                            .align(Alignment.CenterEnd)
+                            .padding(end = 24.dp)
+                            .size(58.dp)
+                            .clickable {
+                                val next = (selectedImageIndex + 1) % selectedImageUris.size
+                                coroutineScope.launch {
+                                    imagePagerState.animateScrollToPage(next)
+                                }
+                            }
+                    ) {
+                        Box(contentAlignment = Alignment.Center) {
+                            Icon(
+                                painter = painterResource(id = R.drawable.ic_chevron_right),
+                                contentDescription = stringResource(R.string.cd_proxima_imagem),
+                                tint = Color.Black,
+                                modifier = Modifier.size(34.dp)
+                            )
+                        }
+                    }
                 }
+
+                Spacer(Modifier.height(10.dp))
+
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(10.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    repeat(3) { index ->
+                        val selecionado = index == selectedImageIndex
+                        Box(
+                            modifier = Modifier
+                                .size(if (selecionado) 12.dp else 10.dp)
+                                .clip(CircleShape)
+                                .background(if (selecionado) btColor else Color.Transparent)
+                                .border(1.5.dp, btColor, CircleShape)
+                        )
+                    }
+                }
+
+                Spacer(Modifier.height(14.dp))
+
+                Text(
+                    text = stringResource(
+                        R.string.criar_imagens_adicionadas,
+                        selectedImageCount
+                    ),
+                    fontSize = 20.sp,
+                    color = Color.Gray,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.fillMaxWidth()
+                )
 
                 Spacer(Modifier.height(20.dp))
 
@@ -282,8 +405,9 @@ fun CriarProduto(
                         containerColor = btColor,
                         borderColor = btColor,
                         onClick = {
+                            val imagensSelecionadas = selectedImageUris.filterNotNull()
                             if (
-                                selectedImageUri == null ||
+                                imagensSelecionadas.isEmpty() ||
                                 normalizarNomeProduto(textName).isEmpty() ||
                                 selectedCategoria.isEmpty() ||
                                 textPreco.isEmpty()
@@ -292,7 +416,7 @@ fun CriarProduto(
                             } else {
                                 viewModel.salvarProduto(
                                     context = context,
-                                    imageUri = selectedImageUri!!,
+                                    imageUris = imagensSelecionadas,
                                     nome = textName,
                                     categoria = selectedCategoria,
                                     descricao = textDesc1,
@@ -306,7 +430,7 @@ fun CriarProduto(
                     )
                 }
 
-                Spacer(Modifier.height(20.dp))
+                Spacer(Modifier.height(112.dp))
             }
         }
     }

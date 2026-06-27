@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.aracecultura.arace.data.model.Produto
+import com.aracecultura.arace.data.registrarProdutoEmCarrinho
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
@@ -22,6 +23,7 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 import java.text.Normalizer
 import java.util.Locale
 
@@ -138,8 +140,10 @@ class ExplorarProdutoViewmodel : ViewModel() {
 
         val itemCarrinho = hashMapOf(
             "nome" to produto.nome,
+            "descricao" to produto.descricao,
             "preco" to produto.preco,
             "imagens" to if (produto.imagens.isNotEmpty()) listOf(produto.imagens[0]) else emptyList<String>(),
+            "produtoId" to produto.id,
             // Denormalizado para o checkout agrupar o pagamento por loja
             "produtorId" to produto.produtorId,
             "quantidade" to FieldValue.increment(1)
@@ -148,20 +152,24 @@ class ExplorarProdutoViewmodel : ViewModel() {
         val carrinhoRef = db.collection("Carrinho").document(uid)
         val produtoRef = carrinhoRef.collection("Produtos").document(produto.id)
 
-        db.runBatch { batch ->
-            batch.set(
-                carrinhoRef,
-                mapOf(
-                    "usuarioId" to uid,
-                    "atualizadoEm" to FieldValue.serverTimestamp()
-                ),
-                SetOptions.merge()
-            )
-            batch.set(produtoRef, itemCarrinho, SetOptions.merge())
-        }
-            .addOnFailureListener { e ->
+        viewModelScope.launch {
+            try {
+                db.runBatch { batch ->
+                    batch.set(
+                        carrinhoRef,
+                        mapOf(
+                            "usuarioId" to uid,
+                            "atualizadoEm" to FieldValue.serverTimestamp()
+                        ),
+                        SetOptions.merge()
+                    )
+                    batch.set(produtoRef, itemCarrinho, SetOptions.merge())
+                }.await()
+                registrarProdutoEmCarrinho(db, produto.id, uid)
+            } catch (e: Exception) {
                 Log.e("Carrinho", "Erro ao adicionar produto", e)
             }
+        }
     }
 }
 

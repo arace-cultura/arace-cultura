@@ -2,6 +2,8 @@ package com.aracecultura.arace.ui.components.produto
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.aracecultura.arace.data.COLECAO_CONTADOR_CARRINHOS
+import com.aracecultura.arace.data.estaEmDestaque
 import com.aracecultura.arace.data.model.Produto
 import com.aracecultura.arace.data.model.Produtor
 import com.google.firebase.Firebase
@@ -27,6 +29,7 @@ class TelaDoProdutoViewmodel : ViewModel() {
     private var produtoListener: ListenerRegistration? = null
     private var produtorListener: ListenerRegistration? = null
     private var avaliacaoListener: ListenerRegistration? = null
+    private var destaqueListener: ListenerRegistration? = null
     private var produtoIdAtual: String? = null
     private var produtorIdAtual: String? = null
 
@@ -45,6 +48,10 @@ class TelaDoProdutoViewmodel : ViewModel() {
     private val _erroAvaliacao = MutableStateFlow<ErroAvaliacao?>(null)
     val erroAvaliacao: StateFlow<ErroAvaliacao?> = _erroAvaliacao
 
+    // Destaque vem da coleção externa CarrinhosContador, não do produto.
+    private val _emDestaque = MutableStateFlow(false)
+    val emDestaque: StateFlow<Boolean> = _emDestaque
+
     fun carregarProduto(produtoId: String) {
         if (produtoIdAtual == produtoId) return
         produtoIdAtual = produtoId
@@ -60,6 +67,13 @@ class TelaDoProdutoViewmodel : ViewModel() {
             _produto.value = produtoCarregado
             carregarProdutorSeNecessario(produtoCarregado?.produtorId)
         }
+
+        destaqueListener?.remove()
+        destaqueListener = db.collection(COLECAO_CONTADOR_CARRINHOS).document(produtoId)
+            .addSnapshotListener { documento, erro ->
+                if (erro != null) return@addSnapshotListener
+                _emDestaque.value = documento?.estaEmDestaque() ?: false
+            }
 
         carregarAvaliacaoUsuario(produtoId)
     }
@@ -154,6 +168,7 @@ class TelaDoProdutoViewmodel : ViewModel() {
         produtoListener?.remove()
         produtorListener?.remove()
         avaliacaoListener?.remove()
+        destaqueListener?.remove()
         super.onCleared()
     }
 }

@@ -4,6 +4,7 @@ plugins {
     id("com.google.gms.google-services")
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.navigation.safeargs)
+    alias(libs.plugins.kotlin.serialization)
     id("kotlin-parcelize") // Vem da app-dev
 }
 
@@ -62,6 +63,9 @@ dependencies {
     implementation(libs.firebase.auth)
     implementation(libs.firebase.firestore)
     implementation(libs.coil)
+    implementation(libs.androidx.navigation.compose)
+    implementation(libs.kotlinx.serialization.json)
+
     
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)

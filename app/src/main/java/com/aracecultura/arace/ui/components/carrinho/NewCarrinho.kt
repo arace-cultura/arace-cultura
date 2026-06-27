@@ -2,47 +2,40 @@ package com.aracecultura.arace.ui.components.carrinho
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.ScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyListState
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
-import androidx.compose.runtime.withFrameNanos
+import androidx.compose.runtime.key
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.aracecultura.arace.R
 import com.aracecultura.arace.data.model.ItemCarrinho
+import com.aracecultura.arace.navigation.LocalAppFooterHeight
 import com.aracecultura.arace.ui.theme.bgDefault
 
 sealed interface EstadoCarrinho {
     data object Carregando : EstadoCarrinho
     data class Pronto(val itens: List<ItemCarrinho>) : EstadoCarrinho
 }
-
-private data class AncoraScrollCarrinho(
-    val itemId: String?,
-    val indice: Int,
-    val deslocamento: Int
-)
 
 @Composable
 fun NewCarrinho(
@@ -52,42 +45,16 @@ fun NewCarrinho(
     onDeleteClick: (ItemCarrinho) -> Unit = {}
 ) {
     val estado by viewModel.estado.collectAsState()
-    val listState = rememberLazyListState()
-    val itens = (estado as? EstadoCarrinho.Pronto)?.itens
-    var ancoraPendente by remember { mutableStateOf<AncoraScrollCarrinho?>(null) }
+    val scrollState = rememberScrollState()
+    val itens = (estado as? EstadoCarrinho.Pronto)?.itens.orEmpty()
+    val alturaFooterApp = LocalAppFooterHeight.current
 
-    LaunchedEffect(uid) {
-        if (uid.isNotBlank()) {
-            viewModel.carregarCarrinho(uid)
-        }
-    }
-
-    LaunchedEffect(itens) {
-        val ancora = ancoraPendente ?: return@LaunchedEffect
-        if (itens.isNullOrEmpty()) {
-            ancoraPendente = null
-            return@LaunchedEffect
-        }
-
-        val indiceDaAncora = ancora.itemId
-            ?.let { id -> itens.indexOfFirst { it.id == id } }
-            ?.takeIf { it >= 0 }
-            ?: ancora.indice.coerceIn(itens.indices)
-
-        // Aguarda a LazyColumn medir a lista atualizada antes de desfazer
-        // a correção automática de âncora aplicada perto do fim do conteúdo.
-        withFrameNanos { }
-        listState.scrollToItem(indiceDaAncora, ancora.deslocamento)
-        ancoraPendente = null
-    }
-
-    fun guardarAncoraScroll() {
-        ancoraPendente = AncoraScrollCarrinho(
-            itemId = listState.layoutInfo.visibleItemsInfo.firstOrNull()?.key as? String,
-            indice = listState.firstVisibleItemIndex,
-            deslocamento = listState.firstVisibleItemScrollOffset
-        )
-    }
+    // Mede a altura real do footer (overlay) e reserva exatamente esse espaço
+    // no fim da lista. Assim o último item nunca fica ocluso — a reserva não
+    // depende de um número fixo que possa dessincronizar do footer. Como o
+    // footer tem altura fixa, a reserva é estável e não reintroduz salto.
+    val alturaFinalizar = if (itens.isNotEmpty()) AlturaSecaoFinalizarCompra else 0.dp
+    val espacoInferiorLista = alturaFinalizar + alturaFooterApp + 16.dp
 
     Box(
         modifier = Modifier
@@ -102,40 +69,39 @@ fun NewCarrinho(
             alpha = 0.3f
         )
 
-        // Column simples no lugar de Scaffold: o bottomBar do Scaffold é uma
-        // subcomposição medida durante o layout e, lendo o mesmo estado que o
-        // clique altera, forçava re-subcomposição/remedição da LazyColumn no
-        // mesmo frame — reescrevendo a posição de scroll (recuo fixo de 441px)
         Column(modifier = Modifier.fillMaxSize()) {
             TituloCarrinho()
-            // Mesmo padrão do Explorar: o botão é overlay e a lista
-            // rola por trás dele; o contentPadding superior da lista evita
-            // que o primeiro item nasça ocluso.
             Box(modifier = Modifier.weight(1f)) {
                 ListaItens(
                     estado = estado,
-                    listState = listState,
+                    scrollState = scrollState,
+                    espacoInferior = espacoInferiorLista,
                     modifier = Modifier.fillMaxSize(),
                     onAumentarQuantidade = { item ->
-                        guardarAncoraScroll()
                         viewModel.alterarQuantidade(item, uid, item.quantidade + 1)
                     },
                     onDiminuirQuantidade = { item ->
-                        guardarAncoraScroll()
                         viewModel.alterarQuantidade(item, uid, item.quantidade - 1)
                     },
                     onRemoverItem = { item ->
-                        guardarAncoraScroll()
                         viewModel.removerItem(item, uid)
                         onDeleteClick(item)
                     }
                 )
                 Ordenar(onSelecionar = viewModel::setOrdenacao)
+
+                // Footer em OVERLAY (dentro do Box, não irmão do Column com
+                // weight): a recomposição do total no +/- não força a re-medição
+                // da lista — é isso que elimina o salto. onSizeChanged alimenta a
+                // reserva inferior medida lá em cima.
+                SecaoFinalizarCompra(
+                    produtos = itens,
+                    onFinalizarClick = onFinalizarClick,
+                    modifier = Modifier
+                        .align(Alignment.BottomCenter)
+                        .padding(bottom = alturaFooterApp)
+                )
             }
-            SecaoFinalizarCompra(
-                produtos = (estado as? EstadoCarrinho.Pronto)?.itens ?: emptyList(),
-                onFinalizarClick = onFinalizarClick
-            )
         }
     }
 }
@@ -156,14 +122,19 @@ private fun TituloCarrinho() {
 @Composable
 private fun ListaItens(
     estado: EstadoCarrinho,
-    listState: LazyListState,
+    scrollState: ScrollState,
+    espacoInferior: Dp,
     modifier: Modifier = Modifier,
     onAumentarQuantidade: (ItemCarrinho) -> Unit,
     onDiminuirQuantidade: (ItemCarrinho) -> Unit,
     onRemoverItem: (ItemCarrinho) -> Unit
 ) {
     if (estado is EstadoCarrinho.Carregando) {
-        Column(modifier = modifier.padding(top = 56.dp, start = 16.dp, end = 16.dp)) {
+        Column(
+            modifier = modifier
+                .verticalScroll(scrollState)
+                .padding(top = 56.dp, start = 16.dp, end = 16.dp)
+        ) {
             repeat(3) {
                 Box(modifier = Modifier.padding(bottom = 16.dp)) {
                     ProdutoCardItem(produto = null)
@@ -175,31 +146,32 @@ private fun ListaItens(
 
     val itens = (estado as EstadoCarrinho.Pronto).itens
 
-    LazyColumn(
-        modifier = modifier,
-        state = listState,
-        // Mantém os últimos cartões fora da zona em que o LazyColumn corrige
-        // a âncora após uma atualização de quantidade e desloca o scroll.
-        contentPadding = PaddingValues(
-            start = 16.dp,
-            end = 16.dp,
-            top = 56.dp,
-            bottom = 176.dp
-        )
+    Column(
+        modifier = modifier.verticalScroll(scrollState)
     ) {
-        items(
-            items = itens,
-            key = { it.id }
-        ) { item ->
-            Box(modifier = Modifier.padding(bottom = 16.dp)) {
-                ProdutoCardItem(
-                    produto = item.produto,
-                    quantidade = item.quantidade,
-                    onIncreaseClick = { onAumentarQuantidade(item) },
-                    onDecreaseClick = { onDiminuirQuantidade(item) },
-                    onDeleteClick = { onRemoverItem(item) }
-                )
+        Spacer(Modifier.height(56.dp))
+
+        itens.forEach { item ->
+            // key estabiliza a identidade do card: ao reordenar, a composição
+            // (e o estado da AsyncImage) se move junto com o item em vez de ser
+            // reconstruída na posição — sem recarregar imagem nem piscar.
+            key(item.id) {
+                Box(
+                    modifier = Modifier
+                        .padding(horizontal = 16.dp)
+                        .padding(bottom = 16.dp)
+                ) {
+                    ProdutoCardItem(
+                        produto = item.produto,
+                        quantidade = item.quantidade,
+                        onIncreaseClick = { onAumentarQuantidade(item) },
+                        onDecreaseClick = { onDiminuirQuantidade(item) },
+                        onDeleteClick = { onRemoverItem(item) }
+                    )
+                }
             }
         }
+
+        Spacer(Modifier.height(espacoInferior))
     }
 }

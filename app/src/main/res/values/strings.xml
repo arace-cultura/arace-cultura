@@ -30,6 +30,25 @@
     <string name="prefixo_real">R$ </string>
     <string name="preco_reais">R$%1$s</string>
 
+    <!-- Navegação -->
+    <string name="nav_inicio">Início</string>
+    <string name="nav_explorar">Explorar</string>
+    <string name="nav_carrinho">Carrinho</string>
+    <string name="nav_eu">Eu</string>
+    <string name="nav_vendas">Vendas</string>
+    <string name="nav_criar">Criar</string>
+    <string name="nav_perfil">Perfil</string>
+
+    <!-- Vendas -->
+    <string name="vendas_titulo">Vendas</string>
+    <string name="vendas_pagamento_pendente">Aguardando confirmação de pagamento</string>
+    <string name="vendas_confirmar">confirmar</string>
+    <string name="vendas_em_envio">Ainda em envio</string>
+    <string name="vendas_cancelar_envio">cancelar envio</string>
+    <string name="vendas_confirmar_entrega">confirmar entrega</string>
+    <string name="vendas_entregue">Entregue</string>
+    <string name="vendas_moeda_real">R$</string>
+
     <!-- Content descriptions -->
     <string name="cd_produto">Produto</string>
     <string name="cd_imagem_produto">Imagem do produto</string>
@@ -53,6 +72,8 @@
     <string name="cd_copiar">Copiar</string>
     <string name="cd_compra_confirmada">Compra confirmada</string>
     <string name="cd_imagem_de">Imagem de %1$s</string>
+    <string name="cd_imagem_anterior">Imagem anterior</string>
+    <string name="cd_proxima_imagem">Proxima imagem</string>
 
     <!-- Login / Entrada / Cadastro (auth) -->
     <string name="entrada_slogan">Conectando você\nà cultura material\ncapixaba.</string>
@@ -123,6 +144,7 @@
 
     <!-- Criar produto -->
     <string name="criar_escolher_imagem">escolher\nimagem</string>
+    <string name="criar_imagens_adicionadas">%1$d de 3 imagens adicionadas</string>
     <string name="criar_placeholder_categoria">Categoria</string>
     <string name="criar_placeholder_descricao">Descrição</string>
     <string name="criar_placeholder_preco">Preço (R$)</string>
@@ -216,6 +238,7 @@
     <string name="erro_cadastro_usuario">Erro ao cadastrar usuário</string>
     <string name="erro_dados_login">Há erro nos dados.</string>
     <string name="erro_falha_login">Falha no login, tente novamente.</string>
+    <string name="erro_senhas_diferentes">As senhas não coincidem.</string>
     <string name="erro_senha_loja_curta">A senha da loja deve ter pelo menos 4 caracteres</string>
     <string name="erro_salvar_avaliacao">Não foi possível salvar a avaliação.</string>
 

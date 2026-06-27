@@ -5,6 +5,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.aracecultura.arace.data.model.ItemCarrinho
 import com.aracecultura.arace.data.model.Produto
+import com.aracecultura.arace.data.registrarProdutoEmCarrinho
+import com.aracecultura.arace.data.removerProdutoDeCarrinho
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
@@ -28,6 +30,7 @@ class NewCarrinhoViewModel : ViewModel() {
 
     private val db: FirebaseFirestore = Firebase.firestore
     private var uidObservado: String? = null
+    private var produtosComMarcadorSincronizado = emptySet<String>()
 
     // null = ainda carregando (distingue de carrinho vazio)
     private val _itens = MutableStateFlow<List<ItemCarrinho>?>(null)
@@ -44,11 +47,15 @@ class NewCarrinhoViewModel : ViewModel() {
     fun carregarCarrinho(uid: String) {
         if (uid.isBlank() || uid == uidObservado) return
         uidObservado = uid
+        produtosComMarcadorSincronizado = emptySet()
         viewModelScope.launch {
             registrarDocumentoCarrinho(uid)
             itensFlow(uid)
                 .catch { _itens.value = emptyList() }
-                .collect { _itens.value = it }
+                .collect { itens ->
+                    _itens.value = itens
+                    sincronizarMarcadoresDoCarrinho(uid, itens)
+                }
         }
     }
 
@@ -68,9 +75,25 @@ class NewCarrinhoViewModel : ViewModel() {
         }
     }
 
+    private suspend fun sincronizarMarcadoresDoCarrinho(uid: String, itens: List<ItemCarrinho>) {
+        val idsParaSincronizar = itens.map { it.id }
+            .filter { it !in produtosComMarcadorSincronizado }
+
+        idsParaSincronizar.forEach { produtoId ->
+            try {
+                registrarProdutoEmCarrinho(db, produtoId, uid)
+                produtosComMarcadorSincronizado = produtosComMarcadorSincronizado + produtoId
+            } catch (e: Exception) {
+                Log.e("Carrinho", "Erro ao sincronizar destaque do produto $produtoId", e)
+            }
+        }
+    }
+
     // Tempo real: um snapshot listener no carrinho. Alterar quantidade ou
-    // remover item reflete na hora (a persistência offline do Firestore dispara
-    // o listener já na escrita local), então não há mais update otimista manual.
+    // remover item já é refletido na hora por update otimista (ver
+    // alterarQuantidade/removerItem, que escrevem em _itens antes do Firestore
+    // responder). Assim as três emissões — otimista, snapshot local e snapshot
+    // remoto — carregam a mesma lista/altura, sem flicker nem salto de scroll.
     private fun itensFlow(uid: String): Flow<List<ItemCarrinho>> = callbackFlow {
         val registro = db.collection("Carrinho").document(uid)
             .collection("Produtos")
@@ -94,9 +117,20 @@ class NewCarrinhoViewModel : ViewModel() {
 
     private fun ordenar(itens: List<ItemCarrinho>, ordem: String): List<ItemCarrinho> =
         when (ordem) {
-            "preco_asc" -> itens.sortedBy { it.produto.preco }
-            "preco_desc" -> itens.sortedByDescending { it.produto.preco }
-            else -> itens.sortedBy { it.produto.nome.lowercase() }
+            "preco_asc" -> itens.sortedWith(
+                compareBy<ItemCarrinho> { it.produto.preco }
+                    .thenBy { it.produto.nome.lowercase() }
+                    .thenBy { it.id }
+            )
+            "preco_desc" -> itens.sortedWith(
+                compareByDescending<ItemCarrinho> { it.produto.preco }
+                    .thenBy { it.produto.nome.lowercase() }
+                    .thenBy { it.id }
+            )
+            else -> itens.sortedWith(
+                compareBy<ItemCarrinho> { it.produto.nome.lowercase() }
+                    .thenBy { it.id }
+            )
         }
 
     fun setOrdenacao(novaOrdem: String) {
@@ -104,6 +138,11 @@ class NewCarrinhoViewModel : ViewModel() {
     }
 
     fun removerItem(item: ItemCarrinho, uid: String) {
+        val estadoAnterior = _itens.value
+        if (estadoAnterior != null) {
+            _itens.value = estadoAnterior.filterNot { it.id == item.id }
+        }
+
         viewModelScope.launch {
             try {
                 val carrinhoRef = db.collection("Carrinho").document(uid)
@@ -120,8 +159,14 @@ class NewCarrinhoViewModel : ViewModel() {
                     )
                 }.await()
             } catch (e: Exception) {
+                _itens.value = estadoAnterior
                 Log.e("Carrinho", "Erro ao remover item ${item.id}", e)
+                return@launch
             }
+            // Efeito colateral best-effort: a contagem de destaque NUNCA pode
+            // desfazer a remoção do carrinho. Se falhar (ex.: regras), só loga.
+            runCatching { removerProdutoDeCarrinho(db, item.id, uid) }
+                .onFailure { Log.e("Carrinho", "Falha ao baixar destaque de ${item.id}", it) }
         }
     }
 
@@ -130,6 +175,14 @@ class NewCarrinhoViewModel : ViewModel() {
             removerItem(item, uid)
             return
         }
+
+        val estadoAnterior = _itens.value
+        if (estadoAnterior != null) {
+            _itens.value = estadoAnterior.map { atual ->
+                if (atual.id == item.id) atual.copy(quantidade = novaQuantidade) else atual
+            }
+        }
+
         viewModelScope.launch {
             try {
                 val carrinhoRef = db.collection("Carrinho").document(uid)
@@ -146,6 +199,7 @@ class NewCarrinhoViewModel : ViewModel() {
                     )
                 }.await()
             } catch (e: Exception) {
+                _itens.value = estadoAnterior
                 Log.e("Carrinho", "Erro ao alterar quantidade do item ${item.id}", e)
             }
         }

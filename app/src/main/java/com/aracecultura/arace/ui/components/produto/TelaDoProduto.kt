@@ -9,17 +9,18 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -44,10 +45,12 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import coil.compose.AsyncImage
 import com.aracecultura.arace.R
+import com.aracecultura.arace.data.model.Produto
+import com.aracecultura.arace.data.model.Produtor
 import com.aracecultura.arace.ui.components.CarregamentoContainer
-import com.aracecultura.arace.ui.components.sombraInferior
 import com.aracecultura.arace.ui.theme.bgDefault
 import com.aracecultura.arace.ui.theme.btColor
+import java.util.Locale
 
 @Composable
 fun TelaDoProduto(
@@ -55,222 +58,74 @@ fun TelaDoProduto(
     onBackClick: () -> Unit = {},
     onProdutorClick: (String) -> Unit = {}
 ) {
+    val produto by viewModel.produto.collectAsState()
+    val produtor by viewModel.produtor.collectAsState()
+    val avaliacaoUsuario by viewModel.avaliacaoUsuario.collectAsState()
+    val salvandoAvaliacao by viewModel.salvandoAvaliacao.collectAsState()
+    val erroAvaliacao by viewModel.erroAvaliacao.collectAsState()
+    val emDestaque by viewModel.emDestaque.collectAsState()
+    var mostrarDialogoAvaliacao by rememberSaveable { mutableStateOf(false) }
+
     Box(
         modifier = Modifier
             .fillMaxSize()
             .background(bgDefault)
     ) {
         Image(
-            painter = painterResource(id = com.aracecultura.arace.R.drawable.img_bg_explorar),
+            painter = painterResource(id = R.drawable.img_bg_explorar),
             contentDescription = null,
             contentScale = ContentScale.Crop,
             modifier = Modifier
                 .fillMaxSize()
-                .alpha(0.25f)
+                .alpha(0.18f)
         )
-        val produto by viewModel.produto.collectAsState() // by = desempacota o State automaticamente
+
         val produtoAtual = produto
-        val produtor by viewModel.produtor.collectAsState()
-        val avaliacaoUsuario by viewModel.avaliacaoUsuario.collectAsState()
-        val salvandoAvaliacao by viewModel.salvandoAvaliacao.collectAsState()
-        val erroAvaliacao by viewModel.erroAvaliacao.collectAsState()
-        var mostrarDialogoAvaliacao by rememberSaveable { mutableStateOf(false) }
-        val scrollState = rememberScrollState()
-
-        Column(modifier = Modifier
-            .fillMaxSize()
-            .verticalScroll(scrollState)) {
-            Column(Modifier
-                .fillMaxWidth()
-                .weight(1f)) {
-
-                if (produtoAtual == null) {
-                    CarregamentoContainer(Modifier.fillMaxWidth())
-                } else {
-                    val listaDeImagens =
-                        produtoAtual.imagens // sem ?. pois o smart cast já garantiu não-nulo
-                    val pagerState = rememberPagerState(pageCount = { listaDeImagens.size.coerceAtLeast(1) })
-
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .weight(1f)
-                    ) {
-                        if (listaDeImagens.isEmpty()) {
-                            Image(
-                                painter = painterResource(id = com.aracecultura.arace.R.drawable.img_placeholder),
-                                contentDescription = stringResource(R.string.cd_produto_sem_imagem),
-                                contentScale = ContentScale.Crop,
-                                modifier = Modifier.fillMaxSize()
-                            )
-                        } else {
-                            HorizontalPager(
-                                state = pagerState,
-                                key = { index -> index },
-                                pageSpacing = 5.dp,
-                                modifier = Modifier
-                                    .fillMaxSize()
-
-                            ) { index ->
-                                Box(modifier = Modifier.fillMaxSize()) {
-                                    AsyncImage(
-                                        model = listaDeImagens[index],
-                                        contentDescription = stringResource(R.string.cd_imagem_carrossel),
-                                        contentScale = ContentScale.Crop,
-                                        modifier = Modifier
-                                            .fillMaxSize()
-                                    )
-                                }
-
-                            }
-                            Row(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(bottom = 16.dp)
-                                    .align(Alignment.BottomCenter),
-                                verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.Center
-                            ) {
-
-                                Row(
-                                    horizontalArrangement = Arrangement.spacedBy(10.dp)
-                                ) {
-                                    listaDeImagens.forEachIndexed { index, _ ->
-                                        StatusBolinhaGeral(pagerState.currentPage, index)
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    Column(
-                        Modifier
-                            .zIndex(1f)
-                            .fillMaxWidth()
-                            .wrapContentHeight()
-                            .sombraInferior(alturaSombra = 16.dp)
-                            .background(bgDefault)
-                            .padding(horizontal = 20.dp, vertical = 15.dp)
-                    ) {
-                        // Nome do produto em uma linha própria
-                        Text(
-                            text = produtoAtual.nome,
-                            fontSize = 26.sp,
-                            modifier = Modifier.fillMaxWidth()
-                        )
-
-                        Spacer(Modifier.size(10.dp))
-
-                        // Botão centralizado na área livre e avaliação à direita.
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                        ) {
-                            Box(
-                                modifier = Modifier.weight(1f),
-                            ) {
-                                BotaoAvaliarProduto(
-                                    onClick = {
-                                        viewModel.limparErroAvaliacao()
-                                        mostrarDialogoAvaliacao = true
-                                    },
-                                    modifier = Modifier.width(150.dp)
-                                )
-                            }
-                            Spacer(Modifier.size(12.dp))
-                            Column(horizontalAlignment = Alignment.End) {
-                                Avaliacao(produtoAtual.avaliacao)
-                                Spacer(Modifier.size(4.dp))
-                                Text(
-                                    text = "${produtoAtual.avaliacao}",
-                                    fontSize = 16.sp,
-                                    fontWeight = FontWeight.Normal
-                                )
-                            }
-                        }
-
-                        Spacer(Modifier.size(12.dp))
-
-                        Text(
-                            text = stringResource(R.string.preco_reais, produtoAtual.preco),
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 20.sp
-                        )
-                    }
-                    Column(Modifier.padding(top = 20.dp).fillMaxWidth().weight(1f).padding(10.dp, 5.dp)){
-                        // Produtor (loja) responsável: foto circular com borda
-                        // btColor + nome à direita. Clicável → perfil da loja
-                        // na visão do cliente (somente leitura).
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .clickable(enabled = produtoAtual.produtorId.isNotBlank()) {
-                                    onProdutorClick(produtoAtual.produtorId)
-                                }
-                                .background(bgDefault)
-                                .padding(horizontal = 15.dp),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Box(
-                                modifier = Modifier
-                                    .size(64.dp)
-                                    .border(2.dp, btColor, CircleShape)
-                            ) {
-                                Box(
-                                    modifier = Modifier
-                                        .fillMaxSize()
-                                        .padding(2.dp)
-                                        .clip(CircleShape)
-                                        .background(Color(0xFFD9D9D9))
-                                ) {
-                                    val fotoLoja = produtor?.fotoLoja
-                                    if (!fotoLoja.isNullOrBlank()) {
-                                        AsyncImage(
-                                            model = fotoLoja,
-                                            contentDescription = stringResource(R.string.cd_foto_produtor),
-                                            contentScale = ContentScale.Crop,
-                                            modifier = Modifier.fillMaxSize()
-                                        )
-                                    }
-                                }
-                            }
-
-                            val nomeProdutor = produtor?.let {
-                                it.nomeLoja.ifBlank { it.nomeCompleto }
-                            }.orEmpty().ifBlank { "Produtor" }
-                            Text(
-                                text = nomeProdutor,
-                                modifier = Modifier.padding(start = 15.dp),
-                                fontSize = 22.sp,
-                                fontWeight = FontWeight.Normal
-                            )
-                        }
-                        Box(Modifier.fillMaxWidth().padding(top = 20.dp).background(bgDefault)) {
-                            Text(
-                                produtoAtual.descricao,
-                                modifier = Modifier.padding(horizontal = 15.dp),
-                                fontSize = 20.sp,
-                                fontWeight = FontWeight.Normal
-                            )
-                        }
-                    }
-
-                }
-            }
+        if (produtoAtual == null) {
+            CarregamentoContainer(Modifier.fillMaxSize())
+        } else {
+            ConteudoProduto(
+                produto = produtoAtual,
+                produtor = produtor,
+                emDestaque = emDestaque,
+                onAvaliarClick = {
+                    viewModel.limparErroAvaliacao()
+                    mostrarDialogoAvaliacao = true
+                },
+                onProdutorClick = onProdutorClick,
+            )
         }
+
         IconButton(
             onClick = onBackClick,
             modifier = Modifier
                 .align(Alignment.TopStart)
-                .padding(12.dp)
-                .clip(CircleShape)
-                .background(bgDefault)
+                .padding(start = 16.dp, top = 32.dp)
                 .zIndex(2f)
         ) {
             Icon(
                 painter = painterResource(R.drawable.ic_arrow_left),
                 contentDescription = stringResource(R.string.voltar),
-                tint = androidx.compose.ui.graphics.Color.Black
+                tint = Color.White,
+                modifier = Modifier.size(34.dp)
             )
         }
+
+        IconButton(
+            onClick = {},
+            modifier = Modifier
+                .align(Alignment.TopEnd)
+                .padding(end = 18.dp, top = 34.dp)
+                .zIndex(2f)
+        ) {
+            Icon(
+                painter = painterResource(R.drawable.ic_menu),
+                contentDescription = stringResource(R.string.configuracoes),
+                tint = Color.White,
+                modifier = Modifier.size(32.dp)
+            )
+        }
+
         if (mostrarDialogoAvaliacao) {
             val mensagemErro = when (erroAvaliacao) {
                 ErroAvaliacao.USUARIO_NAO_AUTENTICADO ->
@@ -296,3 +151,342 @@ fun TelaDoProduto(
         }
     }
 }
+
+@Composable
+private fun ConteudoProduto(
+    produto: Produto,
+    produtor: Produtor?,
+    emDestaque: Boolean,
+    onAvaliarClick: () -> Unit,
+    onProdutorClick: (String) -> Unit,
+) {
+    val scrollState = rememberScrollState()
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .verticalScroll(
+                state = scrollState,
+                overscrollEffect = null,
+            )
+    ) {
+        CarrosselProduto(produto = produto)
+        BlocoResumoProduto(produto = produto)
+        BlocoSocialProduto(produto = produto, emDestaque = emDestaque, onAvaliarClick = onAvaliarClick)
+        LinhaProdutor(produto = produto, produtor = produtor, onProdutorClick = onProdutorClick)
+        BlocoEspecificacoes(produto = produto)
+        Spacer(Modifier.height(36.dp))
+    }
+}
+
+@Composable
+private fun CarrosselProduto(produto: Produto) {
+    val imagens = produto.imagens
+    val pagerState = rememberPagerState(pageCount = { imagens.size.coerceAtLeast(1) })
+
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .aspectRatio(0.92f)
+            .background(Color(0xFFD9D9D9))
+    ) {
+        HorizontalPager(
+            state = pagerState,
+            key = { index -> imagens.getOrNull(index) ?: "placeholder" },
+            modifier = Modifier.fillMaxSize()
+        ) { index ->
+            val imagem = imagens.getOrNull(index)
+            if (imagem.isNullOrBlank()) {
+                Image(
+                    painter = painterResource(id = R.drawable.img_placeholder),
+                    contentDescription = stringResource(R.string.cd_produto_sem_imagem),
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier.fillMaxSize()
+                )
+            } else {
+                AsyncImage(
+                    model = imagem,
+                    contentDescription = stringResource(R.string.cd_imagem_carrossel),
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier.fillMaxSize()
+                )
+            }
+        }
+
+        Row(
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .padding(bottom = 30.dp),
+            horizontalArrangement = Arrangement.spacedBy(18.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            repeat(imagens.size.coerceAtLeast(3)) { index ->
+                Box(
+                    modifier = Modifier
+                        .size(14.dp)
+                        .clip(CircleShape)
+                        .background(
+                            if (index == pagerState.currentPage) Color.White
+                            else Color.White.copy(alpha = 0.55f)
+                        )
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun BlocoResumoProduto(produto: Produto) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(bgDefault)
+            .padding(horizontal = 28.dp, vertical = 24.dp)
+    ) {
+        Text(
+            text = produto.nome,
+            fontSize = 38.sp,
+            fontWeight = FontWeight.Normal,
+            lineHeight = 42.sp
+        )
+        Text(
+            text = formatarReais(produto.preco),
+            fontSize = 25.sp,
+            fontWeight = FontWeight.Bold,
+            lineHeight = 28.sp
+        )
+        Text(
+            text = "Ou 4x${formatarReais(produto.preco / 4).removePrefix("R$")}",
+            fontSize = 17.sp,
+            lineHeight = 22.sp
+        )
+        Spacer(Modifier.height(34.dp))
+        Text(
+            text = produto.descricao,
+            fontSize = 22.sp,
+            lineHeight = 28.sp
+        )
+    }
+}
+
+@Composable
+private fun BlocoSocialProduto(
+    produto: Produto,
+    emDestaque: Boolean,
+    onAvaliarClick: () -> Unit,
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 14.dp, vertical = 28.dp),
+        horizontalArrangement = Arrangement.spacedBy(10.dp),
+    ) {
+        if (emDestaque) {
+            DestaquePill(
+                modifier = Modifier
+                    .weight(1.1f)
+                    .height(90.dp)
+            )
+        }
+
+        AvaliacaoPill(
+            avaliacao = produto.avaliacao,
+            modifier = Modifier
+                .weight(1f)
+                .height(88.dp)
+        )
+
+        AvaliarPill(
+            quantidadeAvaliacoes = produto.quantidadeAvaliacoes,
+            onClick = onAvaliarClick,
+            modifier = Modifier
+                .weight(0.9f)
+                .height(112.dp)
+        )
+    }
+}
+
+@Composable
+private fun DestaquePill(modifier: Modifier = Modifier) {
+    Box(
+        modifier = modifier
+            .clip(RoundedCornerShape(44.dp))
+            .background(btColor),
+        contentAlignment = Alignment.Center
+    ) {
+        Text(
+            text = "Em destaque",
+            color = Color.White,
+            fontSize = 24.sp,
+            fontWeight = FontWeight.Medium
+        )
+    }
+}
+
+@Composable
+private fun AvaliacaoPill(
+    avaliacao: Double,
+    modifier: Modifier = Modifier,
+) {
+    Column(
+        modifier = modifier
+            .clip(RoundedCornerShape(44.dp))
+            .border(2.dp, btColor, RoundedCornerShape(44.dp))
+            .background(bgDefault),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        Text(
+            text = avaliacao.toInt().coerceIn(0, 5).toString(),
+            color = btColor,
+            fontSize = 30.sp,
+            fontWeight = FontWeight.Bold,
+            lineHeight = 30.sp
+        )
+        Row(horizontalArrangement = Arrangement.Center) {
+            repeat(5) { index ->
+                Icon(
+                    painter = painterResource(
+                        if (index < avaliacao.toInt()) R.drawable.ic_estrela1 else R.drawable.ic_estrela0
+                    ),
+                    contentDescription = null,
+                    tint = btColor,
+                    modifier = Modifier.size(22.dp)
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun AvaliarPill(
+    quantidadeAvaliacoes: Int,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Column(
+        modifier = modifier
+            .clip(RoundedCornerShape(34.dp))
+            .border(2.dp, btColor, RoundedCornerShape(34.dp))
+            .background(btColor)
+            .clickable(onClick = onClick),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(1f)
+                .clip(RoundedCornerShape(bottomStart = 34.dp, bottomEnd = 34.dp))
+                .background(bgDefault),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            Text(
+                text = quantidadeAvaliacoes.toString(),
+                color = btColor,
+                fontSize = 31.sp,
+                fontWeight = FontWeight.Bold,
+                lineHeight = 31.sp
+            )
+            Text(
+                text = "avaliações",
+                color = btColor,
+                fontSize = 15.sp,
+                lineHeight = 18.sp
+            )
+        }
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(0.55f),
+            contentAlignment = Alignment.Center
+        ) {
+            Text(
+                text = stringResource(R.string.avaliar),
+                color = Color.White,
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Medium
+            )
+        }
+    }
+}
+
+@Composable
+private fun LinhaProdutor(
+    produto: Produto,
+    produtor: Produtor?,
+    onProdutorClick: (String) -> Unit,
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(bgDefault)
+            .clickable(enabled = produto.produtorId.isNotBlank()) {
+                onProdutorClick(produto.produtorId)
+            }
+            .padding(horizontal = 24.dp, vertical = 24.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Box(
+            modifier = Modifier
+                .size(68.dp)
+                .clip(CircleShape)
+                .background(Color(0xFFD9D9D9))
+        ) {
+            val fotoLoja = produtor?.fotoLoja
+            if (!fotoLoja.isNullOrBlank()) {
+                AsyncImage(
+                    model = fotoLoja,
+                    contentDescription = stringResource(R.string.cd_foto_produtor),
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier.fillMaxSize()
+                )
+            }
+        }
+        Spacer(Modifier.width(20.dp))
+        Text(
+            text = produtor?.let { it.nomeLoja.ifBlank { it.nomeCompleto } }
+                .orEmpty()
+                .ifBlank { "Produtor" },
+            fontSize = 26.sp,
+            lineHeight = 30.sp
+        )
+    }
+}
+
+@Composable
+private fun BlocoEspecificacoes(produto: Produto) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 22.dp, vertical = 22.dp)
+            .clip(RoundedCornerShape(18.dp))
+            .background(bgDefault.copy(alpha = 0.88f))
+            .padding(horizontal = 22.dp, vertical = 20.dp)
+    ) {
+        Text(
+            text = "Especificações",
+            color = Color(0xFF606060),
+            fontSize = 23.sp,
+            fontWeight = FontWeight.Bold
+        )
+        Spacer(Modifier.height(8.dp))
+        Text(
+            text = buildString {
+                if (produto.categorias.isNotEmpty()) {
+                    append("Categoria: ")
+                    append(produto.categorias.joinToString(", "))
+                    append('\n')
+                }
+                append("Descrição: ")
+                append(produto.descricao.ifBlank { "Não informado." })
+            },
+            color = Color(0xFF303030),
+            fontSize = 18.sp,
+            lineHeight = 23.sp
+        )
+    }
+}
+
+private fun formatarReais(valor: Double): String =
+    "R$" + String.format(Locale.forLanguageTag("pt-BR"), "%.2f", valor)

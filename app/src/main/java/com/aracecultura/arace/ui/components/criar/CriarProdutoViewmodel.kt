@@ -5,19 +5,19 @@ import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.aracecultura.arace.R
-import com.aracecultura.arace.supabase
 import com.aracecultura.arace.data.LojaRepository
 import com.aracecultura.arace.data.model.Produto
+import com.aracecultura.arace.supabase
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
 import com.google.firebase.firestore.firestore
 import io.github.jan.supabase.storage.storage
+import java.util.UUID
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
-import java.util.UUID
 
 sealed class ProdutoUiState {
     data object Idle : ProdutoUiState()
@@ -35,7 +35,7 @@ class ProdutoViewModel : ViewModel() {
 
     fun salvarProduto(
         context: Context,
-        imageUri: Uri,
+        imageUris: List<Uri>,
         nome: String,
         categoria: String,
         descricao: String,
@@ -51,7 +51,7 @@ class ProdutoViewModel : ViewModel() {
 
         val userUid = Firebase.auth.currentUser?.uid
         if (userUid == null) {
-            _uiState.value = ProdutoUiState.Error("Usuário não autenticado.")
+            _uiState.value = ProdutoUiState.Error("Usuario nao autenticado.")
             return
         }
 
@@ -59,47 +59,38 @@ class ProdutoViewModel : ViewModel() {
             _uiState.value = ProdutoUiState.Loading
 
             try {
-                // O produto pertence à LOJA vinculada à conta (compartilhável
-                // entre contas), não ao usuário individual
                 val lojaId = LojaRepository.resolverLojaId(userUid)
                     ?: throw Exception("Conta sem loja vinculada.")
 
-                // 1. Converter a URI local em ByteArray
-                val imageBytes = context.contentResolver.openInputStream(imageUri)?.readBytes()
-                    ?: throw Exception("Não foi possível processar a imagem.")
-
-                // 2. Upload para o Supabase
                 val bucket = supabase.storage.from("imagens")
-                val fileName = "${UUID.randomUUID()}.jpg"
-                val caminhoSeguro = "$userUid/$fileName"
+                val imageUrls = imageUris.take(3).map { imageUri ->
+                    val imageBytes = context.contentResolver.openInputStream(imageUri)?.readBytes()
+                        ?: throw Exception("Nao foi possivel processar a imagem.")
+                    val caminhoSeguro = "$userUid/${UUID.randomUUID()}.jpg"
 
-                bucket.upload(path = caminhoSeguro, data = imageBytes) {
-                    upsert = true
+                    bucket.upload(path = caminhoSeguro, data = imageBytes) {
+                        upsert = true
+                    }
+
+                    bucket.publicUrl(caminhoSeguro)
                 }
-                val imageUrl = bucket.publicUrl(caminhoSeguro)
 
-                // 3. Formatar o preço
                 val precoFormatado = precoStr.replace(",", ".").toDoubleOrNull() ?: 0.0
-
-                // 4. Instanciar a Data Class (adaptando os campos únicos para listas)
                 val novoProduto = Produto(
-                    // id = "" -> Não passamos o ID, o @DocumentId diz pro Firestore gerar um automaticamente no .add()
                     nome = nomeNormalizado,
-                    categorias = listOf(categoria), // Envolvido em lista
+                    categorias = listOf(categoria),
                     descricao = descricao,
                     preco = precoFormatado,
-                    imagens = listOf(imageUrl), // Envolvido em lista
+                    imagens = imageUrls,
                     produtorId = lojaId,
                     avaliacao = 0.0,
                     somaAvaliacoes = 0.0,
                     quantidadeAvaliacoes = 0
                 )
 
-                // 5. Salvar o objeto diretamente no Firestore
                 db.collection("Produtos").add(novoProduto).await()
 
                 _uiState.value = ProdutoUiState.Success("Produto criado com sucesso!")
-
             } catch (e: Exception) {
                 e.printStackTrace()
                 _uiState.value = ProdutoUiState.Error(e.message ?: "Erro ao salvar produto.")

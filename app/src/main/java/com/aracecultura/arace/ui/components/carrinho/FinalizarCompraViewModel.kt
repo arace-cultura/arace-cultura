@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.aracecultura.arace.data.model.Produto
 import com.aracecultura.arace.data.model.Produtor
+import com.aracecultura.arace.data.removerProdutoDeCarrinho
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.SetOptions
@@ -22,6 +23,16 @@ data class LinhaCheckout(
     val totalLinha: Double
 )
 
+/** Dados de um item para gerar o Envio correspondente ao finalizar a compra. */
+data class ProdutoEnvio(
+    val produtoId: String,
+    val nome: String,
+    val descricao: String,
+    val imagem: String,
+    val preco: Double,
+    val quantidade: Int
+)
+
 /** Um cartão de pagamento = uma loja presente no carrinho. */
 data class LojaCheckout(
     val produtorId: String,
@@ -30,7 +41,9 @@ data class LojaCheckout(
     val itens: List<LinhaCheckout>,
     val total: Double,
     // Ids dos docs no carrinho desta loja, para removê-los ao finalizar.
-    val cartItemIds: List<String>
+    val cartItemIds: List<String>,
+    // Itens desta loja, para criar um Envio por item ao finalizar.
+    val produtosParaEnvio: List<ProdutoEnvio>
 )
 
 sealed interface CheckoutUiState {
@@ -99,7 +112,17 @@ class FinalizarCompraViewModel : ViewModel() {
                     LinhaCheckout(it.produto.nome, it.quantidade, it.produto.preco * it.quantidade)
                 },
                 total = doGrupo.sumOf { it.produto.preco * it.quantidade },
-                cartItemIds = doGrupo.map { it.cartId }
+                cartItemIds = doGrupo.map { it.cartId },
+                produtosParaEnvio = doGrupo.map {
+                    ProdutoEnvio(
+                        produtoId = it.cartId,
+                        nome = it.produto.nome,
+                        descricao = it.produto.descricao,
+                        imagem = it.produto.imagens.firstOrNull().orEmpty(),
+                        preco = it.produto.preco,
+                        quantidade = it.quantidade
+                    )
+                }
             )
         }
     }
@@ -125,6 +148,7 @@ class FinalizarCompraViewModel : ViewModel() {
                 withContext(Dispatchers.IO) {
                     val carrinhoRef = db.collection("Carrinho").document(uid)
                     val produtosRef = carrinhoRef.collection("Produtos")
+                    val enviosRef = db.collection("Envios")
                     db.runBatch { batch ->
                         loja.cartItemIds.forEach { id ->
                             batch.delete(produtosRef.document(id))
@@ -137,7 +161,29 @@ class FinalizarCompraViewModel : ViewModel() {
                             ),
                             SetOptions.merge()
                         )
+                        // Cada item vendido vira um Envio (status inicial PAGAMENTO),
+                        // que a loja acompanha na Tela de Vendas.
+                        loja.produtosParaEnvio.forEach { p ->
+                            batch.set(
+                                enviosRef.document(),
+                                mapOf(
+                                    "produtoId" to p.produtoId,
+                                    "produtorId" to loja.produtorId,
+                                    "compradorId" to uid,
+                                    "nome" to p.nome,
+                                    "descricao" to p.descricao,
+                                    "imagem" to p.imagem,
+                                    "preco" to p.preco,
+                                    "quantidade" to p.quantidade,
+                                    "status" to "PAGAMENTO",
+                                    "criadoEm" to FieldValue.serverTimestamp()
+                                )
+                            )
+                        }
                     }.await()
+                    loja.cartItemIds.forEach { produtoId ->
+                        removerProdutoDeCarrinho(db, produtoId, uid)
+                    }
                 }
             } catch (_: Exception) {
                 // Persistência offline reenvia quando voltar a conexão.

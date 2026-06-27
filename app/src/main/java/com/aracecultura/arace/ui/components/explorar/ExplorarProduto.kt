@@ -13,6 +13,7 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -48,6 +49,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.aracecultura.arace.ui.components.AppButton
 import com.aracecultura.arace.R
 import com.aracecultura.arace.data.model.CategoriasProduto
+import com.aracecultura.arace.navigation.LocalAppFooterHeight
 import com.aracecultura.arace.ui.theme.bgDefault
 import com.aracecultura.arace.ui.theme.btColor
 
@@ -95,6 +97,7 @@ fun ConteudoExplorar(
     val categoriasSelecionadas by viewmodel.categoriasSelecionadas.collectAsState()
     val ordenacaoAtual by viewmodel.ordenacao.collectAsState()
     val isLoading by viewmodel.isLoading.collectAsState()
+    val alturaFooter = LocalAppFooterHeight.current
 
     Box(
         modifier = Modifier
@@ -113,7 +116,10 @@ fun ConteudoExplorar(
             header()
 
             Box(Modifier.fillMaxSize()) {
-                LazyColumn {
+                LazyColumn(
+                    modifier = Modifier.fillMaxSize(),
+                    contentPadding = PaddingValues(bottom = alturaFooter + 16.dp)
+                ) {
                     item { Spacer(modifier = Modifier.height(56.dp)) }
                     when {
                         isLoading -> items(4) {
