@@ -7,13 +7,13 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="/css/autenticacao.css">
+  <link rel="stylesheet" href="<?= base_url('css/autenticacao.css') ?>">
 </head>
 <body>
 
   <div class="login-card cadastro-card item-animado">
     <div class="logo-wrap item-animado atraso-1">
-      <img src="/images/arace.png" alt="Logo Aracê" />
+      <img src="<?= base_url('images/arace.png') ?>" alt="Logo Aracê" />
     </div>
 
     <p class="subtitle item-animado atraso-1">Crie sua conta</p>
@@ -33,23 +33,42 @@
     <form id="formCadastro" action="/cadastro/clientes" method="post" novalidate>
       <div class="input-group-custom item-animado atraso-2">
         <i data-lucide="user"></i>
-        <input type="text" id="nome" name="nome" placeholder="Nome completo" value="<?= esc(old('nome')) ?>" required />
+        <input type="text" id="nome" name="nome" placeholder="Nome completo" autocomplete="name" value="<?= esc(old('nome')) ?>" required />
       </div>
 
       <div class="input-group-custom item-animado atraso-2">
         <i data-lucide="mail"></i>
-        <input type="email" id="email" name="email" placeholder="E-mail" value="<?= esc(old('email')) ?>" required />
+        <input type="email" id="email" name="email" placeholder="E-mail" autocomplete="email" value="<?= esc(old('email')) ?>" required />
+      </div>
+
+      <div class="input-group-custom item-animado atraso-3">
+        <i data-lucide="phone"></i>
+        <input type="tel" id="telefone" name="telefone" placeholder="Telefone" autocomplete="tel" value="<?= esc(old('telefone')) ?>" />
       </div>
 
       <div class="input-group-custom item-animado atraso-3">
         <i data-lucide="lock"></i>
-        <input type="password" id="senha" name="senha" placeholder="Senha" required />
+        <input type="password" id="senha" name="senha" placeholder="Senha" autocomplete="new-password" required />
         <button type="button" class="toggle-senha" onclick="alternarSenha('senha', 'icone-olho-1')">
           <i id="icone-olho-1" data-lucide="eye"></i>
         </button>
       </div>
 
+      <div class="input-group-custom item-animado atraso-4">
+        <i data-lucide="lock-keyhole"></i>
+        <input type="password" id="confirmarSenha" name="confirmarSenha" placeholder="Confirmar senha" autocomplete="new-password" required />
+        <button type="button" class="toggle-senha" onclick="alternarSenha('confirmarSenha', 'icone-olho-2')">
+          <i id="icone-olho-2" data-lucide="eye"></i>
+        </button>
+      </div>
+      <span id="erro-senha" class="erro-campo" style="display:none">As senhas precisam ser iguais</span>
+
       <div class="item-animado atraso-5">
+        <label class="permanecer">
+          <input type="checkbox" id="termos" name="termosAceitos" value="1" required />
+          Aceito os <a href="#" target="_blank">termos de uso</a>
+        </label>
+
         <button type="submit" class="btn-login">Criar conta</button>
 
         <div class="links-rodape">
@@ -62,17 +81,6 @@
 
   <script src="https://unpkg.com/lucide@latest"></script>
   <script>lucide.createIcons();</script>
-  <script>
-    function alternarSenha(campoId, iconeId) {
-      const campo = document.getElementById(campoId);
-      const icone = document.getElementById(iconeId);
-
-      if (!campo || !icone) return;
-
-      campo.type = campo.type === 'password' ? 'text' : 'password';
-      icone.setAttribute('data-lucide', campo.type === 'password' ? 'eye' : 'eye-off');
-      lucide.createIcons();
-    }
-  </script>
+  <script src="<?= base_url('js/cadastro.js') ?>"></script>
 </body>
 </html>

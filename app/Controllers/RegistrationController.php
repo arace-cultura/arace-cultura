@@ -8,12 +8,16 @@ final class RegistrationController extends BaseController
 {
     public function user()
     {
-        $payload = $this->request->getPost(['nome', 'email', 'senha']);
+        $payload = $this->request->getPost(['nome', 'email', 'telefone', 'senha', 'confirmarSenha']);
+        $payload['termosAceitos'] = $this->request->getPost('termosAceitos') ? '1' : '0';
 
         if (! $this->validateData($payload, [
-            'nome'  => 'required|min_length[2]|max_length[120]',
-            'email' => 'required|valid_email',
-            'senha' => 'required|min_length[6]',
+            'nome'           => 'required|min_length[2]|max_length[120]',
+            'email'          => 'required|valid_email',
+            'telefone'       => 'permit_empty|max_length[30]',
+            'senha'          => 'required|min_length[6]',
+            'confirmarSenha' => 'required|matches[senha]',
+            'termosAceitos'  => 'in_list[1]',
         ])) {
             return redirect()
                 ->back()
@@ -21,6 +25,9 @@ final class RegistrationController extends BaseController
                 ->with('erro', 'Confira os dados do cadastro.')
                 ->with('erros', $this->validator->getErrors());
         }
+
+        unset($payload['confirmarSenha']);
+        $payload['termosAceitos'] = true;
 
         try {
             $user = (new AraceFirestore())->createUser($payload);
@@ -40,17 +47,19 @@ final class RegistrationController extends BaseController
     public function producerOwner()
     {
         $payload = $this->request->getPost(['nome', 'cpf', 'email', 'telefone']);
-        $payload['termosAceitos'] = (bool) $this->request->getPost('termosAceitos');
+        $payload['termosAceitos'] = $this->request->getPost('termosAceitos') ? '1' : '0';
 
         if (! $this->validateData($payload, [
             'nome'     => 'required|min_length[2]|max_length[120]',
             'cpf'      => 'required',
             'email'    => 'required|valid_email',
             'telefone' => 'required',
+            'termosAceitos' => 'in_list[1]',
         ]) || ! $this->validCpf($payload['cpf'])) {
             return redirect()->back()->withInput()->with('erro', 'Confira os dados do produtor.');
         }
 
+        $payload['termosAceitos'] = true;
         session()->set('arace_producer_owner', $payload);
 
         return redirect()->to('/cadastro/produtor-loja');
@@ -61,7 +70,7 @@ final class RegistrationController extends BaseController
         $owner = session()->get('arace_producer_owner') ?? [];
         $store = $this->request->getPost(['nomeLoja', 'cnpj', 'email', 'telefone', 'categoria', 'distritoId']);
         $store['nome']          = $store['nomeLoja'] ?? '';
-        $store['termosAceitos'] = (bool) $this->request->getPost('termosAceitos');
+        $store['termosAceitos'] = $this->request->getPost('termosAceitos') ? '1' : '0';
         $payload = array_filter([...$owner, ...$store], static fn ($value): bool => $value !== null && $value !== '');
 
         if (! $this->validateData($payload, [
@@ -71,9 +80,12 @@ final class RegistrationController extends BaseController
             'telefone'  => 'required',
             'categoria' => 'required',
             'distritoId' => 'required',
+            'termosAceitos' => 'in_list[1]',
         ])) {
             return redirect()->back()->withInput()->with('erro', 'Confira os dados da loja.');
         }
+
+        $payload['termosAceitos'] = true;
 
         try {
             (new AraceFirestore())->createProducer($payload);
