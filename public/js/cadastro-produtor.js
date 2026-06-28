@@ -53,43 +53,10 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   form.addEventListener('submit', event => {
-    event.preventDefault();
-
-    if (!form.checkValidity()) {
-      form.reportValidity();
-      return;
-    }
-
     if (!validarCPF(cpf.value)) {
+      event.preventDefault();
       mostrarErroCPF(true);
-      return;
+      cpf.focus();
     }
-
-    const email = document.getElementById('email')?.value.trim() || '';
-    const nome = document.getElementById('nome-dono')?.value.trim() || '';
-    const telefone = document.getElementById('telefone')?.value.trim() || '';
-    const termos = document.getElementById('termos')?.checked || false;
-
-    if (!termos) {
-      alert('Voce precisa aceitar os termos de uso.');
-      return;
-    }
-
-    const [primeiroNome, ...sobrenomes] = nome.split(/\s+/);
-    localStorage.setItem('arace:auth', JSON.stringify({ loggedIn: true, email }));
-    localStorage.setItem('arace:user', JSON.stringify({
-      nome: primeiroNome || nome,
-      sobrenome: sobrenomes.join(' '),
-      username: `@${email.split('@')[0]}`,
-      email,
-      telefone,
-      cidade: '',
-      estado: 'ES',
-      avatar: '',
-      membroDesde: 'Junho de 2026',
-      cpf: cpf.value,
-    }));
-
-    window.location.href = '/cadastro/produtor-loja';
   });
 });

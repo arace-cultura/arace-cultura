@@ -15,6 +15,7 @@ function preencherDistritos(distritos) {
   const select = document.getElementById('distritos');
   if (!select) return;
 
+  const valorAtual = select.value;
   select.innerHTML = '<option value="" disabled selected>Distrito da loja</option>';
 
   distritos
@@ -25,6 +26,8 @@ function preencherDistritos(distritos) {
       option.textContent = distrito.nome;
       select.appendChild(option);
     });
+
+  if (valorAtual) select.value = valorAtual;
 }
 
 async function carregarDistritos() {
@@ -48,51 +51,11 @@ function configurarFormularioLoja() {
   });
 
   form.addEventListener('submit', event => {
-    event.preventDefault();
-
-    const loja = {
-      nome: document.getElementById('nome')?.value.trim() || '',
-      cnpj: document.getElementById('cnpj')?.value.trim() || '',
-      email: document.getElementById('email')?.value.trim() || '',
-      telefone: document.getElementById('telefone')?.value.trim() || '',
-      categoria: document.getElementById('categoria')?.value || '',
-      distritoId: distritos.value,
-      distritoNome: distritos.options[distritos.selectedIndex]?.textContent || '',
-      termosAceitos: document.getElementById('termos')?.checked || false,
-    };
-
-    if (!form.checkValidity()) {
-      form.reportValidity();
-      return;
-    }
-
-    if (!loja.distritoId) {
+    if (!distritos.value) {
+      event.preventDefault();
       mostrarErro('distritos-erro', true);
-      return;
+      distritos.focus();
     }
-
-    if (!loja.termosAceitos) {
-      alert('Voce precisa aceitar os termos de uso.');
-      return;
-    }
-
-    localStorage.setItem('arace:auth', JSON.stringify({ loggedIn: true, email: loja.email }));
-    localStorage.setItem('arace:producer', JSON.stringify({
-      cadastrado: true,
-      lojaNome: loja.nome,
-      lojaBio: '',
-      lojaCategoria: loja.categoria,
-      lojaCidade: loja.distritoNome,
-      lojaEstado: 'ES',
-      lojaTelefone: loja.telefone,
-      lojaEmail: loja.email,
-      lojaAvatar: '',
-      lojaBanner: '/images/bahia-vitoria.jpg',
-      cnpj: loja.cnpj,
-    }));
-    localStorage.setItem('arace:viewMode', 'produtor');
-
-    window.location.href = '/produtor/perfil-loja';
   });
 }
 

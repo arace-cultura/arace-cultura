@@ -44,6 +44,10 @@ $RECYCLE.BIN/
 .env
 .vagrant
 Vagrantfile
+firebase-credentials/
+*service-account*.json
+keyfile.json
+arace-cultura-firebase-adminsdk-fbsvc-e152abf953.json
 
 #-------------------------
 # Temporary Files
@@ -62,6 +66,8 @@ Vagrantfile
 
 /writable/debugbar/*
 !/writable/debugbar/index.html
+
+writable/firebase-credentials.json
 
 php_errors.log
 
