@@ -10,45 +10,6 @@ use RuntimeException;
 
 final class AraceFirestore
 {
-    private const FALLBACK_PRODUCTS = [
-        [
-            'id'         => 'panela-barro',
-            'nome'       => 'Panela de barro',
-            'artesao'    => 'Espirito das Pedras',
-            'categoria'  => 'ceramica',
-            'preco'      => 245,
-            'avaliacoes' => 24,
-            'estrelas'   => 4.5,
-            'favorito'   => false,
-            'cor'        => '#C1734A',
-            'destaque'   => true,
-        ],
-        [
-            'id'         => 'preguica-madeira',
-            'nome'       => 'Preguica de machao',
-            'artesao'    => 'Atelier Capixaba',
-            'categoria'  => 'madeira',
-            'preco'      => 290,
-            'avaliacoes' => 11,
-            'estrelas'   => 4,
-            'favorito'   => false,
-            'cor'        => '#8F5E35',
-            'destaque'   => true,
-        ],
-        [
-            'id'         => 'panela-barro-2',
-            'nome'       => 'Panela de barro n. 2',
-            'artesao'    => 'Arte Local',
-            'categoria'  => 'ceramica',
-            'preco'      => 180,
-            'avaliacoes' => 38,
-            'estrelas'   => 5,
-            'favorito'   => true,
-            'cor'        => '#D28A4D',
-            'destaque'   => true,
-        ],
-    ];
-
     private const FALLBACK_PRODUCERS = [
         ['id' => 'espirito-das-pedras', 'nome' => 'Espirito das Pedras', 'iniciais' => 'EP', 'produtos' => 12],
         ['id' => 'arte-arace', 'nome' => 'Arte Arace', 'iniciais' => 'AA', 'produtos' => 8],
@@ -58,16 +19,20 @@ final class AraceFirestore
     public function products(bool $featured = false): array
     {
         try {
-            $products = $this->collectionItems(ProductCollection::class, 'nome');
+            $products = $this->collectionItems(ProductCollection::class);
             $products = array_map(fn (array $product): array => $this->normalizeProduct($product), $products);
 
             if ($featured) {
                 $products = array_values(array_filter($products, static fn (array $product): bool => $product['destaque'] ?? true));
             }
 
-            return $products ?: self::FALLBACK_PRODUCTS;
-        } catch (\Throwable) {
-            return self::FALLBACK_PRODUCTS;
+            return $products;
+        } catch (\Throwable $exception) {
+            log_message('error', 'Falha ao buscar produtos no Firestore: {message}', [
+                'message' => $exception->getMessage(),
+            ]);
+
+            return [];
         }
     }
 
@@ -77,12 +42,10 @@ final class AraceFirestore
             $product = $this->collection(ProductCollection::class)->get($id);
 
             return $product === null ? null : $this->normalizeProduct($this->entityPayload($product));
-        } catch (\Throwable) {
-            foreach (self::FALLBACK_PRODUCTS as $product) {
-                if ($product['id'] === $id) {
-                    return $product;
-                }
-            }
+        } catch (\Throwable $exception) {
+            log_message('error', 'Falha ao buscar produto no Firestore: {message}', [
+                'message' => $exception->getMessage(),
+            ]);
 
             return null;
         }
@@ -103,6 +66,7 @@ final class AraceFirestore
     public function createUser(array $payload): array
     {
         $payload['email'] = mb_strtolower(trim((string) ($payload['email'] ?? '')));
+        $payload['telefone'] = $this->formatPhone((string) ($payload['telefone'] ?? ''));
 
         if (isset($payload['senha'])) {
             $payload['senha'] = password_hash((string) $payload['senha'], PASSWORD_DEFAULT);
@@ -112,6 +76,84 @@ final class AraceFirestore
         unset($user['senha']);
 
         return $user;
+    }
+
+    public function userFromSession(array $sessionUser): array
+    {
+        $user = null;
+
+        try {
+            $collection = $this->collection(UsuarioCollection::class);
+            $id         = trim((string) ($sessionUser['id'] ?? ''));
+
+            if ($id !== '') {
+                $entity = $collection->get($id);
+                if ($entity !== null) {
+                    $user = $this->entityPayload($entity);
+                }
+            }
+
+            if ($user === null && ! empty($sessionUser['email'])) {
+                $email = mb_strtolower(trim((string) $sessionUser['email']));
+                $query = $collection->where('email', '=', $email)->limit(1);
+
+                foreach ($collection->list($query) as $entity) {
+                    $user = $this->entityPayload($entity);
+                    break;
+                }
+            }
+        } catch (\Throwable $exception) {
+            log_message('error', 'Falha ao buscar usuario atual no Firestore: {message}', [
+                'message' => $exception->getMessage(),
+            ]);
+        }
+
+        return $this->safeUser($user ?? $sessionUser);
+    }
+
+    public function updateUserFromSession(array $sessionUser, array $payload): array
+    {
+        $collection = $this->collection(UsuarioCollection::class);
+        $entity     = $this->userEntityFromSession($collection, $sessionUser);
+
+        if ($entity === null) {
+            throw new RuntimeException('Usuario autenticado nao foi encontrado no Firestore.');
+        }
+
+        $allowed = [
+            'nome',
+            'username',
+            'email',
+            'telefone',
+            'cidade',
+            'estado',
+            'cpf',
+            'avatar',
+            'bio',
+            'nascimento',
+            'genero',
+        ];
+
+        $updates = [];
+        foreach ($allowed as $field) {
+            if (array_key_exists($field, $payload)) {
+                $updates[$field] = is_string($payload[$field]) ? trim($payload[$field]) : $payload[$field];
+            }
+        }
+
+        if (isset($updates['email'])) {
+            $updates['email'] = mb_strtolower((string) $updates['email']);
+        }
+        if (isset($updates['telefone'])) {
+            $updates['telefone'] = $this->formatPhone((string) $updates['telefone']);
+        }
+        if (isset($updates['cpf'])) {
+            $updates['cpf'] = $this->formatCpf((string) $updates['cpf']);
+        }
+
+        $collection->update($entity, $updates);
+
+        return $this->userFromSession($this->safeUser([...$sessionUser, ...$updates]));
     }
 
     /**
@@ -168,20 +210,59 @@ final class AraceFirestore
             }
         }
 
+        return $this->safeUser($user + ['email' => $email]);
+    }
+
+    private function safeUser(array $user): array
+    {
         return array_filter([
             'id'       => (string) ($user['id'] ?? ''),
             'nome'     => (string) ($user['nome'] ?? 'Usuario'),
-            'email'    => (string) ($user['email'] ?? $email),
-            'telefone' => $user['telefone'] ?? null,
+            'username' => $user['username'] ?? $user['usuario'] ?? null,
+            'email'    => (string) ($user['email'] ?? ''),
+            'telefone' => isset($user['telefone']) ? $this->formatPhone((string) $user['telefone']) : null,
             'cidade'   => $user['cidade'] ?? null,
             'estado'   => $user['estado'] ?? null,
-            'cpf'      => $user['cpf'] ?? null,
+            'cpf'      => isset($user['cpf']) ? $this->formatCpf((string) $user['cpf']) : null,
             'avatar'   => $user['avatar'] ?? null,
+            'bio'      => $user['bio'] ?? null,
+            'nascimento' => $user['nascimento'] ?? $user['dataNascimento'] ?? null,
+            'genero'   => $user['genero'] ?? null,
+            'createdAt' => $user['createdAt'] ?? $user['criadoEm'] ?? null,
         ], static fn ($value): bool => $value !== null && $value !== '');
+    }
+
+    private function userEntityFromSession(object $collection, array $sessionUser): ?object
+    {
+        $id = trim((string) ($sessionUser['id'] ?? ''));
+        if ($id !== '') {
+            $entity = $collection->get($id);
+            if ($entity !== null) {
+                return $entity;
+            }
+        }
+
+        if (! empty($sessionUser['email'])) {
+            $email = mb_strtolower(trim((string) $sessionUser['email']));
+            $query = $collection->where('email', '=', $email)->limit(1);
+
+            foreach ($collection->list($query) as $entity) {
+                return $entity;
+            }
+        }
+
+        return null;
     }
 
     public function createProducer(array $payload): array
     {
+        if (isset($payload['telefone'])) {
+            $payload['telefone'] = $this->formatPhone((string) $payload['telefone']);
+        }
+        if (isset($payload['cpf'])) {
+            $payload['cpf'] = $this->formatCpf((string) $payload['cpf']);
+        }
+
         $payload['tipo']                = 'produtor';
         $payload['cadastrado']          = true;
         $payload['produtos']            = $payload['produtos'] ?? 0;
@@ -207,10 +288,10 @@ final class AraceFirestore
         return collection($class);
     }
 
-    private function collectionItems(string $class, string $orderBy): array
+    private function collectionItems(string $class, ?string $orderBy = null): array
     {
         $collection = $this->collection($class);
-        $query      = $collection->orderBy($orderBy);
+        $query      = $orderBy === null ? null : $collection->orderBy($orderBy);
         $items      = [];
 
         foreach ($collection->list($query) as $entity) {
@@ -233,21 +314,122 @@ final class AraceFirestore
 
     private function normalizeProduct(array $product): array
     {
-        $product['id']         = (string) ($product['id'] ?? $product['produto_id'] ?? $product['sku'] ?? '');
-        $product['nome']       = $product['nome'] ?? $product['nome_produto'] ?? $product['titulo'] ?? 'Produto Arace';
-        $product['artesao']    = $product['artesao'] ?? $product['produtor'] ?? $product['nome_produtor'] ?? $product['nome_loja'] ?? 'Produtor Arace';
-        $product['categoria']  = $product['categoria'] ?? $product['categoria_produto'] ?? $product['colecao'] ?? 'artesanato';
-        $product['preco']      = (float) ($product['preco'] ?? $product['preco_produto'] ?? $product['valor'] ?? 0);
-        $product['avaliacoes'] = (int) ($product['avaliacoes'] ?? $product['total_avaliacoes'] ?? 0);
-        $product['estrelas']   = (float) ($product['estrelas'] ?? $product['avaliacao'] ?? 4);
-        $product['cor']        = $product['cor'] ?? '#b5a898';
-        $product['img']        = $product['img'] ?? $product['imagem'] ?? $product['imagem_produto'] ?? '';
+        $quantidadeAvaliacoes = (int) ($product['quantidadeAvaliacoes'] ?? $product['avaliacoes'] ?? $product['total_avaliacoes'] ?? 0);
+        $somaAvaliacoes       = (float) ($product['somaAvaliacoes'] ?? 0);
+        $estrelas             = $product['estrelas'] ?? $product['avaliacao'] ?? null;
+
+        if ($estrelas === null && $quantidadeAvaliacoes > 0 && $somaAvaliacoes > 0) {
+            $estrelas = $somaAvaliacoes / $quantidadeAvaliacoes;
+        }
+
+        $categorias = $product['categorias'] ?? $product['categoria'] ?? $product['categoria_produto'] ?? $product['colecao'] ?? 'artesanato';
+        if (is_string($categorias) && str_contains($categorias, ',')) {
+            $categorias = array_map('trim', explode(',', $categorias));
+        }
+
+        $product['id']                   = (string) ($product['id'] ?? $product['produto_id'] ?? $product['sku'] ?? '');
+        $product['nome']                 = $product['nome'] ?? $product['nome_produto'] ?? $product['titulo'] ?? 'Produto Arace';
+        $product['descricao']            = $product['descricao'] ?? $product['description'] ?? '';
+        $product['produtorId']           = (string) ($product['produtorId'] ?? $product['produtor_id'] ?? '');
+        $product['artesao']              = $product['artesao'] ?? $product['produtor'] ?? $product['nome_produtor'] ?? $product['nome_loja'] ?? 'Produtor Arace';
+        $product['categorias']           = is_array($categorias) ? array_values($categorias) : [$categorias];
+        $product['categoria']            = (string) ($product['categorias'][0] ?? 'artesanato');
+        $product['preco']                = (float) ($product['preco'] ?? $product['preco_produto'] ?? $product['valor'] ?? 0);
+        $product['quantidadeAvaliacoes'] = $quantidadeAvaliacoes;
+        $product['somaAvaliacoes']       = $somaAvaliacoes;
+        $product['avaliacoes']           = $quantidadeAvaliacoes;
+        $product['estrelas']             = (float) ($estrelas ?? 0);
+        $product['cor']                  = $product['cor'] ?? '#b5a898';
+        $product['imagens']              = $this->productImages($product);
+        $product['img']                  = $product['imagens'][0] ?? '';
+        $product['imagem']               = $product['img'];
 
         if ($product['id'] === '') {
             $product['id'] = url_title($product['nome'], '-', true);
         }
 
         return $product;
+    }
+
+    private function productImages(array $product): array
+    {
+        $fields = [
+            'imagens',
+            'images',
+            'fotos',
+            'foto',
+            'img',
+            'imagem',
+            'imagemUrl',
+            'imagemURL',
+            'imagem_url',
+            'imagem_produto',
+            'image',
+            'imageUrl',
+            'imageURL',
+            'image_url',
+            'urlImagem',
+            'url_imagem',
+            'publicUrl',
+            'publicURL',
+            'public_url',
+            'storageUrl',
+            'storage_url',
+            'supabaseUrl',
+            'supabase_url',
+            'thumbnail',
+            'capa',
+            'url',
+        ];
+
+        $images = [];
+
+        foreach ($fields as $field) {
+            if (array_key_exists($field, $product)) {
+                $images = array_merge($images, $this->imageUrlsFromValue($product[$field]));
+            }
+        }
+
+        return array_values(array_unique(array_filter(
+            $images,
+            static fn (string $url): bool => $url !== ''
+        )));
+    }
+
+    private function imageUrlsFromValue(mixed $value): array
+    {
+        if ($value === null || $value === '') {
+            return [];
+        }
+
+        if (is_string($value)) {
+            $value = trim($value);
+
+            return filter_var($value, FILTER_VALIDATE_URL) ? [$value] : [];
+        }
+
+        if (is_object($value)) {
+            $value = method_exists($value, 'toArray') ? $value->toArray() : (array) $value;
+        }
+
+        if (! is_array($value)) {
+            return [];
+        }
+
+        $images = [];
+        $preferredKeys = ['url', 'publicUrl', 'public_url', 'imageUrl', 'image_url', 'imagemUrl', 'imagem_url', 'src'];
+
+        foreach ($preferredKeys as $key) {
+            if (array_key_exists($key, $value)) {
+                $images = array_merge($images, $this->imageUrlsFromValue($value[$key]));
+            }
+        }
+
+        foreach ($value as $item) {
+            $images = array_merge($images, $this->imageUrlsFromValue($item));
+        }
+
+        return $images;
     }
 
     private function normalizeProducer(array $producer): array
@@ -283,5 +465,31 @@ final class AraceFirestore
         return password_verify($plainPassword, $storedPassword)
             || (password_get_info($storedPassword)['algo'] === null
                 && hash_equals($storedPassword, $plainPassword));
+    }
+
+    private function formatPhone(string $phone): string
+    {
+        $digits = preg_replace('/\D/', '', $phone) ?? '';
+
+        if (strlen($digits) === 11) {
+            return sprintf('(%s) %s-%s', substr($digits, 0, 2), substr($digits, 2, 5), substr($digits, 7));
+        }
+
+        if (strlen($digits) === 10) {
+            return sprintf('(%s) %s-%s', substr($digits, 0, 2), substr($digits, 2, 4), substr($digits, 6));
+        }
+
+        return trim($phone);
+    }
+
+    private function formatCpf(string $cpf): string
+    {
+        $digits = preg_replace('/\D/', '', $cpf) ?? '';
+
+        if (strlen($digits) !== 11) {
+            return trim($cpf);
+        }
+
+        return sprintf('%s.%s.%s-%s', substr($digits, 0, 3), substr($digits, 3, 3), substr($digits, 6, 3), substr($digits, 9));
     }
 }

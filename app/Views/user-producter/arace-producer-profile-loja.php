@@ -1,36 +1,37 @@
-ï»¿ï»¿ï»¿<!DOCTYPE html>
+??<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>AracÃª â€” Minha Loja</title>
+  <title>Aracê — Minha Loja</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex&family=Playfair+Display:wght@700&display=swap" rel="stylesheet" />
   <script src="https://unpkg.com/lucide@latest"></script>
-  <link href="/css/loja.css" rel="stylesheet" />
+  <script src="<?= base_url('js/icons.js') ?>"></script>
+  <link href="<?= base_url('css/loja.css') ?>" rel="stylesheet" />
 </head>
 <body>
 
   
   <!-- HEADER -->
 <header>
-  <a href="/" class="logo">aracÃª</a>
+  <a href="<?= url_to('home') ?>" class="logo">aracê</a>
 
-  <form class="search-wrap" action="/pesquisa" method="get">
+  <form class="search-wrap" action="<?= url_to('main_pesquisa') ?>" method="get">
     <i data-lucide="search"></i>
     <input type="text" name="q" id="searchHeaderInput" placeholder="Pesquisar produtos..." />
   </form>
 
   <div class="header-right">
-    <button class="cart-btn" type="button" onclick="window.location.href='/arace-carrinho'">
+    <button class="cart-btn" type="button" onclick="window.location.href='<?= url_to('main_arace_carrinho') ?>'">
       <i data-lucide="shopping-cart"></i>
       <span class="cart-count">2 itens</span>
     </button>
-    <button class="cart-btn" type="button" onclick="window.location.href='/usuario/arace-favoritos'">
+    <button class="cart-btn" type="button" onclick="window.location.href='<?= url_to('user_arace_favoritos') ?>'">
       <i data-lucide="heart"></i>
       <span class="cart-count">5 itens</span>
     </button>
-    <button class="avatar-btn" type="button" onclick="window.location.href='/usuario/arace-perfil'">
+    <button class="avatar-btn" type="button" onclick="window.location.href='<?= url_to('user_arace_perfil') ?>'">
       <i data-lucide="user"></i>
     </button>
   </div>
@@ -38,37 +39,37 @@
 
 <!--Icone de chat-->
 <div class="chat-bubble">
-  <a href="/usuario/chat">
+  <a href="<?= url_to('user_chat') ?>">
     <i data-lucide="message-circle-more"></i>
   </a>
 </div>
 
 <!-- SIDEBAR -->
 <aside>
-    <a class="nav-item" href="/">
+    <a class="nav-item" href="<?= url_to('home') ?>">
       <i data-lucide="house"></i> Home page
     </a>
-    <a class="nav-item" href="/arace-produtos">
+    <a class="nav-item" href="<?= url_to('arace_produtos') ?>">
       <i data-lucide="shopping-bag"></i> Produtos
     </a>
-    <a class="nav-item active" href="/arace-carrinho">
+    <a class="nav-item active" href="<?= url_to('main_arace_carrinho') ?>">
       <i data-lucide="shopping-cart"></i> Carrinho
     </a>
-    <a class="nav-item" href="/usuario/arace-notificacao">
-      <i data-lucide="bell"></i> NotificaÃ§Ãµes
+    <a class="nav-item" href="<?= url_to('user_arace_notificacao') ?>">
+      <i data-lucide="bell"></i> Notificações
     </a>
-    <a class="nav-item" href="/arace-config">
-      <i data-lucide="settings"></i> ConfiguraÃ§Ãµes
+    <a class="nav-item" href="<?= url_to('main_arace_config') ?>">
+      <i data-lucide="settings"></i> Configurações
     </a>
-    <a class="nav-item" href="/usuario/arace-perfil">
+    <a class="nav-item" href="<?= url_to('user_arace_perfil') ?>">
       <i data-lucide="user"></i> Perfil
     </a>
-    <a class="nav-item" href="/cadastro/produtor">
+    <a class="nav-item" href="<?= url_to('auth_cadastro_produtor') ?>">
       <i data-lucide="box"></i> Quero ser produtor
     </a>
     <div class="nav-divider"></div>
     <div class="nav-section">Reportar</div>
-    <a class="nav-item" href="/arace-config">
+    <a class="nav-item" href="<?= url_to('main_arace_config') ?>">
       <i data-lucide="hand-coins"></i> Detalhes de pagamento
     </a>
   </aside>
@@ -77,8 +78,8 @@
   <main>
 
     <!-- Breadcrumb -->
-    <nav class="breadcrumb" aria-label="Caminho de navegaÃ§Ã£o">
-      <a href="/">Home</a>
+    <nav class="breadcrumb" aria-label="Caminho de navegação">
+      <a href="<?= url_to('home') ?>">Home</a>
       <i data-lucide="chevron-right"></i>
       <span>Minha loja</span>
     </nav>
@@ -106,17 +107,17 @@
           <h1 class="store-title">Paneleiras Capixabas</h1>
           <p class="store-subtitle">
             <i data-lucide="map-pin"></i>
-            VitÃ³ria, ES Â· Artesanato tradicional
+            Vitória, ES · Artesanato tradicional
           </p>
         </div>
-        <div class="store-stats" aria-label="EstatÃ­sticas da loja">
+        <div class="store-stats" aria-label="Estatísticas da loja">
           <div class="stat-item">
             <span class="stat-number">42</span>
             <span class="stat-label">Produtos</span>
           </div>
           <div class="stat-item">
             <span class="stat-number">4.9</span>
-            <span class="stat-label">AvaliaÃ§Ã£o</span>
+            <span class="stat-label">Avaliação</span>
           </div>
           <div class="stat-item">
             <span class="stat-number">320</span>
@@ -214,18 +215,18 @@
       </div>
     </section>
 
-    <!-- Nossa histÃ³ria -->
+    <!-- Nossa história -->
     <section class="store-section history-section item-animado atraso-3" aria-labelledby="historia-titulo">
       <div class="history-container">
         <div class="history-image">
-          <img src="/images/convento1.jpg" alt="ArtesÃ£ modelando panela de barro" loading="lazy" />
+          <img src="/images/convento1.jpg" alt="Artesã modelando panela de barro" loading="lazy" />
         </div>
         <div class="history-text">
-          <h2 id="historia-titulo">Nossa histÃ³ria</h2>
+          <h2 id="historia-titulo">Nossa história</h2>
           <p>
-            Preservamos uma tradiÃ§Ã£o centenÃ¡ria de produÃ§Ã£o artesanal de panelas de barro,
-            sÃ­mbolo da cultura capixaba. Cada peÃ§a carrega a identidade, o suor e o amor
-            passado de geraÃ§Ã£o em geraÃ§Ã£o.
+            Preservamos uma tradição centenária de produção artesanal de panelas de barro,
+            símbolo da cultura capixaba. Cada peça carrega a identidade, o suor e o amor
+            passado de geração em geração.
           </p>
           <span class="history-tag">Artesanato certificado</span>
         </div>

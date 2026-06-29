@@ -1,59 +1,60 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Aracê — Notificações</title>
+  <title>Arac� � Notifica��es</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex&family=Playfair+Display:wght@700&display=swap" rel="stylesheet" />
   <script src="https://unpkg.com/lucide@latest"></script>
-  <link href="/css/notificacoes.css" rel="stylesheet" />
+  <script src="<?= base_url('js/icons.js') ?>"></script>
+  <link href="<?= base_url('css/notificacoes.css') ?>" rel="stylesheet" />
 </head>
 <body>
 
 <header>
-    <a href="/" class="logo">aracê</a>
+    <a href="<?= url_to('home') ?>" class="logo">arac�</a>
     <div class="header-right">
-    <button class="cart-btn" type="button" onclick="window.location.href='/arace-carrinho'">
+    <button class="cart-btn" type="button" onclick="window.location.href='<?= url_to('main_arace_carrinho') ?>'">
         <i data-lucide="shopping-cart"></i>
         <span class="cart-count">2 itens</span>
       </button>
-    <button class="cart-btn" type="button" onclick="window.location.href='/usuario/arace-favoritos'">
+    <button class="cart-btn" type="button" onclick="window.location.href='<?= url_to('user_arace_favoritos') ?>'">
         <i data-lucide="heart"></i>
         <span class="cart-count">5 itens</span>
       </button>
-      <button class="avatar-btn" type="button" onclick="window.location.href='/usuario/arace-perfil'" aria-label="Abrir perfil">
+      <button class="avatar-btn" type="button" onclick="window.location.href='<?= url_to('user_arace_perfil') ?>'" aria-label="Abrir perfil">
         <i data-lucide="user"></i>
       </button>
     </div>
   </header>
 
 <aside>
-    <a class="nav-item" href="/">
+    <a class="nav-item" href="<?= url_to('home') ?>">
       <i data-lucide="house"></i> Home page
     </a>
-    <a class="nav-item" href="/arace-produtos">
+    <a class="nav-item" href="<?= url_to('arace_produtos') ?>">
       <i data-lucide="shopping-bag"></i> Produtos
     </a>
-    <a class="nav-item active" href="/arace-carrinho">
+    <a class="nav-item active" href="<?= url_to('main_arace_carrinho') ?>">
       <i data-lucide="shopping-cart"></i> Carrinho
     </a>
-    <a class="nav-item" href="/usuario/arace-notificacao">
-      <i data-lucide="bell"></i> Notificações
+    <a class="nav-item" href="<?= url_to('user_arace_notificacao') ?>">
+      <i data-lucide="bell"></i> Notifica��es
     </a>
-    <a class="nav-item" href="/arace-config">
-      <i data-lucide="settings"></i> Configurações
+    <a class="nav-item" href="<?= url_to('main_arace_config') ?>">
+      <i data-lucide="settings"></i> Configura��es
     </a>
-    <a class="nav-item" href="/usuario/arace-perfil">
+    <a class="nav-item" href="<?= url_to('user_arace_perfil') ?>">
       <i data-lucide="user"></i> Perfil
     </a>
-    <a class="nav-item" href="/cadastro/produtor">
+    <a class="nav-item" href="<?= url_to('auth_cadastro_produtor') ?>">
       <i data-lucide="box"></i> Quero ser produtor
     </a>
     <div class="nav-divider"></div>
     <div class="nav-section">Reportar</div>
-    <a class="nav-item" href="/arace-config">
+    <a class="nav-item" href="<?= url_to('main_arace_config') ?>">
       <i data-lucide="hand-coins"></i> Detalhes de pagamento
     </a>
   </aside>
@@ -62,8 +63,8 @@
 
   <div class="notif-header">
     <div>
-      <h1>Notificações</h1>
-      <p id="subtituloHeader">Você tem <strong>4 notificações não lidas</strong></p>
+      <h1>Notifica��es</h1>
+      <p id="subtituloHeader">Voc� tem <strong>4 notifica��es n�o lidas</strong></p>
     </div>
     <div class="notif-header-actions">
       <button class="btn-marcar-tudo" onclick="marcarTodasLidas()">
@@ -83,7 +84,7 @@
       <span class="chip-count" id="cnt-pedido">2</span>
     </button>
     <button class="notif-chip" onclick="filtrar(this,'promo')">
-      <i data-lucide="tag"></i> Promoções
+      <i data-lucide="tag"></i> Promo��es
       <span class="chip-count" id="cnt-promo">2</span>
     </button>
     <button class="notif-chip" onclick="filtrar(this,'chat')">
@@ -91,7 +92,7 @@
       <span class="chip-count" id="cnt-chat">1</span>
     </button>
     <button class="notif-chip" onclick="filtrar(this,'avaliacao')">
-      <i data-lucide="star"></i> Avaliações
+      <i data-lucide="star"></i> Avalia��es
       <span class="chip-count" id="cnt-avaliacao">1</span>
     </button>
     <button class="notif-chip" onclick="filtrar(this,'sistema')">
@@ -106,64 +107,64 @@
 </main>
 
 <script>
-// ── DADOS (substituir por fetch('/api/notificacoes') em produção) ──────────
+// -- DADOS (substituir por fetch('/api/notificacoes') em produ��o) ----------
 const NOTIFICACOES = [
   {
     id: 1, tipo: 'pedido', lida: false, dia: 'Hoje',
     titulo: 'Pedido enviado!',
-    desc: 'Seu pedido <strong>#4821</strong> — Panela de barro Capixaba foi enviado e está a caminho.',
-    tempo: 'há 20 min',
+    desc: 'Seu pedido <strong>#4821</strong> � Panela de barro Capixaba foi enviado e est� a caminho.',
+    tempo: 'h� 20 min',
     thumb: 'https://images.unsplash.com/photo-1614613535308-eb5fbd847f51?w=80&q=70',
     cta: { label: 'Rastrear pedido', icon: 'map-pin', href: '#' }
   },
   {
     id: 2, tipo: 'chat', lida: false, dia: 'Hoje',
-    titulo: 'Nova mensagem de Mestre Zé Pedro',
-    desc: 'Olá! Obrigado pelo pedido. A panela está sendo embalada com cuidado para você.',
-    tempo: 'há 1h',
+    titulo: 'Nova mensagem de Mestre Z� Pedro',
+    desc: 'Ol�! Obrigado pelo pedido. A panela est� sendo embalada com cuidado para voc�.',
+    tempo: 'h� 1h',
     cta: { label: 'Ver conversa', icon: 'message-circle', href: '/usuario/chat' }
   },
   {
     id: 3, tipo: 'promo', lida: false, dia: 'Hoje',
-    titulo: 'Cupom exclusivo para você! 🎉',
-    desc: 'Use o código <strong>CAPIXABA15</strong> e ganhe 15% de desconto em toda a categoria Cerâmica. Válido até domingo.',
-    tempo: 'há 3h',
+    titulo: 'Cupom exclusivo para voc�! ??',
+    desc: 'Use o c�digo <strong>CAPIXABA15</strong> e ganhe 15% de desconto em toda a categoria Cer�mica. V�lido at� domingo.',
+    tempo: 'h� 3h',
     cta: { label: 'Usar cupom', icon: 'tag', href: '#' }
   },
   {
     id: 4, tipo: 'avaliacao', lida: false, dia: 'Hoje',
-    titulo: 'Sua avaliação foi curtida',
-    desc: '<strong>12 pessoas</strong> acharam sua avaliação da Preguiça de madeira útil.',
-    tempo: 'há 5h',
-    cta: { label: 'Ver avaliação', icon: 'star', href: '#' }
+    titulo: 'Sua avalia��o foi curtida',
+    desc: '<strong>12 pessoas</strong> acharam sua avalia��o da Pregui�a de madeira �til.',
+    tempo: 'h� 5h',
+    cta: { label: 'Ver avalia��o', icon: 'star', href: '#' }
   },
   {
     id: 5, tipo: 'pedido', lida: true, dia: 'Ontem',
     titulo: 'Pedido entregue com sucesso',
-    desc: 'Seu pedido <strong>#4790</strong> — Colar de pedras do ES foi entregue. Tudo certo?',
-    tempo: 'ontem às 14h32',
+    desc: 'Seu pedido <strong>#4790</strong> � Colar de pedras do ES foi entregue. Tudo certo?',
+    tempo: 'ontem �s 14h32',
     thumb: 'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=80&q=70',
     cta: { label: 'Avaliar produto', icon: 'star', href: '#' }
   },
   {
     id: 6, tipo: 'promo', lida: true, dia: 'Ontem',
-    titulo: 'Novos produtos dos seus artesãos favoritos',
-    desc: '<strong>Arte Vitória</strong> adicionou 3 novos produtos à loja. Confira antes que esgote!',
-    tempo: 'ontem às 10h15',
+    titulo: 'Novos produtos dos seus artes�os favoritos',
+    desc: '<strong>Arte Vit�ria</strong> adicionou 3 novos produtos � loja. Confira antes que esgote!',
+    tempo: 'ontem �s 10h15',
     cta: { label: 'Ver produtos', icon: 'shopping-bag', href: '/arace-produtos' }
   },
   {
     id: 7, tipo: 'sistema', lida: true, dia: 'Esta semana',
-    titulo: 'Bem-vinda à Aracê!',
+    titulo: 'Bem-vinda � Arac�!',
     desc: 'Sua conta foi criada com sucesso. Explore produtos artesanais da cultura capixaba e apoie produtores locais.',
-    tempo: 'há 3 dias',
+    tempo: 'h� 3 dias',
     cta: { label: 'Explorar agora', icon: 'compass', href: '/' }
   },
 ];
 
 let filtroAtivo = 'todas';
 
-// ── RENDER ────────────────────────────────────────────────────────────────
+// -- RENDER ----------------------------------------------------------------
 const ICONE_TIPO = {
   pedido:    'package',
   promo:     'tag',
@@ -191,8 +192,8 @@ function renderNotificacoes() {
     container.innerHTML = `
       <div class="notif-empty">
         <i data-lucide="bell-off"></i>
-        <h2>Nenhuma notificação</h2>
-        <p>Quando houver novidades, elas aparecerão aqui.</p>
+        <h2>Nenhuma notifica��o</h2>
+        <p>Quando houver novidades, elas aparecer�o aqui.</p>
       </div>`;
     lucide.createIcons(); return;
   }
@@ -237,10 +238,10 @@ function renderNotificacoes() {
 }
 
 function labelTipo(tipo) {
-  return { pedido:'Pedido', promo:'Promoção', chat:'Chat', avaliacao:'Avaliação', sistema:'Sistema', aviso:'Aviso' }[tipo] || tipo;
+  return { pedido:'Pedido', promo:'Promo��o', chat:'Chat', avaliacao:'Avalia��o', sistema:'Sistema', aviso:'Aviso' }[tipo] || tipo;
 }
 
-// ── AÇÕES ─────────────────────────────────────────────────────────────────
+// -- A��ES -----------------------------------------------------------------
 function marcarLida(id) {
   const n = NOTIFICACOES.find(n => n.id === id);
   if (n) { n.lida = true; renderNotificacoes(); }
@@ -277,11 +278,11 @@ function atualizarContadores() {
   const sub = document.getElementById('subtituloHeader');
   const qtd = naoLidas.length;
   sub.innerHTML = qtd > 0
-    ? `Você tem <strong>${qtd} notificaç${qtd === 1 ? 'ão não lida' : 'ões não lidas'}</strong>`
-    : 'Tudo em dia! Nenhuma notificação pendente.';
+    ? `Voc� tem <strong>${qtd} notifica�${qtd === 1 ? '�o n�o lida' : '�es n�o lidas'}</strong>`
+    : 'Tudo em dia! Nenhuma notifica��o pendente.';
 }
 
-// ── INIT ──────────────────────────────────────────────────────────────────
+// -- INIT ------------------------------------------------------------------
 document.addEventListener('DOMContentLoaded', renderNotificacoes);
 </script>
 </body>

@@ -2,7 +2,6 @@
 
 namespace App\Controllers;
 
-use App\Libraries\AraceFirestore;
 use DomainException;
 
 final class AuthController extends BaseController
@@ -10,7 +9,7 @@ final class AuthController extends BaseController
     public function index()
     {
         if (session()->get('arace_authenticated') === true && is_array(session()->get('arace_user'))) {
-            return redirect()->to('/usuario/arace-perfil');
+            return redirect()->route('user_arace_perfil');
         }
 
         return view('authentication/login-arace');
@@ -31,7 +30,7 @@ final class AuthController extends BaseController
         }
 
         try {
-            $user = (new AraceFirestore())->authenticateUser($email, $senha);
+            $user = service('araceFirestore')->authenticateUser($email, $senha);
 
             if ($user === null) {
                 return $this->loginFailure('E-mail ou senha incorretos.', 401);
@@ -47,12 +46,12 @@ final class AuthController extends BaseController
             if ($this->wantsJson()) {
                 return $this->response->setJSON([
                     'success'  => true,
-                    'redirect' => '/usuario/arace-perfil',
+                    'redirect' => url_to('user_arace_perfil'),
                     'user'     => $user,
                 ]);
             }
 
-            return redirect()->to('/usuario/arace-perfil');
+            return redirect()->route('user_arace_perfil');
         } catch (DomainException $e) {
             return $this->loginFailure($e->getMessage(), 403);
         } catch (\Throwable) {
@@ -72,7 +71,7 @@ final class AuthController extends BaseController
         session()->remove(['arace_authenticated', 'arace_user', 'arace_remember']);
         session()->regenerate(true);
 
-        return redirect()->to('/login')->with('sucesso', 'Voce saiu da sua conta.');
+        return redirect()->route('auth_login')->with('sucesso', 'Voce saiu da sua conta.');
     }
 
     private function loginFailure(string $message, int $status)

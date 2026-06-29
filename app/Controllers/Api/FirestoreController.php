@@ -68,7 +68,6 @@ final class FirestoreController extends ResourceController
             'cnpj',
             'categoria',
             'distritoId',
-            'termosAceitos',
         ]);
 
         if (! $this->validateData($payload, [

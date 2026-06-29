@@ -1,9 +1,9 @@
-﻿﻿﻿<!DOCTYPE html>
+??<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Aracê - Cadastro</title>
+  <title>Arac� - Cadastro</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex&display=swap" rel="stylesheet" />
@@ -13,7 +13,7 @@
 
   <div class="login-card cadastro-card item-animado">
     <div class="logo-wrap item-animado atraso-1">
-      <img src="<?= base_url('images/arace.png') ?>" alt="Logo Aracê" />
+      <img src="<?= base_url('images/arace.png') ?>" alt="Logo Arac�" />
     </div>
 
     <p class="subtitle item-animado atraso-1">Crie sua conta</p>
@@ -30,7 +30,7 @@
       </ul>
     <?php endif; ?>
 
-    <form id="formCadastro" action="/cadastro/clientes" method="post" novalidate>
+    <form id="formCadastro" action="<?= url_to('auth_cadastro_cliente_store') ?>" method="post" novalidate>
       <div class="input-group-custom item-animado atraso-2">
         <i data-lucide="user"></i>
         <input type="text" id="nome" name="nome" placeholder="Nome completo" autocomplete="name" value="<?= esc(old('nome')) ?>" required />
@@ -64,15 +64,10 @@
       <span id="erro-senha" class="erro-campo" style="display:none">As senhas precisam ser iguais</span>
 
       <div class="item-animado atraso-5">
-        <label class="permanecer">
-          <input type="checkbox" id="termos" name="termosAceitos" value="1" required />
-          Aceito os <a href="#" target="_blank">termos de uso</a>
-        </label>
-
         <button type="submit" class="btn-login">Criar conta</button>
 
         <div class="links-rodape">
-          <a href="/login" class="esqueceu">Já tenho uma conta</a>
+          <a href="<?= url_to('auth_login') ?>" class="esqueceu">J� tenho uma conta</a>
         </div>
       </div>
 
@@ -80,6 +75,7 @@
   </div>
 
   <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="<?= base_url('js/icons.js') ?>"></script>
   <script>lucide.createIcons();</script>
   <script src="<?= base_url('js/cadastro.js') ?>"></script>
 </body>

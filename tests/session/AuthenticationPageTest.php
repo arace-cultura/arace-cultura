@@ -2,6 +2,7 @@
 
 namespace Tests\Session;
 
+use Config\Services;
 use CodeIgniter\Test\CIUnitTestCase;
 use CodeIgniter\Test\FeatureTestTrait;
 
@@ -41,6 +42,33 @@ final class AuthenticationPageTest extends CIUnitTestCase
 
         $result->assertRedirect();
         $result->assertSessionHas('erro');
+    }
+
+    public function testValidTraditionalLoginCreatesAuthenticatedSession(): void
+    {
+        Services::injectMock('araceFirestore', new class () {
+            public function authenticateUser(string $email, string $password): ?array
+            {
+                if ($email !== 'usuario@teste.com' || $password !== 'senha-correta') {
+                    return null;
+                }
+
+                return [
+                    'id'    => 'usuario-teste',
+                    'nome'  => 'Usuario Teste',
+                    'email' => $email,
+                ];
+            }
+        });
+
+        $result = $this->post('/login', [
+            'email' => 'usuario@teste.com',
+            'senha' => 'senha-correta',
+        ]);
+
+        $result->assertRedirectTo('/usuario/arace-perfil');
+        $result->assertSessionHas('arace_authenticated', true);
+        $result->assertSessionHas('arace_user');
     }
 
     public function testAuthenticatedSessionCanOpenProfile(): void

@@ -21,6 +21,45 @@
   --display:    'Playfair Display', serif;
   --body:       'Google Sans Flex', 'Google Sans', sans-serif;
 }
+
+:root[data-theme="escuro"] {
+  --bg:         #1f211d;
+  --branco:     #2a2d27;
+  --border:     rgba(238, 229, 219, .18);
+  --text:       #f6f1e8;
+  --muted:      #cbc4b8;
+  --faint:      #9d9488;
+  --laranja-l:  rgba(242, 96, 26, .16);
+  --verde-l:    rgba(71, 134, 50, .18);
+  --sh-sm:      0 2px 8px rgba(0,0,0,.22);
+  --sh-md:      0 6px 24px rgba(0,0,0,.32);
+}
+
+:root[data-theme="escuro"] body::before { opacity: .06; }
+
+.arace-map-marker {
+  width: 24px;
+  height: 24px;
+  border-radius: 999px;
+  background: rgba(242, 96, 26, .18);
+  border: 1px solid rgba(242, 96, 26, .3);
+  display: grid;
+  place-items: center;
+}
+
+.arace-map-marker span {
+  width: 12px;
+  height: 12px;
+  border-radius: 999px;
+  background: var(--laranja);
+  border: 2px solid #fff;
+  box-shadow: 0 4px 12px rgba(0,0,0,.22);
+}
+
+.leaflet-popup-content-wrapper,
+.leaflet-popup-tip {
+  font-family: var(--body);
+}
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 body {

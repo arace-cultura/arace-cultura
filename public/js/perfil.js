@@ -3,13 +3,11 @@ function textoOuPendente(valor) {
 }
 
 async function carregarPerfil() {
-  // Firestore/API: buscar dados do usuario autenticado aqui.
-  // Campos esperados: {{nome_usuario}}, {{email_usuario}}, {{telefone_usuario}}, {{cidade_usuario}}.
-  const user = window.ARACE_AUTH_USER || (window.AraceState ? window.AraceState.getUser() : {});
-  const favoritos = window.AraceState ? window.AraceState.getFavorites().length : 0;
+  const user = window.ARACE_AUTH_USER || {};
+  const favoritos = Number(user.favoritos || 0);
   return {
     nome: `${user.nome || ''} ${user.sobrenome || ''}`.trim() || 'Usuario',
-    email: user.email || 'usuario@gmail.com',
+    email: user.email || '',
     telefone: user.telefone || '',
     localizacao: [user.cidade, user.estado].filter(Boolean).join(' - '),
     membroDesde: user.membroDesde || '',
@@ -33,7 +31,7 @@ function renderPerfil(dados) {
   if (email) email.textContent = dados.email;
 
   const avatar = document.querySelector('.profile-card .avatar');
-  if (avatar && window.AraceState) window.AraceState.renderAvatar(avatar, dados.avatar);
+  if (avatar && dados.avatar) avatar.innerHTML = `<img src="${dados.avatar}" alt="Avatar do usuario" />`;
 
   const campos = document.querySelectorAll('.field-value');
   if (campos[0]) campos[0].innerHTML = textoOuPendente(dados.nome);

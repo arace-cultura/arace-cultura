@@ -1,4 +1,13 @@
-﻿﻿<!DOCTYPE html>
+?<!DOCTYPE html>
+<?php
+$usuario = $usuario ?? [];
+$nomeCompleto = trim((string) ($usuario['nome'] ?? ''));
+$nomePartes = preg_split('/\s+/', $nomeCompleto, 2) ?: [];
+$nome = (string) ($nomePartes[0] ?? $nomeCompleto);
+$sobrenome = (string) ($usuario['sobrenome'] ?? ($nomePartes[1] ?? ''));
+$username = (string) ($usuario['username'] ?? '');
+$genero = (string) ($usuario['genero'] ?? '');
+?>
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
@@ -8,23 +17,24 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex&family=Playfair+Display:wght@700&display=swap" rel="stylesheet" />
   <script src="https://unpkg.com/lucide@latest"></script>
-  <link href="/css/config.css" rel="stylesheet" />
+  <script src="<?= base_url('js/icons.js') ?>"></script>
+  <link href="<?= base_url('css/config.css') ?>" rel="stylesheet" />
 </head>
 <body>
 
 <!-- HEADER -->
   <header>
-    <a href="/" class="logo">aracê</a>
+    <a href="<?= url_to('home') ?>" class="logo">aracê</a>
     <div class="header-right">
-    <button class="cart-btn" type="button" onclick="window.location.href='/arace-carrinho'">
+    <button class="cart-btn" type="button" onclick="window.location.href='<?= url_to('main_arace_carrinho') ?>'">
         <i data-lucide="shopping-cart"></i>
         <span class="cart-count">2 itens</span>
       </button>
-    <button class="cart-btn" type="button" onclick="window.location.href='/usuario/arace-favoritos'">
+    <button class="cart-btn" type="button" onclick="window.location.href='<?= url_to('user_arace_favoritos') ?>'">
         <i data-lucide="heart"></i>
         <span class="cart-count">5 itens</span>
       </button>
-      <button class="avatar-btn" type="button" onclick="window.location.href='/usuario/arace-perfil'" aria-label="Abrir perfil">
+      <button class="avatar-btn" type="button" onclick="window.location.href='<?= url_to('user_arace_perfil') ?>'" aria-label="Abrir perfil">
         <i data-lucide="user"></i>
       </button>
     </div>
@@ -32,30 +42,30 @@
 
 <!-- SIDEBAR -->
 <aside>
-    <a class="nav-item" href="/">
+    <a class="nav-item" href="<?= url_to('home') ?>">
       <i data-lucide="house"></i> Home page
     </a>
-    <a class="nav-item" href="/arace-produtos">
+    <a class="nav-item" href="<?= url_to('arace_produtos') ?>">
       <i data-lucide="shopping-bag"></i> Produtos
     </a>
-    <a class="nav-item active" href="/arace-carrinho">
+    <a class="nav-item active" href="<?= url_to('main_arace_carrinho') ?>">
       <i data-lucide="shopping-cart"></i> Carrinho
     </a>
-    <a class="nav-item" href="/usuario/arace-notificacao">
+    <a class="nav-item" href="<?= url_to('user_arace_notificacao') ?>">
       <i data-lucide="bell"></i> Notificações
     </a>
-    <a class="nav-item" href="/arace-config">
+    <a class="nav-item" href="<?= url_to('main_arace_config') ?>">
       <i data-lucide="settings"></i> Configurações
     </a>
-    <a class="nav-item" href="/usuario/arace-perfil">
+    <a class="nav-item" href="<?= url_to('user_arace_perfil') ?>">
       <i data-lucide="user"></i> Perfil
     </a>
-    <a class="nav-item" href="/cadastro/produtor">
+    <a class="nav-item" href="<?= url_to('auth_cadastro_produtor') ?>">
       <i data-lucide="box"></i> Quero ser produtor
     </a>
     <div class="nav-divider"></div>
     <div class="nav-section">Reportar</div>
-    <a class="nav-item" href="/arace-config">
+    <a class="nav-item" href="<?= url_to('main_arace_config') ?>">
       <i data-lucide="hand-coins"></i> Detalhes de pagamento
     </a>
   </aside>
@@ -99,8 +109,9 @@
     <!-- CONTEÚDO -->
     <div>
 
-      <!-- ── PERFIL ── -->
+      <!-- -- PERFIL -- -->
       <section class="config-section active" id="sec-perfil">
+        <form action="<?= url_to('user_profile_update') ?>" method="post" enctype="multipart/form-data">
 
         <div class="config-card">
           <div class="config-card-header">
@@ -109,14 +120,17 @@
           <div class="config-card-body">
             <div class="avatar-upload-area">
               <div class="avatar-preview" id="avatarPreview">
-                <i data-lucide="user"></i>
+                <?php if (! empty($usuario['avatar'])): ?>
+                  <img src="<?= esc($usuario['avatar'], 'attr') ?>" alt="Avatar do usuario" />
+                <?php else: ?>
+                  <i data-lucide="user"></i>
+                <?php endif; ?>
               </div>
               <div class="avatar-upload-btns">
                 <label for="avatarInput" class="btn-primary" style="cursor:pointer">
                   <i data-lucide="upload"></i> Alterar foto
                 </label>
-                <input type="file" id="avatarInput" accept="image/*" style="display:none" onchange="previewAvatar(this)" />
-                <button class="btn-secondary" onclick="removerAvatar()">Remover</button>
+                <input type="file" id="avatarInput" name="avatar" accept="image/*" style="display:none" onchange="previewAvatar(this)" />
               </div>
             </div>
           </div>
@@ -130,41 +144,36 @@
             <div class="field-row">
               <div class="field-group">
                 <label>Nome</label>
-                <input class="input-field" type="text" id="nome" placeholder="Seu nome" value="Maria" />
-              </div>
-              <div class="field-group">
-                <label>Sobrenome</label>
-                <input class="input-field" type="text" id="sobrenome" placeholder="Seu sobrenome" value="Silva" />
+                <input class="input-field" type="text" id="nome" name="nome" placeholder="Seu nome" value="<?= esc($nome, 'attr') ?>" />
               </div>
             </div>
             <div class="field-group">
               <label>Nome de usuário</label>
-              <input class="input-field" type="text" id="username" placeholder="@usuario" value="@mariasilva" />
+              <input class="input-field" type="text" id="username" name="username" placeholder="@usuario" value="<?= esc($username, 'attr') ?>" />
               <small>Visível publicamente no seu perfil</small>
             </div>
             <div class="field-group">
               <label>Bio</label>
-              <textarea class="input-field" id="bio" rows="3" placeholder="Uma breve descrição sobre você…" style="resize:vertical;line-height:1.5">Amante da cultura capixaba 🍃</textarea>
+              <textarea class="input-field" id="bio" name="bio" rows="3" placeholder="Uma breve descrição sobre você…" style="resize:vertical;line-height:1.5"><?= esc($usuario['bio'] ?? '') ?></textarea>
             </div>
             <div class="field-row">
               <div class="field-group">
                 <label>Data de nascimento</label>
-                <input class="input-field" type="date" id="nascimento" value="1995-06-12" />
+                <input class="input-field" type="date" id="nascimento" name="nascimento" value="<?= esc($usuario['nascimento'] ?? '', 'attr') ?>" />
               </div>
               <div class="field-group">
                 <label>Gênero</label>
-                <select class="input-field" id="genero">
+                <select class="input-field" id="genero" name="genero">
                   <option value="">Prefiro não informar</option>
-                  <option value="f" selected>Feminino</option>
-                  <option value="m">Masculino</option>
-                  <option value="nb">Não-binário</option>
+                  <option value="f" <?= $genero === 'f' ? 'selected' : '' ?>>Feminino</option>
+                  <option value="m" <?= $genero === 'm' ? 'selected' : '' ?>>Masculino</option>
+                  <option value="nb" <?= $genero === 'nb' ? 'selected' : '' ?>>Não-binário</option>
                 </select>
               </div>
             </div>
           </div>
           <div class="config-card-footer">
-            <button class="btn-secondary">Cancelar</button>
-            <button class="btn-primary" onclick="salvar('Perfil salvo com sucesso')"><i data-lucide="check"></i> Salvar</button>
+            <button class="btn-primary" type="submit"><i data-lucide="check"></i> Salvar</button>
           </div>
         </div>
 
@@ -175,21 +184,21 @@
           <div class="config-card-body">
             <div class="field-group">
               <label>E-mail</label>
-              <input class="input-field" type="email" id="email" value="maria@email.com" />
+              <input class="input-field" type="email" id="email" name="email" value="<?= esc($usuario['email'] ?? '', 'attr') ?>" />
             </div>
             <div class="field-group">
               <label>Telefone</label>
-              <input class="input-field" type="tel" id="tel" placeholder="(27) 99999-9999" />
+              <input class="input-field" type="tel" id="tel" name="telefone" placeholder="(27) 99999-9999" value="<?= esc($usuario['telefone'] ?? '', 'attr') ?>" />
             </div>
           </div>
           <div class="config-card-footer">
-            <button class="btn-secondary">Cancelar</button>
-            <button class="btn-primary" onclick="salvar('Contato atualizado')"><i data-lucide="check"></i> Salvar</button>
+            <button class="btn-primary" type="submit"><i data-lucide="check"></i> Salvar</button>
           </div>
         </div>
+        </form>
       </section>
 
-      <!-- ── CONTA & SEGURANÇA ── -->
+      <!-- -- CONTA & SEGURANÇA -- -->
       <section class="config-section" id="sec-conta">
 
         <div class="config-card">
@@ -212,9 +221,6 @@
               </div>
             </div>
             <small style="font-size:12px;color:var(--muted)">Mínimo 8 caracteres, com letras e números.</small>
-          </div>
-          <div class="config-card-footer">
-            <button class="btn-primary" onclick="salvar('Senha alterada com sucesso')"><i data-lucide="lock"></i> Atualizar senha</button>
           </div>
         </div>
 
@@ -266,7 +272,6 @@
                 <div style="font-size:14px;font-weight:500;color:var(--text)">Desativar conta</div>
                 <div style="font-size:12px;color:var(--muted);margin-top:2px">Sua conta ficará invisível temporariamente</div>
               </div>
-              <button class="btn-danger"><i data-lucide="pause-circle"></i> Desativar</button>
             </div>
             <div style="height:.5px;background:rgba(220,38,38,.15);margin:.25rem 0"></div>
             <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.75rem">
@@ -274,13 +279,12 @@
                 <div style="font-size:14px;font-weight:500;color:#dc2626">Excluir conta</div>
                 <div style="font-size:12px;color:var(--muted);margin-top:2px">Remove permanentemente todos os seus dados</div>
               </div>
-              <button class="btn-danger"><i data-lucide="trash-2"></i> Excluir conta</button>
             </div>
           </div>
         </div>
       </section>
 
-      <!-- ── NOTIFICAÇÕES ── -->
+      <!-- -- NOTIFICAÇÕES -- -->
       <section class="config-section" id="sec-notificacoes">
         <div class="config-card">
           <div class="config-card-header">
@@ -323,18 +327,14 @@
               <label class="toggle-switch"><input type="checkbox" /><span class="toggle-slider"></span></label>
             </div>
           </div>
-          <div class="config-card-footer">
-            <button class="btn-primary" onclick="salvar('Notificações salvas')"><i data-lucide="check"></i> Salvar</button>
-          </div>
         </div>
       </section>
 
-      <!-- ── PAGAMENTO ── -->
+      <!-- -- PAGAMENTO -- -->
       <section class="config-section" id="sec-pagamento">
         <div class="config-card">
           <div class="config-card-header">
             <div><h2>Métodos de pagamento</h2><p>Cartões e formas de pagamento salvos</p></div>
-            <button class="btn-primary"><i data-lucide="plus"></i> Adicionar cartão</button>
           </div>
           <div class="config-card-body" id="cartoesList">
             <div style="display:flex;align-items:center;justify-content:space-between;padding:.5rem 0">
@@ -347,7 +347,6 @@
               </div>
               <div style="display:flex;align-items:center;gap:8px">
                 <span style="font-size:11px;background:var(--verde-l);color:var(--verde);border-radius:99px;padding:2px 10px;font-weight:500">Principal</span>
-                <button class="btn-secondary" style="padding:6px 10px;font-size:12px">Remover</button>
               </div>
             </div>
           </div>
@@ -362,18 +361,14 @@
               <input class="input-field" type="text" placeholder="CPF, e-mail, telefone ou chave aleatória" />
             </div>
           </div>
-          <div class="config-card-footer">
-            <button class="btn-primary" onclick="salvar('Chave Pix salva')"><i data-lucide="check"></i> Salvar</button>
-          </div>
         </div>
       </section>
 
-      <!-- ── ENDEREÇOS ── -->
+      <!-- -- ENDEREÇOS -- -->
       <section class="config-section" id="sec-enderecos">
         <div class="config-card">
           <div class="config-card-header">
             <div><h2>Endereços salvos</h2></div>
-            <button class="btn-primary"><i data-lucide="plus"></i> Novo endereço</button>
           </div>
           <div class="config-card-body">
             <div style="display:flex;align-items:flex-start;justify-content:space-between;padding:.25rem 0">
@@ -383,8 +378,6 @@
               </div>
               <div style="display:flex;align-items:center;gap:8px">
                 <span style="font-size:11px;background:var(--laranja-l);color:var(--laranja-d);border-radius:99px;padding:2px 10px;font-weight:500">Principal</span>
-                <button class="btn-secondary" style="padding:6px 10px;font-size:12px"><i data-lucide="pencil" style="width:13px;height:13px"></i></button>
-                <button class="btn-secondary" style="padding:6px 10px;font-size:12px"><i data-lucide="trash-2" style="width:13px;height:13px"></i></button>
               </div>
             </div>
           </div>
@@ -437,14 +430,10 @@
               </div>
             </div>
           </div>
-          <div class="config-card-footer">
-            <button class="btn-secondary">Cancelar</button>
-            <button class="btn-primary" onclick="salvar('Endereço salvo')"><i data-lucide="check"></i> Salvar endereço</button>
-          </div>
         </div>
       </section>
 
-      <!-- ── APARÊNCIA ── -->
+      <!-- -- APARÊNCIA -- -->
       <section class="config-section" id="sec-aparencia">
         <div class="config-card">
           <div class="config-card-header">
@@ -476,7 +465,7 @@
               <div class="field-group">
                 <label>Idioma</label>
                 <div class="select-with-icon">
-                  <span class="flag">🇧🇷</span>
+                  <span class="flag">????</span>
                   <select class="input-field" id="idioma">
                     <option value="pt-BR" selected>Português (Brasil)</option>
                     <option value="en">English</option>
@@ -494,13 +483,10 @@
               </div>
             </div>
           </div>
-          <div class="config-card-footer">
-            <button class="btn-primary" onclick="salvar('Preferências salvas')"><i data-lucide="check"></i> Salvar</button>
-          </div>
         </div>
       </section>
 
-      <!-- ── PRIVACIDADE ── -->
+      <!-- -- PRIVACIDADE -- -->
       <section class="config-section" id="sec-privacidade">
         <div class="config-card">
           <div class="config-card-header">
@@ -531,7 +517,6 @@
                 <div style="font-size:14px;font-weight:500;color:var(--text)">Exportar meus dados</div>
                 <div style="font-size:12px;color:var(--muted);margin-top:2px">Baixe uma cópia de todos os seus dados</div>
               </div>
-              <button class="btn-secondary"><i data-lucide="download" style="width:15px;height:15px"></i> Exportar</button>
             </div>
             <div style="height:.5px;background:var(--border);margin:.25rem 0"></div>
             <div class="toggle-row">
@@ -542,9 +527,6 @@
               <div class="toggle-info"><span>Personalização de anúncios</span><small>Recomendações baseadas no seu histórico</small></div>
               <label class="toggle-switch"><input type="checkbox" /><span class="toggle-slider"></span></label>
             </div>
-          </div>
-          <div class="config-card-footer">
-            <button class="btn-primary" onclick="salvar('Privacidade atualizada')"><i data-lucide="check"></i> Salvar</button>
           </div>
         </div>
       </section>

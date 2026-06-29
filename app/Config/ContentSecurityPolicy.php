@@ -103,7 +103,7 @@ class ContentSecurityPolicy extends BaseConfig
      *
      * @var list<string>|string
      */
-    public $imageSrc = 'self';
+    public $imageSrc = ['self', 'data:', 'blob:', 'https://*.supabase.co', 'https://*.supabase.com'];
 
     /**
      * Restricts the URLs that can appear in a page's `<base>` element.

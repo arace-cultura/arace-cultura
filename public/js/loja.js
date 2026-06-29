@@ -2,6 +2,9 @@ const lojaState = {
   cartCount: 2,
 };
 
+const araceUrl = path => window.AraceState?.url(path) || path;
+const araceGo = path => window.AraceState?.go(path) || (window.location.href = path);
+
 const produtosLoja = [
   { id: 'loja-kit-panela', nome: 'Kit Panela de Barro', preco: 200, categoria: 'ceramica', colecao: 'ceramica', cor: '#b5a898', artesao: 'Paneleiras Capixabas', estrelas: 4.9, avaliacoes: 42 },
   { id: 'loja-panela-individual', nome: 'Panela Individual', preco: 90, categoria: 'ceramica', colecao: 'ceramica', cor: '#a89880', artesao: 'Paneleiras Capixabas', estrelas: 4.8, avaliacoes: 31 },
@@ -27,32 +30,32 @@ function atualizarCarrinho() {
 
 function asideCliente() {
   return `
-    <a class="nav-item" href="/"><i data-lucide="house"></i> Home page</a>
-    <a class="nav-item" href="/pesquisa"><i data-lucide="shopping-bag"></i> Produtos</a>
-    <a class="nav-item" href="/arace-carrinho"><i data-lucide="shopping-cart"></i> Carrinho</a>
-    <a class="nav-item" href="/usuario/arace-notificacao"><i data-lucide="bell"></i> Notificacoes</a>
-    <a class="nav-item" href="/arace-config"><i data-lucide="settings"></i> Configuracoes</a>
-    <a class="nav-item" href="/usuario/arace-perfil"><i data-lucide="user"></i> Perfil</a>
-    <a class="nav-item" href="/cadastro/produtor"><i data-lucide="box"></i> Quero ser produtor</a>
+    <a class="nav-item" href="${araceUrl('')}"><i data-lucide="house"></i> Home page</a>
+    <a class="nav-item" href="${araceUrl('pesquisa')}"><i data-lucide="shopping-bag"></i> Produtos</a>
+    <a class="nav-item" href="${araceUrl('arace-carrinho')}"><i data-lucide="shopping-cart"></i> Carrinho</a>
+    <a class="nav-item" href="${araceUrl('usuario/arace-notificacao')}"><i data-lucide="bell"></i> Notificacoes</a>
+    <a class="nav-item" href="${araceUrl('arace-config')}"><i data-lucide="settings"></i> Configuracoes</a>
+    <a class="nav-item" href="${araceUrl('usuario/arace-perfil')}"><i data-lucide="user"></i> Perfil</a>
+    <a class="nav-item" href="${araceUrl('cadastro/produtor')}"><i data-lucide="box"></i> Quero ser produtor</a>
     <div class="nav-divider"></div>
     <div class="nav-section">Reportar</div>
-    <a class="nav-item" href="/arace-config#pagamento"><i data-lucide="hand-coins"></i> Detalhes de pagamento</a>
+    <a class="nav-item" href="${araceUrl('arace-config#pagamento')}"><i data-lucide="hand-coins"></i> Detalhes de pagamento</a>
   `;
 }
 
 function asideProdutor() {
   return `
-    <a class="nav-item" href="/"><i data-lucide="house"></i> Home page</a>
-    <a class="nav-item" href="/produtor/painel"><i data-lucide="layout-dashboard"></i> Painel</a>
-    <a class="nav-item" href="/produtor/painel"><i data-lucide="shopping-bag"></i> Meus produtos</a>
-    <a class="nav-item" href="/produtor/pedidos"><i data-lucide="package"></i> Pedidos</a>
-    <a class="nav-item active" href="/produtor/perfil-loja" aria-current="page"><i data-lucide="store"></i> Minha loja</a>
+    <a class="nav-item" href="${araceUrl('')}"><i data-lucide="house"></i> Home page</a>
+    <a class="nav-item" href="${araceUrl('produtor/painel')}"><i data-lucide="layout-dashboard"></i> Painel</a>
+    <a class="nav-item" href="${araceUrl('produtor/painel')}"><i data-lucide="shopping-bag"></i> Meus produtos</a>
+    <a class="nav-item" href="${araceUrl('produtor/pedidos')}"><i data-lucide="package"></i> Pedidos</a>
+    <a class="nav-item active" href="${araceUrl('produtor/perfil-loja')}" aria-current="page"><i data-lucide="store"></i> Minha loja</a>
     <div class="nav-divider"></div>
-    <a class="nav-item" href="/produtor/perfil"><i data-lucide="user"></i> Perfil</a>
-    <a class="nav-item" href="/produtor/configuracao-loja"><i data-lucide="settings"></i> Configuracoes da loja</a>
+    <a class="nav-item" href="${araceUrl('produtor/perfil')}"><i data-lucide="user"></i> Perfil</a>
+    <a class="nav-item" href="${araceUrl('produtor/configuracao-loja')}"><i data-lucide="settings"></i> Configuracoes da loja</a>
     <button class="nav-item nav-button" type="button" id="verComoCliente"><i data-lucide="eye"></i> Ver como cliente</button>
     <div class="nav-section">Suporte</div>
-    <a class="nav-item" href="/arace-config#pagamento"><i data-lucide="hand-coins"></i> Pagamentos</a>
+    <a class="nav-item" href="${araceUrl('arace-config#pagamento')}"><i data-lucide="hand-coins"></i> Pagamentos</a>
   `;
 }
 
@@ -88,7 +91,7 @@ function renderDadosLoja() {
   if (history) history.textContent = loja.lojaBio;
   if (avatar) window.AraceState.renderAvatar(avatar, loja.lojaAvatar, 'store');
   if (banner) {
-    banner.src = loja.lojaBanner || '/images/bahia-vitoria.jpg';
+    banner.src = loja.lojaBanner ? araceUrl(loja.lojaBanner) : araceUrl('images/bahia-vitoria.jpg');
     banner.alt = `Capa da loja ${loja.lojaNome}`;
   }
 }
@@ -138,15 +141,15 @@ function configurarProdutos() {
 
 function configurarHeader() {
   document.getElementById('btn-cart')?.addEventListener('click', () => {
-    window.location.href = '/arace-carrinho';
+    araceGo('arace-carrinho');
   });
 
   document.getElementById('btn-fav')?.addEventListener('click', () => {
-    window.location.href = '/usuario/arace-favoritos';
+    araceGo('usuario/arace-favoritos');
   });
 
   document.querySelector('header .avatar-btn')?.addEventListener('click', () => {
-    window.location.href = '/usuario/arace-perfil';
+    araceGo('usuario/arace-perfil');
   });
 }
 
@@ -177,7 +180,7 @@ function configurarBanner() {
   });
 
   document.getElementById('btn-edit-banner')?.addEventListener('click', () => {
-    window.location.href = '/produtor/configuracao-loja';
+    araceGo('produtor/configuracao-loja');
   });
 }
 

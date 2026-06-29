@@ -8,7 +8,6 @@ final class Producer extends Entity
 {
     protected $casts = [
         'produtos'      => 'integer',
-        'termosAceitos' => 'boolean',
         'cadastrado'    => 'boolean',
     ];
 }

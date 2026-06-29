@@ -6,6 +6,7 @@ function produtoDoCard(card) {
     preco: Number(card.dataset.preco || 0),
     categoria: card.dataset.categoria,
     cor: card.dataset.cor || '#b5a898',
+    img: card.dataset.img || '',
   };
 }
 
@@ -105,6 +106,11 @@ function configurarHeroCarousel() {
 }
 
 function configurarMapa() {
+  if (window.AraceState?.initMap) {
+    window.AraceState.initMap('mapa');
+    return;
+  }
+
   const mapaEl = document.getElementById('mapa');
   if (!mapaEl || !window.L) return;
 
