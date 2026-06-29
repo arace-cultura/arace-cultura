@@ -16,11 +16,17 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.dp
 
 @Composable
 fun CarregamentoContainer(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    // O default mantém o arredondado das barras-esqueleto. Loaders de imagem
+    // dentro de um AsyncImage já clipado devem passar RectangleShape para herdar
+    // o formato do contêiner (cantos só de cima, só da esquerda, quadrado etc.),
+    // em vez de impor um arredondado de 16 dp que destoa da base do card.
+    shape: Shape = RoundedCornerShape(16.dp),
 ) {
 
     val shimmerColors = listOf(
@@ -49,7 +55,7 @@ fun CarregamentoContainer(
 
     Box(
         modifier = modifier
-            .clip(RoundedCornerShape(16.dp))
+            .clip(shape)
             .background(brush)
     )
 }

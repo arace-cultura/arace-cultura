@@ -19,9 +19,6 @@ class SenhaIncorretaException : Exception("Senha atual incorreta.")
  * própria (hash em Produtores/{lojaId}.senhaHash) para permitir que outras
  * contas entrem nelas.
  *
- * Compatibilidade: cadastros antigos usavam Produtores/{uid}; ao resolver o
- * vínculo de um usuário legado, o uid é adotado como lojaId e o vínculo é
- * gravado, migrando a conta de forma transparente.
  */
 object LojaRepository {
 
@@ -56,7 +53,9 @@ object LojaRepository {
     suspend fun criarLoja(uid: String, produtor: Produtor, senha: String): String {
         val nome = produtor.nomeLoja.trim()
         require(nome.isNotBlank()) { "A loja precisa de um nome." }
-        require(senha.length >= 4) { "A senha da loja deve ter pelo menos 4 caracteres." }
+        require(Validacoes.senhaForte(senha)) {
+            "A senha da loja deve ter no mínimo 8 caracteres, com maiúscula, minúscula, número e símbolo."
+        }
 
         val existente = db.collection("Produtores")
             .whereEqualTo("nomeLoja", nome)
@@ -68,8 +67,6 @@ object LojaRepository {
         }
 
         val docRef = db.collection("Produtores").document()
-        // Uma única escrita (create) com senhaHash e o criador já em `membros`
-        // (as regras exigem que o criador esteja na lista de membros).
         docRef.set(
             produtor.copy(
                 nomeLoja = nome,
@@ -100,8 +97,7 @@ object LojaRepository {
             throw IllegalStateException("Senha incorreta.")
         }
 
-        // Entra como membro da loja (regras permitem o auto-cadastro em
-        // `membros`) e vincula a conta.
+        // Entra como membro da loja e vincula a conta.
         db.collection("Produtores").document(doc.id)
             .set(mapOf("membros" to FieldValue.arrayUnion(uid)), SetOptions.merge())
             .await()
@@ -114,7 +110,9 @@ object LojaRepository {
      * gravar a nova; lança [SenhaIncorretaException] se a atual não confere.
      */
     suspend fun alterarSenhaLoja(uid: String, senhaAtual: String, senhaNova: String) {
-        require(senhaNova.length >= 4) { "A nova senha deve ter pelo menos 4 caracteres." }
+        require(Validacoes.senhaForte(senhaNova)) {
+            "A nova senha deve ter no mínimo 8 caracteres, com maiúscula, minúscula, número e símbolo."
+        }
         val lojaId = resolverLojaId(uid)
             ?: throw IllegalStateException("Conta sem loja vinculada.")
 
@@ -160,8 +158,7 @@ object LojaRepository {
             .await()
     }
 
-    // SHA-256 com o nome da loja como salt. Validação client-side: adequada
-    // para o escopo do app, mas não substitui regras de segurança no Firestore.
+    // SHA-256 com o nome da loja como salt.
     private fun hashSenha(nomeLoja: String, senha: String): String {
         val texto = "arace:${nomeLoja.trim().lowercase()}:$senha"
         return MessageDigest.getInstance("SHA-256")

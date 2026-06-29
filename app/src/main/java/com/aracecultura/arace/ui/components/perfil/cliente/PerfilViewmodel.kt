@@ -27,11 +27,11 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 
-// Data class perfeita para o Firestore
 data class Usuario(
     val id: String = "",
     val nome: String = "",
     val email: String = "",
+    val telefone: String = "",
     val fotoUrl: String = "",
     val bannerUrl: String = "",
     val isProdutor: Boolean = false
@@ -176,6 +176,7 @@ class PerfilViewModel : ViewModel() {
         context: Context,
         novoNome: String,
         uid: String,
+        novoTelefone: String = _usuario.value.telefone,
         novaFotoUri: Uri? = null,
         novoBannerUri: Uri? = null,
         onSucesso: () -> Unit = {}
@@ -192,12 +193,13 @@ class PerfilViewModel : ViewModel() {
                 } ?: estadoAnterior.bannerUrl
 
                 _usuario.value = estadoAnterior.copy(
-                    nome = novoNome, fotoUrl = fotoUrl, bannerUrl = bannerUrl
+                    nome = novoNome, telefone = novoTelefone, fotoUrl = fotoUrl, bannerUrl = bannerUrl
                 )
 
                 withContext(Dispatchers.IO) {
                     val updates = mapOf(
                         "nome" to novoNome,
+                        "telefone" to novoTelefone,
                         "fotoUrl" to fotoUrl,
                         "bannerUrl" to bannerUrl
                     )
@@ -207,6 +209,101 @@ class PerfilViewModel : ViewModel() {
                 onSucesso()
             } catch (e: Exception) {
                 _usuario.value = estadoAnterior
+            }
+        }
+    }
+
+    fun salvarEdicaoProdutor(
+        context: Context,
+        uid: String,
+        nomeCompleto: String,
+        nomeLoja: String,
+        tipoPessoa: String,
+        razaoSocial: String,
+        cnpj: String,
+        telefone: String,
+        cep: String,
+        endereco: String,
+        tipoArtesanato: String,
+        categoriaProduto: String,
+        historia: String,
+        chavePix: String,
+        novoBannerUri: Uri? = null,
+        novaFotoLojaUri: Uri? = null,
+        novasFotosHistoriaUris: List<Uri?> = emptyList(),
+        onSucesso: () -> Unit = {},
+        onErro: (String) -> Unit = {}
+    ) {
+        val estadoAnterior = _produtor.value ?: run {
+            onErro("Cadastro de produtor nao encontrado.")
+            return
+        }
+
+        viewModelScope.launch {
+            try {
+                val lojaId = withContext(Dispatchers.IO) {
+                    LojaRepository.resolverLojaId(uid)
+                } ?: throw IllegalStateException("Conta sem loja vinculada.")
+
+                val bannerUrl = novoBannerUri?.let {
+                    ImagemRepository.upload(context, lojaId, "banner-loja", it)
+                } ?: estadoAnterior.banner
+                val fotoLojaUrl = novaFotoLojaUri?.let {
+                    ImagemRepository.upload(context, lojaId, "foto-loja", it)
+                } ?: estadoAnterior.fotoLoja
+                val fotosHistoriaUrls = List(3) { index ->
+                    novasFotosHistoriaUris.getOrNull(index)?.let {
+                        ImagemRepository.upload(context, lojaId, "historia-$index", it)
+                    } ?: estadoAnterior.fotosHistoria.getOrNull(index).orEmpty()
+                }
+
+                val produtorAtualizado = estadoAnterior.copy(
+                    nomeCompleto = nomeCompleto,
+                    nomeLoja = nomeLoja,
+                    tipoPessoa = tipoPessoa,
+                    razaoSocial = razaoSocial,
+                    cnpj = cnpj,
+                    telefone = telefone,
+                    cep = cep,
+                    endereco = endereco,
+                    tipoArtesanato = tipoArtesanato,
+                    categoriaProduto = categoriaProduto,
+                    banner = bannerUrl,
+                    fotoLoja = fotoLojaUrl,
+                    fotosHistoria = fotosHistoriaUrls,
+                    historia = historia,
+                    chavePix = chavePix
+                )
+
+                _produtor.value = produtorAtualizado
+
+                withContext(Dispatchers.IO) {
+                    val updates = mapOf(
+                        "nomeCompleto" to nomeCompleto,
+                        "nomeLoja" to nomeLoja,
+                        "tipoPessoa" to tipoPessoa,
+                        "razaoSocial" to razaoSocial,
+                        "cnpj" to cnpj,
+                        "telefone" to telefone,
+                        "cep" to cep,
+                        "endereco" to endereco,
+                        "tipoArtesanato" to tipoArtesanato,
+                        "categoriaProduto" to categoriaProduto,
+                        "banner" to bannerUrl,
+                        "fotoLoja" to fotoLojaUrl,
+                        "fotosHistoria" to fotosHistoriaUrls,
+                        "historia" to historia,
+                        "chavePix" to chavePix
+                    )
+                    db.collection("Produtores")
+                        .document(lojaId)
+                        .set(updates, SetOptions.merge())
+                        .await()
+                }
+                onSucesso()
+            } catch (e: Exception) {
+                _produtor.value = estadoAnterior
+                onErro(e.message ?: "Nao foi possivel salvar os dados da loja.")
             }
         }
     }

@@ -2,7 +2,6 @@ package com.aracecultura.arace.ui.auth
 
 import android.net.Uri
 import android.util.Log
-import android.util.Patterns
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -28,7 +27,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.lifecycleScope
 import com.aracecultura.arace.R
+import com.aracecultura.arace.data.CampoCadastro
+import com.aracecultura.arace.data.Formatadores
 import com.aracecultura.arace.data.ImagemRepository
+import com.aracecultura.arace.data.Validacoes
+import com.aracecultura.arace.ui.components.MascaraTelefone
 import com.aracecultura.arace.ui.theme.GoogleSans
 import com.google.firebase.FirebaseNetworkException
 import com.google.firebase.auth.FirebaseAuth
@@ -50,11 +53,14 @@ fun TelaCadastro(
 
     var nome by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
+    var telefone by remember { mutableStateOf("") }
     var senha by remember { mutableStateOf("") }
     var confirmarSenha by remember { mutableStateOf("") }
     var fotoPerfilUri by remember { mutableStateOf<Uri?>(null) }
     var bannerUri by remember { mutableStateOf<Uri?>(null) }
     var carregando by remember { mutableStateOf(false) }
+    // Campos reprovados na validação final; quando não vazio, abre o pop-up.
+    var camposInvalidos by remember { mutableStateOf<List<CampoCadastro>>(emptyList()) }
 
     val fotoPerfilLauncher = rememberLauncherForActivityResult(
         ActivityResultContracts.PickVisualMedia()
@@ -64,11 +70,14 @@ fun TelaCadastro(
         ActivityResultContracts.PickVisualMedia()
     ) { uri -> bannerUri = uri }
 
-    fun credenciaisValidas(): Boolean {
-        val nomeOk = nome.trim().isNotEmpty()
-        val emailOk = email.isNotEmpty() && Patterns.EMAIL_ADDRESS.matcher(email.trim()).matches()
-        val senhaOk = senha.trim().length >= 6
-        return nomeOk && emailOk && senhaOk
+    // Valida todos os campos e devolve a lista dos reprovados (vazia = tudo ok).
+    // O telefone é obrigatório: é por ele que o produtor contata o cliente.
+    fun camposReprovados(): List<CampoCadastro> = buildList {
+        if (!Validacoes.nomeValido(nome)) add(CampoCadastro.NOME)
+        if (!Validacoes.emailValido(email)) add(CampoCadastro.EMAIL)
+        if (!Validacoes.telefoneValido(telefone)) add(CampoCadastro.TELEFONE)
+        if (!Validacoes.senhaForte(senha)) add(CampoCadastro.SENHA)
+        if (senha != confirmarSenha) add(CampoCadastro.CONFIRMAR_SENHA)
     }
 
     // Upload em segundo plano: a navegação não espera as imagens. Usa o escopo
@@ -94,13 +103,9 @@ fun TelaCadastro(
     }
 
     fun cadastrar() {
-        if (!credenciaisValidas()) {
-            Toast.makeText(context, R.string.erro_preencha_dados, Toast.LENGTH_SHORT).show()
-            return
-        }
-        // Acréscimo em relação ao Fragment: valida a confirmação de senha.
-        if (senha != confirmarSenha) {
-            Toast.makeText(context, R.string.erro_senhas_diferentes, Toast.LENGTH_SHORT).show()
+        val reprovados = camposReprovados()
+        if (reprovados.isNotEmpty()) {
+            camposInvalidos = reprovados
             return
         }
 
@@ -112,7 +117,11 @@ fun TelaCadastro(
                     val uid = cadastro.result.user?.uid
                     if (uid != null) {
                         db.collection("Usuarios").document(uid)
-                            .set(hashMapOf("nome" to nome.trim(), "isProdutor" to false))
+                            .set(hashMapOf(
+                                "nome" to nome.trim(),
+                                "telefone" to Formatadores.telefone(telefone),
+                                "isProdutor" to false
+                            ))
                             .addOnFailureListener {
                                 Log.e("Cadastro", "Falha ao salvar dados do usuário", it)
                             }
@@ -135,6 +144,10 @@ fun TelaCadastro(
                 }
                 Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
             }
+    }
+
+    if (camposInvalidos.isNotEmpty()) {
+        DialogoDadosInvalidos(campos = camposInvalidos, onDismiss = { camposInvalidos = emptyList() })
     }
 
     FundoAuth {
@@ -165,8 +178,15 @@ fun TelaCadastro(
             modifier = Modifier.fillMaxWidth().padding(bottom = 12.dp),
         )
         CampoArace(
+            valor = telefone, aoMudar = { telefone = Formatadores.digitos(it, 11) },
+            rotulo = stringResource(R.string.cad_numero_telefone), teclado = KeyboardType.Phone,
+            mascara = MascaraTelefone,
+            modifier = Modifier.fillMaxWidth().padding(bottom = 12.dp),
+        )
+        CampoArace(
             valor = senha, aoMudar = { senha = it },
             rotulo = stringResource(R.string.senha), senha = true,
+            suporte = stringResource(R.string.senha_forte_helper),
             modifier = Modifier.fillMaxWidth().padding(bottom = 12.dp),
         )
         CampoArace(

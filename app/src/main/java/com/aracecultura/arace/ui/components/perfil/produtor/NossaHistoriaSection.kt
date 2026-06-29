@@ -6,6 +6,8 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -20,16 +22,18 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import coil.compose.AsyncImage
+import coil.compose.SubcomposeAsyncImage
 import com.aracecultura.arace.R
 import com.aracecultura.arace.data.model.Produtor
 import com.aracecultura.arace.ui.components.AppButton
+import com.aracecultura.arace.ui.components.CarregamentoContainer
 import com.aracecultura.arace.ui.theme.btColor
 
 @Composable
@@ -52,36 +56,44 @@ fun NossaHistoriaSection(
             modifier = Modifier.padding(bottom = 12.dp)
         )
 
+        val fotoCentro = produtor.fotosHistoria.getOrNull(0)
+        val fotoDireita = produtor.fotosHistoria.getOrNull(1)
+        val fotoEsquerda = produtor.fotosHistoria.getOrNull(2)
+        val temAlgumaFoto = listOf(fotoCentro, fotoDireita, fotoEsquerda).any { !it.isNullOrBlank() }
+
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(165.dp),
+                .height(if (temAlgumaFoto) 165.dp else 32.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                HistoriaImageBox(
-                    imageUrl = produtor.fotosHistoria.getOrNull(2),
-                    modifier = Modifier.weight(4f).fillMaxWidth(),
-                    fallbackColor = Color.LightGray
-                )
-                Box(modifier = Modifier.weight(1f).fillMaxWidth().clip(RoundedCornerShape(10.dp)).background(Color(0xFF6A9960)))
-            }
-            Column(modifier = Modifier.weight(1.2f), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                Box(modifier = Modifier.weight(0.5f).fillMaxWidth().clip(RoundedCornerShape(10.dp)).background(Color(0xFFF1B74F)))
-                HistoriaImageBox(
-                    imageUrl = produtor.fotosHistoria.getOrNull(0),
-                    modifier = Modifier.weight(2f).fillMaxWidth(),
-                    fallbackColor = Color.DarkGray
-                )
-            }
-            Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                HistoriaImageBox(
-                    imageUrl = produtor.fotosHistoria.getOrNull(1),
-                    modifier = Modifier.weight(3f).fillMaxWidth(),
-                    fallbackColor = Color.Gray
-                )
-                Box(modifier = Modifier.weight(1f).fillMaxWidth().clip(RoundedCornerShape(10.dp)).background(Color(0xFF3B6897)))
-            }
+            HistoriaImageColumn(
+                imageUrl = fotoEsquerda,
+                color = Color(0xFF6A9960),
+                imageWeight = 4f,
+                colorWeight = 1f,
+                colorPosition = HistoriaColorPosition.BOTTOM,
+                compact = !temAlgumaFoto,
+                modifier = Modifier.weight(1f)
+            )
+            HistoriaImageColumn(
+                imageUrl = fotoCentro,
+                color = Color(0xFFF1B74F),
+                imageWeight = 2f,
+                colorWeight = 0.5f,
+                colorPosition = HistoriaColorPosition.TOP,
+                compact = !temAlgumaFoto,
+                modifier = Modifier.weight(1.2f)
+            )
+            HistoriaImageColumn(
+                imageUrl = fotoDireita,
+                color = Color(0xFF3B6897),
+                imageWeight = 3f,
+                colorWeight = 1f,
+                colorPosition = HistoriaColorPosition.BOTTOM,
+                compact = !temAlgumaFoto,
+                modifier = Modifier.weight(1f)
+            )
         }
 
         Text(
@@ -111,23 +123,66 @@ fun NossaHistoriaSection(
 }
 
 @Composable
-private fun HistoriaImageBox(
+private fun HistoriaImageColumn(
     imageUrl: String?,
-    fallbackColor: Color,
+    color: Color,
+    imageWeight: Float,
+    colorWeight: Float,
+    colorPosition: HistoriaColorPosition,
+    compact: Boolean,
+    modifier: Modifier = Modifier
+) {
+    val temImagem = !imageUrl.isNullOrBlank()
+
+    Column(
+        modifier = modifier.fillMaxHeight(),
+        verticalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        if (temImagem && colorPosition == HistoriaColorPosition.TOP) {
+            HistoriaColorBox(color = color, modifier = Modifier.weight(colorWeight))
+        }
+        if (temImagem) {
+            HistoriaImageBox(imageUrl = imageUrl, modifier = Modifier.weight(imageWeight))
+        }
+        if (!temImagem) {
+            HistoriaColorBox(
+                color = color,
+                modifier = if (compact) Modifier.weight(1f) else Modifier.height(28.dp)
+            )
+        } else if (colorPosition == HistoriaColorPosition.BOTTOM) {
+            HistoriaColorBox(color = color, modifier = Modifier.weight(colorWeight))
+        }
+    }
+}
+
+@Composable
+private fun HistoriaImageBox(
+    imageUrl: String,
+    modifier: Modifier = Modifier
+) {
+    SubcomposeAsyncImage(
+        model = imageUrl,
+        contentDescription = null,
+        contentScale = ContentScale.Crop,
+        modifier = modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(15.dp)),
+        loading = { CarregamentoContainer(Modifier.fillMaxSize(), shape = RectangleShape) },
+        error = { CarregamentoContainer(Modifier.fillMaxSize(), shape = RectangleShape) }
+    )
+}
+
+@Composable
+private fun HistoriaColorBox(
+    color: Color,
     modifier: Modifier = Modifier
 ) {
     Box(
         modifier = modifier
-            .clip(RoundedCornerShape(15.dp))
-            .background(fallbackColor)
-    ) {
-        if (!imageUrl.isNullOrBlank()) {
-            AsyncImage(
-                model = imageUrl,
-                contentDescription = null,
-                contentScale = ContentScale.Crop,
-                modifier = Modifier.matchParentSize()
-            )
-        }
-    }
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(10.dp))
+            .background(color)
+    )
 }
+
+private enum class HistoriaColorPosition { TOP, BOTTOM }

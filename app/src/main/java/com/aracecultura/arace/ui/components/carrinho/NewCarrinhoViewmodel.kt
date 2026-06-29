@@ -53,7 +53,7 @@ class NewCarrinhoViewModel : ViewModel() {
             itensFlow(uid)
                 .catch { _itens.value = emptyList() }
                 .collect { itens ->
-                    _itens.value = itens
+                    _itens.value = marcarEsgotados(itens)
                     sincronizarMarcadoresDoCarrinho(uid, itens)
                 }
         }
@@ -83,8 +83,7 @@ class NewCarrinhoViewModel : ViewModel() {
             try {
                 registrarProdutoEmCarrinho(db, produtoId, uid)
                 produtosComMarcadorSincronizado = produtosComMarcadorSincronizado + produtoId
-            } catch (e: Exception) {
-                Log.e("Carrinho", "Erro ao sincronizar destaque do produto $produtoId", e)
+            } catch (_: Exception) {
             }
         }
     }
@@ -115,6 +114,35 @@ class NewCarrinhoViewModel : ViewModel() {
         awaitClose { registro.remove() }
     }
 
+    /**
+     * Marca cada item como esgotado lendo o estoque atual da coleção Produtos.
+     * O doc do carrinho só tem um snapshot do produto (e seu campo "quantidade"
+     * é a quantidade escolhida pelo comprador, não o estoque), então o estoque
+     * precisa ser buscado à parte. Em caso de falha, retorna os itens sem alterar
+     * (default não-esgotado), para não bloquear o carrinho por um erro de leitura.
+     */
+    private suspend fun marcarEsgotados(itens: List<ItemCarrinho>): List<ItemCarrinho> {
+        if (itens.isEmpty()) return itens
+        return try {
+            val estoques = mutableMapOf<String, Long>()
+            // whereIn aceita no máximo 10 ids por consulta.
+            itens.map { it.id }.chunked(10).forEach { grupo ->
+                db.collection("Produtos")
+                    .whereIn(com.google.firebase.firestore.FieldPath.documentId(), grupo)
+                    .get().await()
+                    .documents.forEach { doc -> estoques[doc.id] = doc.getLong("quantidade") ?: 0L }
+            }
+            // Produto ausente (ex.: excluído) conta como esgotado (estoque 0).
+            itens.map {
+                val estoque = (estoques[it.id] ?: 0L).coerceAtMost(Int.MAX_VALUE.toLong()).toInt()
+                it.copy(estoque = estoque, esgotado = estoque <= 0)
+            }
+        } catch (e: Exception) {
+            Log.e("Carrinho", "Erro ao verificar estoque dos itens", e)
+            itens
+        }
+    }
+
     private fun ordenar(itens: List<ItemCarrinho>, ordem: String): List<ItemCarrinho> =
         when (ordem) {
             "preco_asc" -> itens.sortedWith(
@@ -135,6 +163,70 @@ class NewCarrinhoViewModel : ViewModel() {
 
     fun setOrdenacao(novaOrdem: String) {
         _ordenacao.value = novaOrdem
+    }
+
+    fun adicionarProduto(produto: Produto, uid: String, onConcluido: () -> Unit = {}) {
+        if (uid.isBlank() || produto.id.isBlank()) {
+            Log.w("Carrinho", "Tentativa de adicionar ao carrinho sem usuario ou produto.")
+            return
+        }
+
+        val estadoAnterior = _itens.value
+        // Teto de estoque: produto.quantidade é o estoque ao vivo (vem da tela
+        // do produto). Como a atualização otimista de _itens é síncrona, dois
+        // toques seguidos já enxergam a quantidade nova — o teto é à prova de
+        // toque-duplo sem leitura extra. No teto, não adiciona, mas segue o
+        // fluxo: o "Comprar" ainda navega com o que já está no carrinho.
+        val qtdAtual = estadoAnterior?.firstOrNull { it.id == produto.id }?.quantidade ?: 0
+        if (qtdAtual >= produto.quantidade) {
+            onConcluido()
+            return
+        }
+
+        if (estadoAnterior != null) {
+            val itemExistente = estadoAnterior.firstOrNull { it.id == produto.id }
+            _itens.value = if (itemExistente == null) {
+                estadoAnterior + ItemCarrinho(id = produto.id, produto = produto, quantidade = 1)
+            } else {
+                estadoAnterior.map { item ->
+                    if (item.id == produto.id) item.copy(quantidade = item.quantidade + 1) else item
+                }
+            }
+        }
+
+        val itemCarrinho = hashMapOf(
+            "nome" to produto.nome,
+            "descricao" to produto.descricao,
+            "preco" to produto.preco,
+            "imagens" to if (produto.imagens.isNotEmpty()) listOf(produto.imagens.first()) else emptyList<String>(),
+            "produtoId" to produto.id,
+            "produtorId" to produto.produtorId,
+            "quantidade" to FieldValue.increment(1)
+        )
+
+        viewModelScope.launch {
+            try {
+                val carrinhoRef = db.collection("Carrinho").document(uid)
+                val produtoRef = carrinhoRef.collection("Produtos").document(produto.id)
+                db.runBatch { batch ->
+                    batch.set(
+                        carrinhoRef,
+                        mapOf(
+                            "usuarioId" to uid,
+                            "atualizadoEm" to FieldValue.serverTimestamp()
+                        ),
+                        SetOptions.merge()
+                    )
+                    batch.set(produtoRef, itemCarrinho, SetOptions.merge())
+                }.await()
+
+                runCatching { registrarProdutoEmCarrinho(db, produto.id, uid) }
+                onConcluido()
+            } catch (e: Exception) {
+                _itens.value = estadoAnterior
+                Log.e("Carrinho", "Erro ao adicionar produto ${produto.id}", e)
+            }
+        }
     }
 
     fun removerItem(item: ItemCarrinho, uid: String) {
@@ -164,9 +256,8 @@ class NewCarrinhoViewModel : ViewModel() {
                 return@launch
             }
             // Efeito colateral best-effort: a contagem de destaque NUNCA pode
-            // desfazer a remoção do carrinho. Se falhar (ex.: regras), só loga.
+            // desfazer a remoção do carrinho.
             runCatching { removerProdutoDeCarrinho(db, item.id, uid) }
-                .onFailure { Log.e("Carrinho", "Falha ao baixar destaque de ${item.id}", it) }
         }
     }
 

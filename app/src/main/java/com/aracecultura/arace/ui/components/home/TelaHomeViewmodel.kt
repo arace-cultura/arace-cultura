@@ -22,6 +22,8 @@ class TelaHomeViewmodel : ViewModel() {
 
     private val _produtos = MutableStateFlow<List<Produto>>(emptyList())
     val produtos: StateFlow<List<Produto>> = _produtos
+    private val _carregandoProdutos = MutableStateFlow(true)
+    val carregandoProdutos: StateFlow<Boolean> = _carregandoProdutos
 
     init {
         observarProdutos()
@@ -35,8 +37,14 @@ class TelaHomeViewmodel : ViewModel() {
             combine(produtosFlow(), destaquesFlow()) { produtos, idsEmDestaque ->
                 produtos.filter { it.id in idsEmDestaque }
             }
-                .catch { _produtos.value = emptyList() }
-                .collect { _produtos.value = it }
+                .catch {
+                    _produtos.value = emptyList()
+                    _carregandoProdutos.value = false
+                }
+                .collect {
+                    _produtos.value = it
+                    _carregandoProdutos.value = false
+                }
         }
     }
 

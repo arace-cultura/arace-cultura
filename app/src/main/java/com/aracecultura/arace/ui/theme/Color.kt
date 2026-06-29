@@ -19,6 +19,8 @@ val verdeAzeitona = Color(0xFFB3BB39)
 
 val azulPrincipal = Color(0xFF2F5E91)
 
+val cinzaPrincipal = Color(0xFF8A8A8A)
+
 val terracota = Color(0xFFD45D22)
 
 val azulCinza = Color(0xFF3C6B87)

@@ -22,7 +22,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -30,6 +29,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.aracecultura.arace.R
 import com.aracecultura.arace.data.model.ItemCarrinho
 import com.aracecultura.arace.navigation.LocalAppFooterHeight
+import com.aracecultura.arace.ui.theme.GoogleSans
 import com.aracecultura.arace.ui.theme.bgDefault
 
 sealed interface EstadoCarrinho {
@@ -78,7 +78,11 @@ fun NewCarrinho(
                     espacoInferior = espacoInferiorLista,
                     modifier = Modifier.fillMaxSize(),
                     onAumentarQuantidade = { item ->
-                        viewModel.alterarQuantidade(item, uid, item.quantidade + 1)
+                        // O "+" nunca fica inativo, mas só sobe até o estoque
+                        // disponível; no teto, clicar não altera a quantidade.
+                        if (item.quantidade < item.estoque) {
+                            viewModel.alterarQuantidade(item, uid, item.quantidade + 1)
+                        }
                     },
                     onDiminuirQuantidade = { item ->
                         viewModel.alterarQuantidade(item, uid, item.quantidade - 1)
@@ -108,15 +112,19 @@ fun NewCarrinho(
 
 @Composable
 private fun TituloCarrinho() {
-    Text(
-        text = stringResource(R.string.carrinho_titulo),
-        fontSize = 36.sp,
+    Box(
         modifier = Modifier
             .fillMaxWidth()
-            .background(bgDefault)
-            .padding(vertical = 10.dp),
-        textAlign = TextAlign.Center
-    )
+            .height(64.dp)
+            .background(bgDefault),
+        contentAlignment = Alignment.Center
+    ) {
+        Text(
+            text = stringResource(R.string.carrinho_titulo),
+            fontFamily = GoogleSans,
+            fontSize = 36.sp
+        )
+    }
 }
 
 @Composable
@@ -164,6 +172,7 @@ private fun ListaItens(
                     ProdutoCardItem(
                         produto = item.produto,
                         quantidade = item.quantidade,
+                        esgotado = item.esgotado,
                         onIncreaseClick = { onAumentarQuantidade(item) },
                         onDecreaseClick = { onDiminuirQuantidade(item) },
                         onDeleteClick = { onRemoverItem(item) }

@@ -224,7 +224,6 @@ private fun BoxScope.PainelFiltros(
         Column(
             modifier = Modifier
                 .background(bgDefault)
-                // Consome cliques dentro do painel para não fechá-lo via scrim
                 .clickable(
                     interactionSource = remember { MutableInteractionSource() },
                     indication = null

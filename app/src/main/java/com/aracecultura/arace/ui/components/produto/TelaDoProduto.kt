@@ -1,5 +1,6 @@
 package com.aracecultura.arace.ui.components.produto
 
+import androidx.compose.animation.core.animateIntAsState
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -7,47 +8,76 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.graphics.Outline
+import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
+import androidx.compose.ui.input.nestedscroll.NestedScrollSource
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.Density
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.IntOffset
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import coil.compose.AsyncImage
+import coil.compose.SubcomposeAsyncImage
 import com.aracecultura.arace.R
 import com.aracecultura.arace.data.model.Produto
 import com.aracecultura.arace.data.model.Produtor
 import com.aracecultura.arace.ui.components.CarregamentoContainer
+import com.aracecultura.arace.ui.components.DirecaoSombra
+import com.aracecultura.arace.ui.components.sombraFormato
+import com.aracecultura.arace.ui.components.sombraInferior
 import com.aracecultura.arace.ui.theme.bgDefault
 import com.aracecultura.arace.ui.theme.btColor
 import java.util.Locale
@@ -56,7 +86,9 @@ import java.util.Locale
 fun TelaDoProduto(
     viewModel: TelaDoProdutoViewmodel,
     onBackClick: () -> Unit = {},
-    onProdutorClick: (String) -> Unit = {}
+    onProdutorClick: (String) -> Unit = {},
+    onAdicionarAoCarrinhoClick: (Produto) -> Unit = {},
+    onComprarClick: (Produto) -> Unit = {},
 ) {
     val produto by viewModel.produto.collectAsState()
     val produtor by viewModel.produtor.collectAsState()
@@ -65,11 +97,37 @@ fun TelaDoProduto(
     val erroAvaliacao by viewModel.erroAvaliacao.collectAsState()
     val emDestaque by viewModel.emDestaque.collectAsState()
     var mostrarDialogoAvaliacao by rememberSaveable { mutableStateOf(false) }
+    var footerVisivel by remember { mutableStateOf(true) }
+    var alturaFooterPx by remember { mutableStateOf(0) }
+    val alturaFooterDp = with(LocalDensity.current) { alturaFooterPx.toDp() }
+    val deslocamentoFooter by animateIntAsState(
+        targetValue = if (footerVisivel) 0 else alturaFooterPx,
+        label = "produtoFooterOffset"
+    )
+    val conexaoScroll = remember {
+        object : NestedScrollConnection {
+            override fun onPostScroll(
+                consumed: Offset,
+                available: Offset,
+                source: NestedScrollSource
+            ): Offset {
+                if (consumed.y < -2f) footerVisivel = false
+                else if (consumed.y > 2f || available.y > 2f) footerVisivel = true
+                return Offset.Zero
+            }
+        }
+    }
+    val produtoAtual = produto
+
+    LaunchedEffect(produtoAtual?.id) {
+        footerVisivel = true
+    }
 
     Box(
         modifier = Modifier
             .fillMaxSize()
             .background(bgDefault)
+            .nestedScroll(conexaoScroll)
     ) {
         Image(
             painter = painterResource(id = R.drawable.img_bg_explorar),
@@ -80,7 +138,6 @@ fun TelaDoProduto(
                 .alpha(0.18f)
         )
 
-        val produtoAtual = produto
         if (produtoAtual == null) {
             CarregamentoContainer(Modifier.fillMaxSize())
         } else {
@@ -88,41 +145,40 @@ fun TelaDoProduto(
                 produto = produtoAtual,
                 produtor = produtor,
                 emDestaque = emDestaque,
+                espacoInferior = alturaFooterDp + 24.dp,
                 onAvaliarClick = {
                     viewModel.limparErroAvaliacao()
                     mostrarDialogoAvaliacao = true
                 },
                 onProdutorClick = onProdutorClick,
             )
+
+            FooterProduto(
+                produto = produtoAtual,
+                onAdicionarAoCarrinhoClick = { onAdicionarAoCarrinhoClick(produtoAtual) },
+                onComprarClick = { onComprarClick(produtoAtual) },
+                modifier = Modifier
+                    .align(Alignment.BottomCenter)
+                    .onSizeChanged { alturaFooterPx = it.height }
+                    .offset { IntOffset(0, deslocamentoFooter) }
+                    .zIndex(1f),
+            )
         }
 
-        IconButton(
-            onClick = onBackClick,
+        Box(
             modifier = Modifier
+                .padding(12.dp)
+                .size(44.dp)
                 .align(Alignment.TopStart)
-                .padding(start = 16.dp, top = 32.dp)
-                .zIndex(2f)
+                .clip(CircleShape)
+                .background(bgDefault)
+                .clickable { onBackClick() },
+            contentAlignment = Alignment.Center
         ) {
             Icon(
                 painter = painterResource(R.drawable.ic_arrow_left),
                 contentDescription = stringResource(R.string.voltar),
-                tint = Color.White,
-                modifier = Modifier.size(34.dp)
-            )
-        }
-
-        IconButton(
-            onClick = {},
-            modifier = Modifier
-                .align(Alignment.TopEnd)
-                .padding(end = 18.dp, top = 34.dp)
-                .zIndex(2f)
-        ) {
-            Icon(
-                painter = painterResource(R.drawable.ic_menu),
-                contentDescription = stringResource(R.string.configuracoes),
-                tint = Color.White,
-                modifier = Modifier.size(32.dp)
+                tint = Color.Black
             )
         }
 
@@ -157,6 +213,7 @@ private fun ConteudoProduto(
     produto: Produto,
     produtor: Produtor?,
     emDestaque: Boolean,
+    espacoInferior: Dp,
     onAvaliarClick: () -> Unit,
     onProdutorClick: (String) -> Unit,
 ) {
@@ -175,59 +232,218 @@ private fun ConteudoProduto(
         BlocoSocialProduto(produto = produto, emDestaque = emDestaque, onAvaliarClick = onAvaliarClick)
         LinhaProdutor(produto = produto, produtor = produtor, onProdutorClick = onProdutorClick)
         BlocoEspecificacoes(produto = produto)
-        Spacer(Modifier.height(36.dp))
+        Spacer(Modifier.height(espacoInferior + 36.dp))
+    }
+}
+
+@Composable
+private fun FooterProduto(
+    produto: Produto,
+    onAdicionarAoCarrinhoClick: () -> Unit,
+    onComprarClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Box(
+        modifier = modifier
+            .fillMaxWidth()
+            .height(139.dp)
+    ) {
+        val abaPrecoShape = remember { AbaPrecoShape() }
+
+        Box(
+            modifier = Modifier
+                .align(Alignment.TopStart)
+                .zIndex(1f)
+                .widthIn(min = 176.dp, max = 320.dp)
+                .height(54.dp)
+                .sombraFormato(
+                    shape = abaPrecoShape,
+                    cor = Color.Black.copy(alpha = 0.20f),
+                    raioBlur = 7.dp,
+                    deslocamentoY = (-3).dp
+                )
+                .clip(abaPrecoShape)
+                .background(bgDefault)
+                .padding(start = 34.dp, top = 7.dp, end = 56.dp, bottom = 7.dp),
+            contentAlignment = Alignment.Center
+        ) {
+            Text(
+                text = formatarReais(produto.preco),
+                color = Color(0xFF1F1B18),
+                fontSize = 25.sp,
+                lineHeight = 28.sp,
+                maxLines = 1,
+            )
+        }
+
+        Box(
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .fillMaxWidth()
+                .height(85.dp)
+                .sombraInferior(
+                    DirecaoSombra.CIMA,
+                    alturaSombra = 15.dp,
+                    corSombra = Color.Black.copy(alpha = 0.08f)
+                )
+                .clip(RoundedCornerShape(topStart = 0.dp, topEnd = 15.dp))
+                .background(bgDefault)
+        ) {
+            Column(Modifier.fillMaxSize()) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(3.dp)
+                        .background(
+                            Brush.horizontalGradient(
+                                colors = listOf(btColor, bgDefault)
+                            )
+                        )
+                )
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(82.dp)
+                        .padding(horizontal = 18.dp, vertical = 12.dp),
+                    horizontalArrangement = Arrangement.spacedBy(24.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    val esgotado = produto.quantidade <= 0
+                    if (esgotado) {
+                        BotaoFooterProduto(
+                            texto = stringResource(R.string.esgotado),
+                            onClick = {},
+                            containerColor = Color.LightGray,
+                            textColor = Color.Black,
+                            modifier = Modifier.weight(1f)
+                        )
+                    } else {
+                        BotaoFooterProduto(
+                            texto = stringResource(R.string.adicionar_ao_carrinho),
+                            onClick = onAdicionarAoCarrinhoClick,
+                            modifier = Modifier.weight(1.42f)
+                        )
+                        BotaoFooterProduto(
+                            texto = stringResource(R.string.comprar),
+                            onClick = onComprarClick,
+                            modifier = Modifier.weight(1f)
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun BotaoFooterProduto(
+    texto: String,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    containerColor: Color = btColor,
+    textColor: Color = Color.White,
+) {
+    Button(
+        onClick = onClick,
+        modifier = modifier.height(58.dp),
+        shape = CircleShape,
+        colors = ButtonDefaults.buttonColors(containerColor = containerColor),
+        contentPadding = PaddingValues(horizontal = 12.dp, vertical = 0.dp)
+    ) {
+        Text(
+            text = texto,
+            color = textColor,
+            fontSize = 17.sp,
+            fontWeight = FontWeight.Medium,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis
+        )
+    }
+}
+
+private class AbaPrecoShape(
+    private val cornerRadius: Dp = 15.dp,
+    private val slantWidth: Dp = 38.dp,
+) : Shape {
+    override fun createOutline(
+        size: Size,
+        layoutDirection: LayoutDirection,
+        density: Density,
+    ): Outline {
+        val radius = with(density) { cornerRadius.toPx() }.coerceAtMost(size.height / 2f)
+        val slant = with(density) { slantWidth.toPx() }.coerceAtMost(size.width / 3f)
+        val path = Path().apply {
+            moveTo(0f, size.height)
+            lineTo(0f, radius)
+            quadraticTo(0f, 0f, radius, 0f)
+            lineTo(size.width - slant - radius, 0f)
+            quadraticTo(
+                size.width - slant * 0.55f,
+                0f,
+                size.width - slant * 0.35f,
+                radius
+            )
+            lineTo(size.width, size.height)
+            close()
+        }
+        return Outline.Generic(path)
     }
 }
 
 @Composable
 private fun CarrosselProduto(produto: Produto) {
-    val imagens = produto.imagens
-    val pagerState = rememberPagerState(pageCount = { imagens.size.coerceAtLeast(1) })
+    val imagens = produto.imagens.filter { it.isNotBlank() }
 
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .aspectRatio(0.92f)
-            .background(Color(0xFFD9D9D9))
-    ) {
-        HorizontalPager(
-            state = pagerState,
-            key = { index -> imagens.getOrNull(index) ?: "placeholder" },
-            modifier = Modifier.fillMaxSize()
-        ) { index ->
-            val imagem = imagens.getOrNull(index)
-            if (imagem.isNullOrBlank()) {
-                Image(
-                    painter = painterResource(id = R.drawable.img_placeholder),
-                    contentDescription = stringResource(R.string.cd_produto_sem_imagem),
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier.fillMaxSize()
-                )
-            } else {
-                AsyncImage(
-                    model = imagem,
+    if (imagens.isEmpty()) {
+        CarregamentoContainer(
+            modifier = Modifier
+                .fillMaxWidth()
+                .aspectRatio(0.92f)
+        )
+        return
+    }
+
+    val pagerState = rememberPagerState(pageCount = { imagens.size })
+
+    Column(modifier = Modifier.fillMaxWidth().background(bgDefault).padding(top = 64.dp)) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .aspectRatio(0.92f)
+                .background(Color(0xFFD9D9D9))
+        ) {
+            HorizontalPager(
+                state = pagerState,
+                key = { index -> imagens[index] },
+                modifier = Modifier.fillMaxSize()
+            ) { index ->
+                SubcomposeAsyncImage(
+                    model = imagens[index],
                     contentDescription = stringResource(R.string.cd_imagem_carrossel),
                     contentScale = ContentScale.Crop,
-                    modifier = Modifier.fillMaxSize()
+                    modifier = Modifier.fillMaxSize(),
+                    loading = { CarregamentoContainer(Modifier.fillMaxSize(), shape = RectangleShape) },
+                    error = { CarregamentoContainer(Modifier.fillMaxSize(), shape = RectangleShape) }
                 )
             }
         }
 
         Row(
             modifier = Modifier
-                .align(Alignment.BottomCenter)
-                .padding(bottom = 30.dp),
-            horizontalArrangement = Arrangement.spacedBy(18.dp),
+                .fillMaxWidth()
+                .background(bgDefault)
+                .padding(top = 14.dp, bottom = 10.dp),
+            horizontalArrangement = Arrangement.spacedBy(18.dp, Alignment.CenterHorizontally),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            repeat(imagens.size.coerceAtLeast(3)) { index ->
+            repeat(imagens.size) { index ->
                 Box(
                     modifier = Modifier
                         .size(14.dp)
                         .clip(CircleShape)
                         .background(
-                            if (index == pagerState.currentPage) Color.White
-                            else Color.White.copy(alpha = 0.55f)
+                            if (index == pagerState.currentPage) btColor
+                            else Color(0xFFD9D9D9)
                         )
                 )
             }
@@ -256,7 +472,10 @@ private fun BlocoResumoProduto(produto: Produto) {
             lineHeight = 28.sp
         )
         Text(
-            text = "Ou 4x${formatarReais(produto.preco / 4).removePrefix("R$")}",
+            text = stringResource(
+                R.string.produto_parcelamento,
+                formatarReais(produto.preco / 4).removePrefix("R$")
+            ),
             fontSize = 17.sp,
             lineHeight = 22.sp
         )
@@ -275,34 +494,47 @@ private fun BlocoSocialProduto(
     emDestaque: Boolean,
     onAvaliarClick: () -> Unit,
 ) {
+    // Todas as pílulas partem da mesma linha de topo e compartilham a mesma
+    // altura de "corpo" (alturaCorpo). A pílula de avaliar repete essa altura
+    // no topo e só a aba "Avaliar" estende abaixo da linha de base — assim os
+    // números das três pílulas ficam alinhados, como no protótipo. Sem espaço
+    // entre as pílulas: os pesos repartem toda a largura disponível.
+    val alturaCorpo = 96.dp
+    val alturaAbaAvaliar = 40.dp
+
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 14.dp, vertical = 28.dp),
-        horizontalArrangement = Arrangement.spacedBy(10.dp),
+        horizontalArrangement = Arrangement.spacedBy(0.dp),
+        verticalAlignment = Alignment.Top,
     ) {
+        Spacer(Modifier.weight(0.025f))
+
         if (emDestaque) {
             DestaquePill(
                 modifier = Modifier
                     .weight(1.1f)
-                    .height(90.dp)
+                    .height(alturaCorpo)
             )
         }
 
         AvaliacaoPill(
             avaliacao = produto.avaliacao,
             modifier = Modifier
-                .weight(1f)
-                .height(88.dp)
+                .weight(1.1f)
+                .height(alturaCorpo)
         )
 
         AvaliarPill(
             quantidadeAvaliacoes = produto.quantidadeAvaliacoes,
             onClick = onAvaliarClick,
-            modifier = Modifier
-                .weight(0.9f)
-                .height(112.dp)
+            alturaTopo = alturaCorpo,
+            alturaAba = alturaAbaAvaliar,
+            modifier = Modifier.weight(0.87f)
         )
+
+        Spacer(Modifier.weight(0.025f))
     }
 }
 
@@ -311,14 +543,17 @@ private fun DestaquePill(modifier: Modifier = Modifier) {
     Box(
         modifier = modifier
             .clip(RoundedCornerShape(44.dp))
-            .background(btColor),
+            .background(btColor)
+            .padding(horizontal = 8.dp, vertical = 8.dp),
         contentAlignment = Alignment.Center
     ) {
         Text(
-            text = "Em destaque",
+            text = stringResource(R.string.produto_em_destaque),
             color = Color.White,
-            fontSize = 24.sp,
-            fontWeight = FontWeight.Medium
+            fontSize = 22.sp,
+            lineHeight = 24.sp,
+            fontWeight = FontWeight.Medium,
+            textAlign = TextAlign.Center
         )
     }
 }
@@ -332,7 +567,8 @@ private fun AvaliacaoPill(
         modifier = modifier
             .clip(RoundedCornerShape(44.dp))
             .border(2.dp, btColor, RoundedCornerShape(44.dp))
-            .background(bgDefault),
+            .background(bgDefault)
+            .padding(horizontal = 2.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
@@ -351,7 +587,7 @@ private fun AvaliacaoPill(
                     ),
                     contentDescription = null,
                     tint = btColor,
-                    modifier = Modifier.size(22.dp)
+                    modifier = Modifier.size(19.dp)
                 )
             }
         }
@@ -362,20 +598,25 @@ private fun AvaliacaoPill(
 private fun AvaliarPill(
     quantidadeAvaliacoes: Int,
     onClick: () -> Unit,
+    alturaTopo: Dp,
+    alturaAba: Dp,
     modifier: Modifier = Modifier,
 ) {
     Column(
         modifier = modifier
+            .height(alturaTopo + alturaAba)
             .clip(RoundedCornerShape(34.dp))
             .border(2.dp, btColor, RoundedCornerShape(34.dp))
             .background(btColor)
             .clickable(onClick = onClick),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        // Topo com a mesma altura das outras pílulas: mantém o número e o
+        // "avaliações" na mesma linha de base das pílulas vizinhas.
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .weight(1f)
+                .height(alturaTopo)
                 .clip(RoundedCornerShape(bottomStart = 34.dp, bottomEnd = 34.dp))
                 .background(bgDefault),
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -389,16 +630,17 @@ private fun AvaliarPill(
                 lineHeight = 31.sp
             )
             Text(
-                text = "avaliações",
+                text = stringResource(R.string.produto_avaliacoes),
                 color = btColor,
-                fontSize = 15.sp,
+                fontSize = 17.sp,
+                fontWeight = FontWeight.Medium,
                 lineHeight = 18.sp
             )
         }
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .weight(0.55f),
+                .height(alturaAba),
             contentAlignment = Alignment.Center
         ) {
             Text(
@@ -417,6 +659,8 @@ private fun LinhaProdutor(
     produtor: Produtor?,
     onProdutorClick: (String) -> Unit,
 ) {
+    val produtorGenerico = stringResource(R.string.produtor_generico)
+
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -447,7 +691,7 @@ private fun LinhaProdutor(
         Text(
             text = produtor?.let { it.nomeLoja.ifBlank { it.nomeCompleto } }
                 .orEmpty()
-                .ifBlank { "Produtor" },
+                .ifBlank { produtorGenerico },
             fontSize = 26.sp,
             lineHeight = 30.sp
         )
@@ -456,6 +700,10 @@ private fun LinhaProdutor(
 
 @Composable
 private fun BlocoEspecificacoes(produto: Produto) {
+    val categoriaPrefixo = stringResource(R.string.produto_categoria_prefixo)
+    val descricaoPrefixo = stringResource(R.string.produto_descricao_prefixo)
+    val textoNaoInformado = stringResource(R.string.nao_informado)
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -465,7 +713,7 @@ private fun BlocoEspecificacoes(produto: Produto) {
             .padding(horizontal = 22.dp, vertical = 20.dp)
     ) {
         Text(
-            text = "Especificações",
+            text = stringResource(R.string.produto_especificacoes),
             color = Color(0xFF606060),
             fontSize = 23.sp,
             fontWeight = FontWeight.Bold
@@ -474,12 +722,14 @@ private fun BlocoEspecificacoes(produto: Produto) {
         Text(
             text = buildString {
                 if (produto.categorias.isNotEmpty()) {
-                    append("Categoria: ")
+                    append(categoriaPrefixo)
+                    append(' ')
                     append(produto.categorias.joinToString(", "))
                     append('\n')
                 }
-                append("Descrição: ")
-                append(produto.descricao.ifBlank { "Não informado." })
+                append(descricaoPrefixo)
+                append(' ')
+                append(produto.descricao.ifBlank { textoNaoInformado })
             },
             color = Color(0xFF303030),
             fontSize = 18.sp,

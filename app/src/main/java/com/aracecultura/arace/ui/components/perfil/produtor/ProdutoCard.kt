@@ -16,11 +16,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import coil.compose.AsyncImage
+import coil.compose.SubcomposeAsyncImage
+import com.aracecultura.arace.ui.components.CarregamentoContainer
 
 @Composable
 fun ProdutoCard(
@@ -42,11 +44,13 @@ fun ProdutoCard(
                     .weight(1f)
                     .background(Color(0xFFE2E2E2))
             ) {
-                AsyncImage(
+                SubcomposeAsyncImage(
                     model = imageUrl,
                     contentDescription = nome,
                     modifier = Modifier.fillMaxSize(),
-                    contentScale = ContentScale.Crop
+                    contentScale = ContentScale.Crop,
+                    loading = { CarregamentoContainer(Modifier.fillMaxSize(), shape = RectangleShape) },
+                    error = { CarregamentoContainer(Modifier.fillMaxSize(), shape = RectangleShape) }
                 )
                 Text(
                     text = preco,

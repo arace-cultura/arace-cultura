@@ -13,11 +13,13 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -30,12 +32,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.aracecultura.arace.R
+import com.aracecultura.arace.data.CampoCadastro
 import com.aracecultura.arace.ui.theme.GoogleSans
 
 // Cores espelhadas dos recursos XML usados nas telas de auth
@@ -88,6 +92,7 @@ internal fun CampoArace(
     teclado: KeyboardType = KeyboardType.Text,
     umaLinha: Boolean = true,
     suporte: String? = null,
+    mascara: VisualTransformation? = null,
 ) {
     var visivel by remember { mutableStateOf(false) }
 
@@ -99,8 +104,11 @@ internal fun CampoArace(
         keyboardOptions = KeyboardOptions(
             keyboardType = if (senha && !visivel) KeyboardType.Password else teclado,
         ),
-        visualTransformation =
-            if (senha && !visivel) PasswordVisualTransformation() else VisualTransformation.None,
+        visualTransformation = when {
+            senha && !visivel -> PasswordVisualTransformation()
+            mascara != null -> mascara
+            else -> VisualTransformation.None
+        },
         trailingIcon = if (senha) {
             {
                 Text(
@@ -148,6 +156,78 @@ internal fun BotaoArace(
             else Modifier.padding(horizontal = 40.dp, vertical = 12.dp),
         )
     }
+}
+
+/** Rótulo legível de cada campo, para listar no pop-up de dados inválidos. */
+@Composable
+internal fun rotuloCampo(campo: CampoCadastro): String = stringResource(
+    when (campo) {
+        CampoCadastro.NOME -> R.string.campo_nome
+        CampoCadastro.NOME_LOJA -> R.string.campo_nome_loja
+        CampoCadastro.RAZAO_SOCIAL -> R.string.campo_razao_social
+        CampoCadastro.EMAIL -> R.string.campo_email
+        CampoCadastro.TELEFONE -> R.string.campo_telefone
+        CampoCadastro.CPF -> R.string.campo_cpf
+        CampoCadastro.CNPJ -> R.string.campo_cnpj
+        CampoCadastro.CEP -> R.string.campo_cep
+        CampoCadastro.ENDERECO -> R.string.campo_endereco
+        CampoCadastro.TIPO_ARTESANATO -> R.string.campo_tipo_artesanato
+        CampoCadastro.CATEGORIA -> R.string.campo_categoria
+        CampoCadastro.CHAVE_PIX -> R.string.campo_chave_pix
+        CampoCadastro.SENHA -> R.string.campo_senha
+        CampoCadastro.CONFIRMAR_SENHA -> R.string.campo_confirmar_senha
+    }
+)
+
+/**
+ * Pop-up (estilo do de logout) exibido ao final do cadastro quando algum dado é
+ * inválido. Lista os campos reprovados para o usuário corrigir.
+ */
+@Composable
+internal fun DialogoDadosInvalidos(
+    campos: List<CampoCadastro>,
+    onDismiss: () -> Unit,
+) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        containerColor = Color(0xFFFAF7F2),
+        title = {
+            Text(
+                text = stringResource(R.string.dados_invalidos_titulo),
+                color = Color(0xFF2E2B27),
+                fontFamily = GoogleSans,
+                fontWeight = FontWeight.Bold,
+            )
+        },
+        text = {
+            Column {
+                Text(
+                    text = stringResource(R.string.dados_invalidos_msg),
+                    color = Color(0xFF7A7168),
+                    fontFamily = GoogleSans,
+                )
+                campos.forEach { campo ->
+                    Text(
+                        text = "•  ${rotuloCampo(campo)}",
+                        color = Color(0xFF2E2B27),
+                        fontFamily = GoogleSans,
+                        fontWeight = FontWeight.Medium,
+                        modifier = Modifier.padding(top = 6.dp),
+                    )
+                }
+            }
+        },
+        confirmButton = {
+            TextButton(onClick = onDismiss) {
+                Text(
+                    text = stringResource(R.string.dados_invalidos_ok),
+                    color = Color(0xFFCE5A14),
+                    fontFamily = GoogleSans,
+                    fontWeight = FontWeight.SemiBold,
+                )
+            }
+        },
+    )
 }
 
 /** Link "Voltar" em texto, como os TextView de voltar dos XML. */

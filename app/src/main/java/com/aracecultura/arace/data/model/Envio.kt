@@ -4,8 +4,13 @@ import androidx.compose.runtime.Immutable
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.DocumentId
 
-/** Estados de um envio. Decide o tipo de cartão exibido na Tela de Vendas. */
-enum class StatusEnvio { PAGAMENTO, ENVIO, ENTREGUE }
+/**
+ * Estados de um envio. Decide o tipo de cartão exibido. PAGAMENTO → ENVIO →
+ * ENTREGUE é o fluxo normal; CANCELADO é estado terminal: o produtor cancelou,
+ * o estoque já voltou e o cliente vê o pedido como cancelado (cartão cinza) em
+ * Meus Pedidos até dispensá-lo.
+ */
+enum class StatusEnvio { PAGAMENTO, ENVIO, ENTREGUE, CANCELADO }
 
 /**
  * Um item vendido a ser enviado por uma loja. Coleção própria ("Envios"), à
@@ -16,14 +21,18 @@ enum class StatusEnvio { PAGAMENTO, ENVIO, ENTREGUE }
 data class Envio(
     @DocumentId val id: String = "",
     val produtoId: String = "",
-    val produtorId: String = "",   // loja responsável pelo envio (dono desta tela)
+    val produtorId: String = "",
     val compradorId: String = "",
+    // Telefone do comprador, copiado do cadastro no fechamento da compra. Fica no
+    // próprio Envio para a Tela de Vendas identificar e contatar o cliente sem
+    // uma leitura extra do documento do usuário.
+    val telefoneComprador: String = "",
+    val nomeComprador: String = "",
     val nome: String = "",
     val descricao: String = "",
     val imagem: String = "",
     val preco: Double = 0.0,
     val quantidade: Int = 1,
-    // Guardado como String (nome do enum) para o mapeamento do Firestore.
     val status: String = StatusEnvio.PAGAMENTO.name,
     val criadoEm: Timestamp? = null,
 )

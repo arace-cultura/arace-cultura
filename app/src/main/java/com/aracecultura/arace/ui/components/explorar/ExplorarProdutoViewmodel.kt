@@ -137,25 +137,21 @@ class ExplorarProdutoViewmodel : ViewModel() {
             Log.w("Carrinho", "Tentativa de adicionar ao carrinho sem usuário logado.")
             return
         }
-
-        val itemCarrinho = hashMapOf(
-            "nome" to produto.nome,
-            "descricao" to produto.descricao,
-            "preco" to produto.preco,
-            "imagens" to if (produto.imagens.isNotEmpty()) listOf(produto.imagens[0]) else emptyList<String>(),
-            "produtoId" to produto.id,
-            // Denormalizado para o checkout agrupar o pagamento por loja
-            "produtorId" to produto.produtorId,
-            "quantidade" to FieldValue.increment(1)
-        )
+        if (produto.id.isBlank()) return
 
         val carrinhoRef = db.collection("Carrinho").document(uid)
         val produtoRef = carrinhoRef.collection("Produtos").document(produto.id)
 
         viewModelScope.launch {
             try {
-                db.runBatch { batch ->
-                    batch.set(
+                // Transação: lê a quantidade atual no carrinho e só incrementa se
+                // estiver abaixo do estoque (produto.quantidade). Diferente da tela
+                // do produto, aqui não há estado do carrinho em memória, então a
+                // leitura atômica é o que protege contra toque-duplo / corrida.
+                val adicionou = db.runTransaction { tx ->
+                    val atual = tx.get(produtoRef).getLong("quantidade") ?: 0L
+                    if (atual >= produto.quantidade) return@runTransaction false
+                    tx.set(
                         carrinhoRef,
                         mapOf(
                             "usuarioId" to uid,
@@ -163,9 +159,24 @@ class ExplorarProdutoViewmodel : ViewModel() {
                         ),
                         SetOptions.merge()
                     )
-                    batch.set(produtoRef, itemCarrinho, SetOptions.merge())
+                    tx.set(
+                        produtoRef,
+                        hashMapOf(
+                            "nome" to produto.nome,
+                            "descricao" to produto.descricao,
+                            "preco" to produto.preco,
+                            "imagens" to if (produto.imagens.isNotEmpty()) listOf(produto.imagens[0]) else emptyList<String>(),
+                            "produtoId" to produto.id,
+                            // Denormalizado para o checkout agrupar o pagamento por loja
+                            "produtorId" to produto.produtorId,
+                            "quantidade" to atual + 1
+                        ),
+                        SetOptions.merge()
+                    )
+                    true
                 }.await()
-                registrarProdutoEmCarrinho(db, produto.id, uid)
+
+                if (adicionou) registrarProdutoEmCarrinho(db, produto.id, uid)
             } catch (e: Exception) {
                 Log.e("Carrinho", "Erro ao adicionar produto", e)
             }

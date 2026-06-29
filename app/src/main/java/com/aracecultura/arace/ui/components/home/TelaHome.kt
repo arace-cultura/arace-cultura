@@ -28,14 +28,17 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -55,6 +58,7 @@ fun TelaHome(
     onCategoriaClick: (String) -> Unit = {}
 ) {
     val produtos by viewmodel.produtos.collectAsState()
+    val carregandoProdutos by viewmodel.carregandoProdutos.collectAsState()
     val scrollState = rememberScrollState()
 
     Box(
@@ -78,15 +82,22 @@ fun TelaHome(
         ) {
             Spacer(modifier = Modifier.height(20.dp))
 
-            TituloSecao("Categorias")
+            TituloSecao(stringResource(R.string.home_categorias))
             Spacer(modifier = Modifier.height(15.dp))
             SecaoCategorias(onCategoriaClick = onCategoriaClick)
             Spacer(modifier = Modifier.height(15.dp))
 
-            TituloSecao("Produtos em destaque")
+            TituloSecao(stringResource(R.string.home_produtos_destaque))
             Spacer(modifier = Modifier.height(10.dp))
 
-            if (produtos.isNotEmpty()) {
+            if (carregandoProdutos) {
+                CarregamentoContainer(
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 10.dp)
+                        .aspectRatio(1.3f)
+                )
+            } else if (produtos.isNotEmpty()) {
                 CarrosselProdutos(
                     produtos = produtos,
                     onProdutoClick = onProdutoClick,
@@ -95,7 +106,12 @@ fun TelaHome(
                         .padding(horizontal = 10.dp)
                 )
             } else {
-                CarregamentoContainer(Modifier.padding(10.dp))
+                ProdutosDestaqueVazio(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 10.dp)
+                        .aspectRatio(1.3f)
+                )
             }
         }
     }
@@ -115,6 +131,25 @@ private fun TituloSecao(titulo: String) {
                 .padding(horizontal = 20.dp),
             fontSize = 26.sp,
             fontWeight = FontWeight.Medium
+        )
+    }
+}
+
+@Composable
+private fun ProdutosDestaqueVazio(modifier: Modifier = Modifier) {
+    Box(
+        modifier = modifier
+            .clip(RoundedCornerShape(15.dp))
+            .background(bgDefault),
+        contentAlignment = Alignment.Center
+    ) {
+        Text(
+            text = stringResource(R.string.nenhum_produto_destaque),
+            modifier = Modifier.padding(horizontal = 24.dp),
+            color = Color(0xFF606060),
+            fontSize = 18.sp,
+            fontWeight = FontWeight.Medium,
+            textAlign = TextAlign.Center
         )
     }
 }
@@ -179,8 +214,8 @@ private fun CartaoProduto(
                 .fillMaxWidth()
                 .aspectRatio(1.3f)
                 .clip(RoundedCornerShape(topStart = 15.dp, topEnd = 15.dp)),
-            loading = { CarregamentoContainer(Modifier.fillMaxSize()) },
-            error   = { CarregamentoContainer(Modifier.fillMaxSize()) }
+            loading = { CarregamentoContainer(Modifier.fillMaxSize(), shape = RectangleShape) },
+            error   = { CarregamentoContainer(Modifier.fillMaxSize(), shape = RectangleShape) }
         )
         RodapeCartaoProduto(produto = produto)
     }

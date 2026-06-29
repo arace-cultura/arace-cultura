@@ -12,6 +12,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -24,13 +25,21 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import com.aracecultura.arace.R
+import com.aracecultura.arace.data.CampoCadastro
+import com.aracecultura.arace.data.Formatadores
+import com.aracecultura.arace.data.Validacoes
+import com.aracecultura.arace.ui.auth.DialogoDadosInvalidos
 import com.aracecultura.arace.ui.components.AppButton
+import com.aracecultura.arace.ui.components.MascaraCep
+import com.aracecultura.arace.ui.components.MascaraCpfCnpj
+import com.aracecultura.arace.ui.components.MascaraTelefone
 import com.aracecultura.arace.ui.theme.bgDefault
 import com.aracecultura.arace.ui.theme.btColor
 
@@ -43,14 +52,36 @@ fun EditarPerfilUsuario(
     val context = LocalContext.current
     val mensagemPreenchaSenhas = stringResource(R.string.preencha_senhas)
     val mensagemSenhaAtualIncorreta = stringResource(R.string.senha_atual_incorreta)
+    val mensagemSenhaFraca = stringResource(R.string.senha_forte_helper)
     val usuario by viewModel.usuario.collectAsState()
     val produtor by viewModel.produtor.collectAsState()
     val scrollState = rememberScrollState()
     val screenWidth = LocalConfiguration.current.screenWidthDp.dp
 
     var nomeInput by remember { mutableStateOf("") }
+    var telefoneInput by remember { mutableStateOf("") }
+    var telefonePreenchido by remember { mutableStateOf(false) }
+    var camposInvalidos by remember { mutableStateOf<List<CampoCadastro>>(emptyList()) }
     var novaFotoUri by remember { mutableStateOf<Uri?>(null) }
     var novoBannerUri by remember { mutableStateOf<Uri?>(null) }
+    var produtorPreenchido by remember { mutableStateOf(false) }
+    var nomeCompletoProdutorInput by remember { mutableStateOf("") }
+    var nomeLojaInput by remember { mutableStateOf("") }
+    var tipoPessoaInput by remember { mutableStateOf("") }
+    var razaoSocialInput by remember { mutableStateOf("") }
+    var cnpjInput by remember { mutableStateOf("") }
+    var telefoneLojaInput by remember { mutableStateOf("") }
+    var cepInput by remember { mutableStateOf("") }
+    var enderecoInput by remember { mutableStateOf("") }
+    var tipoArtesanatoInput by remember { mutableStateOf("") }
+    var categoriaProdutoInput by remember { mutableStateOf("") }
+    var historiaInput by remember { mutableStateOf("") }
+    var chavePixInput by remember { mutableStateOf("") }
+    var novoBannerLojaUri by remember { mutableStateOf<Uri?>(null) }
+    var novaFotoLojaUri by remember { mutableStateOf<Uri?>(null) }
+    var novasFotosHistoriaUris by remember { mutableStateOf(List<Uri?>(3) { null }) }
+    var fotoHistoriaSelecionada by remember { mutableStateOf(0) }
+    var erroSalvarProdutor by remember { mutableStateOf<String?>(null) }
 
     // Troca de senha da loja (só para contas produtoras)
     var senhaAtual by remember { mutableStateOf("") }
@@ -65,6 +96,24 @@ fun EditarPerfilUsuario(
         ActivityResultContracts.PickVisualMedia()
     ) { uri -> if (uri != null) novoBannerUri = uri }
 
+    val bannerLojaPicker = rememberLauncherForActivityResult(
+        ActivityResultContracts.PickVisualMedia()
+    ) { uri -> if (uri != null) novoBannerLojaUri = uri }
+
+    val fotoLojaPicker = rememberLauncherForActivityResult(
+        ActivityResultContracts.PickVisualMedia()
+    ) { uri -> if (uri != null) novaFotoLojaUri = uri }
+
+    val historiaPicker = rememberLauncherForActivityResult(
+        ActivityResultContracts.PickVisualMedia()
+    ) { uri ->
+        if (uri != null) {
+            novasFotosHistoriaUris = novasFotosHistoriaUris.toMutableList().also {
+                it[fotoHistoriaSelecionada] = uri
+            }
+        }
+    }
+
     LaunchedEffect(uid) {
         if (uid.isNotBlank()) {
             viewModel.carregarDadosUsuario(uid)
@@ -76,6 +125,62 @@ fun EditarPerfilUsuario(
         if (nomeInput.isEmpty() && usuario.nome.isNotEmpty()) {
             nomeInput = usuario.nome
         }
+        // Pré-preenche o telefone uma vez (sem sobrescrever a edição em curso).
+        if (!telefonePreenchido && usuario.telefone.isNotEmpty()) {
+            telefoneInput = Formatadores.digitos(usuario.telefone, 11)
+            telefonePreenchido = true
+        }
+    }
+
+    LaunchedEffect(produtor?.uid) {
+        val dados = produtor ?: return@LaunchedEffect
+        if (!produtorPreenchido) {
+            nomeCompletoProdutorInput = dados.nomeCompleto
+            nomeLojaInput = dados.nomeLoja
+            tipoPessoaInput = dados.tipoPessoa
+            razaoSocialInput = dados.razaoSocial
+            cnpjInput = Formatadores.digitos(dados.cnpj, 14)
+            telefoneLojaInput = Formatadores.digitos(dados.telefone, 11)
+            cepInput = Formatadores.digitos(dados.cep, 8)
+            enderecoInput = dados.endereco
+            tipoArtesanatoInput = dados.tipoArtesanato
+            categoriaProdutoInput = dados.categoriaProduto
+            historiaInput = dados.historia
+            chavePixInput = dados.chavePix
+            produtorPreenchido = true
+        }
+    }
+
+    if (camposInvalidos.isNotEmpty()) {
+        DialogoDadosInvalidos(campos = camposInvalidos, onDismiss = { camposInvalidos = emptyList() })
+    }
+
+    fun salvarProdutorOuVoltar() {
+        if (produtor == null) {
+            onVoltarClick()
+            return
+        }
+        viewModel.salvarEdicaoProdutor(
+            context = context,
+            uid = uid,
+            nomeCompleto = nomeCompletoProdutorInput,
+            nomeLoja = nomeLojaInput,
+            tipoPessoa = tipoPessoaInput,
+            razaoSocial = razaoSocialInput,
+            cnpj = Formatadores.cpfOuCnpj(cnpjInput),
+            telefone = Formatadores.telefone(telefoneLojaInput),
+            cep = Formatadores.cep(cepInput),
+            endereco = enderecoInput,
+            tipoArtesanato = tipoArtesanatoInput,
+            categoriaProduto = categoriaProdutoInput,
+            historia = historiaInput,
+            chavePix = chavePixInput,
+            novoBannerUri = novoBannerLojaUri,
+            novaFotoLojaUri = novaFotoLojaUri,
+            novasFotosHistoriaUris = novasFotosHistoriaUris,
+            onSucesso = onVoltarClick,
+            onErro = { erroSalvarProdutor = it }
+        )
     }
 
     Box(Modifier.background(bgDefault)) {
@@ -209,6 +314,17 @@ fun EditarPerfilUsuario(
                     shape = RoundedCornerShape(8.dp)
                 )
 
+                OutlinedTextField(
+                    value = telefoneInput,
+                    onValueChange = { telefoneInput = Formatadores.digitos(it, 11) },
+                    label = { Text(stringResource(R.string.telefone)) },
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
+                    visualTransformation = MascaraTelefone,
+                    singleLine = true,
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(8.dp)
+                )
+
                 // Campo de E-mail Desabilitado
                 OutlinedTextField(
                     value = usuario.email,
@@ -218,6 +334,175 @@ fun EditarPerfilUsuario(
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(8.dp)
                 )
+
+                produtor?.let { dadosProdutor ->
+                    Text(
+                        text = stringResource(R.string.mdados_cadastro_produtor),
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Medium,
+                        color = Color(0xFF1F2937)
+                    )
+
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(12.dp)
+                    ) {
+                        ImagemEditavel(
+                            label = stringResource(R.string.selecionar_banner),
+                            model = novoBannerLojaUri ?: dadosProdutor.banner.ifBlank { null },
+                            onClick = {
+                                bannerLojaPicker.launch(
+                                    PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+                                )
+                            },
+                            modifier = Modifier.weight(1f)
+                        )
+                        ImagemEditavel(
+                            label = stringResource(R.string.cad_selecionar_foto_loja),
+                            model = novaFotoLojaUri ?: dadosProdutor.fotoLoja.ifBlank { null },
+                            onClick = {
+                                fotoLojaPicker.launch(
+                                    PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+                                )
+                            },
+                            modifier = Modifier.weight(1f)
+                        )
+                    }
+
+                    Text(
+                        text = stringResource(R.string.cad_selecionar_fotos_historia),
+                        fontSize = 15.sp,
+                        fontWeight = FontWeight.Medium,
+                        color = Color(0xFF1F2937)
+                    )
+
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        repeat(3) { index ->
+                            ImagemEditavel(
+                                label = stringResource(
+                                    when (index) {
+                                        0 -> R.string.cad_foto_historia_1
+                                        1 -> R.string.cad_foto_historia_2
+                                        else -> R.string.cad_foto_historia_3
+                                    }
+                                ),
+                                model = novasFotosHistoriaUris[index]
+                                    ?: dadosProdutor.fotosHistoria.getOrNull(index)?.ifBlank { null },
+                                onClick = {
+                                    fotoHistoriaSelecionada = index
+                                    historiaPicker.launch(
+                                        PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+                                    )
+                                },
+                                modifier = Modifier.weight(1f)
+                            )
+                        }
+                    }
+
+                    OutlinedTextField(
+                        value = nomeCompletoProdutorInput,
+                        onValueChange = { nomeCompletoProdutorInput = it },
+                        label = { Text(stringResource(R.string.cad_nome_completo)) },
+                        modifier = Modifier.fillMaxWidth(),
+                        shape = RoundedCornerShape(8.dp)
+                    )
+                    OutlinedTextField(
+                        value = nomeLojaInput,
+                        onValueChange = { nomeLojaInput = it },
+                        label = { Text(stringResource(R.string.cad_nome_loja_empresa)) },
+                        modifier = Modifier.fillMaxWidth(),
+                        shape = RoundedCornerShape(8.dp)
+                    )
+                    OutlinedTextField(
+                        value = tipoPessoaInput,
+                        onValueChange = { tipoPessoaInput = it },
+                        label = { Text(stringResource(R.string.cad_voce_e)) },
+                        modifier = Modifier.fillMaxWidth(),
+                        shape = RoundedCornerShape(8.dp)
+                    )
+                    OutlinedTextField(
+                        value = razaoSocialInput,
+                        onValueChange = { razaoSocialInput = it },
+                        label = { Text(stringResource(R.string.cad_razao_social)) },
+                        modifier = Modifier.fillMaxWidth(),
+                        shape = RoundedCornerShape(8.dp)
+                    )
+                    OutlinedTextField(
+                        value = cnpjInput,
+                        onValueChange = { cnpjInput = Formatadores.digitos(it, 14) },
+                        label = { Text(stringResource(R.string.cad_cnpj_cpf)) },
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                        visualTransformation = MascaraCpfCnpj,
+                        modifier = Modifier.fillMaxWidth(),
+                        shape = RoundedCornerShape(8.dp)
+                    )
+                    OutlinedTextField(
+                        value = telefoneLojaInput,
+                        onValueChange = { telefoneLojaInput = Formatadores.digitos(it, 11) },
+                        label = { Text(stringResource(R.string.cad_numero_telefone)) },
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
+                        visualTransformation = MascaraTelefone,
+                        modifier = Modifier.fillMaxWidth(),
+                        shape = RoundedCornerShape(8.dp)
+                    )
+                    OutlinedTextField(
+                        value = cepInput,
+                        onValueChange = { cepInput = Formatadores.digitos(it, 8) },
+                        label = { Text(stringResource(R.string.cad_cep)) },
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                        visualTransformation = MascaraCep,
+                        modifier = Modifier.fillMaxWidth(),
+                        shape = RoundedCornerShape(8.dp)
+                    )
+                    OutlinedTextField(
+                        value = enderecoInput,
+                        onValueChange = { enderecoInput = it },
+                        label = { Text(stringResource(R.string.cad_endereco)) },
+                        modifier = Modifier.fillMaxWidth(),
+                        shape = RoundedCornerShape(8.dp)
+                    )
+                    OutlinedTextField(
+                        value = tipoArtesanatoInput,
+                        onValueChange = { tipoArtesanatoInput = it },
+                        label = { Text(stringResource(R.string.cad_tipo_artesanato)) },
+                        modifier = Modifier.fillMaxWidth(),
+                        shape = RoundedCornerShape(8.dp)
+                    )
+                    OutlinedTextField(
+                        value = categoriaProdutoInput,
+                        onValueChange = { categoriaProdutoInput = it },
+                        label = { Text(stringResource(R.string.cad_categoria_produto)) },
+                        modifier = Modifier.fillMaxWidth(),
+                        shape = RoundedCornerShape(8.dp)
+                    )
+                    OutlinedTextField(
+                        value = chavePixInput,
+                        onValueChange = { chavePixInput = it },
+                        label = { Text(stringResource(R.string.cad_chave_pix)) },
+                        modifier = Modifier.fillMaxWidth(),
+                        shape = RoundedCornerShape(8.dp)
+                    )
+                    OutlinedTextField(
+                        value = historiaInput,
+                        onValueChange = { historiaInput = it },
+                        label = { Text(stringResource(R.string.cad_historia_loja)) },
+                        minLines = 4,
+                        modifier = Modifier.fillMaxWidth(),
+                        shape = RoundedCornerShape(8.dp)
+                    )
+
+                    erroSalvarProdutor?.let {
+                        Text(
+                            text = it,
+                            color = Color.Red,
+                            fontSize = 13.sp,
+                            modifier = Modifier.padding(start = 4.dp)
+                        )
+                    }
+                }
 
                 // Troca de senha da loja — só para contas produtoras
                 if (produtor != null) {
@@ -268,8 +553,14 @@ fun EditarPerfilUsuario(
                         erroSenha = null
                         val querTrocarSenha = senhaAtual.isNotBlank() || senhaNova.isNotBlank()
                         when {
+                            !Validacoes.telefoneValido(telefoneInput) -> {
+                                camposInvalidos = listOf(CampoCadastro.TELEFONE)
+                            }
                             querTrocarSenha && (senhaAtual.isBlank() || senhaNova.isBlank()) -> {
                                 erroSenha = mensagemPreenchaSenhas
+                            }
+                            querTrocarSenha && !Validacoes.senhaForte(senhaNova) -> {
+                                erroSenha = mensagemSenhaFraca
                             }
                             querTrocarSenha -> {
                                 viewModel.alterarSenhaLoja(
@@ -281,9 +572,10 @@ fun EditarPerfilUsuario(
                                             context = context,
                                             novoNome = nomeInput,
                                             uid = uid,
+                                            novoTelefone = Formatadores.telefone(telefoneInput),
                                             novaFotoUri = novaFotoUri,
                                             novoBannerUri = novoBannerUri,
-                                            onSucesso = onVoltarClick
+                                            onSucesso = { salvarProdutorOuVoltar() }
                                         )
                                     },
                                     onSenhaIncorreta = { erroSenha = mensagemSenhaAtualIncorreta },
@@ -295,9 +587,10 @@ fun EditarPerfilUsuario(
                                     context = context,
                                     novoNome = nomeInput,
                                     uid = uid,
+                                    novoTelefone = Formatadores.telefone(telefoneInput),
                                     novaFotoUri = novaFotoUri,
                                     novoBannerUri = novoBannerUri,
-                                    onSucesso = onVoltarClick
+                                    onSucesso = { salvarProdutorOuVoltar() }
                                 )
                             }
                         }
@@ -311,5 +604,55 @@ fun EditarPerfilUsuario(
                 )
             }
         }
+    }
+}
+
+@Composable
+private fun ImagemEditavel(
+    label: String,
+    model: Any?,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Column(
+        modifier = modifier,
+        verticalArrangement = Arrangement.spacedBy(6.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(104.dp)
+                .clip(RoundedCornerShape(12.dp))
+                .background(Color(0xFFE0E0E0))
+                .clickable(onClick = onClick),
+            contentAlignment = Alignment.Center
+        ) {
+            if (model != null) {
+                AsyncImage(
+                    model = model,
+                    contentDescription = label,
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier.fillMaxSize()
+                )
+            }
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(Color.Black.copy(alpha = 0.24f))
+            )
+            Image(
+                painter = painterResource(R.drawable.ic_editar_imagem),
+                contentDescription = label,
+                modifier = Modifier.size(34.dp)
+            )
+        }
+        Text(
+            text = label,
+            fontSize = 12.sp,
+            color = Color(0xFF3B4045),
+            maxLines = 2,
+            lineHeight = 14.sp
+        )
     }
 }

@@ -1,9 +1,12 @@
 package com.aracecultura.arace.ui.components.perfil.produtor
 
+import androidx.annotation.DrawableRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -56,6 +59,7 @@ fun PerfilProdutor(
     viewModel: PerfilProdutorViewModel = viewModel(),
     onModoChanged: (Boolean) -> Unit = {},
     onEditarProdutos: () -> Unit = {},
+    onMeusDestaques: () -> Unit = {},
     onSairLojaClick: () -> Unit = {},
     onBack: (() -> Unit)? = null
 ) {
@@ -73,9 +77,11 @@ fun PerfilProdutor(
         uiState.produtor != null -> PerfilProdutorContent(
             produtor = uiState.produtor!!,
             produtos = uiState.produtos,
+            produtosDestaque = uiState.produtosDestaque,
             somenteLeitura = somenteLeitura,
             onModoChanged = onModoChanged,
             onEditarProdutos = onEditarProdutos,
+            onMeusDestaques = onMeusDestaques,
             onSairLojaClick = onSairLojaClick,
             onBack = onBack
         )
@@ -183,15 +189,18 @@ private fun PerfilProdutorErro(message: String) {
 private fun PerfilProdutorContent(
     produtor: Produtor,
     produtos: List<Produto>,
+    produtosDestaque: List<Produto>,
     somenteLeitura: Boolean = false,
     onModoChanged: (Boolean) -> Unit = {},
     onEditarProdutos: () -> Unit = {},
+    onMeusDestaques: () -> Unit = {},
     onSairLojaClick: () -> Unit = {},
     onBack: (() -> Unit)? = null
 ) {
     val screenWidth = LocalConfiguration.current.screenWidthDp.dp
     val loja = produtor.nomeLoja.ifBlank { produtor.nomeCompleto }
-    val nomeExibicao = loja.ifBlank { "Produtor" }
+    val produtorGenerico = stringResource(R.string.produtor_generico)
+    val nomeExibicao = loja.ifBlank { produtorGenerico }
     var showSairLojaDialog by remember { mutableStateOf(false) }
 
     if (showSairLojaDialog) {
@@ -368,13 +377,16 @@ private fun PerfilProdutorContent(
                     textAlign = TextAlign.Start
                 )
 
-                ImageCarousel(imageUrls = produtos.flatMap { it.imagens }.take(5))
+                ImageCarousel(imageUrls = produtosDestaque.flatMap { it.imagens }.take(5))
             }
         }
 
         if (!somenteLeitura) {
             item {
-                BotaoEditarProdutos(onClick = onEditarProdutos)
+                AcoesProdutorRow(
+                    onEditarProdutos = onEditarProdutos,
+                    onMeusDestaques = onMeusDestaques
+                )
             }
         }
 
@@ -395,38 +407,65 @@ private fun PerfilProdutorContent(
         item {
             FooterSection(
                 brandColor = btColor,
-                produtor = produtor
+                produtor = produtor,
+                avaliacaoMedia = produtos.filter { it.quantidadeAvaliacoes > 0 }
+                    .map { it.avaliacao }
+                    .takeIf { it.isNotEmpty() }
+                    ?.average()
             )
         }
     }
 }
 
 @Composable
-private fun BotaoEditarProdutos(onClick: () -> Unit) {
-    Column(
+private fun AcoesProdutorRow(
+    onEditarProdutos: () -> Unit,
+    onMeusDestaques: () -> Unit
+) {
+    Row(
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 8.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalArrangement = Arrangement.spacedBy(40.dp, Alignment.CenterHorizontally)
     ) {
+        BotaoAcaoProdutor(
+            iconeRes = R.drawable.ic_editar_produto,
+            texto = stringResource(R.string.editar_produtos_botao),
+            onClick = onEditarProdutos
+        )
+        BotaoAcaoProdutor(
+            iconeRes = R.drawable.ic_destacar,
+            texto = stringResource(R.string.meus_destaques_botao),
+            onClick = onMeusDestaques
+        )
+    }
+}
+
+@Composable
+private fun BotaoAcaoProdutor(
+    @DrawableRes iconeRes: Int,
+    texto: String,
+    onClick: () -> Unit
+) {
+    Column(horizontalAlignment = Alignment.CenterHorizontally) {
         Box(
             modifier = Modifier
                 .clip(RoundedCornerShape(50))
                 .background(btColor)
                 .clickable { onClick() }
-                .padding(horizontal = 56.dp, vertical = 18.dp),
+                .padding(horizontal = 40.dp, vertical = 18.dp),
             contentAlignment = Alignment.Center
         ) {
             Icon(
-                painter = painterResource(R.drawable.ic_editar_produto),
-                contentDescription = stringResource(R.string.editar_produtos),
+                painter = painterResource(iconeRes),
+                contentDescription = texto,
                 tint = Color.White,
                 modifier = Modifier.size(32.dp)
             )
         }
         Spacer(Modifier.height(8.dp))
         Text(
-            text = stringResource(R.string.editar_produtos_botao),
+            text = texto,
             fontSize = 16.sp,
             fontWeight = FontWeight.Medium
         )

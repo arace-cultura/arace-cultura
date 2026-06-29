@@ -29,6 +29,7 @@ import com.aracecultura.arace.R
 fun TelaConfiguracoes(
     onBackClick: () -> Unit = {},
     onMeusDadosClick: () -> Unit = {},
+    onMeusPedidosClick: () -> Unit = {},
     onDeletarContaClick: () -> Unit = {}
 ) {
     val scrollState = rememberScrollState()
@@ -120,6 +121,12 @@ fun TelaConfiguracoes(
             icon = painterResource(R.drawable.ic_user_data),
             text = stringResource(R.string.meus_dados),
             onClick = onMeusDadosClick
+        )
+
+        ConfiguracaoItem(
+            icon = painterResource(R.drawable.ic_meus_pedidos),
+            text = stringResource(R.string.meus_pedidos),
+            onClick = onMeusPedidosClick
         )
 
         ConfiguracaoItem(

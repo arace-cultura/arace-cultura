@@ -18,7 +18,9 @@ import com.aracecultura.arace.ui.components.explorar.TelaConfiguracoes
 import com.aracecultura.arace.ui.components.perfil.cliente.EditarPerfilUsuario
 import com.aracecultura.arace.ui.components.perfil.cliente.MeusDados
 import com.aracecultura.arace.ui.components.perfil.cliente.PerfilCliente
+import com.aracecultura.arace.ui.components.perfil.cliente.TelaMeusPedidos
 import com.aracecultura.arace.ui.components.perfil.produtor.PerfilProdutor
+import com.aracecultura.arace.ui.components.perfil.produtor.TelaDestaques
 import com.aracecultura.arace.ui.components.produto.TelaEditarProdutos
 import com.aracecultura.arace.ui.main.jetpack.Modo
 import com.google.firebase.auth.FirebaseAuth
@@ -28,11 +30,11 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 
-private enum class TelaPerfil { PERFIL, EDITAR, CONFIGURACOES, MEUS_DADOS }
+private enum class TelaPerfil { PERFIL, EDITAR, CONFIGURACOES, MEUS_DADOS, MEUS_PEDIDOS }
 
 /**
  * Host do perfil do cliente. Reúne as sub-telas (perfil, edição, configurações,
- * meus dados) num estado interno — antes era o `PerfilClienteFragment`.
+ * meus dados) num estado interno.
  */
 @Composable
 fun HostPerfilCliente(
@@ -98,6 +100,7 @@ fun HostPerfilCliente(
         TelaPerfil.CONFIGURACOES -> TelaConfiguracoes(
             onBackClick = { telaAtual = TelaPerfil.PERFIL },
             onMeusDadosClick = { telaAtual = TelaPerfil.MEUS_DADOS },
+            onMeusPedidosClick = { telaAtual = TelaPerfil.MEUS_PEDIDOS },
             onDeletarContaClick = { deletarConta() },
         )
         TelaPerfil.MEUS_DADOS -> MeusDados(
@@ -105,13 +108,19 @@ fun HostPerfilCliente(
             onVoltarClick = { telaAtual = TelaPerfil.CONFIGURACOES },
             onEditarClick = { telaAtual = TelaPerfil.EDITAR },
         )
+        TelaPerfil.MEUS_PEDIDOS -> TelaMeusPedidos(
+            uid = uid,
+            onVoltar = { telaAtual = TelaPerfil.CONFIGURACOES },
+        )
     }
 }
 
 /**
  * Host do perfil do produtor: alterna entre perfil e edição de produtos num
- * estado interno — antes era o `PerfilProdutorFragment`.
+ * estado interno.
  */
+private enum class TelaProdutor { PERFIL, EDITAR, DESTAQUES }
+
 @Composable
 fun HostPerfilProdutor(
     uid: String,
@@ -119,17 +128,24 @@ fun HostPerfilProdutor(
 ) {
     val context = LocalContext.current
     val escopo = rememberCoroutineScope()
-    var editandoProdutos by remember { mutableStateOf(false) }
+    var telaAtual by remember { mutableStateOf(TelaProdutor.PERFIL) }
 
-    if (editandoProdutos) {
-        TelaEditarProdutos(uid = uid, onBack = { editandoProdutos = false })
-    } else {
-        PerfilProdutor(
+    when (telaAtual) {
+        TelaProdutor.EDITAR -> TelaEditarProdutos(
+            uid = uid,
+            onBack = { telaAtual = TelaProdutor.PERFIL }
+        )
+        TelaProdutor.DESTAQUES -> TelaDestaques(
+            uid = uid,
+            onBack = { telaAtual = TelaProdutor.PERFIL }
+        )
+        TelaProdutor.PERFIL -> PerfilProdutor(
             uid = uid,
             onModoChanged = { isProdutor ->
                 if (!isProdutor) appVm.definirModo(Modo.CLIENTE)
             },
-            onEditarProdutos = { editandoProdutos = true },
+            onEditarProdutos = { telaAtual = TelaProdutor.EDITAR },
+            onMeusDestaques = { telaAtual = TelaProdutor.DESTAQUES },
             onSairLojaClick = {
                 escopo.launch {
                     try {

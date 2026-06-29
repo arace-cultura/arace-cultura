@@ -20,7 +20,6 @@ ui = "1.11.0"
 compose = "1.11.0"
 recyclerview = "1.4.0"
 
-crashlytics = "3.0.2"
 lifecycleRuntimeKtx = "2.10.0"
 service = "4.4.2"
 coil = "2.7.0"
@@ -56,7 +55,6 @@ firebase-firestore = { module = "com.google.firebase:firebase-firestore" }
 androidx-recyclerview = { group = "androidx.recyclerview", name = "recyclerview", version.ref = "recyclerview" }
 
 coil = {module = "io.coil-kt:coil-compose", version.ref = "coil"}
-firebase-crashlytics = {module = "com.google.firebase:firebase-crashlytics"}
 androidx-lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycleRuntimeKtx" }
 androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activityCompose" }
 androidx-compose-foundation-layout = { group = "androidx.compose.foundation", name = "foundation-layout", version.ref = "foundationLayout" }
@@ -66,7 +64,6 @@ kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serializa
 [plugins]
 navigation-safeargs = { id = "androidx.navigation.safeargs.kotlin", version.ref = "navigationFragment" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
-crashlytics = {id = "com.google.firebase.crashlytics", version.ref = "crashlytics"}
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }

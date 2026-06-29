@@ -4,6 +4,7 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
@@ -11,7 +12,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -36,82 +37,117 @@ import com.aracecultura.arace.ui.theme.GoogleSans
 
 private val CorFundoEntrada = Color(0xFF0F171E)
 
-/**
- * Compose da antiga `Entrada` (fragment_entrada.xml): foto no topo e um card
- * branco arredondado com o slogan e os dois botões.
- * Obs.: a sobreposição do logo sobre a foto é aproximada (aqui ele abre o card).
- */
 @Composable
 fun TelaEntrada(
     onCadastro: () -> Unit,
     onLogin: () -> Unit,
 ) {
-    Column(
+    BoxWithConstraints(
         modifier = Modifier
             .fillMaxSize()
-            .background(CorFundoEntrada)
-            .verticalScroll(rememberScrollState()),
+            .background(CorFundoEntrada),
     ) {
-        Image(
-            painter = painterResource(R.drawable.img_entrada),
-            contentDescription = null,
-            modifier = Modifier.fillMaxWidth().aspectRatio(1f),
-            contentScale = ContentScale.Crop,
-        )
+        // Mantém as proporções do design em telas curtas (paisagem/split-screen).
+        val contentHeight = maxOf(maxHeight, 640.dp)
+        val cardTop = contentHeight * 0.42f
 
-        Column(
+        // Logo e logotipo escalam com a largura da tela
+        val logoWidth = maxWidth * 0.22f
+        val logoHeight = logoWidth * (1456f / 1509f)
+        val logotipoWidth = maxWidth * 0.28f
+        val logotipoHeight = logotipoWidth * (16f / 54f)
+
+        Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .clip(RoundedCornerShape(topStart = 30.dp, topEnd = 30.dp))
-                .background(Color.White)
-                .padding(horizontal = 24.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
+                .verticalScroll(rememberScrollState()),
         ) {
-            Spacer(Modifier.height(24.dp))
-            Image(
-                painter = painterResource(R.drawable.logo),
-                contentDescription = null,
-                modifier = Modifier.size(75.dp),
-            )
-            Spacer(Modifier.height(8.dp))
-            Image(
-                painter = painterResource(R.drawable.arace),
-                contentDescription = null,
-                modifier = Modifier.size(width = 90.dp, height = 40.dp),
-            )
-
-            Spacer(Modifier.height(32.dp))
-            Text(
-                text = stringResource(R.string.entrada_slogan),
-                fontFamily = GoogleSans, fontWeight = FontWeight.Bold, fontSize = 26.sp,
-                color = CorTexto, textAlign = TextAlign.Center,
-                modifier = Modifier.fillMaxWidth(0.842f),
-            )
-
-            Spacer(Modifier.height(40.dp))
-            Button(
-                onClick = onCadastro,
-                shape = RoundedCornerShape(30.dp),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = CorAzul, contentColor = Color.White
-                ),
-                modifier = Modifier.fillMaxWidth(0.842f).height(60.dp),
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(contentHeight),
             ) {
-                Text(stringResource(R.string.entrada_criar_conta), fontFamily = GoogleSans, fontSize = 20.sp)
-            }
+                Image(
+                    painter = painterResource(R.drawable.img_entrada),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .align(Alignment.TopCenter)
+                        .fillMaxWidth()
+                        .aspectRatio(1f),
+                    contentScale = ContentScale.Crop,
+                )
 
-            Spacer(Modifier.height(16.dp))
-            OutlinedButton(
-                onClick = onLogin,
-                shape = RoundedCornerShape(30.dp),
-                border = BorderStroke(1.dp, CorTexto),
-                colors = ButtonDefaults.outlinedButtonColors(contentColor = CorTexto),
-                modifier = Modifier.fillMaxWidth(0.842f).height(60.dp),
-            ) {
-                Text(stringResource(R.string.entrada_entrar), fontFamily = GoogleSans, fontSize = 20.sp)
-            }
+                Column(
+                    modifier = Modifier
+                        .align(Alignment.BottomCenter)
+                        .fillMaxWidth()
+                        .height(contentHeight - cardTop)
+                        .clip(RoundedCornerShape(topStart = 30.dp, topEnd = 30.dp))
+                        .background(Color.White)
+                        .padding(horizontal = 24.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                ) {
+                    Spacer(Modifier.height(48.dp))
+                    Text(
+                        text = stringResource(R.string.entrada_slogan),
+                        fontFamily = GoogleSans, fontWeight = FontWeight.Bold, fontSize = 26.sp,
+                        color = CorTexto, textAlign = TextAlign.Center,
+                        modifier = Modifier.fillMaxWidth(0.842f),
+                    )
 
-            Spacer(Modifier.height(40.dp))
+                    Spacer(Modifier.height(40.dp))
+                    Button(
+                        onClick = onCadastro,
+                        shape = RoundedCornerShape(30.dp),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = CorAzul, contentColor = Color.White
+                        ),
+                        modifier = Modifier.fillMaxWidth(0.842f).height(60.dp),
+                    ) {
+                        Text(stringResource(R.string.entrada_criar_conta), fontFamily = GoogleSans, fontSize = 20.sp)
+                    }
+
+                    Spacer(Modifier.height(16.dp))
+                    OutlinedButton(
+                        onClick = onLogin,
+                        shape = RoundedCornerShape(30.dp),
+                        border = BorderStroke(1.dp, CorTexto),
+                        colors = ButtonDefaults.outlinedButtonColors(contentColor = CorTexto),
+                        modifier = Modifier.fillMaxWidth(0.842f).height(60.dp),
+                    ) {
+                        Text(stringResource(R.string.entrada_entrar), fontFamily = GoogleSans, fontSize = 20.sp)
+                    }
+                }
+
+                Box(
+                    modifier = Modifier
+                        .align(Alignment.TopCenter)
+                        .fillMaxWidth()
+                        .height(cardTop),
+                    contentAlignment = Alignment.BottomCenter,
+                ) {
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        modifier = Modifier.padding(bottom = 62.dp),
+                    ) {
+                        Image(
+                            painter = painterResource(R.drawable.logo),
+                            contentDescription = null,
+                            modifier = Modifier
+                                .width(logoWidth)
+                                .height(logoHeight),
+                        )
+                        Spacer(Modifier.height(15.dp))
+                        Image(
+                            painter = painterResource(R.drawable.arace),
+                            contentDescription = null,
+                            modifier = Modifier
+                                .width(logotipoWidth)
+                                .height(logotipoHeight),
+                        )
+                    }
+                }
+            }
         }
     }
 }

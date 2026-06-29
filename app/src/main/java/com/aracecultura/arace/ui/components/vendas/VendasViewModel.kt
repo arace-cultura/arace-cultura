@@ -17,6 +17,7 @@ class VendasViewModel : ViewModel() {
     private val db = FirebaseFirestore.getInstance()
     private var registro: ListenerRegistration? = null
     private var produtorObservado: String? = null
+    private val nomesCompradores = mutableMapOf<String, String>()
 
     private val _vendas = MutableStateFlow<List<Envio>>(emptyList())
     val vendas: StateFlow<List<Envio>> = _vendas
@@ -32,10 +33,48 @@ class VendasViewModel : ViewModel() {
                     Log.e("Vendas", "Erro ao observar vendas", erro)
                     return@addSnapshotListener
                 }
-                _vendas.value = snap?.documents
+                val vendas = snap?.documents
                     ?.mapNotNull { it.toObject(Envio::class.java) }
+                    // Cancelados saem do quadro do produtor; ficam só em Meus Pedidos.
+                    ?.filterNot { it.status == StatusEnvio.CANCELADO.name }
+                    ?.map { envio ->
+                        val nome = nomesCompradores[envio.compradorId]
+                        if (envio.nomeComprador.isBlank() && !nome.isNullOrBlank()) {
+                            envio.copy(nomeComprador = nome)
+                        } else {
+                            envio
+                        }
+                    }
                     ?.sortedByDescending { it.criadoEm }
                     ?: emptyList()
+                _vendas.value = vendas
+                buscarNomesFaltantes(vendas)
+            }
+    }
+
+    private fun buscarNomesFaltantes(vendas: List<Envio>) {
+        vendas.asSequence()
+            .filter { it.nomeComprador.isBlank() && it.compradorId.isNotBlank() }
+            .map { it.compradorId }
+            .distinct()
+            .filterNot { nomesCompradores.containsKey(it) }
+            .forEach { compradorId ->
+                db.collection("Usuarios").document(compradorId).get()
+                    .addOnSuccessListener { doc ->
+                        val nome = doc.getString("nome").orEmpty()
+                        if (nome.isBlank()) return@addOnSuccessListener
+                        nomesCompradores[compradorId] = nome
+                        _vendas.value = _vendas.value.map { envio ->
+                            if (envio.compradorId == compradorId && envio.nomeComprador.isBlank()) {
+                                envio.copy(nomeComprador = nome)
+                            } else {
+                                envio
+                            }
+                        }
+                    }
+                    .addOnFailureListener {
+                        Log.e("Vendas", "Erro ao buscar comprador $compradorId", it)
+                    }
             }
     }
 
@@ -45,11 +84,40 @@ class VendasViewModel : ViewModel() {
     /** "confirmar entrega" no cartão de envio: entregue. */
     fun confirmarEntrega(envio: Envio) = atualizarStatus(envio, StatusEnvio.ENTREGUE)
 
-    /** "cancelar envio": remove o registro. */
+    /**
+     * "cancelar envio": devolve ao estoque a quantidade vendida e marca o envio
+     * como CANCELADO (estado terminal). A devolução e a marcação rodam numa
+     * transação para serem atômicas; se o produto não existir mais, apenas marca
+     * o envio. O registro fica para o cliente ver em Meus Pedidos até dispensar.
+     */
     fun cancelarEnvio(envio: Envio) {
         if (envio.id.isBlank()) return
+        val envioRef = db.collection("Envios").document(envio.id)
+
+        if (envio.produtoId.isBlank() || envio.quantidade <= 0) {
+            envioRef.update("status", StatusEnvio.CANCELADO.name)
+                .addOnFailureListener { Log.e("Vendas", "Erro ao cancelar envio ${envio.id}", it) }
+            return
+        }
+
+        val produtoRef = db.collection("Produtos").document(envio.produtoId)
+        db.runTransaction { tx ->
+            val produto = tx.get(produtoRef)
+            if (produto.exists()) {
+                val atual = produto.getLong("quantidade") ?: 0L
+                tx.update(produtoRef, "quantidade", atual + envio.quantidade)
+            }
+            tx.update(envioRef, "status", StatusEnvio.CANCELADO.name)
+        }.addOnFailureListener { Log.e("Vendas", "Erro ao cancelar envio ${envio.id}", it) }
+    }
+
+    /** "x" no cartão entregue: dispensa a venda já concluída, removendo o registro. */
+    fun removerEntregue(envio: Envio) = removerEnvio(envio)
+
+    private fun removerEnvio(envio: Envio) {
+        if (envio.id.isBlank()) return
         db.collection("Envios").document(envio.id).delete()
-            .addOnFailureListener { Log.e("Vendas", "Erro ao cancelar envio ${envio.id}", it) }
+            .addOnFailureListener { Log.e("Vendas", "Erro ao remover envio ${envio.id}", it) }
     }
 
     private fun atualizarStatus(envio: Envio, novo: StatusEnvio) {

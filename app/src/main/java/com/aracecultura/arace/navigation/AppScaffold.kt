@@ -127,8 +127,8 @@ fun AppScaffold(rootNav: NavController, appVm: AppViewModel) {
     val alturaFooterDp = with(LocalDensity.current) { alturaFooterPx.toDp() }
     val espacoFooterOverlay = if (mostrarFooter) alturaFooterDp else 0.dp
 
-    // Ao trocar de modo enquanto estou num perfil, vou para o perfil do novo
-    // modo (antes era o configurarMenuCliente/Produtor do NavegacaoPrincipal).
+    // Ao trocar de modo enquanto estou num perfil, vou para o perfil do novo modo
+
     LaunchedEffect(modo) {
         val atual = innerNav.currentBackStackEntry?.destination ?: return@LaunchedEffect
         if (modo == Modo.PRODUTOR && atual.hasRoute(Rota.PerfilCliente::class)) {
@@ -188,11 +188,20 @@ fun AppScaffold(rootNav: NavController, appVm: AppViewModel) {
                     composable<Rota.Produto> { backStack ->
                         val args = backStack.toRoute<Rota.Produto>()
                         val vm: TelaDoProdutoViewmodel = viewModel()
+                        val carrinhoVm: NewCarrinhoViewModel = viewModel()
                         LaunchedEffect(args.produtoId) { vm.carregarProduto(args.produtoId) }
                         TelaDoProduto(
                             viewModel = vm,
                             onBackClick = { innerNav.popBackStack() },
                             onProdutorClick = { innerNav.navigate(Rota.ProdutorPublico(it)) },
+                            onAdicionarAoCarrinhoClick = { produto ->
+                                carrinhoVm.adicionarProduto(produto, uid)
+                            },
+                            onComprarClick = { produto ->
+                                carrinhoVm.adicionarProduto(produto, uid) {
+                                    innerNav.navigate(Rota.FinalizarCompra)
+                                }
+                            },
                         )
                     }
 
@@ -239,7 +248,6 @@ fun AppScaffold(rootNav: NavController, appVm: AppViewModel) {
                     composable<Rota.TelaVendas> {
                         // Vendas da loja do produtor logado. O produtorId é o
                         // lojaId (produtos nascem com produtorId = resolverLojaId(uid)),
-                        // NÃO o uid — senão a query nunca casa.
                         var lojaId by remember { mutableStateOf<String?>(null) }
                         LaunchedEffect(uid) {
                             lojaId = runCatching { LojaRepository.resolverLojaId(uid) }.getOrNull()

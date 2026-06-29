@@ -37,24 +37,14 @@ fun TodosProdutosSection(
             .fillMaxWidth()
             .padding(16.dp)
     ) {
-        Row(
+        Text(
+            text = stringResource(R.string.todos_produtos),
+            fontSize = 18.sp,
+            fontWeight = FontWeight.Medium,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(bottom = 16.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(
-                text = stringResource(R.string.todos_produtos),
-                fontSize = 18.sp,
-                fontWeight = FontWeight.Medium
-            )
-            Text(
-                text = stringResource(R.string.ordenar_por_nome),
-                fontSize = 12.sp,
-                color = Color.DarkGray
-            )
-        }
+                .padding(bottom = 16.dp)
+        )
 
         if (produtos.isEmpty()) {
             Text(

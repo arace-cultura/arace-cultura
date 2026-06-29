@@ -3,7 +3,6 @@ package com.aracecultura.arace.ui.components.explorar
 import android.net.Uri
 import com.aracecultura.arace.R
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -17,9 +16,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -54,14 +54,10 @@ fun ProdutoNavegar (
                 .weight(1f)
                 .padding(end = 12.dp),
             loading = {
-                CarregamentoContainer(modifier = Modifier.fillMaxSize())
+                CarregamentoContainer(modifier = Modifier.fillMaxSize(), shape = RectangleShape)
             },
             error = {
-                Image(
-                    painter = painterResource(id = R.drawable.img_placeholder),
-                    contentDescription = null,
-                    contentScale = ContentScale.Crop
-                )
+                CarregamentoContainer(modifier = Modifier.fillMaxSize(), shape = RectangleShape)
             }
         )
 
@@ -85,19 +81,22 @@ fun ProdutoNavegar (
             Spacer(modifier = Modifier.height(8.dp))
             Row(verticalAlignment = Alignment.Top){
                 Text(stringResource(R.string.prefixo_real), fontSize = 12.sp)
+                Spacer(modifier = Modifier.width(4.dp))
                 Text(
                     text = "${produto.preco}",
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Bold,
                 )
             }
+            val esgotado = produto.quantidade <= 0
             AppButton(
-                text = stringResource(R.string.adicionar_ao_carrinho),
+                text = if (esgotado) stringResource(R.string.esgotado)
+                else stringResource(R.string.adicionar_ao_carrinho),
                 fontSize = 16.sp,
-                textColor = bgDefault,
-                containerColor = btColor,
-                borderColor = btColor,
-                onClick = { onAddToCartClick() },
+                textColor = if (esgotado) Color.Black else bgDefault,
+                containerColor = if (esgotado) Color.LightGray else btColor,
+                borderColor = if (esgotado) Color.LightGray else btColor,
+                onClick = { if (!esgotado) onAddToCartClick() },
                 modifier = Modifier
                     .padding(top = 8.dp)
                     .width(screenWidth * 0.5f)

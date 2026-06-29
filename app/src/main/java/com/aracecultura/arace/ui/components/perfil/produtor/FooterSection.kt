@@ -19,11 +19,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.aracecultura.arace.R
 import com.aracecultura.arace.data.model.Produtor
+import java.util.Locale
 
 @Composable
 fun FooterSection(
     brandColor: Color,
-    produtor: Produtor
+    produtor: Produtor,
+    avaliacaoMedia: Double?
 ) {
     Column(
         modifier = Modifier
@@ -53,6 +55,10 @@ fun FooterSection(
             value = produtor.telefone.ifBlank { stringResource(R.string.nao_informado) }
         )
         Spacer(modifier = Modifier.height(12.dp))
-        FooterRow(label = stringResource(R.string.avaliacao_media), value = produtor.cnpj.ifBlank { produtor.tipoPessoa })
+        FooterRow(
+            label = stringResource(R.string.avaliacao_media),
+            value = avaliacaoMedia?.let { String.format(Locale.getDefault(), "%.1f", it) }
+                ?: stringResource(R.string.sem_avaliacoes)
+        )
     }
 }

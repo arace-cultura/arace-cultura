@@ -5,13 +5,13 @@ import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.aracecultura.arace.R
+import com.aracecultura.arace.data.ImagemRepository
 import com.aracecultura.arace.data.LojaRepository
 import com.aracecultura.arace.data.model.Produto
-import com.aracecultura.arace.supabase
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
 import com.google.firebase.firestore.firestore
-import io.github.jan.supabase.storage.storage
+import java.util.Locale
 import java.util.UUID
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -39,7 +39,8 @@ class ProdutoViewModel : ViewModel() {
         nome: String,
         categoria: String,
         descricao: String,
-        precoStr: String
+        precoStr: String,
+        quantidadeStr: String
     ) {
         val nomeNormalizado = normalizarNomeProduto(nome)
         if (nomeNormalizado.isEmpty()) {
@@ -62,20 +63,13 @@ class ProdutoViewModel : ViewModel() {
                 val lojaId = LojaRepository.resolverLojaId(userUid)
                     ?: throw Exception("Conta sem loja vinculada.")
 
-                val bucket = supabase.storage.from("imagens")
                 val imageUrls = imageUris.take(3).map { imageUri ->
-                    val imageBytes = context.contentResolver.openInputStream(imageUri)?.readBytes()
-                        ?: throw Exception("Nao foi possivel processar a imagem.")
-                    val caminhoSeguro = "$userUid/${UUID.randomUUID()}.jpg"
-
-                    bucket.upload(path = caminhoSeguro, data = imageBytes) {
-                        upsert = true
-                    }
-
-                    bucket.publicUrl(caminhoSeguro)
+                    ImagemRepository.upload(context, userUid, "produto", imageUri)
                 }
 
                 val precoFormatado = precoStr.replace(",", ".").toDoubleOrNull() ?: 0.0
+                val quantidadeEstoque = quantidadeStr.toIntOrNull()?.coerceAtLeast(0) ?: 0
+                val produtoId = gerarProdutoId()
                 val novoProduto = Produto(
                     nome = nomeNormalizado,
                     categorias = listOf(categoria),
@@ -85,10 +79,11 @@ class ProdutoViewModel : ViewModel() {
                     produtorId = lojaId,
                     avaliacao = 0.0,
                     somaAvaliacoes = 0.0,
-                    quantidadeAvaliacoes = 0
+                    quantidadeAvaliacoes = 0,
+                    quantidade = quantidadeEstoque
                 )
 
-                db.collection("Produtos").add(novoProduto).await()
+                db.collection("Produtos").document(produtoId).set(novoProduto).await()
 
                 _uiState.value = ProdutoUiState.Success("Produto criado com sucesso!")
             } catch (e: Exception) {
@@ -100,5 +95,13 @@ class ProdutoViewModel : ViewModel() {
 
     fun resetState() {
         _uiState.value = ProdutoUiState.Idle
+    }
+
+    private fun gerarProdutoId(): String {
+        val codigo = UUID.randomUUID().toString()
+            .replace("-", "")
+            .take(8)
+            .uppercase(Locale.ROOT)
+        return "PRD-$codigo"
     }
 }

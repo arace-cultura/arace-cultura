@@ -26,26 +26,26 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.graphics.painter.ColorPainter
-import coil.compose.AsyncImage
+import coil.compose.SubcomposeAsyncImage
 import com.aracecultura.arace.R
 import com.aracecultura.arace.data.model.Produto
 import com.aracecultura.arace.ui.components.CarregamentoContainer
 import java.util.Locale
 
 private val CorBotaoControle = Color(0xFFE46D39)
-private val CorPlaceholderImagem = Color(0xFFE9E5E1)
 
 @Composable
 fun ProdutoCardItem(
     produto: Produto?,
     quantidade: Int = 0,
+    esgotado: Boolean = false,
     onIncreaseClick: () -> Unit = {},
     onDecreaseClick: () -> Unit = {},
     onDeleteClick: () -> Unit = {}
@@ -64,16 +64,21 @@ fun ProdutoCardItem(
             .height(130.dp)
     ) {
         Row(modifier = Modifier.fillMaxSize()) {
-            if (produto == null) {
-                CarregamentoContainer(modifier = imagemModifier)
+            val imagem = produto?.imagens?.firstOrNull()?.takeIf { it.isNotBlank() }
+            if (produto == null || imagem == null) {
+                CarregamentoContainer(modifier = imagemModifier, shape = RectangleShape)
             } else {
-                AsyncImage(
-                    model = produto.imagens.firstOrNull(),
+                SubcomposeAsyncImage(
+                    model = imagem,
                     contentDescription = produto.nome,
                     contentScale = ContentScale.Crop,
-                    placeholder = ColorPainter(CorPlaceholderImagem),
-                    error = ColorPainter(CorPlaceholderImagem),
-                    modifier = imagemModifier
+                    modifier = imagemModifier,
+                    loading = {
+                        CarregamentoContainer(modifier = Modifier.fillMaxSize(), shape = RectangleShape)
+                    },
+                    error = {
+                        CarregamentoContainer(modifier = Modifier.fillMaxSize(), shape = RectangleShape)
+                    }
                 )
             }
 
@@ -89,6 +94,7 @@ fun ProdutoCardItem(
                     ConteudoProdutoCardItem(
                         produto = produto,
                         quantidade = quantidade,
+                        esgotado = esgotado,
                         onIncreaseClick = onIncreaseClick,
                         onDecreaseClick = onDecreaseClick,
                         onDeleteClick = onDeleteClick
@@ -115,6 +121,7 @@ private fun EsqueletoProdutoCardItem() {
 private fun ConteudoProdutoCardItem(
     produto: Produto,
     quantidade: Int,
+    esgotado: Boolean,
     onIncreaseClick: () -> Unit,
     onDecreaseClick: () -> Unit,
     onDeleteClick: () -> Unit
@@ -137,16 +144,19 @@ private fun ConteudoProdutoCardItem(
             fontSize = 15.sp,
             color = Color.Black
         )
-        Spacer(modifier = Modifier.height(4.dp))
-        Text(
-            text = stringResource(R.string.carrinho_quantidade),
-            fontSize = 13.sp,
-            color = Color.Gray
-        )
+        if (!esgotado) {
+            Spacer(modifier = Modifier.height(4.dp))
+            Text(
+                text = stringResource(R.string.carrinho_quantidade),
+                fontSize = 13.sp,
+                color = Color.Gray
+            )
+        }
     }
 
     ControlesQuantidade(
         quantidade = quantidade,
+        esgotado = esgotado,
         onIncreaseClick = onIncreaseClick,
         onDecreaseClick = onDecreaseClick,
         onDeleteClick = onDeleteClick
@@ -156,6 +166,7 @@ private fun ConteudoProdutoCardItem(
 @Composable
 private fun ControlesQuantidade(
     quantidade: Int,
+    esgotado: Boolean,
     onIncreaseClick: () -> Unit,
     onDecreaseClick: () -> Unit,
     onDeleteClick: () -> Unit
@@ -164,33 +175,44 @@ private fun ControlesQuantidade(
         modifier = Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        BotaoControle(onClick = onIncreaseClick) {
-            Icon(
-                painter = painterResource(R.drawable.ic_adicionar),
-                contentDescription = stringResource(R.string.cd_aumentar_qtd),
-                tint = Color.White,
-                modifier = Modifier.size(18.dp)
+        if (esgotado) {
+            // Estoque zerado: no lugar dos controles de quantidade, só o aviso.
+            // A lixeira (à direita) é preservada para o cliente poder remover.
+            Text(
+                text = stringResource(R.string.esgotado),
+                fontSize = 18.sp,
+                fontWeight = FontWeight.SemiBold,
+                color = Color.Black
             )
-        }
+        } else {
+            BotaoControle(onClick = onIncreaseClick) {
+                Icon(
+                    painter = painterResource(R.drawable.ic_adicionar),
+                    contentDescription = stringResource(R.string.cd_aumentar_qtd),
+                    tint = Color.White,
+                    modifier = Modifier.size(18.dp)
+                )
+            }
 
-        Spacer(modifier = Modifier.width(16.dp))
+            Spacer(modifier = Modifier.width(16.dp))
 
-        Text(
-            text = quantidade.toString(),
-            fontSize = 18.sp,
-            fontWeight = FontWeight.Medium,
-            color = Color.Black
-        )
-
-        Spacer(modifier = Modifier.width(16.dp))
-
-        BotaoControle(onClick = onDecreaseClick) {
-            Icon(
-                painter = painterResource(R.drawable.ic_menos),
-                contentDescription = stringResource(R.string.cd_diminuir_qtd),
-                tint = Color.White,
-                modifier = Modifier.size(18.dp)
+            Text(
+                text = quantidade.toString(),
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Medium,
+                color = Color.Black
             )
+
+            Spacer(modifier = Modifier.width(16.dp))
+
+            BotaoControle(onClick = onDecreaseClick) {
+                Icon(
+                    painter = painterResource(R.drawable.ic_menos),
+                    contentDescription = stringResource(R.string.cd_diminuir_qtd),
+                    tint = Color.White,
+                    modifier = Modifier.size(18.dp)
+                )
+            }
         }
 
         Spacer(modifier = Modifier.weight(1f))

@@ -51,8 +51,62 @@ fun CheckoutPaymentScreen(
     val clipboard = LocalClipboardManager.current
 
     val uiState by viewModel.uiState.collectAsState()
+    val estoqueInsuficiente by viewModel.estoqueInsuficiente.collectAsState()
 
     LaunchedEffect(uid) { viewModel.carregar(uid) }
+
+    if (estoqueInsuficiente.isNotEmpty()) {
+        AlertDialog(
+            onDismissRequest = { viewModel.limparEstoqueInsuficiente() },
+            containerColor = Color(0xFFFAF7F2),
+            title = {
+                Text(
+                    stringResource(R.string.checkout_estoque_titulo),
+                    color = Color(0xFF2E2B27),
+                    fontWeight = FontWeight.Bold
+                )
+            },
+            text = {
+                Column {
+                    Text(
+                        stringResource(R.string.checkout_estoque_msg),
+                        color = Color(0xFF7A7168)
+                    )
+                    Spacer(Modifier.height(12.dp))
+                    estoqueInsuficiente.forEach { item ->
+                        Text(
+                            text = stringResource(
+                                R.string.checkout_estoque_item,
+                                item.nome, item.solicitado, item.disponivel
+                            ),
+                            color = Color(0xFF2E2B27),
+                            fontWeight = FontWeight.Medium,
+                            modifier = Modifier.padding(top = 4.dp)
+                        )
+                    }
+                }
+            },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        viewModel.limparEstoqueInsuficiente()
+                        navController.popBackStack()
+                    }
+                ) {
+                    Text(
+                        stringResource(R.string.checkout_estoque_voltar),
+                        color = Color(0xFFCE5A14),
+                        fontWeight = FontWeight.SemiBold
+                    )
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { viewModel.limparEstoqueInsuficiente() }) {
+                    Text(stringResource(R.string.checkout_estoque_fechar), color = Color(0xFF7A7168))
+                }
+            }
+        )
+    }
 
     if (uiState is CheckoutUiState.Confirmacao) {
         CheckoutConfirmationScreen(
@@ -180,6 +234,7 @@ private fun LojaCheckoutCard(
     val laranja = Color(0xFFCE5A14)
     val escuro = Color(0xFF2E2B27)
     val cinza = Color(0xFF7A7168)
+    val nomeLoja = loja.nomeLoja.ifBlank { stringResource(R.string.produtor_generico) }
 
     Column(
         modifier = Modifier
@@ -190,10 +245,8 @@ private fun LojaCheckoutCard(
             .padding(20.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        if (loja.nomeLoja.isNotBlank()) {
-            Text(loja.nomeLoja, fontSize = 14.sp, fontWeight = FontWeight.SemiBold, color = cinza)
-            Spacer(Modifier.height(4.dp))
-        }
+        Text(nomeLoja, fontSize = 14.sp, fontWeight = FontWeight.SemiBold, color = cinza)
+        Spacer(Modifier.height(4.dp))
         Text(
             text = stringResource(R.string.checkout_apos_pagar),
             fontSize = 16.sp,

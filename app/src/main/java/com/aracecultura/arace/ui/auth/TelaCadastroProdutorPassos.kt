@@ -41,6 +41,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.aracecultura.arace.R
+import com.aracecultura.arace.data.CampoCadastro
+import com.aracecultura.arace.data.Formatadores
+import com.aracecultura.arace.ui.components.MascaraCep
+import com.aracecultura.arace.ui.components.MascaraCpfCnpj
+import com.aracecultura.arace.ui.components.MascaraTelefone
 import com.aracecultura.arace.data.model.CategoriasProduto
 import com.aracecultura.arace.ui.theme.GoogleSans
 
@@ -121,11 +126,16 @@ fun CadastroProdutorPasso2(
 ) {
     val draft = viewModel.draft.value
     var razao by remember { mutableStateOf(draft.razaoSocial) }
-    var cnpj by remember { mutableStateOf(draft.cnpj) }
-    var telefone by remember { mutableStateOf(draft.telefone) }
+    // Estado guarda só dígitos; a máscara é aplicada na exibição (VisualTransformation).
+    var cnpj by remember { mutableStateOf(Formatadores.digitos(draft.cnpj, 14)) }
+    var telefone by remember { mutableStateOf(Formatadores.digitos(draft.telefone, 11)) }
 
     fun salvar() = viewModel.atualizarDraft {
-        it.copy(razaoSocial = razao, cnpj = cnpj, telefone = telefone)
+        it.copy(
+            razaoSocial = razao,
+            cnpj = Formatadores.cpfOuCnpj(cnpj),
+            telefone = Formatadores.telefone(telefone),
+        )
     }
 
     FundoAuth(comImagem = false) {
@@ -137,13 +147,15 @@ fun CadastroProdutorPasso2(
             modifier = Modifier.fillMaxWidth().padding(bottom = 12.dp),
         )
         CampoArace(
-            valor = cnpj, aoMudar = { cnpj = it },
+            valor = cnpj, aoMudar = { cnpj = Formatadores.digitos(it, 14) },
             rotulo = stringResource(R.string.cad_cnpj_cpf), teclado = KeyboardType.Number,
+            mascara = MascaraCpfCnpj,
             modifier = Modifier.fillMaxWidth().padding(bottom = 12.dp),
         )
         CampoArace(
-            valor = telefone, aoMudar = { telefone = it },
+            valor = telefone, aoMudar = { telefone = Formatadores.digitos(it, 11) },
             rotulo = stringResource(R.string.cad_numero_telefone), teclado = KeyboardType.Phone,
+            mascara = MascaraTelefone,
             modifier = Modifier.fillMaxWidth().padding(bottom = 32.dp),
         )
 
@@ -166,15 +178,16 @@ fun CadastroProdutorPasso3(
     val context = LocalContext.current
     val draft = viewModel.draft.value
 
-    var cep by remember { mutableStateOf(draft.cep) }
+    var cep by remember { mutableStateOf(Formatadores.digitos(draft.cep, 8)) }
     var endereco by remember { mutableStateOf(draft.endereco) }
     var tipoArt by remember { mutableStateOf(draft.tipoArtesanato) }
     var categoria by remember { mutableStateOf(draft.categoriaProduto) }
     var historia by remember { mutableStateOf(draft.historia) }
     var chavePix by remember { mutableStateOf(draft.chavePix) }
     var senhaLoja by remember { mutableStateOf(viewModel.senhaLoja.value) }
-    var erroSenha by remember { mutableStateOf(false) }
     var categoriaAberta by remember { mutableStateOf(false) }
+    // Campos reprovados na validação final; quando não vazio, abre o pop-up.
+    var camposInvalidos by remember { mutableStateOf<List<CampoCadastro>>(emptyList()) }
 
     // espelhos locais das imagens (os campos no ViewModel são vars simples)
     var bannerUri by remember { mutableStateOf(viewModel.bannerUri) }
@@ -196,31 +209,42 @@ fun CadastroProdutorPasso3(
     fun salvar() {
         viewModel.atualizarDraft {
             it.copy(
-                cep = cep, endereco = endereco, tipoArtesanato = tipoArt,
+                cep = Formatadores.cep(cep), endereco = endereco, tipoArtesanato = tipoArt,
                 categoriaProduto = categoria, historia = historia, chavePix = chavePix.trim(),
             )
         }
         viewModel.atualizarSenha(senhaLoja)
     }
 
-    // Reage ao resultado do salvamento disparado por salvarProdutor()
+    // Reage ao resultado do salvamento disparado por validarECadastrar()
     LaunchedEffect(Unit) {
         viewModel.resultado.collect { resultado ->
             when (resultado) {
                 is ResultadoCadastro.Sucesso -> onConcluir()
-                is ResultadoCadastro.Erro ->
+                is ResultadoCadastro.DadosInvalidos -> {
+                    camposInvalidos = resultado.campos
+                    viewModel.consumirResultado()
+                }
+                is ResultadoCadastro.Erro -> {
                     Toast.makeText(context, resultado.mensagem, Toast.LENGTH_LONG).show()
+                    viewModel.consumirResultado()
+                }
                 else -> Unit
             }
         }
+    }
+
+    if (camposInvalidos.isNotEmpty()) {
+        DialogoDadosInvalidos(campos = camposInvalidos, onDismiss = { camposInvalidos = emptyList() })
     }
 
     FundoAuth(comImagem = false) {
         TituloPasso(stringResource(R.string.cad_finalizar_titulo))
 
         CampoArace(
-            valor = cep, aoMudar = { cep = it },
+            valor = cep, aoMudar = { cep = Formatadores.digitos(it, 8) },
             rotulo = stringResource(R.string.cad_cep), teclado = KeyboardType.Number,
+            mascara = MascaraCep,
             modifier = Modifier.fillMaxWidth().padding(bottom = 12.dp),
         )
         CampoArace(
@@ -277,10 +301,9 @@ fun CadastroProdutorPasso3(
             modifier = Modifier.fillMaxWidth().padding(bottom = 12.dp),
         )
         CampoArace(
-            valor = senhaLoja, aoMudar = { senhaLoja = it; erroSenha = false },
+            valor = senhaLoja, aoMudar = { senhaLoja = it },
             rotulo = stringResource(R.string.senha_loja), senha = true,
-            suporte = if (erroSenha) stringResource(R.string.erro_senha_loja_curta)
-            else stringResource(R.string.cad_senha_loja_helper),
+            suporte = stringResource(R.string.senha_forte_helper),
             modifier = Modifier.fillMaxWidth().padding(bottom = 12.dp),
         )
 
@@ -343,12 +366,8 @@ fun CadastroProdutorPasso3(
         BotaoArace(
             texto = stringResource(R.string.cad_cadastrar_produtor),
             onClick = {
-                if (senhaLoja.length < 4) {
-                    erroSenha = true
-                    return@BotaoArace
-                }
                 salvar()
-                viewModel.salvarProdutor(context)
+                viewModel.validarECadastrar(context)
             },
         )
         LinkVoltar(onVoltar = { salvar(); onVoltar() })

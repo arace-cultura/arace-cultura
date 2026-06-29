@@ -2,6 +2,8 @@ package com.aracecultura.arace.ui.components.perfil.produtor
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.aracecultura.arace.data.CAMPO_PRODUTOR_ID
+import com.aracecultura.arace.data.COLECAO_DESTAQUES
 import com.aracecultura.arace.data.LojaRepository
 import com.aracecultura.arace.data.model.Produto
 import com.aracecultura.arace.data.model.Produtor
@@ -23,6 +25,7 @@ import kotlinx.coroutines.withContext
 data class PerfilProdutorUiState(
     val produtor: Produtor? = null,
     val produtos: List<Produto> = emptyList(),
+    val produtosDestaque: List<Produto> = emptyList(),
     val isLoading: Boolean = false,
     val errorMessage: String? = null
 )
@@ -72,10 +75,15 @@ class PerfilProdutorViewModel : ViewModel() {
                 return@launch
             }
 
-            combine(produtorFlow(lojaId), produtosFlow(lojaId)) { produtor, produtos ->
+            combine(
+                produtorFlow(lojaId),
+                produtosFlow(lojaId),
+                destaquesFlow(lojaId).catch { emit(emptySet()) }
+            ) { produtor, produtos, idsEmDestaque ->
                 PerfilProdutorUiState(
                     produtor = produtor,
                     produtos = produtos,
+                    produtosDestaque = produtos.filter { it.id in idsEmDestaque },
                     errorMessage = if (produtor == null) "Cadastro de produtor nao encontrado" else null
                 )
             }
@@ -112,6 +120,19 @@ class PerfilProdutorViewModel : ViewModel() {
                     doc.toObject(Produto::class.java)?.copy(id = doc.id)
                 } ?: emptyList()
                 trySend(lista)
+            }
+        awaitClose { registro.remove() }
+    }
+
+    private fun destaquesFlow(lojaId: String): Flow<Set<String>> = callbackFlow {
+        val registro = db.collection(COLECAO_DESTAQUES)
+            .whereEqualTo(CAMPO_PRODUTOR_ID, lojaId)
+            .addSnapshotListener(Dispatchers.IO.asExecutor()) { snapshot, erro ->
+                if (erro != null) {
+                    close(erro)
+                    return@addSnapshotListener
+                }
+                trySend(snapshot?.documents?.map { it.id }?.toSet() ?: emptySet())
             }
         awaitClose { registro.remove() }
     }

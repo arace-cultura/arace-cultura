@@ -27,7 +27,7 @@
         <item quantity="other">%1$d fotos selecionadas</item>
     </plurals>
     <string name="entrar_loja_existente">Entrar em loja existente</string>
-    <string name="prefixo_real">R$ </string>
+    <string name="prefixo_real">R$</string>
     <string name="preco_reais">R$%1$s</string>
 
     <!-- Navegação -->
@@ -47,7 +47,26 @@
     <string name="vendas_cancelar_envio">cancelar envio</string>
     <string name="vendas_confirmar_entrega">confirmar entrega</string>
     <string name="vendas_entregue">Entregue</string>
+    <string name="cd_remover_venda">Remover venda</string>
+    <string name="vendas_produto_id">Produto (%1$s)</string>
     <string name="vendas_moeda_real">R$</string>
+    <string name="vendas_contatar_prefixo">Para contatar</string>
+    <string name="vendas_contatar_cliente">Cliente</string>
+    <string name="vendas_contatar_sufixo">, ligue para:</string>
+    <string name="vendas_telefone_indisponivel">telefone não informado</string>
+
+    <!-- Meus pedidos (visão do cliente, pareada com a Tela de Vendas do produtor) -->
+    <string name="meus_pedidos">Meus pedidos</string>
+    <string name="meus_pedidos_titulo">Meus Pedidos</string>
+    <string name="pedido_de_prefixo">de </string>
+    <string name="pedido_estado_prefixo">estado atual: </string>
+    <string name="pedido_estado_pagamento">confirmando pagamento</string>
+    <string name="pedido_estado_envio">em envio</string>
+    <string name="pedido_estado_entregue">entregue</string>
+    <string name="pedido_estado_cancelado">cancelado</string>
+    <string name="pedido_qtd">qtd</string>
+    <string name="pedido_loja_desconhecida">Loja</string>
+    <string name="cd_dispensar_pedido">Dispensar pedido entregue</string>
 
     <!-- Content descriptions -->
     <string name="cd_produto">Produto</string>
@@ -144,10 +163,12 @@
 
     <!-- Criar produto -->
     <string name="criar_escolher_imagem">escolher\nimagem</string>
+    <string name="criar_adicionar_produto_titulo">Adicionar Produto</string>
     <string name="criar_imagens_adicionadas">%1$d de 3 imagens adicionadas</string>
     <string name="criar_placeholder_categoria">Categoria</string>
     <string name="criar_placeholder_descricao">Descrição</string>
     <string name="criar_placeholder_preco">Preço (R$)</string>
+    <string name="criar_placeholder_quantidade">Quantidade em estoque</string>
     <string name="criar_adicionar">Adicionar</string>
     <string name="criar_sucesso">Produto criado!</string>
     <string name="ordenar_preco_menor">Menor preço</string>
@@ -165,8 +186,16 @@
     <string name="excluir_produto_msg">Essa ação remove o produto da loja e não poderá ser desfeita.</string>
     <string name="sim_excluir_produto">Sim, excluir</string>
     <string name="salvar_edicoes">Salvar edições</string>
+    <string name="editar_estoque_label">Estoque</string>
     <string name="cd_recolher">Recolher</string>
     <string name="cd_expandir">Expandir</string>
+
+    <!-- Destaques (gestão pelo produtor) -->
+    <string name="destaques_titulo">Destaques</string>
+    <string name="destaques_valor">Valor: %1$s</string>
+    <string name="destaques_destacar">destacar</string>
+    <string name="destaques_remover">remover</string>
+    <string name="meus_destaques_botao">meus destaques</string>
 
     <!-- Meus dados (rótulos) -->
     <string name="e_mail">E-mail</string>
@@ -178,15 +207,20 @@
     <string name="mdados_telefone">Telefone</string>
     <string name="mdados_artesanato">Artesanato</string>
     <string name="mdados_categoria">Categoria</string>
+    <string name="dado_vazio">—</string>
 
     <!-- Explorar / Navegar -->
     <string name="adicionar_ao_carrinho">Adicionar ao carrinho</string>
+    <string name="esgotado">Esgotado</string>
+    <string name="comprar">Comprar</string>
     <string name="nenhum_produto_encontrado">Nenhum produto encontrado.</string>
     <string name="ordenar_por">Ordenar por</string>
     <string name="categorias_label">Categorias:</string>
     <string name="ordenar_nome">Nome</string>
     <string name="ordenar_preco">Preço</string>
     <string name="explorar_titulo">Descubra</string>
+    <string name="home_categorias">Categorias</string>
+    <string name="home_produtos_destaque">Produtos em destaque</string>
     <string name="abrir_busca">Buscar produtos</string>
     <string name="buscar_produtos">Buscar produtos...</string>
     <string name="fechar_busca">Fechar busca</string>
@@ -201,20 +235,27 @@
     <string name="nossos_produtos_destaque">Nossos produtos em destaque</string>
     <string name="nenhum_produto_destaque">Nenhum produto em destaque</string>
     <string name="todos_produtos">Todos produtos</string>
-    <string name="ordenar_por_nome">Ordenar por: nome</string>
     <string name="nenhum_produto_cadastrado">Nenhum produto cadastrado ainda.</string>
     <string name="informacoes">Informações</string>
     <string name="endereco">Endereço</string>
     <string name="telefone">Telefone</string>
     <string name="avaliacao_media">Avaliação média</string>
+    <string name="sem_avaliacoes">Sem avaliações</string>
     <string name="nao_informado">Não informado.</string>
     <string name="este_produtor">Este produtor</string>
+    <string name="produtor_generico">Produtor</string>
     <string name="historia_nao_cadastrada">História ainda não cadastrada.</string>
     <string name="ler_mais">Ler mais</string>
     <string name="ler_menos">Ler menos</string>
     <string name="avaliar">Avaliar</string>
     <string name="avaliar_produto">Avaliar produto</string>
     <string name="avaliar_instrucao">Clique em um dos números abaixo</string>
+    <string name="produto_parcelamento">Ou 4x%1$s</string>
+    <string name="produto_em_destaque">Em destaque</string>
+    <string name="produto_avaliacoes">avaliações</string>
+    <string name="produto_especificacoes">Especificações</string>
+    <string name="produto_categoria_prefixo">Categoria:</string>
+    <string name="produto_descricao_prefixo">Descrição:</string>
 
     <!-- Visualização (cliente/produtor) -->
     <string name="visualizacao">Visualização</string>
@@ -239,8 +280,29 @@
     <string name="erro_dados_login">Há erro nos dados.</string>
     <string name="erro_falha_login">Falha no login, tente novamente.</string>
     <string name="erro_senhas_diferentes">As senhas não coincidem.</string>
-    <string name="erro_senha_loja_curta">A senha da loja deve ter pelo menos 4 caracteres</string>
+    <string name="erro_senha_loja_curta">A senha da loja deve ter no mínimo 8 caracteres, com maiúscula, minúscula, número e símbolo</string>
     <string name="erro_salvar_avaliacao">Não foi possível salvar a avaliação.</string>
+    <string name="erro_cep_rede">Não foi possível verificar o CEP. Confira sua conexão e tente novamente.</string>
+
+    <!-- Validação de cadastro: pop-up de dados inválidos e rótulos de campo -->
+    <string name="dados_invalidos_titulo">Dados inválidos</string>
+    <string name="dados_invalidos_msg">Corrija os campos abaixo e tente novamente:</string>
+    <string name="dados_invalidos_ok">Entendi</string>
+    <string name="senha_forte_helper">Mínimo 8 caracteres, com maiúscula, minúscula, número e símbolo.</string>
+    <string name="campo_nome">Nome completo</string>
+    <string name="campo_nome_loja">Nome da loja</string>
+    <string name="campo_razao_social">Razão social</string>
+    <string name="campo_email">E-mail</string>
+    <string name="campo_telefone">Telefone</string>
+    <string name="campo_cpf">CPF</string>
+    <string name="campo_cnpj">CNPJ</string>
+    <string name="campo_cep">CEP</string>
+    <string name="campo_endereco">Endereço</string>
+    <string name="campo_tipo_artesanato">Tipo de artesanato</string>
+    <string name="campo_categoria">Categoria do produto</string>
+    <string name="campo_chave_pix">Chave Pix</string>
+    <string name="campo_senha">Senha</string>
+    <string name="campo_confirmar_senha">Confirmação de senha</string>
 
     <!-- Checkout / Finalizar compra -->
     <string name="checkout_titulo">Finalizar Compra</string>
@@ -257,6 +319,11 @@
     <string name="checkout_cancelar_titulo">Cancelar pedido?</string>
     <string name="checkout_cancelar_msg">Tem certeza que deseja cancelar esta compra?</string>
     <string name="checkout_sim_cancelar">Sim, cancelar</string>
+    <string name="checkout_estoque_titulo">Estoque insuficiente</string>
+    <string name="checkout_estoque_msg">O estoque mudou enquanto você comprava e ficou abaixo do que você quer levar. Reduza a quantidade no carrinho para o disponível e tente de novo:</string>
+    <string name="checkout_estoque_item">%1$s: você quer %2$d, há %3$d em estoque</string>
+    <string name="checkout_estoque_voltar">Voltar ao carrinho</string>
+    <string name="checkout_estoque_fechar">Fechar</string>
     <string name="checkout_confirmacao">Confirmação</string>
     <string name="checkout_obrigado">Agradecemos a aquisição!</string>
     <string name="checkout_continue_comprando">Continue comprando</string>

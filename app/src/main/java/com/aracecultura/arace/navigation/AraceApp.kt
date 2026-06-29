@@ -93,7 +93,7 @@ fun AraceApp() {
             }
 
             composable<Rota.CadastroProdutor> {
-                val vm: CadastroProdutorViewModel = viewModel()        // UMA instância pro fluxo inteiro
+                val vm: CadastroProdutorViewModel = viewModel()
                 val passo by vm.passo.collectAsStateWithLifecycle()
 
                 // Voltar do sistema (gesto/botão): recua o passo; no primeiro, sai da rota

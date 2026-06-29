@@ -59,16 +59,19 @@ class EditarProdutosViewModel : ViewModel() {
         nome: String,
         descricao: String,
         precoStr: String,
+        quantidadeStr: String,
         novaImagemUri: Uri?
     ) {
         val uid = FirebaseAuth.getInstance().currentUser?.uid ?: return
         viewModelScope.launch {
             try {
                 val preco = precoStr.replace(",", ".").toDoubleOrNull() ?: 0.0
+                val quantidade = quantidadeStr.toIntOrNull()?.coerceAtLeast(0) ?: 0
                 val updates = mutableMapOf<String, Any>(
                     "nome" to nome,
                     "descricao" to descricao,
-                    "preco" to preco
+                    "preco" to preco,
+                    "quantidade" to quantidade
                 )
                 var novaUrl: String? = null
                 if (novaImagemUri != null) {
@@ -86,6 +89,7 @@ class EditarProdutosViewModel : ViewModel() {
                             nome = nome,
                             descricao = descricao,
                             preco = preco,
+                            quantidade = quantidade,
                             imagens = if (novaUrl != null) listOf(novaUrl) else p.imagens
                         )
                     } else p

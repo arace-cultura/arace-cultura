@@ -31,6 +31,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.aracecultura.arace.R
+import com.aracecultura.arace.navigation.LocalAppFooterHeight
 import com.aracecultura.arace.ui.components.AppButton
 import com.aracecultura.arace.ui.theme.bgDefault
 import com.aracecultura.arace.ui.theme.btColor
@@ -45,6 +46,8 @@ fun MeusDados(
     val usuario by viewModel.usuario.collectAsState()
     val produtor by viewModel.produtor.collectAsState()
     val scrollState = rememberScrollState()
+    val alturaFooter = LocalAppFooterHeight.current
+    val dadoVazio = stringResource(R.string.dado_vazio)
 
     LaunchedEffect(uid) {
         if (uid.isNotBlank()) {
@@ -98,24 +101,25 @@ fun MeusDados(
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             SecaoDados(titulo = stringResource(R.string.mdados_conta)) {
-                InfoRow(label = stringResource(R.string.nome), value = usuario.nome.ifBlank { "—" })
-                InfoRow(label = stringResource(R.string.e_mail), value = usuario.email.ifBlank { "—" })
+                InfoRow(label = stringResource(R.string.nome), value = usuario.nome.ifBlank { dadoVazio })
+                InfoRow(label = stringResource(R.string.e_mail), value = usuario.email.ifBlank { dadoVazio })
+                InfoRow(label = stringResource(R.string.telefone), value = usuario.telefone.ifBlank { dadoVazio })
             }
 
             produtor?.let { dados ->
                 SecaoDados(titulo = stringResource(R.string.mdados_cadastro_produtor)) {
-                    InfoRow(label = stringResource(R.string.mdados_loja), value = dados.nomeLoja.ifBlank { "—" })
+                    InfoRow(label = stringResource(R.string.mdados_loja), value = dados.nomeLoja.ifBlank { dadoVazio })
                     if (dados.razaoSocial.isNotBlank()) {
                         InfoRow(label = stringResource(R.string.mdados_razao_social), value = dados.razaoSocial)
                     }
                     if (dados.cnpj.isNotBlank()) {
                         InfoRow(label = stringResource(R.string.mdados_cnpj), value = dados.cnpj)
                     }
-                    InfoRow(label = stringResource(R.string.mdados_telefone), value = dados.telefone.ifBlank { "—" })
-                    InfoRow(label = stringResource(R.string.cad_cep), value = dados.cep.ifBlank { "—" })
-                    InfoRow(label = stringResource(R.string.cad_endereco), value = dados.endereco.ifBlank { "—" })
-                    InfoRow(label = stringResource(R.string.mdados_artesanato), value = dados.tipoArtesanato.ifBlank { "—" })
-                    InfoRow(label = stringResource(R.string.mdados_categoria), value = dados.categoriaProduto.ifBlank { "—" })
+                    InfoRow(label = stringResource(R.string.mdados_telefone), value = dados.telefone.ifBlank { dadoVazio })
+                    InfoRow(label = stringResource(R.string.cad_cep), value = dados.cep.ifBlank { dadoVazio })
+                    InfoRow(label = stringResource(R.string.cad_endereco), value = dados.endereco.ifBlank { dadoVazio })
+                    InfoRow(label = stringResource(R.string.mdados_artesanato), value = dados.tipoArtesanato.ifBlank { dadoVazio })
+                    InfoRow(label = stringResource(R.string.mdados_categoria), value = dados.categoriaProduto.ifBlank { dadoVazio })
                 }
             }
 
@@ -128,7 +132,7 @@ fun MeusDados(
                     .height(50.dp)
             )
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(alturaFooter + 16.dp))
         }
     }
 }

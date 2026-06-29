@@ -39,6 +39,7 @@ import coil.compose.AsyncImage
 import com.aracecultura.arace.R
 import com.aracecultura.arace.data.model.CategoriasProduto
 import com.aracecultura.arace.ui.components.AppButton
+import com.aracecultura.arace.ui.theme.GoogleSans
 import com.aracecultura.arace.ui.theme.bgDefault
 import com.aracecultura.arace.ui.theme.btColor
 import kotlinx.coroutines.launch
@@ -55,6 +56,7 @@ fun CriarProduto(
     var textName by remember { mutableStateOf("") }
     var textDesc1 by remember { mutableStateOf("") }
     var textPreco by remember { mutableStateOf("") }
+    var textQuantidade by remember { mutableStateOf("") }
 
     val categorias = CategoriasProduto.TODAS
     var expandedCategoria by remember { mutableStateOf(false) }
@@ -98,6 +100,7 @@ fun CriarProduto(
                 textName = ""
                 textDesc1 = ""
                 textPreco = ""
+                textQuantidade = ""
                 selectedCategoria = ""
             }
             is ProdutoUiState.Error -> {
@@ -133,15 +136,20 @@ fun CriarProduto(
                     overscrollEffect = null,
                 )
         ) {
-            Text(
-                "Adicionar Produto",
-                fontSize = 36.sp,
-                textAlign = TextAlign.Center,
+            Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(bgDefault)
-                    .padding(vertical = 10.dp)
-            )
+                    .height(64.dp)
+                    .background(bgDefault),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = stringResource(R.string.criar_adicionar_produto_titulo),
+                    fontFamily = GoogleSans,
+                    fontSize = 36.sp,
+                    textAlign = TextAlign.Center
+                )
+            }
             Spacer(Modifier.height(20.dp))
 
             Column(
@@ -219,7 +227,7 @@ fun CriarProduto(
                         shadowElevation = 6.dp,
                         modifier = Modifier
                             .align(Alignment.CenterStart)
-                            .padding(start = 24.dp)
+                            .padding(start = 5.dp)
                             .size(58.dp)
                             .clickable {
                                 val previous = if (selectedImageIndex == 0) {
@@ -250,7 +258,7 @@ fun CriarProduto(
                         shadowElevation = 6.dp,
                         modifier = Modifier
                             .align(Alignment.CenterEnd)
-                            .padding(end = 24.dp)
+                            .padding(end = 5.dp)
                             .size(58.dp)
                             .clickable {
                                 val next = (selectedImageIndex + 1) % selectedImageUris.size
@@ -396,6 +404,26 @@ fun CriarProduto(
 
                 Spacer(Modifier.height(20.dp))
 
+                FixedTextField(
+                    text = textQuantidade,
+                    onTextChange = { nova ->
+                        if (nova.isEmpty() || nova.matches(Regex("^\\d+\$"))) {
+                            textQuantidade = nova
+                        }
+                    },
+                    placeholder = { Text(stringResource(R.string.criar_placeholder_quantidade), color = btColor) },
+                    focusedContainerColor = bgDefault,
+                    unfocusedContainerColor = bgDefault,
+                    focusedBorderColor = btColor,
+                    unfocusedBorderColor = btColor,
+                    focusedTextColor = Color.Black,
+                    unfocusedTextColor = Color.Black,
+                    modifier = Modifier.fillMaxWidth(0.83f),
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                )
+
+                Spacer(Modifier.height(20.dp))
+
                 if (uiState is ProdutoUiState.Loading) {
                     CircularProgressIndicator(color = btColor)
                 } else {
@@ -410,7 +438,8 @@ fun CriarProduto(
                                 imagensSelecionadas.isEmpty() ||
                                 normalizarNomeProduto(textName).isEmpty() ||
                                 selectedCategoria.isEmpty() ||
-                                textPreco.isEmpty()
+                                textPreco.isEmpty() ||
+                                textQuantidade.isEmpty()
                             ) {
                                 Toast.makeText(context, mensagemCamposObrigatorios, Toast.LENGTH_SHORT).show()
                             } else {
@@ -420,7 +449,8 @@ fun CriarProduto(
                                     nome = textName,
                                     categoria = selectedCategoria,
                                     descricao = textDesc1,
-                                    precoStr = textPreco
+                                    precoStr = textPreco,
+                                    quantidadeStr = textQuantidade
                                 )
                             }
                         },

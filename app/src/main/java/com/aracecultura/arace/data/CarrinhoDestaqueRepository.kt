@@ -7,17 +7,9 @@ import com.google.firebase.firestore.SetOptions
 import kotlinx.coroutines.tasks.await
 
 /**
- * Destaque mantido FORA do Produto. Uma coleção própria ("CarrinhosContador")
+ * Destaque mantido fora do Produto. Uma coleção própria ("CarrinhosContador")
  * guarda, por produto, os ids dos usuários que o têm no carrinho agora. "Em
- * destaque" é derivado na leitura (≥ 5 carrinhos) — nunca escrito no produto.
- *
- * Por que externo:
- *  - o comprador não precisa de permissão de escrita no produto do vendedor;
- *  - o doc do produto (conteúdo + muito lido) não vira ponto quente de escrita;
- *  - destaque é estado de mercado derivado, não um campo que o produtor edita.
- *
- * arrayUnion/arrayRemove são idempotentes: marcar/desmarcar o mesmo uid não
- * duplica nem exige checar "primeira vez" — daí não precisar de transação.
+ * destaque" é derivado na leitura (≥ 5 carrinhos)
  */
 const val LIMIAR_DESTAQUE_CARRINHOS = 5
 const val COLECAO_CONTADOR_CARRINHOS = "CarrinhosContador"
@@ -49,7 +41,7 @@ suspend fun removerProdutoDeCarrinho(
 
 /** Quantos carrinhos distintos contêm o produto (lido do doc do contador). */
 fun DocumentSnapshot.carrinhosCount(): Int =
-    (get(CAMPO_CARRINHOS_IDS) as? List<*>)?.size ?: 0
+    (get(CAMPO_CARRINHOS_IDS) as? List<*>)?.size ?: 0 // O asterisco ignora o tipo.
 
 /** Deriva o destaque a partir do doc do contador. */
 fun DocumentSnapshot.estaEmDestaque(): Boolean =

@@ -15,7 +15,6 @@ data class Produto(
     val avaliacao: Double = 0.0,
     val somaAvaliacoes: Double = 0.0,
     val quantidadeAvaliacoes: Int = 0,
-    val preco: Double = 0.0
-    // "Em destaque" NÃO mora aqui: é derivado da coleção externa
-    // CarrinhosContador (ver CarrinhoDestaqueRepository).
+    val preco: Double = 0.0,
+    val quantidade: Int = 0
 )

@@ -24,6 +24,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -48,6 +49,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -127,8 +129,8 @@ fun TelaEditarProdutos(
                     Box(modifier = Modifier.padding(bottom = 24.dp)) {
                         ProdutoEditavelCard(
                             produto = produto,
-                            onSalvar = { nome, descricao, preco, imagemUri ->
-                                viewModel.salvar(context, produto.id, nome, descricao, preco, imagemUri)
+                            onSalvar = { nome, descricao, preco, quantidade, imagemUri ->
+                                viewModel.salvar(context, produto.id, nome, descricao, preco, quantidade, imagemUri)
                             },
                             onExcluir = { viewModel.excluir(produto.id) }
                         )
@@ -142,7 +144,7 @@ fun TelaEditarProdutos(
 @Composable
 private fun ProdutoEditavelCard(
     produto: Produto,
-    onSalvar: (nome: String, descricao: String, preco: String, imagemUri: Uri?) -> Unit,
+    onSalvar: (nome: String, descricao: String, preco: String, quantidade: String, imagemUri: Uri?) -> Unit,
     onExcluir: () -> Unit
 ) {
     var nome by remember(produto.id) { mutableStateOf(produto.nome) }
@@ -150,6 +152,7 @@ private fun ProdutoEditavelCard(
     var preco by remember(produto.id) {
         mutableStateOf(String.format(Locale("pt", "BR"), "%.2f", produto.preco))
     }
+    var quantidade by remember(produto.id) { mutableStateOf(produto.quantidade.toString()) }
     var imagemUri by remember(produto.id) { mutableStateOf<Uri?>(null) }
     var descricaoExpandida by remember(produto.id) { mutableStateOf(false) }
     var showExcluirDialog by remember(produto.id) { mutableStateOf(false) }
@@ -270,7 +273,7 @@ private fun ProdutoEditavelCard(
             // Salvar edições (preenchido laranja)
             AppButton(
                 text = stringResource(R.string.salvar_edicoes),
-                onClick = { onSalvar(nome, descricao, preco, imagemUri) },
+                onClick = { onSalvar(nome, descricao, preco, quantidade, imagemUri) },
                 textColor = Color.White,
                 containerColor = Laranja,
                 shape = RoundedCornerShape(50),
@@ -316,7 +319,26 @@ private fun ProdutoEditavelCard(
                 singleLine = true,
                 shape = RoundedCornerShape(12.dp),
                 colors = cores,
-                prefix = { Text(stringResource(R.string.prefixo_real)) },
+                prefix = {
+                    Row {
+                        Text(stringResource(R.string.prefixo_real))
+                        Spacer(Modifier.width(4.dp))
+                    }
+                },
+                modifier = Modifier.fillMaxWidth()
+            )
+            OutlinedTextField(
+                value = quantidade,
+                onValueChange = { nova ->
+                    if (nova.isEmpty() || nova.matches(Regex("^\\d+\$"))) {
+                        quantidade = nova
+                    }
+                },
+                singleLine = true,
+                label = { Text(stringResource(R.string.editar_estoque_label)) },
+                shape = RoundedCornerShape(12.dp),
+                colors = cores,
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                 modifier = Modifier.fillMaxWidth()
             )
         }
