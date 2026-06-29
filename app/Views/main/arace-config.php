@@ -78,32 +78,7 @@ $genero = (string) ($usuario['genero'] ?? '');
 
   <div class="config-layout">
 
-    <!-- NAV LATERAL -->
-    <nav class="config-nav">
-      <button class="config-nav-item active" onclick="trocarAba(this,'perfil')">
-        <i data-lucide="user"></i> Perfil
-      </button>
-      <button class="config-nav-item" onclick="trocarAba(this,'conta')">
-        <i data-lucide="shield"></i> Conta & Segurança
-      </button>
-      <button class="config-nav-item" onclick="trocarAba(this,'notificacoes')">
-        <i data-lucide="bell"></i> Notificações
-      </button>
-      <button class="config-nav-item" onclick="trocarAba(this,'pagamento')">
-        <i data-lucide="credit-card"></i> Pagamento
-      </button>
-      <button class="config-nav-item" onclick="trocarAba(this,'enderecos')">
-        <i data-lucide="map-pin"></i> Endereços
-      </button>
-      <div class="config-nav-divider"></div>
-      <button class="config-nav-item" onclick="trocarAba(this,'aparencia')">
-        <i data-lucide="palette"></i> Aparência
-      </button>
-      <button class="config-nav-item" onclick="trocarAba(this,'privacidade')">
-        <i data-lucide="lock"></i> Privacidade
-      </button>
-    </nav>
-
+    
     <!-- CONTEÚDO -->
     <div>
 
