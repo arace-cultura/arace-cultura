@@ -12,7 +12,7 @@ $genero = (string) ($usuario['genero'] ?? '');
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Aracê — Configurações</title>
+  <title>AracÃª â€” ConfiguraÃ§Ãµes</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex&family=Playfair+Display:wght@700&display=swap" rel="stylesheet" />
@@ -24,7 +24,7 @@ $genero = (string) ($usuario['genero'] ?? '');
 
 <!-- HEADER -->
   <header>
-    <a href="<?= url_to('home') ?>" class="logo">aracê</a>
+    <a href="<?= url_to('home') ?>" class="logo">aracÃª</a>
     <div class="header-right">
     <button class="cart-btn" type="button" onclick="window.location.href='<?= url_to('main_arace_carrinho') ?>'">
         <i data-lucide="shopping-cart"></i>
@@ -52,10 +52,10 @@ $genero = (string) ($usuario['genero'] ?? '');
       <i data-lucide="shopping-cart"></i> Carrinho
     </a>
     <a class="nav-item" href="<?= url_to('user_arace_notificacao') ?>">
-      <i data-lucide="bell"></i> Notificações
+      <i data-lucide="bell"></i> NotificaÃ§Ãµes
     </a>
     <a class="nav-item" href="<?= url_to('main_arace_config') ?>">
-      <i data-lucide="settings"></i> Configurações
+      <i data-lucide="settings"></i> ConfiguraÃ§Ãµes
     </a>
     <a class="nav-item" href="<?= url_to('user_arace_perfil') ?>">
       <i data-lucide="user"></i> Perfil
@@ -73,8 +73,8 @@ $genero = (string) ($usuario['genero'] ?? '');
 <main>
   <div class="config-header">
     <div>
-      <h1>Configurações</h1>
-      <p>Gerencie suas preferências e dados da conta</p>
+      <h1>ConfiguraÃ§Ãµes</h1>
+      <p>Gerencie suas preferÃªncias e dados da conta</p>
     </div>
   </div>
 
@@ -86,32 +86,32 @@ $genero = (string) ($usuario['genero'] ?? '');
         <i data-lucide="user"></i> Perfil
       </button>
       <button class="config-nav-item" onclick="trocarAba(this,'conta')">
-        <i data-lucide="shield"></i> Conta & Segurança
+        <i data-lucide="shield"></i> Conta & SeguranÃ§a
       </button>
       <button class="config-nav-item" onclick="trocarAba(this,'notificacoes')">
-        <i data-lucide="bell"></i> Notificações
+        <i data-lucide="bell"></i> NotificaÃ§Ãµes
       </button>
       <button class="config-nav-item" onclick="trocarAba(this,'pagamento')">
         <i data-lucide="credit-card"></i> Pagamento
       </button>
       <button class="config-nav-item" onclick="trocarAba(this,'enderecos')">
-        <i data-lucide="map-pin"></i> Endereços
+        <i data-lucide="map-pin"></i> EndereÃ§os
       </button>
       <div class="config-nav-divider"></div>
       <button class="config-nav-item" onclick="trocarAba(this,'aparencia')">
-        <i data-lucide="palette"></i> Aparência
+        <i data-lucide="palette"></i> AparÃªncia
       </button>
       <button class="config-nav-item" onclick="trocarAba(this,'privacidade')">
         <i data-lucide="lock"></i> Privacidade
       </button>
     </nav>
 
-    <!-- CONTEÚDO -->
+    <!-- CONTEÃšDO -->
     <div>
 
       <!-- -- PERFIL -- -->
       <section class="config-section active" id="sec-perfil">
-        <form action="<?= url_to('user_profile_update') ?>" method="post">
+        <form action="<?= url_to('user_profile_update') ?>" method="post" enctype="multipart/form-data">
 
         <div class="config-card">
           <div class="config-card-header">
@@ -130,8 +130,7 @@ $genero = (string) ($usuario['genero'] ?? '');
                 <label for="avatarInput" class="btn-primary" style="cursor:pointer">
                   <i data-lucide="upload"></i> Alterar foto
                 </label>
-                <input type="file" id="avatarInput" accept="image/*" style="display:none" onchange="previewAvatar(this)" />
-                <button class="btn-secondary" type="button" onclick="removerAvatar()">Remover</button>
+                <input type="file" id="avatarInput" name="avatar" accept="image/*" style="display:none" onchange="previewAvatar(this)" />
               </div>
             </div>
           </div>
@@ -139,7 +138,7 @@ $genero = (string) ($usuario['genero'] ?? '');
 
         <div class="config-card">
           <div class="config-card-header">
-            <div><h2>Informações pessoais</h2><p>Seus dados básicos</p></div>
+            <div><h2>InformaÃ§Ãµes pessoais</h2><p>Seus dados bÃ¡sicos</p></div>
           </div>
           <div class="config-card-body">
             <div class="field-row">
@@ -147,19 +146,15 @@ $genero = (string) ($usuario['genero'] ?? '');
                 <label>Nome</label>
                 <input class="input-field" type="text" id="nome" name="nome" placeholder="Seu nome" value="<?= esc($nome, 'attr') ?>" />
               </div>
-              <div class="field-group">
-                <label>Sobrenome</label>
-                <input class="input-field" type="text" id="sobrenome" name="sobrenome" placeholder="Seu sobrenome" value="<?= esc($sobrenome, 'attr') ?>" />
-              </div>
             </div>
             <div class="field-group">
-              <label>Nome de usuário</label>
+              <label>Nome de usuÃ¡rio</label>
               <input class="input-field" type="text" id="username" name="username" placeholder="@usuario" value="<?= esc($username, 'attr') ?>" />
-              <small>Visível publicamente no seu perfil</small>
+              <small>VisÃ­vel publicamente no seu perfil</small>
             </div>
             <div class="field-group">
               <label>Bio</label>
-              <textarea class="input-field" id="bio" name="bio" rows="3" placeholder="Uma breve descrição sobre você…" style="resize:vertical;line-height:1.5"><?= esc($usuario['bio'] ?? '') ?></textarea>
+              <textarea class="input-field" id="bio" name="bio" rows="3" placeholder="Uma breve descriÃ§Ã£o sobre vocÃªâ€¦" style="resize:vertical;line-height:1.5"><?= esc($usuario['bio'] ?? '') ?></textarea>
             </div>
             <div class="field-row">
               <div class="field-group">
@@ -167,18 +162,17 @@ $genero = (string) ($usuario['genero'] ?? '');
                 <input class="input-field" type="date" id="nascimento" name="nascimento" value="<?= esc($usuario['nascimento'] ?? '', 'attr') ?>" />
               </div>
               <div class="field-group">
-                <label>Gênero</label>
+                <label>GÃªnero</label>
                 <select class="input-field" id="genero" name="genero">
-                  <option value="">Prefiro não informar</option>
+                  <option value="">Prefiro nÃ£o informar</option>
                   <option value="f" <?= $genero === 'f' ? 'selected' : '' ?>>Feminino</option>
                   <option value="m" <?= $genero === 'm' ? 'selected' : '' ?>>Masculino</option>
-                  <option value="nb" <?= $genero === 'nb' ? 'selected' : '' ?>>Não-binário</option>
+                  <option value="nb" <?= $genero === 'nb' ? 'selected' : '' ?>>NÃ£o-binÃ¡rio</option>
                 </select>
               </div>
             </div>
           </div>
           <div class="config-card-footer">
-            <button class="btn-secondary" type="button">Cancelar</button>
             <button class="btn-primary" type="submit"><i data-lucide="check"></i> Salvar</button>
           </div>
         </div>
@@ -198,14 +192,13 @@ $genero = (string) ($usuario['genero'] ?? '');
             </div>
           </div>
           <div class="config-card-footer">
-            <button class="btn-secondary" type="button">Cancelar</button>
             <button class="btn-primary" type="submit"><i data-lucide="check"></i> Salvar</button>
           </div>
         </div>
         </form>
       </section>
 
-      <!-- -- CONTA & SEGURANÇA -- -->
+      <!-- -- CONTA & SEGURANÃ‡A -- -->
       <section class="config-section" id="sec-conta">
 
         <div class="config-card">
@@ -215,34 +208,31 @@ $genero = (string) ($usuario['genero'] ?? '');
           <div class="config-card-body">
             <div class="field-group">
               <label>Senha atual</label>
-              <input class="input-field" type="password" placeholder="••••••••" />
+              <input class="input-field" type="password" placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢" />
             </div>
             <div class="field-row">
               <div class="field-group">
                 <label>Nova senha</label>
-                <input class="input-field" type="password" id="novaSenha" placeholder="••••••••" />
+                <input class="input-field" type="password" id="novaSenha" placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢" />
               </div>
               <div class="field-group">
                 <label>Confirmar nova senha</label>
-                <input class="input-field" type="password" id="confirmarSenha" placeholder="••••••••" />
+                <input class="input-field" type="password" id="confirmarSenha" placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢" />
               </div>
             </div>
-            <small style="font-size:12px;color:var(--muted)">Mínimo 8 caracteres, com letras e números.</small>
-          </div>
-          <div class="config-card-footer">
-            <button class="btn-primary" onclick="salvar('Senha alterada com sucesso')"><i data-lucide="lock"></i> Atualizar senha</button>
+            <small style="font-size:12px;color:var(--muted)">MÃ­nimo 8 caracteres, com letras e nÃºmeros.</small>
           </div>
         </div>
 
         <div class="config-card">
           <div class="config-card-header">
-            <div><h2>Verificação em duas etapas</h2><p>Adiciona uma camada extra de segurança</p></div>
+            <div><h2>VerificaÃ§Ã£o em duas etapas</h2><p>Adiciona uma camada extra de seguranÃ§a</p></div>
           </div>
           <div class="config-card-body">
             <div class="toggle-row">
               <div class="toggle-info">
                 <span>SMS</span>
-                <small>Receber código por mensagem de texto</small>
+                <small>Receber cÃ³digo por mensagem de texto</small>
               </div>
               <label class="toggle-switch">
                 <input type="checkbox" checked />
@@ -252,7 +242,7 @@ $genero = (string) ($usuario['genero'] ?? '');
             <div class="toggle-row">
               <div class="toggle-info">
                 <span>E-mail</span>
-                <small>Receber código por e-mail</small>
+                <small>Receber cÃ³digo por e-mail</small>
               </div>
               <label class="toggle-switch">
                 <input type="checkbox" />
@@ -274,15 +264,14 @@ $genero = (string) ($usuario['genero'] ?? '');
 
         <div class="config-card danger-card">
           <div class="config-card-header">
-            <div><h2>Zona de perigo</h2><p>Ações irreversíveis</p></div>
+            <div><h2>Zona de perigo</h2><p>AÃ§Ãµes irreversÃ­veis</p></div>
           </div>
           <div class="config-card-body">
             <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.75rem">
               <div>
                 <div style="font-size:14px;font-weight:500;color:var(--text)">Desativar conta</div>
-                <div style="font-size:12px;color:var(--muted);margin-top:2px">Sua conta ficará invisível temporariamente</div>
+                <div style="font-size:12px;color:var(--muted);margin-top:2px">Sua conta ficarÃ¡ invisÃ­vel temporariamente</div>
               </div>
-              <button class="btn-danger"><i data-lucide="pause-circle"></i> Desativar</button>
             </div>
             <div style="height:.5px;background:rgba(220,38,38,.15);margin:.25rem 0"></div>
             <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.75rem">
@@ -290,17 +279,16 @@ $genero = (string) ($usuario['genero'] ?? '');
                 <div style="font-size:14px;font-weight:500;color:#dc2626">Excluir conta</div>
                 <div style="font-size:12px;color:var(--muted);margin-top:2px">Remove permanentemente todos os seus dados</div>
               </div>
-              <button class="btn-danger"><i data-lucide="trash-2"></i> Excluir conta</button>
             </div>
           </div>
         </div>
       </section>
 
-      <!-- -- NOTIFICAÇÕES -- -->
+      <!-- -- NOTIFICAÃ‡Ã•ES -- -->
       <section class="config-section" id="sec-notificacoes">
         <div class="config-card">
           <div class="config-card-header">
-            <div><h2>Notificações por e-mail</h2></div>
+            <div><h2>NotificaÃ§Ãµes por e-mail</h2></div>
           </div>
           <div class="config-card-body">
             <div class="toggle-row">
@@ -308,7 +296,7 @@ $genero = (string) ($usuario['genero'] ?? '');
               <label class="toggle-switch"><input type="checkbox" checked /><span class="toggle-slider"></span></label>
             </div>
             <div class="toggle-row">
-              <div class="toggle-info"><span>Promoções</span><small>Ofertas exclusivas e cupons</small></div>
+              <div class="toggle-info"><span>PromoÃ§Ãµes</span><small>Ofertas exclusivas e cupons</small></div>
               <label class="toggle-switch"><input type="checkbox" checked /><span class="toggle-slider"></span></label>
             </div>
             <div class="toggle-row">
@@ -316,31 +304,28 @@ $genero = (string) ($usuario['genero'] ?? '');
               <label class="toggle-switch"><input type="checkbox" /><span class="toggle-slider"></span></label>
             </div>
             <div class="toggle-row">
-              <div class="toggle-info"><span>Respostas de avaliações</span><small>Quando alguém responder sua avaliação</small></div>
+              <div class="toggle-info"><span>Respostas de avaliaÃ§Ãµes</span><small>Quando alguÃ©m responder sua avaliaÃ§Ã£o</small></div>
               <label class="toggle-switch"><input type="checkbox" checked /><span class="toggle-slider"></span></label>
             </div>
           </div>
         </div>
         <div class="config-card">
           <div class="config-card-header">
-            <div><h2>Notificações push</h2></div>
+            <div><h2>NotificaÃ§Ãµes push</h2></div>
           </div>
           <div class="config-card-body">
             <div class="toggle-row">
-              <div class="toggle-info"><span>Chat</span><small>Novas mensagens de artesãos</small></div>
+              <div class="toggle-info"><span>Chat</span><small>Novas mensagens de artesÃ£os</small></div>
               <label class="toggle-switch"><input type="checkbox" checked /><span class="toggle-slider"></span></label>
             </div>
             <div class="toggle-row">
-              <div class="toggle-info"><span>Status do pedido</span><small>Atualizações de envio e entrega</small></div>
+              <div class="toggle-info"><span>Status do pedido</span><small>AtualizaÃ§Ãµes de envio e entrega</small></div>
               <label class="toggle-switch"><input type="checkbox" checked /><span class="toggle-slider"></span></label>
             </div>
             <div class="toggle-row">
-              <div class="toggle-info"><span>Novos produtos favoritos</span><small>Produtos novos de artesãos que você segue</small></div>
+              <div class="toggle-info"><span>Novos produtos favoritos</span><small>Produtos novos de artesÃ£os que vocÃª segue</small></div>
               <label class="toggle-switch"><input type="checkbox" /><span class="toggle-slider"></span></label>
             </div>
-          </div>
-          <div class="config-card-footer">
-            <button class="btn-primary" onclick="salvar('Notificações salvas')"><i data-lucide="check"></i> Salvar</button>
           </div>
         </div>
       </section>
@@ -349,21 +334,19 @@ $genero = (string) ($usuario['genero'] ?? '');
       <section class="config-section" id="sec-pagamento">
         <div class="config-card">
           <div class="config-card-header">
-            <div><h2>Métodos de pagamento</h2><p>Cartões e formas de pagamento salvos</p></div>
-            <button class="btn-primary"><i data-lucide="plus"></i> Adicionar cartão</button>
+            <div><h2>MÃ©todos de pagamento</h2><p>CartÃµes e formas de pagamento salvos</p></div>
           </div>
           <div class="config-card-body" id="cartoesList">
             <div style="display:flex;align-items:center;justify-content:space-between;padding:.5rem 0">
               <div style="display:flex;align-items:center;gap:12px">
                 <div style="width:44px;height:28px;background:var(--bg);border:.5px solid var(--border);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:var(--azul)">VISA</div>
                 <div>
-                  <div style="font-size:14px;color:var(--text)">•••• •••• •••• 4242</div>
+                  <div style="font-size:14px;color:var(--text)">â€¢â€¢â€¢â€¢ â€¢â€¢â€¢â€¢ â€¢â€¢â€¢â€¢ 4242</div>
                   <div style="font-size:12px;color:var(--muted)">Expira 12/27</div>
                 </div>
               </div>
               <div style="display:flex;align-items:center;gap:8px">
                 <span style="font-size:11px;background:var(--verde-l);color:var(--verde);border-radius:99px;padding:2px 10px;font-weight:500">Principal</span>
-                <button class="btn-secondary" style="padding:6px 10px;font-size:12px">Remover</button>
               </div>
             </div>
           </div>
@@ -375,32 +358,26 @@ $genero = (string) ($usuario['genero'] ?? '');
           <div class="config-card-body">
             <div class="field-group">
               <label>Chave Pix</label>
-              <input class="input-field" type="text" placeholder="CPF, e-mail, telefone ou chave aleatória" />
+              <input class="input-field" type="text" placeholder="CPF, e-mail, telefone ou chave aleatÃ³ria" />
             </div>
-          </div>
-          <div class="config-card-footer">
-            <button class="btn-primary" onclick="salvar('Chave Pix salva')"><i data-lucide="check"></i> Salvar</button>
           </div>
         </div>
       </section>
 
-      <!-- -- ENDEREÇOS -- -->
+      <!-- -- ENDEREÃ‡OS -- -->
       <section class="config-section" id="sec-enderecos">
         <div class="config-card">
           <div class="config-card-header">
-            <div><h2>Endereços salvos</h2></div>
-            <button class="btn-primary"><i data-lucide="plus"></i> Novo endereço</button>
+            <div><h2>EndereÃ§os salvos</h2></div>
           </div>
           <div class="config-card-body">
             <div style="display:flex;align-items:flex-start;justify-content:space-between;padding:.25rem 0">
               <div>
                 <div style="font-size:14px;font-weight:500;color:var(--text)">Casa</div>
-                <div style="font-size:13px;color:var(--muted);margin-top:3px;line-height:1.5">Rua das Palmeiras, 123 — Jardim da Penha<br/>Vitória, ES — 29060-000</div>
+                <div style="font-size:13px;color:var(--muted);margin-top:3px;line-height:1.5">Rua das Palmeiras, 123 â€” Jardim da Penha<br/>VitÃ³ria, ES â€” 29060-000</div>
               </div>
               <div style="display:flex;align-items:center;gap:8px">
                 <span style="font-size:11px;background:var(--laranja-l);color:var(--laranja-d);border-radius:99px;padding:2px 10px;font-weight:500">Principal</span>
-                <button class="btn-secondary" style="padding:6px 10px;font-size:12px"><i data-lucide="pencil" style="width:13px;height:13px"></i></button>
-                <button class="btn-secondary" style="padding:6px 10px;font-size:12px"><i data-lucide="trash-2" style="width:13px;height:13px"></i></button>
               </div>
             </div>
           </div>
@@ -408,7 +385,7 @@ $genero = (string) ($usuario['genero'] ?? '');
 
         <div class="config-card">
           <div class="config-card-header">
-            <div><h2>Adicionar endereço</h2></div>
+            <div><h2>Adicionar endereÃ§o</h2></div>
           </div>
           <div class="config-card-body">
             <div class="field-row">
@@ -420,8 +397,8 @@ $genero = (string) ($usuario['genero'] ?? '');
                 <label>Estado</label>
                 <select class="input-field" id="estado">
                   <option value="">Selecione</option>
-                  <option value="ES" selected>Espírito Santo</option>
-                  <option value="SP">São Paulo</option>
+                  <option value="ES" selected>EspÃ­rito Santo</option>
+                  <option value="SP">SÃ£o Paulo</option>
                   <option value="RJ">Rio de Janeiro</option>
                   <option value="MG">Minas Gerais</option>
                   <option value="BA">Bahia</option>
@@ -431,7 +408,7 @@ $genero = (string) ($usuario['genero'] ?? '');
             <div class="field-row">
               <div class="field-group">
                 <label>Cidade</label>
-                <input class="input-field" type="text" id="cidade" placeholder="Vitória" />
+                <input class="input-field" type="text" id="cidade" placeholder="VitÃ³ria" />
               </div>
               <div class="field-group">
                 <label>Bairro</label>
@@ -444,27 +421,23 @@ $genero = (string) ($usuario['genero'] ?? '');
             </div>
             <div class="field-row">
               <div class="field-group">
-                <label>Número</label>
-                <input class="input-field" type="text" placeholder="Nº" />
+                <label>NÃºmero</label>
+                <input class="input-field" type="text" placeholder="NÂº" />
               </div>
               <div class="field-group">
                 <label>Complemento</label>
-                <input class="input-field" type="text" placeholder="Apto, bloco…" />
+                <input class="input-field" type="text" placeholder="Apto, blocoâ€¦" />
               </div>
             </div>
-          </div>
-          <div class="config-card-footer">
-            <button class="btn-secondary">Cancelar</button>
-            <button class="btn-primary" onclick="salvar('Endereço salvo')"><i data-lucide="check"></i> Salvar endereço</button>
           </div>
         </div>
       </section>
 
-      <!-- -- APARÊNCIA -- -->
+      <!-- -- APARÃŠNCIA -- -->
       <section class="config-section" id="sec-aparencia">
         <div class="config-card">
           <div class="config-card-header">
-            <div><h2>Tema</h2><p>Escolha a aparência da interface</p></div>
+            <div><h2>Tema</h2><p>Escolha a aparÃªncia da interface</p></div>
           </div>
           <div class="config-card-body">
             <div class="theme-options">
@@ -494,24 +467,21 @@ $genero = (string) ($usuario['genero'] ?? '');
                 <div class="select-with-icon">
                   <span class="flag">????</span>
                   <select class="input-field" id="idioma">
-                    <option value="pt-BR" selected>Português (Brasil)</option>
+                    <option value="pt-BR" selected>PortuguÃªs (Brasil)</option>
                     <option value="en">English</option>
-                    <option value="es">Español</option>
+                    <option value="es">EspaÃ±ol</option>
                   </select>
                 </div>
               </div>
               <div class="field-group">
                 <label>Moeda</label>
                 <select class="input-field">
-                  <option value="BRL" selected>BRL — Real brasileiro</option>
-                  <option value="USD">USD — Dólar americano</option>
-                  <option value="EUR">EUR — Euro</option>
+                  <option value="BRL" selected>BRL â€” Real brasileiro</option>
+                  <option value="USD">USD â€” DÃ³lar americano</option>
+                  <option value="EUR">EUR â€” Euro</option>
                 </select>
               </div>
             </div>
-          </div>
-          <div class="config-card-footer">
-            <button class="btn-primary" onclick="salvar('Preferências salvas')"><i data-lucide="check"></i> Salvar</button>
           </div>
         </div>
       </section>
@@ -524,11 +494,11 @@ $genero = (string) ($usuario['genero'] ?? '');
           </div>
           <div class="config-card-body">
             <div class="toggle-row">
-              <div class="toggle-info"><span>Perfil público</span><small>Outros usuários podem ver seu perfil</small></div>
+              <div class="toggle-info"><span>Perfil pÃºblico</span><small>Outros usuÃ¡rios podem ver seu perfil</small></div>
               <label class="toggle-switch"><input type="checkbox" checked /><span class="toggle-slider"></span></label>
             </div>
             <div class="toggle-row">
-              <div class="toggle-info"><span>Mostrar lista de favoritos</span><small>Seus produtos favoritos ficam visíveis</small></div>
+              <div class="toggle-info"><span>Mostrar lista de favoritos</span><small>Seus produtos favoritos ficam visÃ­veis</small></div>
               <label class="toggle-switch"><input type="checkbox" /><span class="toggle-slider"></span></label>
             </div>
             <div class="toggle-row">
@@ -545,31 +515,27 @@ $genero = (string) ($usuario['genero'] ?? '');
             <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:.75rem">
               <div>
                 <div style="font-size:14px;font-weight:500;color:var(--text)">Exportar meus dados</div>
-                <div style="font-size:12px;color:var(--muted);margin-top:2px">Baixe uma cópia de todos os seus dados</div>
+                <div style="font-size:12px;color:var(--muted);margin-top:2px">Baixe uma cÃ³pia de todos os seus dados</div>
               </div>
-              <button class="btn-secondary"><i data-lucide="download" style="width:15px;height:15px"></i> Exportar</button>
             </div>
             <div style="height:.5px;background:var(--border);margin:.25rem 0"></div>
             <div class="toggle-row">
-              <div class="toggle-info"><span>Cookies de análise</span><small>Ajuda a melhorar a plataforma</small></div>
+              <div class="toggle-info"><span>Cookies de anÃ¡lise</span><small>Ajuda a melhorar a plataforma</small></div>
               <label class="toggle-switch"><input type="checkbox" checked /><span class="toggle-slider"></span></label>
             </div>
             <div class="toggle-row">
-              <div class="toggle-info"><span>Personalização de anúncios</span><small>Recomendações baseadas no seu histórico</small></div>
+              <div class="toggle-info"><span>PersonalizaÃ§Ã£o de anÃºncios</span><small>RecomendaÃ§Ãµes baseadas no seu histÃ³rico</small></div>
               <label class="toggle-switch"><input type="checkbox" /><span class="toggle-slider"></span></label>
             </div>
-          </div>
-          <div class="config-card-footer">
-            <button class="btn-primary" onclick="salvar('Privacidade atualizada')"><i data-lucide="check"></i> Salvar</button>
           </div>
         </div>
       </section>
 
-    </div><!-- /conteúdo -->
+    </div><!-- /conteÃºdo -->
   </div><!-- /config-layout -->
 </main>
 
-<!-- Toast de confirmação -->
+<!-- Toast de confirmaÃ§Ã£o -->
 <div class="toast" id="toast">
   <i data-lucide="check-circle"></i>
   <span id="toastMsg">Salvo com sucesso</span>
