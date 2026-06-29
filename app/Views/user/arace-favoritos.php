@@ -36,13 +36,9 @@
   </div>
 </header>
 
-<!--Icone de chat-->
-<div class="chat-bubble">
-  <a href="/usuario/chat">
-    <i data-lucide="message-circle-more"></i>
-  </a>
-</div>
 
+
+<!-- SIDEBAR -->
 <!-- SIDEBAR -->
 <aside>
     <a class="nav-item" href="/">
@@ -53,10 +49,8 @@
     </a>
     <a class="nav-item active" href="/arace-carrinho">
       <i data-lucide="shopping-cart"></i> Carrinho
-    </a>
-    <a class="nav-item" href="/usuario/arace-notificacao">
-      <i data-lucide="bell"></i> Notificações
-    </a>
+    </a> 
+
     <a class="nav-item" href="/arace-config">
       <i data-lucide="settings"></i> Configurações
     </a>
@@ -66,11 +60,7 @@
     <a class="nav-item" href="/cadastro/produtor">
       <i data-lucide="box"></i> Quero ser produtor
     </a>
-    <div class="nav-divider"></div>
-    <div class="nav-section">Reportar</div>
-    <a class="nav-item" href="/arace-config">
-      <i data-lucide="hand-coins"></i> Detalhes de pagamento
-    </a>
+    
   </aside>
 
 <main>

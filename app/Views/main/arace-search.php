@@ -30,12 +30,6 @@
     </div>
   </header>
 
-<!--Chat-->
-<div class="chat-bubble">
-  <a href="/usuario/chat">
-    <i data-lucide="message-circle-more"></i>
-  </a>
-</div>
 
 <!-- LAYOUT PRINCIPAL -->
 <div class="page-body">
@@ -51,9 +45,6 @@
     <a class="nav-item active" href="/arace-carrinho">
       <i data-lucide="shopping-cart"></i> Carrinho
     </a>
-    <a class="nav-item" href="/usuario/arace-notificacao">
-      <i data-lucide="bell"></i> Notificações
-    </a>
     <a class="nav-item" href="/arace-config">
       <i data-lucide="settings"></i> Configurações
     </a>
@@ -62,11 +53,6 @@
     </a>
     <a class="nav-item" href="/cadastro/produtor">
       <i data-lucide="box"></i> Quero ser produtor
-    </a>
-    <div class="nav-divider"></div>
-    <div class="nav-section">Reportar</div>
-    <a class="nav-item" href="/arace-config">
-      <i data-lucide="hand-coins"></i> Detalhes de pagamento
     </a>
   </aside>
 
@@ -136,99 +122,12 @@
     <!-- Grid -->
     <div class="produtos-grid" id="produtosGrid">
 
-      <div class="produto">
-        <div class="produto-img" style="background:#b5a898"><button class="fav"><i data-lucide="heart"></i></button></div>
-        <div class="produto-info">
-          <a href="#" class="nome">Panela de barro</a>
-          <div class="stars"><i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star" style="opacity:.25"></i><i data-lucide="star" style="opacity:.25"></i></div>
-          <div class="preco"><s>R$129,00</s></div>
-        </div>
-      </div>
-
-      <div class="produto">
-        <div class="produto-img" style="background:#a89880"><button class="fav"><i data-lucide="heart"></i></button></div>
-        <div class="produto-info">
-          <a href="#" class="nome">Panela de barro</a>
-          <div class="stars"><i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star" style="opacity:.25"></i><i data-lucide="star" style="opacity:.25"></i></div>
-          <div class="preco"><strong>R$125,00</strong></div>
-        </div>
-      </div>
-
-      <div class="produto">
-        <div class="produto-img" style="background:#9c8c78"><button class="fav active"><i data-lucide="heart"></i></button></div>
-        <div class="produto-info">
-          <a href="#" class="nome">Panela de barro</a>
-          <div class="stars"><i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star" style="opacity:.25"></i><i data-lucide="star" style="opacity:.25"></i></div>
-          <div class="preco"><strong>R$125,00</strong></div>
-        </div>
-      </div>
-
-      <div class="produto">
-        <div class="produto-img" style="background:#b5a898"><button class="fav"><i data-lucide="heart"></i></button></div>
-        <div class="produto-info">
-          <a href="#" class="nome">Panela de barro</a>
-          <div class="stars"><i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star" style="opacity:.25"></i><i data-lucide="star" style="opacity:.25"></i></div>
-          <div class="preco"><strong>R$125,00</strong></div>
-        </div>
-      </div>
-
-      <div class="produto">
-        <div class="produto-img" style="background:#a89880"><button class="fav"><i data-lucide="heart"></i></button></div>
-        <div class="produto-info">
-          <a href="#" class="nome">Panela de barro</a>
-          <div class="stars"><i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star" style="opacity:.25"></i><i data-lucide="star" style="opacity:.25"></i></div>
-          <div class="preco"><strong>R$125,00</strong></div>
-        </div>
-      </div>
-
-      <div class="produto">
-        <div class="produto-img" style="background:#9c8c78"><button class="fav"><i data-lucide="heart"></i></button></div>
-        <div class="produto-info">
-          <a href="#" class="nome">Panela de barro</a>
-          <div class="stars"><i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star" style="opacity:.25"></i><i data-lucide="star" style="opacity:.25"></i></div>
-          <div class="preco"><strong>R$125,00</strong></div>
-        </div>
-      </div>
-
-      <div class="produto">
-        <div class="produto-img" style="background:#b5a898"><button class="fav"><i data-lucide="heart"></i></button></div>
-        <div class="produto-info">
-          <a href="#" class="nome">Panela de barro</a>
-          <div class="stars"><i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star" style="opacity:.25"></i><i data-lucide="star" style="opacity:.25"></i></div>
-          <div class="preco"><strong>R$125,00</strong></div>
-        </div>
-      </div>
-
-      <div class="produto">
-        <div class="produto-img" style="background:#a89880"><button class="fav"><i data-lucide="heart"></i></button></div>
-        <div class="produto-info">
-          <a href="#" class="nome">Panela de barro</a>
-          <div class="stars"><i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star" style="opacity:.25"></i><i data-lucide="star" style="opacity:.25"></i></div>
-          <div class="preco"><strong>R$125,00</strong></div>
-        </div>
-      </div>
-
-      <div class="produto">
-        <div class="produto-img" style="background:#9c8c78"><button class="fav"><i data-lucide="heart"></i></button></div>
-        <div class="produto-info">
-          <a href="#" class="nome">Panela de barro</a>
-          <div class="stars"><i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star" style="opacity:.25"></i><i data-lucide="star" style="opacity:.25"></i></div>
-          <div class="preco"><strong>R$125,00</strong></div>
-        </div>
-      </div>
 
     </div>
 
     <!-- Paginação -->
     <div class="paginacao">
-      <button class="pg-btn"><i data-lucide="chevron-left"></i> Antes</button>
-      <button class="pg-num active">1</button>
-      <button class="pg-num">2</button>
-      <button class="pg-num">3</button>
-      <span class="pg-sep">…</span>
-      <button class="pg-num">6</button>
-      <button class="pg-num">12</button>
-      <button class="pg-btn">Próxima <i data-lucide="chevron-right"></i></button>
+      
     </div>
 
   </div><!-- /search-main -->
@@ -255,28 +154,9 @@
     </div>
 
     <!-- Preços -->
-    <div class="filter-group">
-      <p class="filter-group-label">Preços</p>
-      <div class="range-wrap">
-        <div class="range-track"><div class="range-fill" id="rangeFill"></div></div>
-        <input type="range" class="range" id="rangeMin" min="0" max="1000" value="80" />
-        <input type="range" class="range" id="rangeMax" min="0" max="1000" value="205" />
-      </div>
-      <div class="range-vals">
-        <span id="valMin">R$80</span>
-        <span id="valMax">R$205</span>
-      </div>
-      <div class="price-inputs">
-        <div class="price-input-group">
-          <span>Valor mínimo</span>
-          <input type="number" id="inputMin" value="80" />
-        </div>
-        <div class="price-input-group">
-          <span>Valor máximo</span>
-          <input type="number" id="inputMax" value="205" />
-        </div>
-      </div>
-    </div>
+    
+      
+    
 
     <!-- Filtrar por Cidades -->
     <div class="filter-group">

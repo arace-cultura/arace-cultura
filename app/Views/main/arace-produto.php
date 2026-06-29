@@ -36,15 +36,13 @@
     <a class="nav-item" href="/">
       <i data-lucide="house"></i> Home page
     </a>
-    <a class="nav-item active" href="/arace-produtos">
+    <a class="nav-item" href="/arace-produtos">
       <i data-lucide="shopping-bag"></i> Produtos
     </a>
-    <a class="nav-item " href="/arace-carrinho">
+    <a class="nav-item active" href="/arace-carrinho">
       <i data-lucide="shopping-cart"></i> Carrinho
-    </a>
-    <a class="nav-item" href="/usuario/arace-notificacao">
-      <i data-lucide="bell"></i> Notificações
-    </a>
+    </a> 
+
     <a class="nav-item" href="/arace-config">
       <i data-lucide="settings"></i> Configurações
     </a>
@@ -54,11 +52,7 @@
     <a class="nav-item" href="/cadastro/produtor">
       <i data-lucide="box"></i> Quero ser produtor
     </a>
-    <div class="nav-divider"></div>
-    <div class="nav-section">Reportar</div>
-    <a class="nav-item" href="/arace-config">
-      <i data-lucide="hand-coins"></i> Detalhes de pagamento
-    </a>
+    
   </aside>
 
 

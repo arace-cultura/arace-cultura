@@ -42,9 +42,6 @@
     <a class="nav-item active" href="/arace-carrinho">
       <i data-lucide="shopping-cart"></i> Carrinho
     </a>
-    <a class="nav-item" href="/usuario/arace-notificacao">
-      <i data-lucide="bell"></i> Notificações
-    </a>
     <a class="nav-item" href="/arace-config">
       <i data-lucide="settings"></i> Configurações
     </a>
@@ -54,11 +51,7 @@
     <a class="nav-item" href="/cadastro/produtor-arace">
       <i data-lucide="box"></i> Quero ser produtor
     </a>
-    <div class="nav-divider"></div>
-    <div class="nav-section">Reportar</div>
-    <a class="nav-item" href="/arace-config">
-      <i data-lucide="hand-coins"></i> Detalhes de pagamento
-    </a>
+    
   </aside>
 
   <!-- MAIN -->
@@ -93,68 +86,7 @@
           <span>Subtotal</span>
         </div>
 
-        <!-- Item 1 -->
-        <div class="cart-item item-animado atraso-1" data-item-id="1">
-          <div class="cart-item-image">
-            <div class="img-placeholder" style="background:#C1734A"></div>
-          </div>
-          <div class="cart-item-info">
-            <a href="#" class="cart-item-name">Item</a>
-            <span class="cart-item-brand">Espírito Das Pedras</span>
-            <span class="cart-item-sku">Cód: 1001</span>
-            <div class="cart-item-variants">
-              <span class="variant-tag">Tamanho: M</span>
-              <span class="variant-tag">Cor: Terracota</span>
-            </div>
-            <span class="cart-item-unit-price">R$245,00 / un.</span>
-          </div>
-          <div class="qty-control">
-            <button class="qty-btn qty-minus" data-item-id="1">
-              <i data-lucide="minus"></i>
-            </button>
-            <input class="qty-input" type="number" value="1" min="1" max="99" id="qty-1" />
-            <button class="qty-btn qty-plus" data-item-id="1">
-              <i data-lucide="plus"></i>
-            </button>
-          </div>
-          <div class="cart-item-subtotal">
-            <span class="subtotal-value" id="subtotal-1">R$245,00</span>
-            <button class="btn-remove-icon" data-item-id="1">
-              <i data-lucide="trash-2"></i>
-            </button>
-          </div>
-        </div>
-
-        <!-- Item 2 -->
-        <div class="cart-item item-animado atraso-1" data-item-id="2">
-          <div class="cart-item-image">
-            <div class="img-placeholder" style="background:#C1734A; opacity:.75"></div>
-          </div>
-          <div class="cart-item-info">
-            <a href="#" class="cart-item-name">Item</a>
-            <span class="cart-item-brand">Sintético</span>
-            <span class="cart-item-sku">Cód: 1002</span>
-            <div class="cart-item-variants">
-              <span class="variant-tag">Tamanho: G</span>
-            </div>
-            <span class="cart-item-unit-price">R$180,00 / un.</span>
-          </div>
-          <div class="qty-control">
-            <button class="qty-btn qty-minus" data-item-id="2">
-              <i data-lucide="minus"></i>
-            </button>
-            <input class="qty-input" type="number" value="1" min="1" max="99" id="qty-2" />
-            <button class="qty-btn qty-plus" data-item-id="2">
-              <i data-lucide="plus"></i>
-            </button>
-          </div>
-          <div class="cart-item-subtotal">
-            <span class="subtotal-value" id="subtotal-2">R$180,00</span>
-            <button class="btn-remove-icon" data-item-id="2">
-              <i data-lucide="trash-2"></i>
-            </button>
-          </div>
-        </div>
+       
 
       
 

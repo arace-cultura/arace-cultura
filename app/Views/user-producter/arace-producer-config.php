@@ -36,12 +36,7 @@
   </div>
 </header>
 
-<!--Icone de chat-->
-<div class="chat-bubble">
-  <a href="/usuario/chat">
-    <i data-lucide="message-circle-more"></i>
-  </a>
-</div>
+
 
 <!-- SIDEBAR -->
 <aside>
@@ -53,10 +48,8 @@
     </a>
     <a class="nav-item active" href="/arace-carrinho">
       <i data-lucide="shopping-cart"></i> Carrinho
-    </a>
-    <a class="nav-item" href="/usuario/arace-notificacao">
-      <i data-lucide="bell"></i> Notificações
-    </a>
+    </a> 
+
     <a class="nav-item" href="/arace-config">
       <i data-lucide="settings"></i> Configurações
     </a>
@@ -66,12 +59,9 @@
     <a class="nav-item" href="/cadastro/produtor">
       <i data-lucide="box"></i> Quero ser produtor
     </a>
-    <div class="nav-divider"></div>
-    <div class="nav-section">Reportar</div>
-    <a class="nav-item" href="/arace-config">
-      <i data-lucide="hand-coins"></i> Detalhes de pagamento
-    </a>
+    
   </aside>
+  
   <main>
   <div class="config-header">
     <div>
@@ -88,7 +78,7 @@
         <i data-lucide="user"></i> Perfil
       </button>
       <button class="config-nav-item" onclick="trocarAba(this,'conta')">
-        <i data-lucide="shield"></i> Conta & Segurança
+        <i data-lucide="shield"></i> Conta 
       </button>
       <button class="config-nav-item" onclick="trocarAba(this,'notificacoes')">
         <i data-lucide="bell"></i> Notificações
@@ -99,13 +89,9 @@
       <button class="config-nav-item" onclick="trocarAba(this,'enderecos')">
         <i data-lucide="map-pin"></i> Endereços
       </button>
-      <div class="config-nav-divider"></div>
-      <button class="config-nav-item" onclick="trocarAba(this,'aparencia')">
-        <i data-lucide="palette"></i> Aparência
-      </button>
-      <button class="config-nav-item" onclick="trocarAba(this,'privacidade')">
-        <i data-lucide="lock"></i> Privacidade
-      </button>
+  
+      
+      
     </nav>
 
     <!-- CONTEÚDO -->

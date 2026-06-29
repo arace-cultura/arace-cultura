@@ -36,12 +36,7 @@
   </div>
 </header>
 
-<!--Icone de chat-->
-<div class="chat-bubble">
-  <a href="/usuario/chat">
-    <i data-lucide="message-circle-more"></i>
-  </a>
-</div>
+
 
 <!-- SIDEBAR -->
 <aside>
@@ -53,10 +48,8 @@
     </a>
     <a class="nav-item active" href="/arace-carrinho">
       <i data-lucide="shopping-cart"></i> Carrinho
-    </a>
-    <a class="nav-item" href="/usuario/arace-notificacao">
-      <i data-lucide="bell"></i> Notificações
-    </a>
+    </a> 
+
     <a class="nav-item" href="/arace-config">
       <i data-lucide="settings"></i> Configurações
     </a>
@@ -66,11 +59,7 @@
     <a class="nav-item" href="/cadastro/produtor">
       <i data-lucide="box"></i> Quero ser produtor
     </a>
-    <div class="nav-divider"></div>
-    <div class="nav-section">Reportar</div>
-    <a class="nav-item" href="/arace-config">
-      <i data-lucide="hand-coins"></i> Detalhes de pagamento
-    </a>
+    
   </aside>
 
 <main>
@@ -133,59 +122,7 @@
       </div>
       <div class="pedidos-mini-list">
 
-        <div class="pedido-mini" data-href="/produtor/pedidos">
-          <div class="pedido-mini-id">#4821</div>
-          <div class="pedido-mini-info">
-            <span class="pedido-mini-cliente">Ana Clara Silva</span>
-            <span class="pedido-mini-produto">Kit Panela de Barro</span>
-          </div>
-          <span class="status-badge pendente">Pendente</span>
-          <span class="pedido-mini-valor">R$200</span>
-        </div>
-
-        <div class="pedido-mini" data-href="/produtor/pedidos">
-          <div class="pedido-mini-id">#4820</div>
-          <div class="pedido-mini-info">
-            <span class="pedido-mini-cliente">Marcos Oliveira</span>
-            <span class="pedido-mini-produto">Panela Trad. M ×2</span>
-          </div>
-          <span class="status-badge producao">Em produção</span>
-          <span class="pedido-mini-valor">R$170</span>
-        </div>
-
-        <div class="pedido-mini" data-href="/produtor/pedidos">
-          <div class="pedido-mini-id">#4819</div>
-          <div class="pedido-mini-info">
-            <span class="pedido-mini-cliente">Fernanda Costa</span>
-            <span class="pedido-mini-produto">Prato de Cerâmica ×3</span>
-          </div>
-          <span class="status-badge enviado">Enviado</span>
-          <span class="pedido-mini-valor">R$135</span>
-        </div>
-
-        <div class="pedido-mini" data-href="/produtor/pedidos">
-          <div class="pedido-mini-id">#4818</div>
-          <div class="pedido-mini-info">
-            <span class="pedido-mini-cliente">João Pedro Matos</span>
-            <span class="pedido-mini-produto">Kit Panela de Barro</span>
-          </div>
-          <span class="status-badge entregue">Entregue</span>
-          <span class="pedido-mini-valor">R$200</span>
-        </div>
-
-        <div class="pedido-mini" data-href="/produtor/pedidos">
-          <div class="pedido-mini-id">#4817</div>
-          <div class="pedido-mini-info">
-            <span class="pedido-mini-cliente">Luciana Ferreira</span>
-            <span class="pedido-mini-produto">Vaso Artesanal Grande</span>
-          </div>
-          <span class="status-badge pendente">Pendente</span>
-          <span class="pedido-mini-valor">R$95</span>
-        </div>
-
-      </div>
-    </div>
-
+        
     <!-- COLUNA DIREITA -->
     <div class="painel-col-right">
 
@@ -197,44 +134,7 @@
         </div>
         <div class="produtos-mini-list">
 
-          <div class="produto-mini">
-            <div class="produto-mini-img" style="background:#b5a898"></div>
-            <div class="produto-mini-info">
-              <span class="produto-mini-nome">Kit Panela de Barro</span>
-              <span class="produto-mini-preco">R$ 200,00</span>
-            </div>
-            <span class="stock-badge">Em estoque</span>
-            <div class="produto-mini-actions">
-              <button type="button" data-href="/produtor/painel" title="Editar"><i data-lucide="pencil"></i></button>
-              <button class="del" title="Excluir"><i data-lucide="trash-2"></i></button>
-            </div>
-          </div>
-
-          <div class="produto-mini">
-            <div class="produto-mini-img" style="background:#a09880"></div>
-            <div class="produto-mini-info">
-              <span class="produto-mini-nome">Panela Tradicional M</span>
-              <span class="produto-mini-preco">R$ 85,00</span>
-            </div>
-            <span class="stock-badge">Em estoque</span>
-            <div class="produto-mini-actions">
-              <button type="button" data-href="/produtor/painel" title="Editar"><i data-lucide="pencil"></i></button>
-              <button class="del" title="Excluir"><i data-lucide="trash-2"></i></button>
-            </div>
-          </div>
-
-          <div class="produto-mini">
-            <div class="produto-mini-img" style="background:#c4b49a"></div>
-            <div class="produto-mini-info">
-              <span class="produto-mini-nome">Prato de Cerâmica</span>
-              <span class="produto-mini-preco">R$ 45,00</span>
-            </div>
-            <span class="stock-badge esgotado">Esgotado</span>
-            <div class="produto-mini-actions">
-              <button type="button" data-href="/produtor/painel" title="Editar"><i data-lucide="pencil"></i></button>
-              <button class="del" title="Excluir"><i data-lucide="trash-2"></i></button>
-            </div>
-          </div>
+          
 
         </div>
 
@@ -250,29 +150,7 @@
         </div>
         <div class="avaliacoes-list">
 
-          <div class="avaliacao-mini">
-            <div class="avaliacao-header">
-              <span class="avaliacao-user">Ana Clara Silva</span>
-              <div class="mini-stars">
-                <i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i>
-                <i data-lucide="star"></i><i data-lucide="star"></i>
-              </div>
-            </div>
-            <p class="avaliacao-text">Panela maravilhosa! Já fiz moqueca duas vezes, ficou perfeita.</p>
-            <span class="avaliacao-produto">Kit Panela de Barro · há 2 dias</span>
-          </div>
-
-          <div class="avaliacao-mini">
-            <div class="avaliacao-header">
-              <span class="avaliacao-user">João Pedro Matos</span>
-              <div class="mini-stars">
-                <i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i>
-                <i data-lucide="star"></i><i data-lucide="star" style="opacity:.3"></i>
-              </div>
-            </div>
-            <p class="avaliacao-text">Produto de excelente qualidade, bem embalado. Recomendo!</p>
-            <span class="avaliacao-produto">Panela Tradicional M · há 5 dias</span>
-          </div>
+          
 
         </div>
       </div>

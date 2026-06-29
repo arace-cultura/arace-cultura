@@ -36,12 +36,7 @@
   </div>
 </header>
 
-<!--Icone de chat-->
-<div class="chat-bubble">
-  <a href="/usuario/chat">
-    <i data-lucide="message-circle-more"></i>
-  </a>
-</div>
+
 
 <!-- SIDEBAR -->
 <aside>
@@ -53,10 +48,8 @@
     </a>
     <a class="nav-item active" href="/arace-carrinho">
       <i data-lucide="shopping-cart"></i> Carrinho
-    </a>
-    <a class="nav-item" href="/usuario/arace-notificacao">
-      <i data-lucide="bell"></i> Notificações
-    </a>
+    </a> 
+
     <a class="nav-item" href="/arace-config">
       <i data-lucide="settings"></i> Configurações
     </a>
@@ -66,11 +59,7 @@
     <a class="nav-item" href="/cadastro/produtor">
       <i data-lucide="box"></i> Quero ser produtor
     </a>
-    <div class="nav-divider"></div>
-    <div class="nav-section">Reportar</div>
-    <a class="nav-item" href="/arace-config">
-      <i data-lucide="hand-coins"></i> Detalhes de pagamento
-    </a>
+    
   </aside>
 
   <main>
@@ -78,16 +67,16 @@
     <div class="stats-row item-animado atraso-1">
       <div class="stat-card">
         <div class="stat-label">Vendas realizadas</div>
-        <div class="stat-value">120</div>
+        <div class="stat-value"></div>
       </div>
       <div class="stat-card">
         <div class="stat-label">Produtos para entrega</div>
-        <div class="stat-value">10</div>
+        <div class="stat-value"></div>
       </div>
       
       <div class="stat-card">
         <div class="stat-label">Pendentes</div>
-        <div class="stat-value">5</div>
+        <div class="stat-value"></div>
       </div>
     </div>
 
@@ -100,7 +89,7 @@
         </div>
         <div class="profile-meta">
           <div class="profile-name">Usuário</div>
-          <div class="profile-email">usuario@gmail.com</div>
+          <div class="profile-email"></div>
         </div>
         <a href="/produtor/configuracao">
         <button class="btn-edit">
@@ -112,30 +101,26 @@
       <div class="fields">
         <div class="field">
           <div class="field-label">Nome</div>
-          <div class="field-value">Usuário</div>
+          <div class="field-value"></div>
         </div>
         <div class="field">
           <div class="field-label">E-mail</div>
-          <div class="field-value">usuario@gmail.com</div>
+          <div class="field-value"></div>
         </div>
         <div class="field">
           <div class="field-label">Número</div>
           <div class="field-value missing">
-            <i data-lucide="alert-circle"></i> Não informado
+            <i data-lucide="alert-circle"></i> 
           </div>
         </div>
         <div class="field">
           <div class="field-label">Localização</div>
-          <div class="field-value">Cariacica – ES</div>
-        </div>
-        <div class="field">
-          <div class="field-label">Membro desde</div>
-          <div class="field-value">Janeiro de 2024</div>
+          <div class="field-value"></div>
         </div>
         <div class="field">
           <div class="field-label">CPF</div>
           <div class="field-value missing">
-            <i data-lucide="alert-circle"></i> Não informado
+            <i data-lucide="alert-circle"></i>
           </div>
         </div>
       </div>

@@ -36,41 +36,29 @@
   </div>
 </header>
 
-<!--Icone de chat-->
-<div class="chat-bubble">
-  <a href="/usuario/chat">
-    <i data-lucide="message-circle-more"></i>
-  </a>
-</div>
 
   <!-- SIDEBAR -->
-  <aside>
+<aside>
     <a class="nav-item" href="/">
       <i data-lucide="house"></i> Home page
     </a>
-    <a class="nav-item" href="/pesquisa">
+    <a class="nav-item" href="/arace-produtos">
       <i data-lucide="shopping-bag"></i> Produtos
     </a>
-    <a class="nav-item" href="/arace-carrinho">
+    <a class="nav-item active" href="/arace-carrinho">
       <i data-lucide="shopping-cart"></i> Carrinho
-    </a>
-    <a class="nav-item" href="/usuario/arace-notificacao">
-      <i data-lucide="bell"></i> Notificações
-    </a>
+    </a> 
+
     <a class="nav-item" href="/arace-config">
       <i data-lucide="settings"></i> Configurações
     </a>
-    <a class="nav-item active" href="/usuario/arace-perfil">
+    <a class="nav-item" href="/usuario/arace-perfil">
       <i data-lucide="user"></i> Perfil
     </a>
     <a class="nav-item" href="/cadastro/produtor">
       <i data-lucide="box"></i> Quero ser produtor
     </a>
-    <div class="nav-divider"></div>
-    <div class="nav-section">Reportar</div>
-    <a class="nav-item" href="/arace-config#pagamento">
-      <i data-lucide="hand-coins"></i> Detalhes de pagamento
-    </a>
+    
     <form class="logout-form" action="<?= site_url('sair') ?>" method="post">
       <button class="nav-item logout-button" type="submit">
         <i data-lucide="log-out"></i> Sair da conta
@@ -118,8 +106,7 @@
           <div class="field-value"><?= esc(implode(' – ', array_filter([$usuario['cidade'] ?? null, $usuario['estado'] ?? null]))) ?></div>
         </div>
         <div class="field">
-          <div class="field-label">Membro desde</div>
-          <div class="field-value">Janeiro de 2024</div>
+
         </div>
         <div class="field">
           <div class="field-label">CPF</div>

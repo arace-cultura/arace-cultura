@@ -72,12 +72,7 @@ function araceStars(float $nota): string
   </div>
 </section>
 
-<!--Icone de chat-->
-<div class="chat-bubble">
-  <a href="/usuario/chat">
-    <i data-lucide="message-circle-more"></i>
-  </a>
-</div>
+
 
 <!-- CATEGORIAS -->
 <section class="section" id="categorias">

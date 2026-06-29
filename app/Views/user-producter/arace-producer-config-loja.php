@@ -36,12 +36,6 @@
   </div>
 </header>
 
-<!--Icone de chat-->
-<div class="chat-bubble">
-  <a href="/usuario/chat">
-    <i data-lucide="message-circle-more"></i>
-  </a>
-</div>
 
 <!-- SIDEBAR -->
 <aside>
@@ -53,10 +47,8 @@
     </a>
     <a class="nav-item active" href="/arace-carrinho">
       <i data-lucide="shopping-cart"></i> Carrinho
-    </a>
-    <a class="nav-item" href="/usuario/arace-notificacao">
-      <i data-lucide="bell"></i> Notificações
-    </a>
+    </a> 
+
     <a class="nav-item" href="/arace-config">
       <i data-lucide="settings"></i> Configurações
     </a>
@@ -66,11 +58,7 @@
     <a class="nav-item" href="/cadastro/produtor">
       <i data-lucide="box"></i> Quero ser produtor
     </a>
-    <div class="nav-divider"></div>
-    <div class="nav-section">Reportar</div>
-    <a class="nav-item" href="/arace-config">
-      <i data-lucide="hand-coins"></i> Detalhes de pagamento
-    </a>
+    
   </aside>
 
   <main>
@@ -90,16 +78,11 @@
         <button class="config-nav-item" onclick="trocarAba(this,'dados-comerciais')">
           <i data-lucide="briefcase"></i> Dados Comerciais
         </button>
-        <button class="config-nav-item" onclick="trocarAba(this,'logistica')">
-          <i data-lucide="truck"></i> Frete & Retirada
-        </button>
         <button class="config-nav-item" onclick="trocarAba(this,'financeiro')">
-          <i data-lucide="landmark"></i> Conta Bancária
+          <i data-lucide="landmark"></i> pix
         </button>
         <div class="config-nav-divider"></div>
-        <button class="config-nav-item" onclick="trocarAba(this,'horarios')">
-          <i data-lucide="clock"></i> Horários de Funcionamento
-        </button>
+        
       </nav>
 
       <div>
@@ -140,7 +123,7 @@
 
           <div class="config-card">
             <div class="config-card-header">
-              <div><h2>Apresentação</h2><p>Como os clientes visualizam seu negócio</p></div>
+              <div><h2>Apresentação</h2></div>
             </div>
             <div class="config-card-body">
               <div class="field-group">
@@ -149,7 +132,7 @@
               </div>
               <div class="field-group">
                 <label>História / Biografia da Loja</label>
-                <textarea class="input-field" id="lojaBio" rows="4" style="resize:vertical;line-height:1.5">Preservamos uma tradição centenária de produção artesanal de panelas de barro, símbolo da cultura capixaba. Cada peça carrega a identidade, o suor e o amor passado de geração em geração.</textarea>
+                <textarea class="input-field" id="lojaBio" rows="4" style="resize:vertical;line-height:1.5">Descrição</textarea>
               </div>
             </div>
             <div class="config-card-footer">
@@ -161,7 +144,7 @@
         <section class="config-section" id="sec-dados-comerciais">
           <div class="config-card">
             <div class="config-card-header">
-              <div><h2>Documentação Jurídica</h2><p>Informações de registro da loja</p></div>
+              <div><h2>Documentação Jurídica</h2></div>
             </div>
             <div class="config-card-body">
               <div class="field-row">
@@ -195,82 +178,24 @@
           </div>
         </section>
 
-        <section class="config-section" id="sec-logistica">
-          <div class="config-card">
-            <div class="config-card-header">
-              <div><h2>Métodos de Entrega Ativos</h2><p>Configure como seus produtos chegam aos clientes</p></div>
-            </div>
-            <div class="config-card-body">
-              <div class="toggle-row">
-                <div class="toggle-info"><span>Permitir Retirada no Local</span><small>Os clientes buscam no endereço da sua oficina/loja</small></div>
-                <label class="toggle-switch"><input type="checkbox" checked /><span class="toggle-slider"></span></label>
-              </div>
-              <div class="toggle-row">
-                <div class="toggle-info"><span>Envio via Correios (PAC/Sedex)</span><small>Cálculo de peso baseado na tabela oficial dos Correios</small></div>
-                <label class="toggle-switch"><input type="checkbox" checked /><span class="toggle-slider"></span></label>
-              </div>
-              <div class="toggle-row">
-                <div class="toggle-info"><span>Entrega Local / Motoboy</span><small>Taxa fixa para distritos vizinhos ou mesma cidade</small></div>
-                <label class="toggle-switch"><input type="checkbox" /><span class="toggle-slider"></span></label>
-              </div>
-            </div>
-          </div>
-
-          <div class="config-card">
-            <div class="config-card-header">
-              <div><h2>Endereço de Postagem / Origem</h2></div>
-            </div>
-            <div class="config-card-body">
-              <div class="field-row">
-                <div class="field-group">
-                  <label>CEP de Origem</label>
-                  <input class="input-field" type="text" value="29023-010" />
-                </div>
-                <div class="field-group">
-                  <label>Distrito / Município</label>
-                  <input class="input-field" type="text" id="lojaCidade" value="Vitória - ES" readonly style="background:var(--bg)" />
-                </div>
-              </div>
-              <div class="field-group">
-                <label>Endereço Completo da Oficina</label>
-                <input class="input-field" type="text" value="Rua das Paneleiras, Nº 50" />
-              </div>
-            </div>
-            <div class="config-card-footer">
-              <button class="btn-primary" onclick="salvar('Logística atualizada com sucesso')"><i data-lucide="check"></i> Salvar Logística</button>
-            </div>
-          </div>
-        </section>
 
         <section class="config-section" id="sec-financeiro">
           <div class="config-card">
             <div class="config-card-header">
-              <div><h2>Conta para Repasse</h2><p>Onde você receberá o saldo das vendas realizadas na Aracê</p></div>
+              <div><h2>Conta para Repasse</h2></p></div>
             </div>
             <div class="config-card-body">
               <div class="field-row">
                 <div class="field-group">
                   <label>Banco</label>
                   <select class="input-field">
-                    <option value="banestes">Banestes — 021</option>
-                    <option value="brasil">Banco do Brasil — 001</option>
-                    <option value="caixa">Caixa Econômica — 104</option>
-                    <option value="nubank">Nu Pagamentos — 260</option>
+                    <option value="nubank">Pix </option>
                   </select>
                 </div>
-                <div class="field-group">
-                  <label>Tipo de Conta</label>
-                  <select class="input-field">
-                    <option value="cc">Conta Corrente</option>
-                    <option value="cp">Conta Poupança</option>
-                  </select>
-                </div>
+                
               </div>
               <div class="field-row">
-                <div class="field-group" style="flex:2">
-                  <label>Agência</label>
-                  <input class="input-field" type="text" placeholder="0000" />
-                </div>
+                
                 <div class="field-group" style="flex:3">
                   <label>Número da Conta</label>
                   <input class="input-field" type="text" placeholder="000000-0" />
@@ -287,34 +212,6 @@
           </div>
         </section>
 
-        <section class="config-section" id="sec-horarios">
-          <div class="config-card">
-            <div class="config-card-header">
-              <div><h2>Horário de Funcionamento</h2><p>Períodos em que a loja responde ao chat ou aceita retiradas</p></div>
-            </div>
-            <div class="config-card-body">
-              <div class="field-row" style="align-items: center; margin-bottom: 12px;">
-                <div style="width: 120px; font-weight: 500;">Segunda a Sexta</div>
-                <input class="input-field" type="time" value="08:00" style="max-width: 100px;" />
-                <span>às</span>
-                <input class="input-field" type="time" value="18:00" style="max-width: 100px;" />
-              </div>
-              <div class="field-row" style="align-items: center; margin-bottom: 12px;">
-                <div style="width: 120px; font-weight: 500;">Sábados</div>
-                <input class="input-field" type="time" value="08:00" style="max-width: 100px;" />
-                <span>às</span>
-                <input class="input-field" type="time" value="12:00" style="max-width: 100px;" />
-              </div>
-              <div class="field-row" style="align-items: center;">
-                <div style="width: 120px; font-weight: 500;">Domingos</div>
-                <span style="color:var(--muted); font-size:14px; font-style:italic;">Fechado</span>
-              </div>
-            </div>
-            <div class="config-card-footer">
-              <button class="btn-primary" onclick="salvar('Horários atualizados')"><i data-lucide="check"></i> Salvar Horários</button>
-            </div>
-          </div>
-        </section>
 
         <div class="toast" id="toast">
           <i data-lucide="check-circle"></i>
