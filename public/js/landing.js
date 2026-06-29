@@ -106,6 +106,11 @@ function configurarHeroCarousel() {
 }
 
 function configurarMapa() {
+  if (window.AraceState?.initMap) {
+    window.AraceState.initMap('mapa');
+    return;
+  }
+
   const mapaEl = document.getElementById('mapa');
   if (!mapaEl || !window.L) return;
 

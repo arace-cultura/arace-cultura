@@ -43,46 +43,47 @@ if ($imagens === []) {
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex&family=Playfair+Display:ital,wght@0,700;1,400&display=swap" rel="stylesheet" />
   <script src="https://unpkg.com/lucide@latest"></script>
-  <link href="/css/produto.css" rel="stylesheet" />
+  <script src="<?= base_url('js/icons.js') ?>"></script>
+  <link href="<?= base_url('css/produto.css') ?>" rel="stylesheet" />
 </head>
 <body>
 <header>
-  <a href="/" class="logo">arace</a>
+  <a href="<?= url_to('home') ?>" class="logo">arace</a>
   <div class="header-right">
-    <button class="cart-btn" type="button" onclick="window.location.href='/arace-carrinho'">
+    <button class="cart-btn" type="button" onclick="window.location.href='<?= url_to('main_arace_carrinho') ?>'">
       <i data-lucide="shopping-cart"></i>
       <span class="cart-count">2 itens</span>
     </button>
-    <button class="cart-btn" type="button" onclick="window.location.href='/usuario/arace-favoritos'">
+    <button class="cart-btn" type="button" onclick="window.location.href='<?= url_to('user_arace_favoritos') ?>'">
       <i data-lucide="heart"></i>
       <span class="cart-count">5 itens</span>
     </button>
-    <button class="avatar-btn" type="button" onclick="window.location.href='/usuario/arace-perfil'" aria-label="Abrir perfil">
+    <button class="avatar-btn" type="button" onclick="window.location.href='<?= url_to('user_arace_perfil') ?>'" aria-label="Abrir perfil">
       <i data-lucide="user"></i>
     </button>
   </div>
 </header>
 
 <aside>
-  <a class="nav-item" href="/"><i data-lucide="house"></i> Home page</a>
-  <a class="nav-item active" href="/arace-produtos"><i data-lucide="shopping-bag"></i> Produtos</a>
-  <a class="nav-item" href="/arace-carrinho"><i data-lucide="shopping-cart"></i> Carrinho</a>
-  <a class="nav-item" href="/usuario/arace-notificacao"><i data-lucide="bell"></i> Notificacoes</a>
-  <a class="nav-item" href="/arace-config"><i data-lucide="settings"></i> Configuracoes</a>
-  <a class="nav-item" href="/usuario/arace-perfil"><i data-lucide="user"></i> Perfil</a>
-  <a class="nav-item" href="/cadastro/produtor"><i data-lucide="box"></i> Quero ser produtor</a>
+  <a class="nav-item" href="<?= url_to('home') ?>"><i data-lucide="house"></i> Home page</a>
+  <a class="nav-item active" href="<?= url_to('arace_produtos') ?>"><i data-lucide="shopping-bag"></i> Produtos</a>
+  <a class="nav-item" href="<?= url_to('main_arace_carrinho') ?>"><i data-lucide="shopping-cart"></i> Carrinho</a>
+  <a class="nav-item" href="<?= url_to('user_arace_notificacao') ?>"><i data-lucide="bell"></i> Notificacoes</a>
+  <a class="nav-item" href="<?= url_to('main_arace_config') ?>"><i data-lucide="settings"></i> Configuracoes</a>
+  <a class="nav-item" href="<?= url_to('user_arace_perfil') ?>"><i data-lucide="user"></i> Perfil</a>
+  <a class="nav-item" href="<?= url_to('auth_cadastro_produtor') ?>"><i data-lucide="box"></i> Quero ser produtor</a>
   <div class="nav-divider"></div>
   <div class="nav-section">Reportar</div>
-  <a class="nav-item" href="/arace-config"><i data-lucide="hand-coins"></i> Detalhes de pagamento</a>
+  <a class="nav-item" href="<?= url_to('main_arace_config') ?>"><i data-lucide="hand-coins"></i> Detalhes de pagamento</a>
 </aside>
 
 <main id="main-content">
   <nav class="breadcrumb">
-    <a href="/">Inicio</a>
+    <a href="<?= url_to('home') ?>">Inicio</a>
     <i data-lucide="chevron-right"></i>
-    <a href="/arace-produtos">Produtos</a>
+    <a href="<?= url_to('arace_produtos') ?>">Produtos</a>
     <i data-lucide="chevron-right"></i>
-    <a href="/pesquisa?categoria=<?= urlencode($categoria) ?>"><?= esc($categoria) ?></a>
+    <a href="<?= url_to('main_pesquisa') ?>?categoria=<?= urlencode($categoria) ?>"><?= esc($categoria) ?></a>
     <i data-lucide="chevron-right"></i>
     <span><?= esc($nome) ?></span>
   </nav>
@@ -201,7 +202,7 @@ if ($imagens === []) {
             $recEstrelas = (float) ($recomendado['estrelas'] ?? 0);
           ?>
           <div class="rec-card">
-            <a class="rec-card-img" href="/produto/detalhes?id=<?= urlencode($recId) ?>">
+            <a class="rec-card-img" href="<?= url_to('main_produto_detalhes') ?>?id=<?= urlencode($recId) ?>">
               <img src="<?= esc($recImg) ?>" alt="<?= esc($recNome) ?>" loading="lazy" />
             </a>
             <div class="rec-card-body">

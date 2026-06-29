@@ -16,16 +16,11 @@ function renderPerfilConfig(dados) {
   preencherCampo('estado', dados.estado);
 
   const preview = document.getElementById('avatarPreview');
-  if (preview && window.AraceState) {
-    window.AraceState.renderAvatar(preview, dados.avatar);
-  }
+  if (preview && dados.avatar) preview.innerHTML = `<img src="${dados.avatar}" alt="Avatar do usuario" />`;
 }
 
 async function carregarConfiguracoes() {
-  // Firestore/API: buscar o documento do usuario autenticado aqui.
-  // Campos esperados: {{nome_usuario}}, {{email_usuario}}, {{telefone_usuario}}, {{endereco_usuario}}.
-  const dados = window.AraceState ? window.AraceState.getUser() : {};
-  renderPerfilConfig(dados);
+  if (window.ARACE_AUTH_USER) renderPerfilConfig(window.ARACE_AUTH_USER);
   renderLojaConfig();
 }
 
@@ -84,22 +79,17 @@ function trocarAba(btn, id) {
   lucide.createIcons();
 }
 
-function salvar(msg) {
-  if (window.AraceState) {
-    if (document.getElementById('lojaNome')) {
-      window.AraceState.saveProducer(coletarLojaConfig());
-      window.AraceState.setMode('produtor');
-    } else if (document.getElementById('nome')) {
-      window.AraceState.saveUser(coletarPerfilConfig());
-    }
-  }
+async function salvar(msg) {
+  mostrarToast(msg || 'Salvo com sucesso');
+}
 
+function mostrarToast(msg) {
   const toast = document.getElementById('toast');
   const toastMsg = document.getElementById('toastMsg');
 
   if (!toast || !toastMsg) return;
 
-  toastMsg.textContent = msg || 'Salvo com sucesso';
+  toastMsg.textContent = msg;
   toast.classList.add('show');
   setTimeout(() => toast.classList.remove('show'), 2800);
 }
@@ -112,13 +102,6 @@ function previewAvatar(input) {
     const preview = document.getElementById('avatarPreview');
     const image = event.target.result;
     if (preview) preview.innerHTML = `<img src="${image}" alt="Avatar do usuario" />`;
-    if (window.AraceState) {
-      if (document.getElementById('lojaNome')) {
-        window.AraceState.saveProducer({ ...coletarLojaConfig(), lojaAvatar: image, cadastrado: true });
-      } else {
-        window.AraceState.saveUser({ avatar: image });
-      }
-    }
   };
   reader.readAsDataURL(input.files[0]);
 }
@@ -128,13 +111,6 @@ function removerAvatar() {
   if (!preview) return;
 
   preview.innerHTML = '<i data-lucide="user"></i>';
-  if (window.AraceState) {
-    if (document.getElementById('lojaNome')) {
-      window.AraceState.saveProducer({ lojaAvatar: '' });
-    } else {
-      window.AraceState.saveUser({ avatar: '' });
-    }
-  }
   lucide.createIcons();
 }
 
@@ -163,6 +139,11 @@ async function buscarCEP(cep) {
 function selecionarTema(el) {
   document.querySelectorAll('.theme-option').forEach(item => item.classList.remove('active'));
   el.classList.add('active');
+
+  const tema = el.querySelector('.theme-label')?.textContent?.trim().toLowerCase();
+  if (tema && window.AraceState?.setTheme) {
+    window.AraceState.setTheme(tema === 'escuro' ? 'escuro' : tema === 'sistema' ? 'sistema' : 'claro');
+  }
 }
 
 window.trocarAba = trocarAba;

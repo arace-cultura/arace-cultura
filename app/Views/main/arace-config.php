@@ -1,30 +1,40 @@
-ÔªøÔªø<!DOCTYPE html>
+?<!DOCTYPE html>
+<?php
+$usuario = $usuario ?? [];
+$nomeCompleto = trim((string) ($usuario['nome'] ?? ''));
+$nomePartes = preg_split('/\s+/', $nomeCompleto, 2) ?: [];
+$nome = (string) ($nomePartes[0] ?? $nomeCompleto);
+$sobrenome = (string) ($usuario['sobrenome'] ?? ($nomePartes[1] ?? ''));
+$username = (string) ($usuario['username'] ?? '');
+$genero = (string) ($usuario['genero'] ?? '');
+?>
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Arac√™ ‚Äî Configura√ß√µes</title>
+  <title>AracÍ ó ConfiguraÁıes</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex&family=Playfair+Display:wght@700&display=swap" rel="stylesheet" />
   <script src="https://unpkg.com/lucide@latest"></script>
-  <link href="/css/config.css" rel="stylesheet" />
+  <script src="<?= base_url('js/icons.js') ?>"></script>
+  <link href="<?= base_url('css/config.css') ?>" rel="stylesheet" />
 </head>
 <body>
 
 <!-- HEADER -->
   <header>
-    <a href="/" class="logo">arac√™</a>
+    <a href="<?= url_to('home') ?>" class="logo">aracÍ</a>
     <div class="header-right">
-    <button class="cart-btn" type="button" onclick="window.location.href='/arace-carrinho'">
+    <button class="cart-btn" type="button" onclick="window.location.href='<?= url_to('main_arace_carrinho') ?>'">
         <i data-lucide="shopping-cart"></i>
         <span class="cart-count">2 itens</span>
       </button>
-    <button class="cart-btn" type="button" onclick="window.location.href='/usuario/arace-favoritos'">
+    <button class="cart-btn" type="button" onclick="window.location.href='<?= url_to('user_arace_favoritos') ?>'">
         <i data-lucide="heart"></i>
         <span class="cart-count">5 itens</span>
       </button>
-      <button class="avatar-btn" type="button" onclick="window.location.href='/usuario/arace-perfil'" aria-label="Abrir perfil">
+      <button class="avatar-btn" type="button" onclick="window.location.href='<?= url_to('user_arace_perfil') ?>'" aria-label="Abrir perfil">
         <i data-lucide="user"></i>
       </button>
     </div>
@@ -32,30 +42,30 @@
 
 <!-- SIDEBAR -->
 <aside>
-    <a class="nav-item" href="/">
+    <a class="nav-item" href="<?= url_to('home') ?>">
       <i data-lucide="house"></i> Home page
     </a>
-    <a class="nav-item" href="/arace-produtos">
+    <a class="nav-item" href="<?= url_to('arace_produtos') ?>">
       <i data-lucide="shopping-bag"></i> Produtos
     </a>
-    <a class="nav-item active" href="/arace-carrinho">
+    <a class="nav-item active" href="<?= url_to('main_arace_carrinho') ?>">
       <i data-lucide="shopping-cart"></i> Carrinho
     </a>
-    <a class="nav-item" href="/usuario/arace-notificacao">
-      <i data-lucide="bell"></i> Notifica√ß√µes
+    <a class="nav-item" href="<?= url_to('user_arace_notificacao') ?>">
+      <i data-lucide="bell"></i> NotificaÁıes
     </a>
-    <a class="nav-item" href="/arace-config">
-      <i data-lucide="settings"></i> Configura√ß√µes
+    <a class="nav-item" href="<?= url_to('main_arace_config') ?>">
+      <i data-lucide="settings"></i> ConfiguraÁıes
     </a>
-    <a class="nav-item" href="/usuario/arace-perfil">
+    <a class="nav-item" href="<?= url_to('user_arace_perfil') ?>">
       <i data-lucide="user"></i> Perfil
     </a>
-    <a class="nav-item" href="/cadastro/produtor">
+    <a class="nav-item" href="<?= url_to('auth_cadastro_produtor') ?>">
       <i data-lucide="box"></i> Quero ser produtor
     </a>
     <div class="nav-divider"></div>
     <div class="nav-section">Reportar</div>
-    <a class="nav-item" href="/arace-config">
+    <a class="nav-item" href="<?= url_to('main_arace_config') ?>">
       <i data-lucide="hand-coins"></i> Detalhes de pagamento
     </a>
   </aside>
@@ -63,8 +73,8 @@
 <main>
   <div class="config-header">
     <div>
-      <h1>Configura√ß√µes</h1>
-      <p>Gerencie suas prefer√™ncias e dados da conta</p>
+      <h1>ConfiguraÁıes</h1>
+      <p>Gerencie suas preferÍncias e dados da conta</p>
     </div>
   </div>
 
@@ -76,31 +86,32 @@
         <i data-lucide="user"></i> Perfil
       </button>
       <button class="config-nav-item" onclick="trocarAba(this,'conta')">
-        <i data-lucide="shield"></i> Conta & Seguran√ßa
+        <i data-lucide="shield"></i> Conta & SeguranÁa
       </button>
       <button class="config-nav-item" onclick="trocarAba(this,'notificacoes')">
-        <i data-lucide="bell"></i> Notifica√ß√µes
+        <i data-lucide="bell"></i> NotificaÁıes
       </button>
       <button class="config-nav-item" onclick="trocarAba(this,'pagamento')">
         <i data-lucide="credit-card"></i> Pagamento
       </button>
       <button class="config-nav-item" onclick="trocarAba(this,'enderecos')">
-        <i data-lucide="map-pin"></i> Endere√ßos
+        <i data-lucide="map-pin"></i> EndereÁos
       </button>
       <div class="config-nav-divider"></div>
       <button class="config-nav-item" onclick="trocarAba(this,'aparencia')">
-        <i data-lucide="palette"></i> Apar√™ncia
+        <i data-lucide="palette"></i> AparÍncia
       </button>
       <button class="config-nav-item" onclick="trocarAba(this,'privacidade')">
         <i data-lucide="lock"></i> Privacidade
       </button>
     </nav>
 
-    <!-- CONTE√öDO -->
+    <!-- CONTE⁄DO -->
     <div>
 
-      <!-- ‚îÄ‚îÄ PERFIL ‚îÄ‚îÄ -->
+      <!-- -- PERFIL -- -->
       <section class="config-section active" id="sec-perfil">
+        <form action="<?= url_to('user_profile_update') ?>" method="post">
 
         <div class="config-card">
           <div class="config-card-header">
@@ -109,14 +120,18 @@
           <div class="config-card-body">
             <div class="avatar-upload-area">
               <div class="avatar-preview" id="avatarPreview">
-                <i data-lucide="user"></i>
+                <?php if (! empty($usuario['avatar'])): ?>
+                  <img src="<?= esc($usuario['avatar'], 'attr') ?>" alt="Avatar do usuario" />
+                <?php else: ?>
+                  <i data-lucide="user"></i>
+                <?php endif; ?>
               </div>
               <div class="avatar-upload-btns">
                 <label for="avatarInput" class="btn-primary" style="cursor:pointer">
                   <i data-lucide="upload"></i> Alterar foto
                 </label>
                 <input type="file" id="avatarInput" accept="image/*" style="display:none" onchange="previewAvatar(this)" />
-                <button class="btn-secondary" onclick="removerAvatar()">Remover</button>
+                <button class="btn-secondary" type="button" onclick="removerAvatar()">Remover</button>
               </div>
             </div>
           </div>
@@ -124,47 +139,47 @@
 
         <div class="config-card">
           <div class="config-card-header">
-            <div><h2>Informa√ß√µes pessoais</h2><p>Seus dados b√°sicos</p></div>
+            <div><h2>InformaÁıes pessoais</h2><p>Seus dados b·sicos</p></div>
           </div>
           <div class="config-card-body">
             <div class="field-row">
               <div class="field-group">
                 <label>Nome</label>
-                <input class="input-field" type="text" id="nome" placeholder="Seu nome" value="Maria" />
+                <input class="input-field" type="text" id="nome" name="nome" placeholder="Seu nome" value="<?= esc($nome, 'attr') ?>" />
               </div>
               <div class="field-group">
                 <label>Sobrenome</label>
-                <input class="input-field" type="text" id="sobrenome" placeholder="Seu sobrenome" value="Silva" />
+                <input class="input-field" type="text" id="sobrenome" name="sobrenome" placeholder="Seu sobrenome" value="<?= esc($sobrenome, 'attr') ?>" />
               </div>
             </div>
             <div class="field-group">
-              <label>Nome de usu√°rio</label>
-              <input class="input-field" type="text" id="username" placeholder="@usuario" value="@mariasilva" />
-              <small>Vis√≠vel publicamente no seu perfil</small>
+              <label>Nome de usu·rio</label>
+              <input class="input-field" type="text" id="username" name="username" placeholder="@usuario" value="<?= esc($username, 'attr') ?>" />
+              <small>VisÌvel publicamente no seu perfil</small>
             </div>
             <div class="field-group">
               <label>Bio</label>
-              <textarea class="input-field" id="bio" rows="3" placeholder="Uma breve descri√ß√£o sobre voc√™‚Ä¶" style="resize:vertical;line-height:1.5">Amante da cultura capixaba üçÉ</textarea>
+              <textarea class="input-field" id="bio" name="bio" rows="3" placeholder="Uma breve descriÁ„o sobre vocÍÖ" style="resize:vertical;line-height:1.5"><?= esc($usuario['bio'] ?? '') ?></textarea>
             </div>
             <div class="field-row">
               <div class="field-group">
                 <label>Data de nascimento</label>
-                <input class="input-field" type="date" id="nascimento" value="1995-06-12" />
+                <input class="input-field" type="date" id="nascimento" name="nascimento" value="<?= esc($usuario['nascimento'] ?? '', 'attr') ?>" />
               </div>
               <div class="field-group">
-                <label>G√™nero</label>
-                <select class="input-field" id="genero">
-                  <option value="">Prefiro n√£o informar</option>
-                  <option value="f" selected>Feminino</option>
-                  <option value="m">Masculino</option>
-                  <option value="nb">N√£o-bin√°rio</option>
+                <label>GÍnero</label>
+                <select class="input-field" id="genero" name="genero">
+                  <option value="">Prefiro n„o informar</option>
+                  <option value="f" <?= $genero === 'f' ? 'selected' : '' ?>>Feminino</option>
+                  <option value="m" <?= $genero === 'm' ? 'selected' : '' ?>>Masculino</option>
+                  <option value="nb" <?= $genero === 'nb' ? 'selected' : '' ?>>N„o-bin·rio</option>
                 </select>
               </div>
             </div>
           </div>
           <div class="config-card-footer">
-            <button class="btn-secondary">Cancelar</button>
-            <button class="btn-primary" onclick="salvar('Perfil salvo com sucesso')"><i data-lucide="check"></i> Salvar</button>
+            <button class="btn-secondary" type="button">Cancelar</button>
+            <button class="btn-primary" type="submit"><i data-lucide="check"></i> Salvar</button>
           </div>
         </div>
 
@@ -175,21 +190,22 @@
           <div class="config-card-body">
             <div class="field-group">
               <label>E-mail</label>
-              <input class="input-field" type="email" id="email" value="maria@email.com" />
+              <input class="input-field" type="email" id="email" name="email" value="<?= esc($usuario['email'] ?? '', 'attr') ?>" />
             </div>
             <div class="field-group">
               <label>Telefone</label>
-              <input class="input-field" type="tel" id="tel" placeholder="(27) 99999-9999" />
+              <input class="input-field" type="tel" id="tel" name="telefone" placeholder="(27) 99999-9999" value="<?= esc($usuario['telefone'] ?? '', 'attr') ?>" />
             </div>
           </div>
           <div class="config-card-footer">
-            <button class="btn-secondary">Cancelar</button>
-            <button class="btn-primary" onclick="salvar('Contato atualizado')"><i data-lucide="check"></i> Salvar</button>
+            <button class="btn-secondary" type="button">Cancelar</button>
+            <button class="btn-primary" type="submit"><i data-lucide="check"></i> Salvar</button>
           </div>
         </div>
+        </form>
       </section>
 
-      <!-- ‚îÄ‚îÄ CONTA & SEGURAN√áA ‚îÄ‚îÄ -->
+      <!-- -- CONTA & SEGURAN«A -- -->
       <section class="config-section" id="sec-conta">
 
         <div class="config-card">
@@ -199,19 +215,19 @@
           <div class="config-card-body">
             <div class="field-group">
               <label>Senha atual</label>
-              <input class="input-field" type="password" placeholder="‚Ä¢‚Ä¢‚Ä¢‚Ä¢‚Ä¢‚Ä¢‚Ä¢‚Ä¢" />
+              <input class="input-field" type="password" placeholder="ïïïïïïïï" />
             </div>
             <div class="field-row">
               <div class="field-group">
                 <label>Nova senha</label>
-                <input class="input-field" type="password" id="novaSenha" placeholder="‚Ä¢‚Ä¢‚Ä¢‚Ä¢‚Ä¢‚Ä¢‚Ä¢‚Ä¢" />
+                <input class="input-field" type="password" id="novaSenha" placeholder="ïïïïïïïï" />
               </div>
               <div class="field-group">
                 <label>Confirmar nova senha</label>
-                <input class="input-field" type="password" id="confirmarSenha" placeholder="‚Ä¢‚Ä¢‚Ä¢‚Ä¢‚Ä¢‚Ä¢‚Ä¢‚Ä¢" />
+                <input class="input-field" type="password" id="confirmarSenha" placeholder="ïïïïïïïï" />
               </div>
             </div>
-            <small style="font-size:12px;color:var(--muted)">M√≠nimo 8 caracteres, com letras e n√∫meros.</small>
+            <small style="font-size:12px;color:var(--muted)">MÌnimo 8 caracteres, com letras e n˙meros.</small>
           </div>
           <div class="config-card-footer">
             <button class="btn-primary" onclick="salvar('Senha alterada com sucesso')"><i data-lucide="lock"></i> Atualizar senha</button>
@@ -220,13 +236,13 @@
 
         <div class="config-card">
           <div class="config-card-header">
-            <div><h2>Verifica√ß√£o em duas etapas</h2><p>Adiciona uma camada extra de seguran√ßa</p></div>
+            <div><h2>VerificaÁ„o em duas etapas</h2><p>Adiciona uma camada extra de seguranÁa</p></div>
           </div>
           <div class="config-card-body">
             <div class="toggle-row">
               <div class="toggle-info">
                 <span>SMS</span>
-                <small>Receber c√≥digo por mensagem de texto</small>
+                <small>Receber cÛdigo por mensagem de texto</small>
               </div>
               <label class="toggle-switch">
                 <input type="checkbox" checked />
@@ -236,7 +252,7 @@
             <div class="toggle-row">
               <div class="toggle-info">
                 <span>E-mail</span>
-                <small>Receber c√≥digo por e-mail</small>
+                <small>Receber cÛdigo por e-mail</small>
               </div>
               <label class="toggle-switch">
                 <input type="checkbox" />
@@ -258,13 +274,13 @@
 
         <div class="config-card danger-card">
           <div class="config-card-header">
-            <div><h2>Zona de perigo</h2><p>A√ß√µes irrevers√≠veis</p></div>
+            <div><h2>Zona de perigo</h2><p>AÁıes irreversÌveis</p></div>
           </div>
           <div class="config-card-body">
             <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.75rem">
               <div>
                 <div style="font-size:14px;font-weight:500;color:var(--text)">Desativar conta</div>
-                <div style="font-size:12px;color:var(--muted);margin-top:2px">Sua conta ficar√° invis√≠vel temporariamente</div>
+                <div style="font-size:12px;color:var(--muted);margin-top:2px">Sua conta ficar· invisÌvel temporariamente</div>
               </div>
               <button class="btn-danger"><i data-lucide="pause-circle"></i> Desativar</button>
             </div>
@@ -280,11 +296,11 @@
         </div>
       </section>
 
-      <!-- ‚îÄ‚îÄ NOTIFICA√á√ïES ‚îÄ‚îÄ -->
+      <!-- -- NOTIFICA«’ES -- -->
       <section class="config-section" id="sec-notificacoes">
         <div class="config-card">
           <div class="config-card-header">
-            <div><h2>Notifica√ß√µes por e-mail</h2></div>
+            <div><h2>NotificaÁıes por e-mail</h2></div>
           </div>
           <div class="config-card-body">
             <div class="toggle-row">
@@ -292,7 +308,7 @@
               <label class="toggle-switch"><input type="checkbox" checked /><span class="toggle-slider"></span></label>
             </div>
             <div class="toggle-row">
-              <div class="toggle-info"><span>Promo√ß√µes</span><small>Ofertas exclusivas e cupons</small></div>
+              <div class="toggle-info"><span>PromoÁıes</span><small>Ofertas exclusivas e cupons</small></div>
               <label class="toggle-switch"><input type="checkbox" checked /><span class="toggle-slider"></span></label>
             </div>
             <div class="toggle-row">
@@ -300,48 +316,48 @@
               <label class="toggle-switch"><input type="checkbox" /><span class="toggle-slider"></span></label>
             </div>
             <div class="toggle-row">
-              <div class="toggle-info"><span>Respostas de avalia√ß√µes</span><small>Quando algu√©m responder sua avalia√ß√£o</small></div>
+              <div class="toggle-info"><span>Respostas de avaliaÁıes</span><small>Quando alguÈm responder sua avaliaÁ„o</small></div>
               <label class="toggle-switch"><input type="checkbox" checked /><span class="toggle-slider"></span></label>
             </div>
           </div>
         </div>
         <div class="config-card">
           <div class="config-card-header">
-            <div><h2>Notifica√ß√µes push</h2></div>
+            <div><h2>NotificaÁıes push</h2></div>
           </div>
           <div class="config-card-body">
             <div class="toggle-row">
-              <div class="toggle-info"><span>Chat</span><small>Novas mensagens de artes√£os</small></div>
+              <div class="toggle-info"><span>Chat</span><small>Novas mensagens de artes„os</small></div>
               <label class="toggle-switch"><input type="checkbox" checked /><span class="toggle-slider"></span></label>
             </div>
             <div class="toggle-row">
-              <div class="toggle-info"><span>Status do pedido</span><small>Atualiza√ß√µes de envio e entrega</small></div>
+              <div class="toggle-info"><span>Status do pedido</span><small>AtualizaÁıes de envio e entrega</small></div>
               <label class="toggle-switch"><input type="checkbox" checked /><span class="toggle-slider"></span></label>
             </div>
             <div class="toggle-row">
-              <div class="toggle-info"><span>Novos produtos favoritos</span><small>Produtos novos de artes√£os que voc√™ segue</small></div>
+              <div class="toggle-info"><span>Novos produtos favoritos</span><small>Produtos novos de artes„os que vocÍ segue</small></div>
               <label class="toggle-switch"><input type="checkbox" /><span class="toggle-slider"></span></label>
             </div>
           </div>
           <div class="config-card-footer">
-            <button class="btn-primary" onclick="salvar('Notifica√ß√µes salvas')"><i data-lucide="check"></i> Salvar</button>
+            <button class="btn-primary" onclick="salvar('NotificaÁıes salvas')"><i data-lucide="check"></i> Salvar</button>
           </div>
         </div>
       </section>
 
-      <!-- ‚îÄ‚îÄ PAGAMENTO ‚îÄ‚îÄ -->
+      <!-- -- PAGAMENTO -- -->
       <section class="config-section" id="sec-pagamento">
         <div class="config-card">
           <div class="config-card-header">
-            <div><h2>M√©todos de pagamento</h2><p>Cart√µes e formas de pagamento salvos</p></div>
-            <button class="btn-primary"><i data-lucide="plus"></i> Adicionar cart√£o</button>
+            <div><h2>MÈtodos de pagamento</h2><p>Cartıes e formas de pagamento salvos</p></div>
+            <button class="btn-primary"><i data-lucide="plus"></i> Adicionar cart„o</button>
           </div>
           <div class="config-card-body" id="cartoesList">
             <div style="display:flex;align-items:center;justify-content:space-between;padding:.5rem 0">
               <div style="display:flex;align-items:center;gap:12px">
                 <div style="width:44px;height:28px;background:var(--bg);border:.5px solid var(--border);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:var(--azul)">VISA</div>
                 <div>
-                  <div style="font-size:14px;color:var(--text)">‚Ä¢‚Ä¢‚Ä¢‚Ä¢ ‚Ä¢‚Ä¢‚Ä¢‚Ä¢ ‚Ä¢‚Ä¢‚Ä¢‚Ä¢ 4242</div>
+                  <div style="font-size:14px;color:var(--text)">ïïïï ïïïï ïïïï 4242</div>
                   <div style="font-size:12px;color:var(--muted)">Expira 12/27</div>
                 </div>
               </div>
@@ -359,7 +375,7 @@
           <div class="config-card-body">
             <div class="field-group">
               <label>Chave Pix</label>
-              <input class="input-field" type="text" placeholder="CPF, e-mail, telefone ou chave aleat√≥ria" />
+              <input class="input-field" type="text" placeholder="CPF, e-mail, telefone ou chave aleatÛria" />
             </div>
           </div>
           <div class="config-card-footer">
@@ -368,18 +384,18 @@
         </div>
       </section>
 
-      <!-- ‚îÄ‚îÄ ENDERE√áOS ‚îÄ‚îÄ -->
+      <!-- -- ENDERE«OS -- -->
       <section class="config-section" id="sec-enderecos">
         <div class="config-card">
           <div class="config-card-header">
-            <div><h2>Endere√ßos salvos</h2></div>
-            <button class="btn-primary"><i data-lucide="plus"></i> Novo endere√ßo</button>
+            <div><h2>EndereÁos salvos</h2></div>
+            <button class="btn-primary"><i data-lucide="plus"></i> Novo endereÁo</button>
           </div>
           <div class="config-card-body">
             <div style="display:flex;align-items:flex-start;justify-content:space-between;padding:.25rem 0">
               <div>
                 <div style="font-size:14px;font-weight:500;color:var(--text)">Casa</div>
-                <div style="font-size:13px;color:var(--muted);margin-top:3px;line-height:1.5">Rua das Palmeiras, 123 ‚Äî Jardim da Penha<br/>Vit√≥ria, ES ‚Äî 29060-000</div>
+                <div style="font-size:13px;color:var(--muted);margin-top:3px;line-height:1.5">Rua das Palmeiras, 123 ó Jardim da Penha<br/>VitÛria, ES ó 29060-000</div>
               </div>
               <div style="display:flex;align-items:center;gap:8px">
                 <span style="font-size:11px;background:var(--laranja-l);color:var(--laranja-d);border-radius:99px;padding:2px 10px;font-weight:500">Principal</span>
@@ -392,7 +408,7 @@
 
         <div class="config-card">
           <div class="config-card-header">
-            <div><h2>Adicionar endere√ßo</h2></div>
+            <div><h2>Adicionar endereÁo</h2></div>
           </div>
           <div class="config-card-body">
             <div class="field-row">
@@ -404,8 +420,8 @@
                 <label>Estado</label>
                 <select class="input-field" id="estado">
                   <option value="">Selecione</option>
-                  <option value="ES" selected>Esp√≠rito Santo</option>
-                  <option value="SP">S√£o Paulo</option>
+                  <option value="ES" selected>EspÌrito Santo</option>
+                  <option value="SP">S„o Paulo</option>
                   <option value="RJ">Rio de Janeiro</option>
                   <option value="MG">Minas Gerais</option>
                   <option value="BA">Bahia</option>
@@ -415,7 +431,7 @@
             <div class="field-row">
               <div class="field-group">
                 <label>Cidade</label>
-                <input class="input-field" type="text" id="cidade" placeholder="Vit√≥ria" />
+                <input class="input-field" type="text" id="cidade" placeholder="VitÛria" />
               </div>
               <div class="field-group">
                 <label>Bairro</label>
@@ -428,27 +444,27 @@
             </div>
             <div class="field-row">
               <div class="field-group">
-                <label>N√∫mero</label>
-                <input class="input-field" type="text" placeholder="N¬∫" />
+                <label>N˙mero</label>
+                <input class="input-field" type="text" placeholder="N∫" />
               </div>
               <div class="field-group">
                 <label>Complemento</label>
-                <input class="input-field" type="text" placeholder="Apto, bloco‚Ä¶" />
+                <input class="input-field" type="text" placeholder="Apto, blocoÖ" />
               </div>
             </div>
           </div>
           <div class="config-card-footer">
             <button class="btn-secondary">Cancelar</button>
-            <button class="btn-primary" onclick="salvar('Endere√ßo salvo')"><i data-lucide="check"></i> Salvar endere√ßo</button>
+            <button class="btn-primary" onclick="salvar('EndereÁo salvo')"><i data-lucide="check"></i> Salvar endereÁo</button>
           </div>
         </div>
       </section>
 
-      <!-- ‚îÄ‚îÄ APAR√äNCIA ‚îÄ‚îÄ -->
+      <!-- -- APAR NCIA -- -->
       <section class="config-section" id="sec-aparencia">
         <div class="config-card">
           <div class="config-card-header">
-            <div><h2>Tema</h2><p>Escolha a apar√™ncia da interface</p></div>
+            <div><h2>Tema</h2><p>Escolha a aparÍncia da interface</p></div>
           </div>
           <div class="config-card-body">
             <div class="theme-options">
@@ -476,31 +492,31 @@
               <div class="field-group">
                 <label>Idioma</label>
                 <div class="select-with-icon">
-                  <span class="flag">üáßüá∑</span>
+                  <span class="flag">????</span>
                   <select class="input-field" id="idioma">
-                    <option value="pt-BR" selected>Portugu√™s (Brasil)</option>
+                    <option value="pt-BR" selected>PortuguÍs (Brasil)</option>
                     <option value="en">English</option>
-                    <option value="es">Espa√±ol</option>
+                    <option value="es">EspaÒol</option>
                   </select>
                 </div>
               </div>
               <div class="field-group">
                 <label>Moeda</label>
                 <select class="input-field">
-                  <option value="BRL" selected>BRL ‚Äî Real brasileiro</option>
-                  <option value="USD">USD ‚Äî D√≥lar americano</option>
-                  <option value="EUR">EUR ‚Äî Euro</option>
+                  <option value="BRL" selected>BRL ó Real brasileiro</option>
+                  <option value="USD">USD ó DÛlar americano</option>
+                  <option value="EUR">EUR ó Euro</option>
                 </select>
               </div>
             </div>
           </div>
           <div class="config-card-footer">
-            <button class="btn-primary" onclick="salvar('Prefer√™ncias salvas')"><i data-lucide="check"></i> Salvar</button>
+            <button class="btn-primary" onclick="salvar('PreferÍncias salvas')"><i data-lucide="check"></i> Salvar</button>
           </div>
         </div>
       </section>
 
-      <!-- ‚îÄ‚îÄ PRIVACIDADE ‚îÄ‚îÄ -->
+      <!-- -- PRIVACIDADE -- -->
       <section class="config-section" id="sec-privacidade">
         <div class="config-card">
           <div class="config-card-header">
@@ -508,11 +524,11 @@
           </div>
           <div class="config-card-body">
             <div class="toggle-row">
-              <div class="toggle-info"><span>Perfil p√∫blico</span><small>Outros usu√°rios podem ver seu perfil</small></div>
+              <div class="toggle-info"><span>Perfil p˙blico</span><small>Outros usu·rios podem ver seu perfil</small></div>
               <label class="toggle-switch"><input type="checkbox" checked /><span class="toggle-slider"></span></label>
             </div>
             <div class="toggle-row">
-              <div class="toggle-info"><span>Mostrar lista de favoritos</span><small>Seus produtos favoritos ficam vis√≠veis</small></div>
+              <div class="toggle-info"><span>Mostrar lista de favoritos</span><small>Seus produtos favoritos ficam visÌveis</small></div>
               <label class="toggle-switch"><input type="checkbox" /><span class="toggle-slider"></span></label>
             </div>
             <div class="toggle-row">
@@ -529,17 +545,17 @@
             <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:.75rem">
               <div>
                 <div style="font-size:14px;font-weight:500;color:var(--text)">Exportar meus dados</div>
-                <div style="font-size:12px;color:var(--muted);margin-top:2px">Baixe uma c√≥pia de todos os seus dados</div>
+                <div style="font-size:12px;color:var(--muted);margin-top:2px">Baixe uma cÛpia de todos os seus dados</div>
               </div>
               <button class="btn-secondary"><i data-lucide="download" style="width:15px;height:15px"></i> Exportar</button>
             </div>
             <div style="height:.5px;background:var(--border);margin:.25rem 0"></div>
             <div class="toggle-row">
-              <div class="toggle-info"><span>Cookies de an√°lise</span><small>Ajuda a melhorar a plataforma</small></div>
+              <div class="toggle-info"><span>Cookies de an·lise</span><small>Ajuda a melhorar a plataforma</small></div>
               <label class="toggle-switch"><input type="checkbox" checked /><span class="toggle-slider"></span></label>
             </div>
             <div class="toggle-row">
-              <div class="toggle-info"><span>Personaliza√ß√£o de an√∫ncios</span><small>Recomenda√ß√µes baseadas no seu hist√≥rico</small></div>
+              <div class="toggle-info"><span>PersonalizaÁ„o de an˙ncios</span><small>RecomendaÁıes baseadas no seu histÛrico</small></div>
               <label class="toggle-switch"><input type="checkbox" /><span class="toggle-slider"></span></label>
             </div>
           </div>
@@ -549,11 +565,11 @@
         </div>
       </section>
 
-    </div><!-- /conte√∫do -->
+    </div><!-- /conte˙do -->
   </div><!-- /config-layout -->
 </main>
 
-<!-- Toast de confirma√ß√£o -->
+<!-- Toast de confirmaÁ„o -->
 <div class="toast" id="toast">
   <i data-lucide="check-circle"></i>
   <span id="toastMsg">Salvo com sucesso</span>

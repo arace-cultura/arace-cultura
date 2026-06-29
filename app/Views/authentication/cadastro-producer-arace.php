@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <meta http-equiv="refresh" content="0; url=/cadastro/produtora-arace" />
+  <meta http-equiv="refresh" content="0; url=<?= url_to('auth_cadastro_producter_arace') ?>" />
   <title>Arace - Cadastro Produtor</title>
 </head>
 <body>

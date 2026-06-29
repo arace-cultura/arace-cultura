@@ -1,9 +1,9 @@
-﻿﻿<!DOCTYPE html>
+?<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Aracê - Login</title>
+  <title>Arac� - Login</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex&display=swap" rel="stylesheet" />
@@ -13,7 +13,7 @@
 
   <div class="login-card item-animado">
     <div class="logo-wrap item-animado atraso-1">
-      <img src="<?= base_url('images/arace.png') ?>" alt="Logo Aracê" />
+      <img src="<?= base_url('images/arace.png') ?>" alt="Logo Arac�" />
     </div>
 
     <p class="subtitle item-animado atraso-1">Bem-vindo de volta</p>
@@ -24,7 +24,7 @@
       <p class="mensagem-login mensagem-sucesso" role="status"><?= esc(session('sucesso')) ?></p>
     <?php endif; ?>
 
-    <form id="formLogin" action="<?= site_url('login') ?>" method="post" novalidate>
+    <form id="formLogin" action="<?= url_to('auth_login_post') ?>" method="post" novalidate>
       <div class="input-group-custom item-animado atraso-2">
         <i data-lucide="user"></i>
         <input type="email" id="email" name="email" placeholder="E-mail" autocomplete="email" value="<?= esc(old('email')) ?>" required />
@@ -47,7 +47,7 @@
         <button type="submit" class="btn-login" id="btnEntrar">Entrar</button>
 
         <div class="links-rodape">
-          <a href="<?= site_url('cadastro') ?>">Cadastre-se</a>
+          <a href="<?= url_to('auth_cadastro') ?>">Cadastre-se</a>
           <a href="#" class="esqueceu">Esqueceu a senha?</a>
         </div>
       </div>
@@ -55,6 +55,7 @@
   </div>
 
   <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="<?= base_url('js/icons.js') ?>"></script>
   <script>lucide.createIcons();</script>
   <script src="<?= base_url('js/login.js') ?>"></script>
 </body>

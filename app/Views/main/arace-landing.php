@@ -1,4 +1,4 @@
-﻿﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <?php
 $produtos = $produtos ?? [];
 $produtores = $produtores ?? [];
@@ -29,7 +29,8 @@ function araceStars(float $nota): string
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
   <link href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex&family=Playfair+Display:ital,wght@0,700;1,400&display=swap" rel="stylesheet"/>
   <script src="https://unpkg.com/lucide@latest"></script>
-  <link rel="stylesheet" href="/css/landing.css"/>
+  <script src="<?= base_url('js/icons.js') ?>"></script>
+  <link rel="stylesheet" href="<?= base_url('css/landing.css') ?>"/>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 </head>
@@ -37,24 +38,24 @@ function araceStars(float $nota): string
 
 <!-- HEADER -->
 <header>
-  <a href="/" class="logo">aracê</a>
+  <a href="<?= url_to('home') ?>" class="logo">aracê</a>
 
-  <form class="search-wrap" action="/pesquisa" method="get">
+  <form class="search-wrap" action="<?= url_to('main_pesquisa') ?>" method="get">
     <i data-lucide="search"></i>
     <input type="text" name="q" id="searchHeaderInput" placeholder="Pesquisar produtos..." />
   </form>
 
   <div class="header-right">
     <!-- Deveriam ser <a></a> -->
-    <button class="cart-btn" type="button" onclick="window.location.href='/arace-carrinho'">
+    <button class="cart-btn" type="button" onclick="window.location.href='<?= url_to('main_arace_carrinho') ?>'">
       <i data-lucide="shopping-cart"></i>
       <span class="cart-count">2 itens</span>
     </button>
-    <button class="cart-btn" type="button" onclick="window.location.href='/usuario/arace-favoritos'">
+    <button class="cart-btn" type="button" onclick="window.location.href='<?= url_to('user_arace_favoritos') ?>'">
       <i data-lucide="heart"></i>
       <span class="cart-count">5 itens</span>
     </button>
-    <button class="avatar-btn" type="button" onclick="window.location.href='login'">
+    <button class="avatar-btn" type="button" onclick="window.location.href='<?= url_to('auth_login') ?>'">
       <i data-lucide="user"></i>
     </button>
   </div>
@@ -76,7 +77,7 @@ function araceStars(float $nota): string
 
 <!--Icone de chat-->
 <div class="chat-bubble">
-  <a href="/usuario/chat">
+  <a href="<?= url_to('user_chat') ?>">
     <i data-lucide="message-circle-more"></i>
   </a>
 </div>
@@ -88,14 +89,14 @@ function araceStars(float $nota): string
       <h2>Categorias</h2>
     </div>
     <div class="cat-grid">
-      <a class="cat-card" href="/pesquisa"><div class="cat-icon" style="background:#f3a621"><i data-lucide="gallery-horizontal-end"></i></div><span>Tudo</span></a>
-      <a class="cat-card" href="/pesquisa?categoria=pinturas"><div class="cat-icon" style="background:#f2601a"><i data-lucide="palette"></i></div><span>Pinturas</span></a>
-      <a class="cat-card" href="/pesquisa?categoria=casa-e-vida"><div class="cat-icon" style="background:#25518f"><i data-lucide="house"></i></div><span>Casa & Vida</span></a>
-      <a class="cat-card" href="/pesquisa?categoria=retro"><div class="cat-icon" style="background:#478632"><i data-lucide="videotape"></i></div><span>Retro</span></a>
-      <a class="cat-card" href="/pesquisa?categoria=joias"><div class="cat-icon" style="background:#f3a621"><i data-lucide="gem"></i></div><span>Joias</span></a>
-      <a class="cat-card" href="/pesquisa?categoria=roupas"><div class="cat-icon" style="background:#f2601a"><i data-lucide="shirt"></i></div><span>Roupas</span></a>
-      <a class="cat-card" href="/pesquisa?categoria=ceramica"><div class="cat-icon" style="background:#25518f"><i data-lucide="amphora"></i></div><span>Cerâmica</span></a>
-      <a class="cat-card" href="/pesquisa?categoria=artesanato"><div class="cat-icon" style="background:#478632"><i data-lucide="paintbrush"></i></div><span>Artesanato</span></a>
+      <a class="cat-card" href="<?= url_to('main_pesquisa') ?>"><div class="cat-icon" style="background:#f3a621"><i data-lucide="gallery-horizontal-end"></i></div><span>Tudo</span></a>
+      <a class="cat-card" href="<?= url_to('main_pesquisa') ?>?categoria=pinturas"><div class="cat-icon" style="background:#f2601a"><i data-lucide="palette"></i></div><span>Pinturas</span></a>
+      <a class="cat-card" href="<?= url_to('main_pesquisa') ?>?categoria=casa-e-vida"><div class="cat-icon" style="background:#25518f"><i data-lucide="house"></i></div><span>Casa & Vida</span></a>
+      <a class="cat-card" href="<?= url_to('main_pesquisa') ?>?categoria=retro"><div class="cat-icon" style="background:#478632"><i data-lucide="videotape"></i></div><span>Retro</span></a>
+      <a class="cat-card" href="<?= url_to('main_pesquisa') ?>?categoria=joias"><div class="cat-icon" style="background:#f3a621"><i data-lucide="gem"></i></div><span>Joias</span></a>
+      <a class="cat-card" href="<?= url_to('main_pesquisa') ?>?categoria=roupas"><div class="cat-icon" style="background:#f2601a"><i data-lucide="shirt"></i></div><span>Roupas</span></a>
+      <a class="cat-card" href="<?= url_to('main_pesquisa') ?>?categoria=ceramica"><div class="cat-icon" style="background:#25518f"><i data-lucide="amphora"></i></div><span>Cerâmica</span></a>
+      <a class="cat-card" href="<?= url_to('main_pesquisa') ?>?categoria=artesanato"><div class="cat-icon" style="background:#478632"><i data-lucide="paintbrush"></i></div><span>Artesanato</span></a>
     </div>
   </div>
 </section>
@@ -151,7 +152,7 @@ function araceStars(float $nota): string
           </div>
           <div class="produto-info">
             <span class="artesao"><?= esc($artesao) ?></span>
-            <a href="/produto/detalhes?id=<?= urlencode($id) ?>" class="nome"><?= esc($nome) ?></a>
+            <a href="<?= url_to('main_produto_detalhes') ?>?id=<?= urlencode($id) ?>" class="nome"><?= esc($nome) ?></a>
             <div class="stars">
               <?= araceStars($estrelas) ?>
               <span>(<?= esc((string) $avaliacoes) ?>)</span>
@@ -181,7 +182,7 @@ function araceStars(float $nota): string
   <div class="wrap">
     <div class="section-head">
       <h2>Destaques Produtores</h2>
-      <a href="/produtor/painel" class="link-ver">Ver todos <i data-lucide="arrow-right"></i></a>
+      <a href="<?= url_to('produtor_painel') ?>" class="link-ver">Ver todos <i data-lucide="arrow-right"></i></a>
     </div>
     <div class="produtores-grid" id="produtoresGrid">
       <?php foreach ($produtores as $produtor): ?>

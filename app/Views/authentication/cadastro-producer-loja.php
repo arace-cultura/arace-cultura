@@ -1,9 +1,9 @@
-ï»¿ï»¿ï»¿<!DOCTYPE html>
+??<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>AracÃª - Cadastro Produtor</title>
+  <title>Aracê - Cadastro Produtor</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex&display=swap" rel="stylesheet" />
@@ -13,7 +13,7 @@
 
   <div class="login-card cadastro-card item-animado">
     <div class="logo-wrap item-animado atraso-1">
-      <img src="<?= base_url('images/arace.png') ?>" alt="Logo AracÃª" />
+      <img src="<?= base_url('images/arace.png') ?>" alt="Logo Aracê" />
     </div>
 
     <p class="subtitle item-animado atraso-1">Comece a vender seus produtos</p>
@@ -22,7 +22,7 @@
       <p class="erro-campo" style="display:block"><?= esc(session('erro')) ?></p>
     <?php endif; ?>
 
-    <form id="formCadastro" action="/cadastro/produtores" method="post" novalidate>
+    <form id="formCadastro" action="<?= url_to('auth_cadastro_produtor_store') ?>" method="post" novalidate>
 
       <div class="input-group-custom item-animado atraso-2">
         <i data-lucide="store"></i> <input type="text" id="nome" name="nomeLoja" placeholder="Nome da loja" required />
@@ -48,8 +48,8 @@
         <select id="categoria" name="categoria" required>
           <option value="" disabled selected>Categoria principal</option>
           <option value="artesanato">Artesanato</option>
-          <option value="ceramica">CerÃ¢mica</option>
-          <option value="vestuario">VestuÃ¡rio</option>
+          <option value="ceramica">Cerâmica</option>
+          <option value="vestuario">Vestuário</option>
           <option value="praiana">Praiana</option>
           <option value="outros">Outros</option>
         </select>
@@ -77,7 +77,7 @@
         <button type="submit" class="btn-login">Criar conta da loja</button>
 
         <div class="links-rodape">
-          <a href="/cadastro/produtora-arace" class="voltar">Voltar</a>
+          <a href="<?= url_to('auth_cadastro_producter_arace') ?>" class="voltar">Voltar</a>
         </div>
       </div>
 
@@ -85,6 +85,7 @@
   </div>
 
   <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="<?= base_url('js/icons.js') ?>"></script>
   <script>lucide.createIcons();</script>
   <script src="<?= base_url('js/cadastro-loja.js') ?>"></script>
 </body>

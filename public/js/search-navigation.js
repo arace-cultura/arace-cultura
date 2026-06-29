@@ -4,7 +4,7 @@ function termoDeBusca(input) {
 
 function irParaBusca(form) {
   const input = form.querySelector('input[name="q"], input[type="text"]');
-  const destino = new URL(form.getAttribute('action') || '/pesquisa', window.location.href);
+  const destino = new URL(form.getAttribute('action') || window.AraceState?.url('pesquisa') || 'pesquisa', window.location.href);
   const paginaAtualBusca = window.location.pathname.endsWith('/pesquisa');
   const params = paginaAtualBusca ? new URLSearchParams(window.location.search) : new URLSearchParams();
   const termo = termoDeBusca(input);

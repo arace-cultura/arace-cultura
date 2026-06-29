@@ -28,67 +28,68 @@ if (! function_exists('araceStars')) {
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex&family=Playfair+Display:wght@700&display=swap" rel="stylesheet" />
   <script src="https://unpkg.com/lucide@latest"></script>
-  <link href="/css/search.css" rel="stylesheet" />
+  <script src="<?= base_url('js/icons.js') ?>"></script>
+  <link href="<?= base_url('css/search.css') ?>" rel="stylesheet" />
 </head>
 <body>
 <header>
-  <a href="/" class="logo">arace</a>
+  <a href="<?= url_to('home') ?>" class="logo">arace</a>
   <div class="header-right">
-    <button class="cart-btn" type="button" onclick="window.location.href='/arace-carrinho'">
+    <button class="cart-btn" type="button" onclick="window.location.href='<?= url_to('main_arace_carrinho') ?>'">
       <i data-lucide="shopping-cart"></i>
       <span class="cart-count">2 itens</span>
     </button>
-    <button class="cart-btn" type="button" onclick="window.location.href='/usuario/arace-favoritos'">
+    <button class="cart-btn" type="button" onclick="window.location.href='<?= url_to('user_arace_favoritos') ?>'">
       <i data-lucide="heart"></i>
       <span class="cart-count">5 itens</span>
     </button>
-    <button class="avatar-btn" type="button" onclick="window.location.href='/usuario/arace-perfil'" aria-label="Abrir perfil">
+    <button class="avatar-btn" type="button" onclick="window.location.href='<?= url_to('user_arace_perfil') ?>'" aria-label="Abrir perfil">
       <i data-lucide="user"></i>
     </button>
   </div>
 </header>
 
 <div class="chat-bubble">
-  <a href="/usuario/chat"><i data-lucide="message-circle-more"></i></a>
+  <a href="<?= url_to('user_chat') ?>"><i data-lucide="message-circle-more"></i></a>
 </div>
 
 <div class="page-body">
   <aside>
-    <a class="nav-item" href="/"><i data-lucide="house"></i> Home page</a>
-    <a class="nav-item active" href="/arace-produtos"><i data-lucide="shopping-bag"></i> Produtos</a>
-    <a class="nav-item" href="/arace-carrinho"><i data-lucide="shopping-cart"></i> Carrinho</a>
-    <a class="nav-item" href="/usuario/arace-notificacao"><i data-lucide="bell"></i> Notificacoes</a>
-    <a class="nav-item" href="/arace-config"><i data-lucide="settings"></i> Configuracoes</a>
-    <a class="nav-item" href="/usuario/arace-perfil"><i data-lucide="user"></i> Perfil</a>
-    <a class="nav-item" href="/cadastro/produtor"><i data-lucide="box"></i> Quero ser produtor</a>
+    <a class="nav-item" href="<?= url_to('home') ?>"><i data-lucide="house"></i> Home page</a>
+    <a class="nav-item active" href="<?= url_to('arace_produtos') ?>"><i data-lucide="shopping-bag"></i> Produtos</a>
+    <a class="nav-item" href="<?= url_to('main_arace_carrinho') ?>"><i data-lucide="shopping-cart"></i> Carrinho</a>
+    <a class="nav-item" href="<?= url_to('user_arace_notificacao') ?>"><i data-lucide="bell"></i> Notificacoes</a>
+    <a class="nav-item" href="<?= url_to('main_arace_config') ?>"><i data-lucide="settings"></i> Configuracoes</a>
+    <a class="nav-item" href="<?= url_to('user_arace_perfil') ?>"><i data-lucide="user"></i> Perfil</a>
+    <a class="nav-item" href="<?= url_to('auth_cadastro_produtor') ?>"><i data-lucide="box"></i> Quero ser produtor</a>
     <div class="nav-divider"></div>
     <div class="nav-section">Reportar</div>
-    <a class="nav-item" href="/arace-config"><i data-lucide="hand-coins"></i> Detalhes de pagamento</a>
+    <a class="nav-item" href="<?= url_to('main_arace_config') ?>"><i data-lucide="hand-coins"></i> Detalhes de pagamento</a>
   </aside>
 
   <div class="search-main">
     <div class="breadcrumb">
-      <a href="/">Inicio</a>
+      <a href="<?= url_to('home') ?>">Inicio</a>
       <i data-lucide="chevron-right"></i>
       <span>Produtos</span>
     </div>
 
     <div class="search-bar-wrap">
-      <form class="search-bar" action="/pesquisa" method="get">
+      <form class="search-bar" action="<?= url_to('main_pesquisa') ?>" method="get">
         <i data-lucide="search"></i>
         <input type="text" name="q" id="searchPageInput" placeholder="pesquise um produto..." value="<?= esc($q) ?>" />
       </form>
     </div>
 
     <div class="cat-grid">
-      <a class="cat-card" data-category-card="tudo" href="/pesquisa"><div class="cat-icon" style="background:#f3a621"><i data-lucide="gallery-horizontal-end"></i></div><span>Tudo</span></a>
-      <a class="cat-card" data-category-card="pinturas" href="/pesquisa?categoria=pinturas"><div class="cat-icon" style="background:#f2601a"><i data-lucide="palette"></i></div><span>Pinturas</span></a>
-      <a class="cat-card" data-category-card="casa-e-vida" href="/pesquisa?categoria=casa-e-vida"><div class="cat-icon" style="background:#25518f"><i data-lucide="house"></i></div><span>Casa & Vida</span></a>
-      <a class="cat-card" data-category-card="retro" href="/pesquisa?categoria=retro"><div class="cat-icon" style="background:#478632"><i data-lucide="videotape"></i></div><span>Retro</span></a>
-      <a class="cat-card" data-category-card="joias" href="/pesquisa?categoria=joias"><div class="cat-icon" style="background:#f3a621"><i data-lucide="gem"></i></div><span>Joias</span></a>
-      <a class="cat-card" data-category-card="roupas" href="/pesquisa?categoria=roupas"><div class="cat-icon" style="background:#f2601a"><i data-lucide="shirt"></i></div><span>Roupas</span></a>
-      <a class="cat-card" data-category-card="ceramica" href="/pesquisa?categoria=ceramica"><div class="cat-icon" style="background:#25518f"><i data-lucide="amphora"></i></div><span>Ceramica</span></a>
-      <a class="cat-card" data-category-card="artesanato" href="/pesquisa?categoria=artesanato"><div class="cat-icon" style="background:#478632"><i data-lucide="paintbrush"></i></div><span>Artesanato</span></a>
+      <a class="cat-card" data-category-card="tudo" href="<?= url_to('main_pesquisa') ?>"><div class="cat-icon" style="background:#f3a621"><i data-lucide="gallery-horizontal-end"></i></div><span>Tudo</span></a>
+      <a class="cat-card" data-category-card="pinturas" href="<?= url_to('main_pesquisa') ?>?categoria=pinturas"><div class="cat-icon" style="background:#f2601a"><i data-lucide="palette"></i></div><span>Pinturas</span></a>
+      <a class="cat-card" data-category-card="casa-e-vida" href="<?= url_to('main_pesquisa') ?>?categoria=casa-e-vida"><div class="cat-icon" style="background:#25518f"><i data-lucide="house"></i></div><span>Casa & Vida</span></a>
+      <a class="cat-card" data-category-card="retro" href="<?= url_to('main_pesquisa') ?>?categoria=retro"><div class="cat-icon" style="background:#478632"><i data-lucide="videotape"></i></div><span>Retro</span></a>
+      <a class="cat-card" data-category-card="joias" href="<?= url_to('main_pesquisa') ?>?categoria=joias"><div class="cat-icon" style="background:#f3a621"><i data-lucide="gem"></i></div><span>Joias</span></a>
+      <a class="cat-card" data-category-card="roupas" href="<?= url_to('main_pesquisa') ?>?categoria=roupas"><div class="cat-icon" style="background:#f2601a"><i data-lucide="shirt"></i></div><span>Roupas</span></a>
+      <a class="cat-card" data-category-card="ceramica" href="<?= url_to('main_pesquisa') ?>?categoria=ceramica"><div class="cat-icon" style="background:#25518f"><i data-lucide="amphora"></i></div><span>Ceramica</span></a>
+      <a class="cat-card" data-category-card="artesanato" href="<?= url_to('main_pesquisa') ?>?categoria=artesanato"><div class="cat-icon" style="background:#478632"><i data-lucide="paintbrush"></i></div><span>Artesanato</span></a>
     </div>
 
     <div class="results-head">
@@ -131,7 +132,7 @@ if (! function_exists('araceStars')) {
             <button class="fav" type="button" aria-label="Favoritar produto"><i data-lucide="heart"></i></button>
           </div>
           <div class="produto-info">
-            <a href="/produto/detalhes?id=<?= urlencode($id) ?>" class="nome"><?= esc($nome) ?></a>
+            <a href="<?= url_to('main_produto_detalhes') ?>?id=<?= urlencode($id) ?>" class="nome"><?= esc($nome) ?></a>
             <div class="stars">
               <?= araceStars($estrelas) ?>
               <span>(<?= esc((string) $avaliacoes) ?>)</span>

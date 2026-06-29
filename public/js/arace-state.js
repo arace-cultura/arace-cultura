@@ -4,21 +4,22 @@
     producer: 'arace:producer',
     favorites: 'arace:favorites',
     mode: 'arace:viewMode',
+    theme: 'arace:theme',
   };
 
   const DEFAULT_USER = {
-    nome: 'Maria',
-    sobrenome: 'Silva',
-    username: '@mariasilva',
-    bio: 'Amante da cultura capixaba',
-    nascimento: '1995-06-12',
-    genero: 'f',
-    email: 'maria@email.com',
+    nome: '',
+    sobrenome: '',
+    username: '',
+    bio: '',
+    nascimento: '',
+    genero: '',
+    email: '',
     telefone: '',
-    cidade: 'Cariacica',
-    estado: 'ES',
+    cidade: '',
+    estado: '',
     avatar: '',
-    membroDesde: 'Janeiro de 2024',
+    membroDesde: '',
     cpf: '',
   };
 
@@ -34,6 +35,20 @@
     lojaAvatar: '',
     lojaBanner: '/images/bahia-vitoria.jpg',
   };
+
+  const stateScript = document.currentScript || document.querySelector('script[src*="/js/arace-state.js"]');
+  const baseUrl = new URL('../', stateScript?.src || window.location.href);
+
+  function url(path = '') {
+    const value = String(path);
+    if (/^(?:[a-z]+:|#)/i.test(value)) return value;
+
+    return new URL(value.replace(/^\/+/, ''), baseUrl).toString();
+  }
+
+  function go(path) {
+    window.location.href = url(path);
+  }
 
   const DEFAULT_FAVORITES = [
     { id: 'fav-panela-capixaba', nome: 'Panela de barro Capixaba', artesao: 'Mestre Ze Pedro', preco: 260, precoAntigo: 300, estrelas: 4.5, avaliacoes: 142, img: '', colecao: 'ceramica', disponivel: true, desconto: 13, cor: '#b5a898' },
@@ -65,6 +80,8 @@
   }
 
   function getUser() {
+    if (window.ARACE_AUTH_USER) return { ...DEFAULT_USER, ...window.ARACE_AUTH_USER };
+
     return read(KEYS.user, DEFAULT_USER);
   }
 
@@ -143,6 +160,30 @@
     return localStorage.getItem(KEYS.mode) || 'cliente';
   }
 
+  function getTheme() {
+    return localStorage.getItem(KEYS.theme) || 'claro';
+  }
+
+  function applyTheme(theme = getTheme()) {
+    const selected = theme === 'escuro' || theme === 'sistema' ? theme : 'claro';
+    const systemDark = window.matchMedia?.('(prefers-color-scheme: dark)').matches;
+    const applied = selected === 'sistema' ? (systemDark ? 'escuro' : 'claro') : selected;
+
+    document.documentElement.dataset.theme = applied;
+    document.body?.classList.toggle('theme-dark', applied === 'escuro');
+
+    document.querySelectorAll('.theme-option').forEach(option => {
+      const label = option.querySelector('.theme-label')?.textContent?.trim().toLowerCase();
+      option.classList.toggle('active', label === selected);
+    });
+  }
+
+  function setTheme(theme) {
+    localStorage.setItem(KEYS.theme, theme);
+    applyTheme(theme);
+    window.dispatchEvent(new CustomEvent('arace:theme-change', { detail: { theme } }));
+  }
+
   function renderAvatar(target, src, fallbackIcon = 'user') {
     if (!target) return;
     if (src) {
@@ -173,7 +214,7 @@
 
   function setupProducerTransition() {
     document.addEventListener('click', event => {
-      const link = event.target.closest('a[href*="cadastro-produtor"], a[href*="cadastro-producer"]');
+      const link = event.target.closest('a[href*="cadastro/produtor"], a[href*="cadastro-produtor"], a[href*="cadastro-producer"]');
       if (!link) return;
 
       const producer = getProducer();
@@ -181,13 +222,76 @@
 
       event.preventDefault();
       setMode('produtor');
-      window.location.href = link.href.includes('/authentication/')
-        ? '/produtor/perfil-loja'
-        : '/produtor/perfil-loja';
+      go('produtor/perfil-loja');
     });
   }
 
+  function applyPageStyles() {
+    applyTheme();
+
+    const current = new URL(window.location.href);
+    document.querySelectorAll('aside .nav-item[href]').forEach(item => {
+      try {
+        const target = new URL(item.getAttribute('href'), window.location.href);
+        if (target.pathname === current.pathname) {
+          item.classList.add('active');
+        }
+      } catch {
+        // Links parciais ou placeholders nao precisam participar do destaque.
+      }
+    });
+  }
+
+  function initMap(targetId = 'mapa') {
+    const mapaEl = document.getElementById(targetId);
+    if (!mapaEl || !window.L || mapaEl.dataset.araceMapReady === '1') return null;
+
+    mapaEl.dataset.araceMapReady = '1';
+
+    const mapa = L.map(targetId, {
+      zoomControl: true,
+      scrollWheelZoom: false,
+    });
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; OpenStreetMap',
+    }).addTo(mapa);
+
+    const fallback = [-20.3155, -40.3128];
+    mapa.setView(fallback, 12);
+
+    const markerIcon = L.divIcon({
+      className: 'arace-map-marker',
+      html: '<span></span>',
+      iconSize: [24, 24],
+      iconAnchor: [12, 12],
+    });
+
+    navigator.geolocation?.getCurrentPosition(
+      pos => {
+        const { latitude, longitude } = pos.coords;
+        mapa.setView([latitude, longitude], 13);
+        L.marker([latitude, longitude], { icon: markerIcon })
+          .addTo(mapa)
+          .bindPopup('Voce esta aqui')
+          .openPopup();
+      },
+      () => {
+        L.marker(fallback, { icon: markerIcon })
+          .addTo(mapa)
+          .bindPopup('Arace em Vitoria')
+          .openPopup();
+      }
+    );
+
+    setTimeout(() => mapa.invalidateSize(), 150);
+
+    return mapa;
+  }
+
   window.AraceState = {
+    url,
+    go,
     getUser,
     saveUser,
     getProducer,
@@ -200,11 +304,20 @@
     isFavorite,
     getMode,
     setMode,
+    getTheme,
+    setTheme,
+    applyTheme,
+    applyPageStyles,
+    initMap,
     renderAvatar,
     syncHeader,
   };
 
   document.addEventListener('DOMContentLoaded', syncHeader);
+  document.addEventListener('DOMContentLoaded', applyPageStyles);
   document.addEventListener('DOMContentLoaded', setupProducerTransition);
   window.addEventListener('arace:state-change', syncHeader);
+  window.matchMedia?.('(prefers-color-scheme: dark)').addEventListener?.('change', () => {
+    if (getTheme() === 'sistema') applyTheme('sistema');
+  });
 })();

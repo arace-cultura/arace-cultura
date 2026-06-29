@@ -1,5 +1,7 @@
 lucide.createIcons();
 
+  const araceUrl = path => window.AraceState?.url(path) || path;
+
   function produtoDoCard(card, index) {
     const nome = card.querySelector('.nome')?.textContent.trim() || 'Produto Arace';
     const precoTexto = card.querySelector('.preco strong, .preco s')?.textContent || '0';
@@ -59,7 +61,7 @@ lucide.createIcons();
     btn.addEventListener('click', () => {
       const p = new URLSearchParams(window.location.search);
       p.set(btn.dataset.filterParam, btn.dataset.filterValue);
-      window.location.href = `/pesquisa?${p}`;
+      window.location.href = `${araceUrl('pesquisa')}?${p}`;
     });
   });
 
@@ -68,7 +70,7 @@ lucide.createIcons();
     const p = new URLSearchParams(window.location.search);
     const cat = document.querySelector('input[name="categoria"]:checked');
     cat ? p.set('categoria', cat.value) : p.delete('categoria');
-    window.location.href = `/pesquisa${p.toString() ? '?' + p : ''}`;
+    window.location.href = `${araceUrl('pesquisa')}${p.toString() ? '?' + p : ''}`;
   });
 
   // Range duplo

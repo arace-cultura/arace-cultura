@@ -2,6 +2,7 @@ let favoritos = window.AraceState ? window.AraceState.getFavorites() : [];
 let filtroAtivo = 'todos';
 let colecaoAtiva = 'todos';
 let buscaAtiva = '';
+const araceUrl = path => window.AraceState?.url(path) || path;
 
 function stars(n) {
   return [1, 2, 3, 4, 5].map(i =>
@@ -42,7 +43,7 @@ function renderCards(lista) {
         <i data-lucide="heart"></i>
         <h2>Nenhum favorito aqui</h2>
         <p>Explore os produtos e salve os que voce curtir</p>
-        <a href="/arace-produtos" class="btn-explorar">
+        <a href="${araceUrl('arace-produtos')}" class="btn-explorar">
           <i data-lucide="shopping-bag"></i> Explorar produtos
         </a>
       </div>`;

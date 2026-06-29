@@ -66,6 +66,7 @@ final class AraceFirestore
     public function createUser(array $payload): array
     {
         $payload['email'] = mb_strtolower(trim((string) ($payload['email'] ?? '')));
+        $payload['telefone'] = $this->formatPhone((string) ($payload['telefone'] ?? ''));
 
         if (isset($payload['senha'])) {
             $payload['senha'] = password_hash((string) $payload['senha'], PASSWORD_DEFAULT);
@@ -75,6 +76,84 @@ final class AraceFirestore
         unset($user['senha']);
 
         return $user;
+    }
+
+    public function userFromSession(array $sessionUser): array
+    {
+        $user = null;
+
+        try {
+            $collection = $this->collection(UsuarioCollection::class);
+            $id         = trim((string) ($sessionUser['id'] ?? ''));
+
+            if ($id !== '') {
+                $entity = $collection->get($id);
+                if ($entity !== null) {
+                    $user = $this->entityPayload($entity);
+                }
+            }
+
+            if ($user === null && ! empty($sessionUser['email'])) {
+                $email = mb_strtolower(trim((string) $sessionUser['email']));
+                $query = $collection->where('email', '=', $email)->limit(1);
+
+                foreach ($collection->list($query) as $entity) {
+                    $user = $this->entityPayload($entity);
+                    break;
+                }
+            }
+        } catch (\Throwable $exception) {
+            log_message('error', 'Falha ao buscar usuario atual no Firestore: {message}', [
+                'message' => $exception->getMessage(),
+            ]);
+        }
+
+        return $this->safeUser($user ?? $sessionUser);
+    }
+
+    public function updateUserFromSession(array $sessionUser, array $payload): array
+    {
+        $collection = $this->collection(UsuarioCollection::class);
+        $entity     = $this->userEntityFromSession($collection, $sessionUser);
+
+        if ($entity === null) {
+            throw new RuntimeException('Usuario autenticado nao foi encontrado no Firestore.');
+        }
+
+        $allowed = [
+            'nome',
+            'username',
+            'email',
+            'telefone',
+            'cidade',
+            'estado',
+            'cpf',
+            'avatar',
+            'bio',
+            'nascimento',
+            'genero',
+        ];
+
+        $updates = [];
+        foreach ($allowed as $field) {
+            if (array_key_exists($field, $payload)) {
+                $updates[$field] = is_string($payload[$field]) ? trim($payload[$field]) : $payload[$field];
+            }
+        }
+
+        if (isset($updates['email'])) {
+            $updates['email'] = mb_strtolower((string) $updates['email']);
+        }
+        if (isset($updates['telefone'])) {
+            $updates['telefone'] = $this->formatPhone((string) $updates['telefone']);
+        }
+        if (isset($updates['cpf'])) {
+            $updates['cpf'] = $this->formatCpf((string) $updates['cpf']);
+        }
+
+        $collection->update($entity, $updates);
+
+        return $this->userFromSession($this->safeUser([...$sessionUser, ...$updates]));
     }
 
     /**
@@ -131,20 +210,59 @@ final class AraceFirestore
             }
         }
 
+        return $this->safeUser($user + ['email' => $email]);
+    }
+
+    private function safeUser(array $user): array
+    {
         return array_filter([
             'id'       => (string) ($user['id'] ?? ''),
             'nome'     => (string) ($user['nome'] ?? 'Usuario'),
-            'email'    => (string) ($user['email'] ?? $email),
-            'telefone' => $user['telefone'] ?? null,
+            'username' => $user['username'] ?? $user['usuario'] ?? null,
+            'email'    => (string) ($user['email'] ?? ''),
+            'telefone' => isset($user['telefone']) ? $this->formatPhone((string) $user['telefone']) : null,
             'cidade'   => $user['cidade'] ?? null,
             'estado'   => $user['estado'] ?? null,
-            'cpf'      => $user['cpf'] ?? null,
+            'cpf'      => isset($user['cpf']) ? $this->formatCpf((string) $user['cpf']) : null,
             'avatar'   => $user['avatar'] ?? null,
+            'bio'      => $user['bio'] ?? null,
+            'nascimento' => $user['nascimento'] ?? $user['dataNascimento'] ?? null,
+            'genero'   => $user['genero'] ?? null,
+            'createdAt' => $user['createdAt'] ?? $user['criadoEm'] ?? null,
         ], static fn ($value): bool => $value !== null && $value !== '');
+    }
+
+    private function userEntityFromSession(object $collection, array $sessionUser): ?object
+    {
+        $id = trim((string) ($sessionUser['id'] ?? ''));
+        if ($id !== '') {
+            $entity = $collection->get($id);
+            if ($entity !== null) {
+                return $entity;
+            }
+        }
+
+        if (! empty($sessionUser['email'])) {
+            $email = mb_strtolower(trim((string) $sessionUser['email']));
+            $query = $collection->where('email', '=', $email)->limit(1);
+
+            foreach ($collection->list($query) as $entity) {
+                return $entity;
+            }
+        }
+
+        return null;
     }
 
     public function createProducer(array $payload): array
     {
+        if (isset($payload['telefone'])) {
+            $payload['telefone'] = $this->formatPhone((string) $payload['telefone']);
+        }
+        if (isset($payload['cpf'])) {
+            $payload['cpf'] = $this->formatCpf((string) $payload['cpf']);
+        }
+
         $payload['tipo']                = 'produtor';
         $payload['cadastrado']          = true;
         $payload['produtos']            = $payload['produtos'] ?? 0;
@@ -347,5 +465,31 @@ final class AraceFirestore
         return password_verify($plainPassword, $storedPassword)
             || (password_get_info($storedPassword)['algo'] === null
                 && hash_equals($storedPassword, $plainPassword));
+    }
+
+    private function formatPhone(string $phone): string
+    {
+        $digits = preg_replace('/\D/', '', $phone) ?? '';
+
+        if (strlen($digits) === 11) {
+            return sprintf('(%s) %s-%s', substr($digits, 0, 2), substr($digits, 2, 5), substr($digits, 7));
+        }
+
+        if (strlen($digits) === 10) {
+            return sprintf('(%s) %s-%s', substr($digits, 0, 2), substr($digits, 2, 4), substr($digits, 6));
+        }
+
+        return trim($phone);
+    }
+
+    private function formatCpf(string $cpf): string
+    {
+        $digits = preg_replace('/\D/', '', $cpf) ?? '';
+
+        if (strlen($digits) !== 11) {
+            return trim($cpf);
+        }
+
+        return sprintf('%s.%s.%s-%s', substr($digits, 0, 3), substr($digits, 3, 3), substr($digits, 6, 3), substr($digits, 9));
     }
 }
