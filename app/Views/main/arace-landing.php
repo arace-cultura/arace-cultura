@@ -3,6 +3,7 @@
 $produtos = $produtos ?? [];
 $produtores = $produtores ?? [];
 
+if (! function_exists('araceStars')) {
 function araceStars(float $nota): string
 {
     $html = '';
@@ -16,6 +17,7 @@ function araceStars(float $nota): string
     }
 
     return $html;
+}
 }
 ?>
 <html lang="pt-BR">
@@ -112,6 +114,9 @@ function araceStars(float $nota): string
     </div>
 
     <div class="produtos-grid" id="produtosGrid">
+      <?php if ($produtos === []): ?>
+        <p class="empty-products">Nenhum produto encontrado.</p>
+      <?php endif; ?>
       <?php foreach ($produtos as $produto): ?>
         <?php
           $id = (string) ($produto['id'] ?? url_title($produto['nome'] ?? 'produto', '-', true));
@@ -122,6 +127,8 @@ function araceStars(float $nota): string
           $avaliacoes = (int) ($produto['avaliacoes'] ?? 0);
           $estrelas = (float) ($produto['estrelas'] ?? 4);
           $cor = (string) ($produto['cor'] ?? '#b5a898');
+          $imagens = $produto['imagens'] ?? [];
+          $imagem = (string) ($imagens[0] ?? $produto['img'] ?? $produto['imagem'] ?? '');
         ?>
         <article
           class="produto"
@@ -132,8 +139,12 @@ function araceStars(float $nota): string
           data-preco="<?= esc((string) $preco) ?>"
           data-categoria="<?= esc($categoria) ?>"
           data-cor="<?= esc($cor) ?>"
+          data-img="<?= esc($imagem) ?>"
         >
           <div class="produto-img" style="background:<?= esc($cor) ?>">
+            <?php if ($imagem !== ''): ?>
+              <img src="<?= esc($imagem) ?>" alt="<?= esc($nome) ?>" loading="lazy" />
+            <?php endif; ?>
             <button class="fav" type="button" aria-label="Favoritar produto">
               <i data-lucide="heart"></i>
             </button>

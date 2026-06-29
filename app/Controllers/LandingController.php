@@ -11,7 +11,7 @@ final class LandingController extends BaseController
         $firestore = new AraceFirestore();
 
         return view('main/arace-landing', [
-            'produtos'   => $firestore->products(true),
+            'produtos'   => $firestore->products(),
             'produtores' => $firestore->producers(),
         ]);
     }

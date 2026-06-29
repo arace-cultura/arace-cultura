@@ -7,7 +7,7 @@ lucide.createIcons();
     const cor = card.querySelector('.produto-img')?.style.background || '#b5a898';
     const id = card.dataset.produtoId || `search-${nome.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/\W+/g, '-')}-${index}`;
     card.dataset.produtoId = id;
-    return { id, nome, preco, cor, artesao: 'Arace', categoria: categoriaAtiva || 'ceramica', colecao: categoriaAtiva || 'ceramica', estrelas: 4, avaliacoes: 24 };
+    return { id, nome, preco, cor, img: card.dataset.img || '', artesao: 'Arace', categoria: categoriaAtiva || 'ceramica', colecao: categoriaAtiva || 'ceramica', estrelas: 4, avaliacoes: 24 };
   }
 
   function configurarFavoritosBusca() {

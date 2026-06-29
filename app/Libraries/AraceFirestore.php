@@ -10,45 +10,6 @@ use RuntimeException;
 
 final class AraceFirestore
 {
-    private const FALLBACK_PRODUCTS = [
-        [
-            'id'         => 'panela-barro',
-            'nome'       => 'Panela de barro',
-            'artesao'    => 'Espirito das Pedras',
-            'categoria'  => 'ceramica',
-            'preco'      => 245,
-            'avaliacoes' => 24,
-            'estrelas'   => 4.5,
-            'favorito'   => false,
-            'cor'        => '#C1734A',
-            'destaque'   => true,
-        ],
-        [
-            'id'         => 'preguica-madeira',
-            'nome'       => 'Preguica de machao',
-            'artesao'    => 'Atelier Capixaba',
-            'categoria'  => 'madeira',
-            'preco'      => 290,
-            'avaliacoes' => 11,
-            'estrelas'   => 4,
-            'favorito'   => false,
-            'cor'        => '#8F5E35',
-            'destaque'   => true,
-        ],
-        [
-            'id'         => 'panela-barro-2',
-            'nome'       => 'Panela de barro n. 2',
-            'artesao'    => 'Arte Local',
-            'categoria'  => 'ceramica',
-            'preco'      => 180,
-            'avaliacoes' => 38,
-            'estrelas'   => 5,
-            'favorito'   => true,
-            'cor'        => '#D28A4D',
-            'destaque'   => true,
-        ],
-    ];
-
     private const FALLBACK_PRODUCERS = [
         ['id' => 'espirito-das-pedras', 'nome' => 'Espirito das Pedras', 'iniciais' => 'EP', 'produtos' => 12],
         ['id' => 'arte-arace', 'nome' => 'Arte Arace', 'iniciais' => 'AA', 'produtos' => 8],
@@ -58,16 +19,20 @@ final class AraceFirestore
     public function products(bool $featured = false): array
     {
         try {
-            $products = $this->collectionItems(ProductCollection::class, 'nome');
+            $products = $this->collectionItems(ProductCollection::class);
             $products = array_map(fn (array $product): array => $this->normalizeProduct($product), $products);
 
             if ($featured) {
                 $products = array_values(array_filter($products, static fn (array $product): bool => $product['destaque'] ?? true));
             }
 
-            return $products ?: self::FALLBACK_PRODUCTS;
-        } catch (\Throwable) {
-            return self::FALLBACK_PRODUCTS;
+            return $products;
+        } catch (\Throwable $exception) {
+            log_message('error', 'Falha ao buscar produtos no Firestore: {message}', [
+                'message' => $exception->getMessage(),
+            ]);
+
+            return [];
         }
     }
 
@@ -77,12 +42,10 @@ final class AraceFirestore
             $product = $this->collection(ProductCollection::class)->get($id);
 
             return $product === null ? null : $this->normalizeProduct($this->entityPayload($product));
-        } catch (\Throwable) {
-            foreach (self::FALLBACK_PRODUCTS as $product) {
-                if ($product['id'] === $id) {
-                    return $product;
-                }
-            }
+        } catch (\Throwable $exception) {
+            log_message('error', 'Falha ao buscar produto no Firestore: {message}', [
+                'message' => $exception->getMessage(),
+            ]);
 
             return null;
         }
@@ -207,10 +170,10 @@ final class AraceFirestore
         return collection($class);
     }
 
-    private function collectionItems(string $class, string $orderBy): array
+    private function collectionItems(string $class, ?string $orderBy = null): array
     {
         $collection = $this->collection($class);
-        $query      = $collection->orderBy($orderBy);
+        $query      = $orderBy === null ? null : $collection->orderBy($orderBy);
         $items      = [];
 
         foreach ($collection->list($query) as $entity) {
@@ -233,21 +196,122 @@ final class AraceFirestore
 
     private function normalizeProduct(array $product): array
     {
-        $product['id']         = (string) ($product['id'] ?? $product['produto_id'] ?? $product['sku'] ?? '');
-        $product['nome']       = $product['nome'] ?? $product['nome_produto'] ?? $product['titulo'] ?? 'Produto Arace';
-        $product['artesao']    = $product['artesao'] ?? $product['produtor'] ?? $product['nome_produtor'] ?? $product['nome_loja'] ?? 'Produtor Arace';
-        $product['categoria']  = $product['categoria'] ?? $product['categoria_produto'] ?? $product['colecao'] ?? 'artesanato';
-        $product['preco']      = (float) ($product['preco'] ?? $product['preco_produto'] ?? $product['valor'] ?? 0);
-        $product['avaliacoes'] = (int) ($product['avaliacoes'] ?? $product['total_avaliacoes'] ?? 0);
-        $product['estrelas']   = (float) ($product['estrelas'] ?? $product['avaliacao'] ?? 4);
-        $product['cor']        = $product['cor'] ?? '#b5a898';
-        $product['img']        = $product['img'] ?? $product['imagem'] ?? $product['imagem_produto'] ?? '';
+        $quantidadeAvaliacoes = (int) ($product['quantidadeAvaliacoes'] ?? $product['avaliacoes'] ?? $product['total_avaliacoes'] ?? 0);
+        $somaAvaliacoes       = (float) ($product['somaAvaliacoes'] ?? 0);
+        $estrelas             = $product['estrelas'] ?? $product['avaliacao'] ?? null;
+
+        if ($estrelas === null && $quantidadeAvaliacoes > 0 && $somaAvaliacoes > 0) {
+            $estrelas = $somaAvaliacoes / $quantidadeAvaliacoes;
+        }
+
+        $categorias = $product['categorias'] ?? $product['categoria'] ?? $product['categoria_produto'] ?? $product['colecao'] ?? 'artesanato';
+        if (is_string($categorias) && str_contains($categorias, ',')) {
+            $categorias = array_map('trim', explode(',', $categorias));
+        }
+
+        $product['id']                   = (string) ($product['id'] ?? $product['produto_id'] ?? $product['sku'] ?? '');
+        $product['nome']                 = $product['nome'] ?? $product['nome_produto'] ?? $product['titulo'] ?? 'Produto Arace';
+        $product['descricao']            = $product['descricao'] ?? $product['description'] ?? '';
+        $product['produtorId']           = (string) ($product['produtorId'] ?? $product['produtor_id'] ?? '');
+        $product['artesao']              = $product['artesao'] ?? $product['produtor'] ?? $product['nome_produtor'] ?? $product['nome_loja'] ?? 'Produtor Arace';
+        $product['categorias']           = is_array($categorias) ? array_values($categorias) : [$categorias];
+        $product['categoria']            = (string) ($product['categorias'][0] ?? 'artesanato');
+        $product['preco']                = (float) ($product['preco'] ?? $product['preco_produto'] ?? $product['valor'] ?? 0);
+        $product['quantidadeAvaliacoes'] = $quantidadeAvaliacoes;
+        $product['somaAvaliacoes']       = $somaAvaliacoes;
+        $product['avaliacoes']           = $quantidadeAvaliacoes;
+        $product['estrelas']             = (float) ($estrelas ?? 0);
+        $product['cor']                  = $product['cor'] ?? '#b5a898';
+        $product['imagens']              = $this->productImages($product);
+        $product['img']                  = $product['imagens'][0] ?? '';
+        $product['imagem']               = $product['img'];
 
         if ($product['id'] === '') {
             $product['id'] = url_title($product['nome'], '-', true);
         }
 
         return $product;
+    }
+
+    private function productImages(array $product): array
+    {
+        $fields = [
+            'imagens',
+            'images',
+            'fotos',
+            'foto',
+            'img',
+            'imagem',
+            'imagemUrl',
+            'imagemURL',
+            'imagem_url',
+            'imagem_produto',
+            'image',
+            'imageUrl',
+            'imageURL',
+            'image_url',
+            'urlImagem',
+            'url_imagem',
+            'publicUrl',
+            'publicURL',
+            'public_url',
+            'storageUrl',
+            'storage_url',
+            'supabaseUrl',
+            'supabase_url',
+            'thumbnail',
+            'capa',
+            'url',
+        ];
+
+        $images = [];
+
+        foreach ($fields as $field) {
+            if (array_key_exists($field, $product)) {
+                $images = array_merge($images, $this->imageUrlsFromValue($product[$field]));
+            }
+        }
+
+        return array_values(array_unique(array_filter(
+            $images,
+            static fn (string $url): bool => $url !== ''
+        )));
+    }
+
+    private function imageUrlsFromValue(mixed $value): array
+    {
+        if ($value === null || $value === '') {
+            return [];
+        }
+
+        if (is_string($value)) {
+            $value = trim($value);
+
+            return filter_var($value, FILTER_VALIDATE_URL) ? [$value] : [];
+        }
+
+        if (is_object($value)) {
+            $value = method_exists($value, 'toArray') ? $value->toArray() : (array) $value;
+        }
+
+        if (! is_array($value)) {
+            return [];
+        }
+
+        $images = [];
+        $preferredKeys = ['url', 'publicUrl', 'public_url', 'imageUrl', 'image_url', 'imagemUrl', 'imagem_url', 'src'];
+
+        foreach ($preferredKeys as $key) {
+            if (array_key_exists($key, $value)) {
+                $images = array_merge($images, $this->imageUrlsFromValue($value[$key]));
+            }
+        }
+
+        foreach ($value as $item) {
+            $images = array_merge($images, $this->imageUrlsFromValue($item));
+        }
+
+        return $images;
     }
 
     private function normalizeProducer(array $producer): array

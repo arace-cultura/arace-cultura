@@ -30,9 +30,10 @@ $routes->view('cadastro/produtora-arace', 'authentication/cadastro-producter-ara
 // 3. PÁGINAS PRINCIPAIS DA LOJA (main/)
 // ============================================================================
 $routes->get('landing-page', 'LandingController::index', ['as' => 'landing-page']);
-$routes->view('arace-produtos', 'main/arace-produto', ['as' => 'arace_produtos']);
-$routes->view('produto/detalhes', 'main/arace-produto', ['as' => 'main_produto_detalhes']);
-$routes->view('pesquisa', 'main/arace-search', ['as' => 'main_pesquisa']);
+$routes->get('arace-produtos', 'ProductController::index', ['as' => 'arace_produtos']);
+$routes->get('produto/detalhes', 'ProductController::show', ['as' => 'main_produto_detalhes']);
+$routes->get('produto/(:segment)', 'ProductController::show/$1', ['as' => 'main_produto']);
+$routes->get('pesquisa', 'ProductController::index', ['as' => 'main_pesquisa']);
 
 // Carrinhos
 
