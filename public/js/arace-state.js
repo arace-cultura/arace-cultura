@@ -9,7 +9,6 @@
 
   const DEFAULT_USER = {
     nome: '',
-    sobrenome: '',
     username: '',
     bio: '',
     nascimento: '',

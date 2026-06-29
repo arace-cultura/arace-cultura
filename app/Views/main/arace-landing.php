@@ -202,20 +202,20 @@ function araceStars(float $nota): string
   <div class="wrap">
     <div class="section-head">
       <h2>Sugestão de Loja</h2>
-      <a href="#" class="link-ver">Ver todas <i data-lucide="arrow-right"></i></a>
+      <a href="<?= url_to('main_pesquisa') ?>" class="link-ver">Ver todas <i data-lucide="arrow-right"></i></a>
     </div>
     <div class="lojas-mapa-grid">
 
       <!-- Lojas (esquerda) -->
       <div class="lojas-col">
         <div class="loja loja-azul">
-          <div class="loja-info"><span class="loja-tag">Artesanato</span><strong>Nome da Loja</strong><a href="#" class="loja-ver">Visitar loja <i data-lucide="arrow-right"></i></a></div>
+          <div class="loja-info"><span class="loja-tag">Artesanato</span><strong>Nome da Loja</strong><a href="<?= url_to('main_pesquisa') ?>" class="loja-ver">Visitar loja <i data-lucide="arrow-right"></i></a></div>
         </div>
         <div class="loja loja-laranja">
-          <div class="loja-info"><span class="loja-tag">Estabelecimento</span><strong>Nome da Loja</strong><a href="#" class="loja-ver">Visitar loja <i data-lucide="arrow-right"></i></a></div>
+          <div class="loja-info"><span class="loja-tag">Estabelecimento</span><strong>Nome da Loja</strong><a href="<?= url_to('main_pesquisa') ?>" class="loja-ver">Visitar loja <i data-lucide="arrow-right"></i></a></div>
         </div>
         <div class="loja loja-amarelo">
-          <div class="loja-info"><span class="loja-tag">Estabelecimento</span><strong>Nome da Loja</strong><a href="#" class="loja-ver">Visitar loja <i data-lucide="arrow-right"></i></a></div>
+          <div class="loja-info"><span class="loja-tag">Estabelecimento</span><strong>Nome da Loja</strong><a href="<?= url_to('main_pesquisa') ?>" class="loja-ver">Visitar loja <i data-lucide="arrow-right"></i></a></div>
         </div>
       </div>
 

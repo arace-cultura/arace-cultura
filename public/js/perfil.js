@@ -6,7 +6,7 @@ async function carregarPerfil() {
   const user = window.ARACE_AUTH_USER || {};
   const favoritos = Number(user.favoritos || 0);
   return {
-    nome: `${user.nome || ''} ${user.sobrenome || ''}`.trim() || 'Usuario',
+    nome: user.nome || 'Usuario',
     email: user.email || '',
     telefone: user.telefone || '',
     localizacao: [user.cidade, user.estado].filter(Boolean).join(' - '),

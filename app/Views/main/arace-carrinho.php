@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Aracê — Carrinho</title>
+  <title>AracÃª â€” Carrinho</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex&family=DM+Serif+Display&display=swap" rel="stylesheet" />
@@ -16,7 +16,7 @@
 
   <!-- HEADER -->
   <header>
-    <a href="<?= url_to('home') ?>" class="logo">aracê</a>
+    <a href="<?= url_to('home') ?>" class="logo">aracÃª</a>
     <div class="header-right">
     <button class="cart-btn" type="button" onclick="window.location.href='<?= url_to('main_arace_carrinho') ?>'">
         <i data-lucide="shopping-cart"></i>
@@ -44,10 +44,10 @@
       <i data-lucide="shopping-cart"></i> Carrinho
     </a>
     <a class="nav-item" href="<?= url_to('user_arace_notificacao') ?>">
-      <i data-lucide="bell"></i> Notificações
+      <i data-lucide="bell"></i> NotificaÃ§Ãµes
     </a>
     <a class="nav-item" href="<?= url_to('main_arace_config') ?>">
-      <i data-lucide="settings"></i> Configurações
+      <i data-lucide="settings"></i> ConfiguraÃ§Ãµes
     </a>
     <a class="nav-item" href="<?= url_to('user_arace_perfil') ?>">
       <i data-lucide="user"></i> Perfil
@@ -72,13 +72,13 @@
       </a>
     </div>
 
-    <!-- Carrinho vazio (oculto por padrão) -->
+    <!-- Carrinho vazio (oculto por padrÃ£o) -->
     <div class="empty-cart hidden" id="emptyCart">
       <div class="empty-icon">
         <i data-lucide="shopping-bag"></i>
       </div>
-      <h2>Seu carrinho está vazio</h2>
-      <p>Explore nossa coleção e encontre algo especial para você.</p>
+      <h2>Seu carrinho estÃ¡ vazio</h2>
+      <p>Explore nossa coleÃ§Ã£o e encontre algo especial para vocÃª.</p>
       <a href="<?= url_to('arace_produtos') ?>" class="btn-primary-arace">Ver produtos</a>
     </div>
 
@@ -100,9 +100,9 @@
             <div class="img-placeholder" style="background:#C1734A"></div>
           </div>
           <div class="cart-item-info">
-            <a href="#" class="cart-item-name">Item</a>
-            <span class="cart-item-brand">Espírito Das Pedras</span>
-            <span class="cart-item-sku">Cód: 1001</span>
+            <a href="<?= url_to('main_produto_detalhes') ?>" class="cart-item-name">Item</a>
+            <span class="cart-item-brand">EspÃ­rito Das Pedras</span>
+            <span class="cart-item-sku">CÃ³d: 1001</span>
             <div class="cart-item-variants">
               <span class="variant-tag">Tamanho: M</span>
               <span class="variant-tag">Cor: Terracota</span>
@@ -132,9 +132,9 @@
             <div class="img-placeholder" style="background:#C1734A; opacity:.75"></div>
           </div>
           <div class="cart-item-info">
-            <a href="#" class="cart-item-name">Item</a>
-            <span class="cart-item-brand">Sintético</span>
-            <span class="cart-item-sku">Cód: 1002</span>
+            <a href="<?= url_to('main_produto_detalhes') ?>" class="cart-item-name">Item</a>
+            <span class="cart-item-brand">SintÃ©tico</span>
+            <span class="cart-item-sku">CÃ³d: 1002</span>
             <div class="cart-item-variants">
               <span class="variant-tag">Tamanho: G</span>
             </div>
@@ -179,7 +179,7 @@
 
           <div class="coupon-area">
             <div class="shipping-row">
-              <input type="text" class="coupon-input" placeholder="Código promocional" />
+              <input type="text" class="coupon-input" placeholder="CÃ³digo promocional" />
               <button class="btn-outline-arace">Aplicar</button>
             </div>
           </div>
@@ -198,7 +198,7 @@
 
           <div class="security-badges">
             <span><i data-lucide="shield-check"></i> Compra segura</span>
-            <span><i data-lucide="rotate-ccw"></i> Troca fácil</span>
+            <span><i data-lucide="rotate-ccw"></i> Troca fÃ¡cil</span>
             <span><i data-lucide="lock"></i> SSL</span>
           </div>
 

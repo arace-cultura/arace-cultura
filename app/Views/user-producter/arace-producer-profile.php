@@ -1,4 +1,4 @@
-?<!DOCTYPE html>
+<!DOCTYPE html>
 <?php
 $usuario = $usuario ?? [];
 $localizacao = implode(' - ', array_filter([$usuario['cidade'] ?? null, $usuario['estado'] ?? null]));
@@ -8,7 +8,7 @@ $membroDesde = $usuario['createdAt'] ?? '';
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Aracê — Perfil Produtor</title>
+  <title>AracÃª â€” Perfil Produtor</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex&family=Playfair+Display:wght@700&display=swap" rel="stylesheet" />
@@ -20,7 +20,7 @@ $membroDesde = $usuario['createdAt'] ?? '';
 
   <!-- HEADER -->
 <header>
-  <a href="<?= url_to('home') ?>" class="logo">aracê</a>
+  <a href="<?= url_to('home') ?>" class="logo">aracÃª</a>
 
   <form class="search-wrap" action="<?= url_to('main_pesquisa') ?>" method="get">
     <i data-lucide="search"></i>
@@ -61,10 +61,10 @@ $membroDesde = $usuario['createdAt'] ?? '';
       <i data-lucide="shopping-cart"></i> Carrinho
     </a>
     <a class="nav-item" href="<?= url_to('user_arace_notificacao') ?>">
-      <i data-lucide="bell"></i> Notificações
+      <i data-lucide="bell"></i> NotificaÃ§Ãµes
     </a>
     <a class="nav-item" href="<?= url_to('main_arace_config') ?>">
-      <i data-lucide="settings"></i> Configurações
+      <i data-lucide="settings"></i> ConfiguraÃ§Ãµes
     </a>
     <a class="nav-item" href="<?= url_to('user_arace_perfil') ?>">
       <i data-lucide="user"></i> Perfil
@@ -111,7 +111,7 @@ $membroDesde = $usuario['createdAt'] ?? '';
           </div>
         </div>
         <div class="profile-meta">
-          <div class="profile-name"><?= esc($usuario['nome'] ?? 'Usuário') ?></div>
+          <div class="profile-name"><?= esc($usuario['nome'] ?? 'UsuÃ¡rio') ?></div>
           <div class="profile-email"><?= esc($usuario['email'] ?? '') ?></div>
         </div>
         <a href="<?= url_to('produtor_config') ?>">
@@ -124,22 +124,22 @@ $membroDesde = $usuario['createdAt'] ?? '';
       <div class="fields">
         <div class="field">
           <div class="field-label">Nome</div>
-          <div class="field-value"><?= esc($usuario['nome'] ?? 'Usuário') ?></div>
+          <div class="field-value"><?= esc($usuario['nome'] ?? 'UsuÃ¡rio') ?></div>
         </div>
         <div class="field">
           <div class="field-label">E-mail</div>
           <div class="field-value"><?= esc($usuario['email'] ?? '') ?></div>
         </div>
         <div class="field">
-          <div class="field-label">Número</div>
+          <div class="field-label">NÃºmero</div>
           <div class="field-value <?= empty($usuario['telefone']) ? 'missing' : '' ?>">
-            <?= empty($usuario['telefone']) ? '<i data-lucide="alert-circle"></i> Não informado' : esc($usuario['telefone']) ?>
+            <?= empty($usuario['telefone']) ? '<i data-lucide="alert-circle"></i> NÃ£o informado' : esc($usuario['telefone']) ?>
           </div>
         </div>
         <div class="field">
-          <div class="field-label">Localização</div>
+          <div class="field-label">LocalizaÃ§Ã£o</div>
           <div class="field-value <?= $localizacao === '' ? 'missing' : '' ?>">
-            <?= $localizacao === '' ? '<i data-lucide="alert-circle"></i> Não informado' : esc($localizacao) ?>
+            <?= $localizacao === '' ? '<i data-lucide="alert-circle"></i> NÃ£o informado' : esc($localizacao) ?>
           </div>
         </div>
         <div class="field">
@@ -149,7 +149,7 @@ $membroDesde = $usuario['createdAt'] ?? '';
         <div class="field">
           <div class="field-label">CPF</div>
           <div class="field-value <?= empty($usuario['cpf']) ? 'missing' : '' ?>">
-            <?= empty($usuario['cpf']) ? '<i data-lucide="alert-circle"></i> Não informado' : esc($usuario['cpf']) ?>
+            <?= empty($usuario['cpf']) ? '<i data-lucide="alert-circle"></i> NÃ£o informado' : esc($usuario['cpf']) ?>
           </div>
         </div>
       </div>

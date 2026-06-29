@@ -1,9 +1,9 @@
-??<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Aracê - Cadastro</title>
+  <title>AracÃª - Cadastro</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex&display=swap" rel="stylesheet" />
@@ -13,7 +13,7 @@
 
   <div class="login-card cadastro-card item-animado">
     <div class="logo-wrap item-animado atraso-1">
-      <img src="<?= base_url('images/arace.png') ?>" alt="Logo Aracê" />
+      <img src="<?= base_url('images/arace.png') ?>" alt="Logo AracÃª" />
     </div>
 
     <p class="subtitle item-animado atraso-1">Crie sua conta</p>
@@ -67,7 +67,7 @@
         <button type="submit" class="btn-login">Criar conta</button>
 
         <div class="links-rodape">
-          <a href="<?= url_to('auth_login') ?>" class="esqueceu">Já tenho uma conta</a>
+          <a href="<?= url_to('auth_login') ?>" class="esqueceu">JÃ¡ tenho uma conta</a>
         </div>
       </div>
 

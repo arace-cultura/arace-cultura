@@ -1,9 +1,9 @@
-??<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Aracê — Minha Loja</title>
+  <title>AracÃª â€” Minha Loja</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex&family=Playfair+Display:wght@700&display=swap" rel="stylesheet" />
   <script src="https://unpkg.com/lucide@latest"></script>
@@ -15,7 +15,7 @@
   
   <!-- HEADER -->
 <header>
-  <a href="<?= url_to('home') ?>" class="logo">aracê</a>
+  <a href="<?= url_to('home') ?>" class="logo">aracÃª</a>
 
   <form class="search-wrap" action="<?= url_to('main_pesquisa') ?>" method="get">
     <i data-lucide="search"></i>
@@ -56,10 +56,10 @@
       <i data-lucide="shopping-cart"></i> Carrinho
     </a>
     <a class="nav-item" href="<?= url_to('user_arace_notificacao') ?>">
-      <i data-lucide="bell"></i> Notificações
+      <i data-lucide="bell"></i> NotificaÃ§Ãµes
     </a>
     <a class="nav-item" href="<?= url_to('main_arace_config') ?>">
-      <i data-lucide="settings"></i> Configurações
+      <i data-lucide="settings"></i> ConfiguraÃ§Ãµes
     </a>
     <a class="nav-item" href="<?= url_to('user_arace_perfil') ?>">
       <i data-lucide="user"></i> Perfil
@@ -78,7 +78,7 @@
   <main>
 
     <!-- Breadcrumb -->
-    <nav class="breadcrumb" aria-label="Caminho de navegação">
+    <nav class="breadcrumb" aria-label="Caminho de navegaÃ§Ã£o">
       <a href="<?= url_to('home') ?>">Home</a>
       <i data-lucide="chevron-right"></i>
       <span>Minha loja</span>
@@ -107,17 +107,17 @@
           <h1 class="store-title">Paneleiras Capixabas</h1>
           <p class="store-subtitle">
             <i data-lucide="map-pin"></i>
-            Vitória, ES · Artesanato tradicional
+            VitÃ³ria, ES Â· Artesanato tradicional
           </p>
         </div>
-        <div class="store-stats" aria-label="Estatísticas da loja">
+        <div class="store-stats" aria-label="EstatÃ­sticas da loja">
           <div class="stat-item">
             <span class="stat-number">42</span>
             <span class="stat-label">Produtos</span>
           </div>
           <div class="stat-item">
             <span class="stat-number">4.9</span>
-            <span class="stat-label">Avaliação</span>
+            <span class="stat-label">AvaliaÃ§Ã£o</span>
           </div>
           <div class="stat-item">
             <span class="stat-number">320</span>
@@ -131,7 +131,7 @@
     <section class="store-section item-animado atraso-2" aria-labelledby="produtos-titulo">
       <div class="section-header">
         <h2 id="produtos-titulo">Nossos produtos</h2>
-        <a href="#" class="view-all-link">
+        <a href="<?= url_to('arace_produtos') ?>" class="view-all-link">
           Todos os produtos <i data-lucide="arrow-right"></i>
         </a>
       </div>
@@ -215,18 +215,18 @@
       </div>
     </section>
 
-    <!-- Nossa história -->
+    <!-- Nossa histÃ³ria -->
     <section class="store-section history-section item-animado atraso-3" aria-labelledby="historia-titulo">
       <div class="history-container">
         <div class="history-image">
-          <img src="/images/convento1.jpg" alt="Artesã modelando panela de barro" loading="lazy" />
+          <img src="/images/convento1.jpg" alt="ArtesÃ£ modelando panela de barro" loading="lazy" />
         </div>
         <div class="history-text">
-          <h2 id="historia-titulo">Nossa história</h2>
+          <h2 id="historia-titulo">Nossa histÃ³ria</h2>
           <p>
-            Preservamos uma tradição centenária de produção artesanal de panelas de barro,
-            símbolo da cultura capixaba. Cada peça carrega a identidade, o suor e o amor
-            passado de geração em geração.
+            Preservamos uma tradiÃ§Ã£o centenÃ¡ria de produÃ§Ã£o artesanal de panelas de barro,
+            sÃ­mbolo da cultura capixaba. Cada peÃ§a carrega a identidade, o suor e o amor
+            passado de geraÃ§Ã£o em geraÃ§Ã£o.
           </p>
           <span class="history-tag">Artesanato certificado</span>
         </div>

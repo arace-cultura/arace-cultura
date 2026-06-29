@@ -1,10 +1,8 @@
-?<!DOCTYPE html>
+<!DOCTYPE html>
 <?php
 $usuario = $usuario ?? [];
 $nomeCompleto = trim((string) ($usuario['nome'] ?? ''));
-$nomePartes = preg_split('/\s+/', $nomeCompleto, 2) ?: [];
-$nome = (string) ($nomePartes[0] ?? $nomeCompleto);
-$sobrenome = (string) ($usuario['sobrenome'] ?? ($nomePartes[1] ?? ''));
+$nome = $nomeCompleto;
 $username = (string) ($usuario['username'] ?? '');
 $genero = (string) ($usuario['genero'] ?? '');
 ?>
@@ -18,7 +16,7 @@ $genero = (string) ($usuario['genero'] ?? '');
   <link href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex&family=Playfair+Display:wght@700&display=swap" rel="stylesheet" />
   <script src="https://unpkg.com/lucide@latest"></script>
   <script src="<?= base_url('js/icons.js') ?>"></script>
-  <link href="<?= base_url('css/config.css') ?>" rel="stylesheet" />
+  <link href="<?= base_url('css/config.css?v=20260629-full') ?>" rel="stylesheet" />
 </head>
 <body>
 
@@ -65,7 +63,7 @@ $genero = (string) ($usuario['genero'] ?? '');
     </a>
     <div class="nav-divider"></div>
     <div class="nav-section">Reportar</div>
-    <a class="nav-item" href="<?= url_to('main_arace_config') ?>">
+    <a class="nav-item" href="<?= url_to('main_arace_config') ?>#pagamento">
       <i data-lucide="hand-coins"></i> Detalhes de pagamento
     </a>
   </aside>
@@ -78,34 +76,9 @@ $genero = (string) ($usuario['genero'] ?? '');
     </div>
   </div>
 
-  <div class="config-layout">
+  <div class="config-layout config-layout-full">
 
-    <!-- NAV LATERAL -->
-    <nav class="config-nav">
-      <button class="config-nav-item active" onclick="trocarAba(this,'perfil')">
-        <i data-lucide="user"></i> Perfil
-      </button>
-      <button class="config-nav-item" onclick="trocarAba(this,'conta')">
-        <i data-lucide="shield"></i> Conta & Segurança
-      </button>
-      <button class="config-nav-item" onclick="trocarAba(this,'notificacoes')">
-        <i data-lucide="bell"></i> Notificações
-      </button>
-      <button class="config-nav-item" onclick="trocarAba(this,'pagamento')">
-        <i data-lucide="credit-card"></i> Pagamento
-      </button>
-      <button class="config-nav-item" onclick="trocarAba(this,'enderecos')">
-        <i data-lucide="map-pin"></i> Endereços
-      </button>
-      <div class="config-nav-divider"></div>
-      <button class="config-nav-item" onclick="trocarAba(this,'aparencia')">
-        <i data-lucide="palette"></i> Aparência
-      </button>
-      <button class="config-nav-item" onclick="trocarAba(this,'privacidade')">
-        <i data-lucide="lock"></i> Privacidade
-      </button>
-    </nav>
-
+    
     <!-- CONTEÚDO -->
     <div>
 
@@ -465,7 +438,7 @@ $genero = (string) ($usuario['genero'] ?? '');
               <div class="field-group">
                 <label>Idioma</label>
                 <div class="select-with-icon">
-                  <span class="flag">????</span>
+                  <span class="flag">BR</span>
                   <select class="input-field" id="idioma">
                     <option value="pt-BR" selected>Português (Brasil)</option>
                     <option value="en">English</option>
@@ -512,13 +485,6 @@ $genero = (string) ($usuario['genero'] ?? '');
             <div><h2>Dados e privacidade</h2></div>
           </div>
           <div class="config-card-body">
-            <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:.75rem">
-              <div>
-                <div style="font-size:14px;font-weight:500;color:var(--text)">Exportar meus dados</div>
-                <div style="font-size:12px;color:var(--muted);margin-top:2px">Baixe uma cópia de todos os seus dados</div>
-              </div>
-            </div>
-            <div style="height:.5px;background:var(--border);margin:.25rem 0"></div>
             <div class="toggle-row">
               <div class="toggle-info"><span>Cookies de análise</span><small>Ajuda a melhorar a plataforma</small></div>
               <label class="toggle-switch"><input type="checkbox" checked /><span class="toggle-slider"></span></label>

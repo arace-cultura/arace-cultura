@@ -1,9 +1,9 @@
-??<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Aracê — Painel</title>
+  <title>AracÃª â€” Painel</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex&family=Playfair+Display:wght@700&display=swap" rel="stylesheet" />
@@ -15,7 +15,7 @@
 
 <!-- HEADER -->
 <header>
-  <a href="<?= url_to('home') ?>" class="logo">aracê</a>
+  <a href="<?= url_to('home') ?>" class="logo">aracÃª</a>
 
   <form class="search-wrap" action="<?= url_to('main_pesquisa') ?>" method="get">
     <i data-lucide="search"></i>
@@ -56,10 +56,10 @@
       <i data-lucide="shopping-cart"></i> Carrinho
     </a>
     <a class="nav-item" href="<?= url_to('user_arace_notificacao') ?>">
-      <i data-lucide="bell"></i> Notificações
+      <i data-lucide="bell"></i> NotificaÃ§Ãµes
     </a>
     <a class="nav-item" href="<?= url_to('main_arace_config') ?>">
-      <i data-lucide="settings"></i> Configurações
+      <i data-lucide="settings"></i> ConfiguraÃ§Ãµes
     </a>
     <a class="nav-item" href="<?= url_to('user_arace_perfil') ?>">
       <i data-lucide="user"></i> Perfil
@@ -80,29 +80,29 @@
   <div class="painel-welcome">
     <div>
       <h1>Bom dia! </h1>
-      <p>Aqui está um resumo da sua loja hoje — <span id="dataHoje"></span></p>
+      <p>Aqui estÃ¡ um resumo da sua loja hoje â€” <span id="dataHoje"></span></p>
     </div>
     <a href="<?= url_to('produtor_painel') ?>" class="btn-novo-produto">
       <i data-lucide="plus"></i> Novo produto
     </a>
   </div>
 
-  <!-- MÉTRICAS PRINCIPAIS -->
+  <!-- MÃ‰TRICAS PRINCIPAIS -->
   <div class="metricas-grid">
     <div class="metrica-card">
       <div class="metrica-icon verde"><i data-lucide="circle-dollar-sign"></i></div>
       <div class="metrica-info">
-        <span class="metrica-label">Faturamento (mês)</span>
+        <span class="metrica-label">Faturamento (mÃªs)</span>
         <span class="metrica-value">R$ 3.840,00</span>
-        <span class="metrica-delta positivo"><i data-lucide="trending-up"></i> +12% vs mês anterior</span>
+        <span class="metrica-delta positivo"><i data-lucide="trending-up"></i> +12% vs mÃªs anterior</span>
       </div>
     </div>
     <div class="metrica-card">
       <div class="metrica-icon azul"><i data-lucide="package"></i></div>
       <div class="metrica-info">
-        <span class="metrica-label">Pedidos (mês)</span>
+        <span class="metrica-label">Pedidos (mÃªs)</span>
         <span class="metrica-value">27</span>
-        <span class="metrica-delta positivo"><i data-lucide="trending-up"></i> +5 vs mês anterior</span>
+        <span class="metrica-delta positivo"><i data-lucide="trending-up"></i> +5 vs mÃªs anterior</span>
       </div>
     </div>
     <div class="metrica-card">
@@ -110,15 +110,15 @@
       <div class="metrica-info">
         <span class="metrica-label">Pedidos pendentes</span>
         <span class="metrica-value">3</span>
-        <span class="metrica-delta neutro">Aguardando ação</span>
+        <span class="metrica-delta neutro">Aguardando aÃ§Ã£o</span>
       </div>
     </div>
     <div class="metrica-card">
       <div class="metrica-icon amarelo"><i data-lucide="star"></i></div>
       <div class="metrica-info">
-        <span class="metrica-label">Avaliação média</span>
+        <span class="metrica-label">AvaliaÃ§Ã£o mÃ©dia</span>
         <span class="metrica-value">4,8</span>
-        <span class="metrica-delta positivo"><i data-lucide="trending-up"></i> +0,2 este mês</span>
+        <span class="metrica-delta positivo"><i data-lucide="trending-up"></i> +0,2 este mÃªs</span>
       </div>
     </div>
   </div>
@@ -148,9 +148,9 @@
           <div class="pedido-mini-id">#4820</div>
           <div class="pedido-mini-info">
             <span class="pedido-mini-cliente">Marcos Oliveira</span>
-            <span class="pedido-mini-produto">Panela Trad. M ×2</span>
+            <span class="pedido-mini-produto">Panela Trad. M Ã—2</span>
           </div>
-          <span class="status-badge producao">Em produção</span>
+          <span class="status-badge producao">Em produÃ§Ã£o</span>
           <span class="pedido-mini-valor">R$170</span>
         </div>
 
@@ -158,7 +158,7 @@
           <div class="pedido-mini-id">#4819</div>
           <div class="pedido-mini-info">
             <span class="pedido-mini-cliente">Fernanda Costa</span>
-            <span class="pedido-mini-produto">Prato de Cerâmica ×3</span>
+            <span class="pedido-mini-produto">Prato de CerÃ¢mica Ã—3</span>
           </div>
           <span class="status-badge enviado">Enviado</span>
           <span class="pedido-mini-valor">R$135</span>
@@ -167,7 +167,7 @@
         <div class="pedido-mini" data-href="<?= url_to('produtor_pedidos') ?>">
           <div class="pedido-mini-id">#4818</div>
           <div class="pedido-mini-info">
-            <span class="pedido-mini-cliente">João Pedro Matos</span>
+            <span class="pedido-mini-cliente">JoÃ£o Pedro Matos</span>
             <span class="pedido-mini-produto">Kit Panela de Barro</span>
           </div>
           <span class="status-badge entregue">Entregue</span>
@@ -227,7 +227,7 @@
           <div class="produto-mini">
             <div class="produto-mini-img" style="background:#c4b49a"></div>
             <div class="produto-mini-info">
-              <span class="produto-mini-nome">Prato de Cerâmica</span>
+              <span class="produto-mini-nome">Prato de CerÃ¢mica</span>
               <span class="produto-mini-preco">R$ 45,00</span>
             </div>
             <span class="stock-badge esgotado">Esgotado</span>
@@ -244,10 +244,10 @@
         </a>
       </div>
 
-      <!-- AVALIAÇÕES RECENTES -->
+      <!-- AVALIAÃ‡Ã•ES RECENTES -->
       <div class="painel-card">
         <div class="card-head">
-          <h2>Avaliações recentes</h2>
+          <h2>AvaliaÃ§Ãµes recentes</h2>
         </div>
         <div class="avaliacoes-list">
 
@@ -259,20 +259,20 @@
                 <i data-lucide="star"></i><i data-lucide="star"></i>
               </div>
             </div>
-            <p class="avaliacao-text">Panela maravilhosa! Já fiz moqueca duas vezes, ficou perfeita.</p>
-            <span class="avaliacao-produto">Kit Panela de Barro · há 2 dias</span>
+            <p class="avaliacao-text">Panela maravilhosa! JÃ¡ fiz moqueca duas vezes, ficou perfeita.</p>
+            <span class="avaliacao-produto">Kit Panela de Barro Â· hÃ¡ 2 dias</span>
           </div>
 
           <div class="avaliacao-mini">
             <div class="avaliacao-header">
-              <span class="avaliacao-user">João Pedro Matos</span>
+              <span class="avaliacao-user">JoÃ£o Pedro Matos</span>
               <div class="mini-stars">
                 <i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i>
                 <i data-lucide="star"></i><i data-lucide="star" style="opacity:.3"></i>
               </div>
             </div>
             <p class="avaliacao-text">Produto de excelente qualidade, bem embalado. Recomendo!</p>
-            <span class="avaliacao-produto">Panela Tradicional M · há 5 dias</span>
+            <span class="avaliacao-produto">Panela Tradicional M Â· hÃ¡ 5 dias</span>
           </div>
 
         </div>
