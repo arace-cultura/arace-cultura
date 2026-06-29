@@ -71,6 +71,11 @@
     <a class="nav-item" href="/arace-config#pagamento">
       <i data-lucide="hand-coins"></i> Detalhes de pagamento
     </a>
+    <form class="logout-form" action="<?= site_url('sair') ?>" method="post">
+      <button class="nav-item logout-button" type="submit">
+        <i data-lucide="log-out"></i> Sair da conta
+      </button>
+    </form>
   </aside>
 
   <!-- MAIN -->
@@ -85,8 +90,8 @@
           </div>
         </div>
         <div class="profile-meta">
-          <div class="profile-name">Usuário</div>
-          <div class="profile-email">usuario@gmail.com</div>
+          <div class="profile-name"><?= esc($usuario['nome'] ?? 'Usuário') ?></div>
+          <div class="profile-email"><?= esc($usuario['email'] ?? '') ?></div>
         </div>
         <a href="/arace-config">
           <button class="btn-edit">
@@ -98,21 +103,19 @@
       <div class="fields">
         <div class="field">
           <div class="field-label">Nome</div>
-          <div class="field-value">Usuário</div>
+          <div class="field-value"><?= esc($usuario['nome'] ?? 'Usuário') ?></div>
         </div>
         <div class="field">
           <div class="field-label">E-mail</div>
-          <div class="field-value">usuario@gmail.com</div>
+          <div class="field-value"><?= esc($usuario['email'] ?? '') ?></div>
         </div>
         <div class="field">
           <div class="field-label">Número</div>
-          <div class="field-value missing">
-            <i data-lucide="alert-circle"></i> Não informado
-          </div>
+          <div class="field-value missing"><?= esc($usuario['telefone'] ?? '') ?></div>
         </div>
         <div class="field">
           <div class="field-label">Localização</div>
-          <div class="field-value">Cariacica – ES</div>
+          <div class="field-value"><?= esc(implode(' – ', array_filter([$usuario['cidade'] ?? null, $usuario['estado'] ?? null]))) ?></div>
         </div>
         <div class="field">
           <div class="field-label">Membro desde</div>
@@ -120,14 +123,13 @@
         </div>
         <div class="field">
           <div class="field-label">CPF</div>
-          <div class="field-value missing">
-            <i data-lucide="alert-circle"></i> Não informado
-          </div>
+          <div class="field-value missing"><?= esc($usuario['cpf'] ?? '') ?></div>
         </div>
       </div>
     </div>
 
   </main>
+  <script>window.ARACE_AUTH_USER = <?= json_encode($usuario, JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>;</script>
   <script src="/js/arace-state.js"></script>
   <script src="/js/perfil.js"></script>
 </body>

@@ -1,4 +1,23 @@
 ﻿﻿<!DOCTYPE html>
+<?php
+$produtos = $produtos ?? [];
+$produtores = $produtores ?? [];
+
+function araceStars(float $nota): string
+{
+    $html = '';
+
+    for ($indice = 1; $indice <= 5; $indice++) {
+        $icon = $indice <= floor($nota)
+            ? 'star'
+            : ($indice - $nota <= 0.5 ? 'star-half' : 'star');
+        $apagada = $indice > ceil($nota) ? ' style="opacity:.3"' : '';
+        $html .= '<i data-lucide="' . esc($icon) . '"' . $apagada . '></i>';
+    }
+
+    return $html;
+}
+?>
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8"/>
@@ -41,9 +60,9 @@
 <!-- HERO -->
 <section class="hero">
   <div class="hero-slides">
-    <div class="hero-slide active" style="background-image: url('<?= base_url('images/bahia-vitoria.jpg') ?>')"></div>
-    <div class="hero-slide" style="background-image: url('<?= base_url('images/baiavitoria2.jpg') ?>')"></div>
-    <div class="hero-slide" style="background-image: url('<?= base_url('images/convento1.jpg') ?>')"></div>
+    <div class="hero-slide active" style="background-image: url('/images/bahia-vitoria.jpg')"></div>
+    <div class="hero-slide" style="background-image: url('/images/baiavitoria2.jpg')"></div>
+    <div class="hero-slide" style="background-image: url('/images/convento1.jpg')"></div>
   </div>
   <div class="hero-overlay"></div>
   <div class="hero-content">
@@ -93,7 +112,46 @@
     </div>
 
     <div class="produtos-grid" id="produtosGrid">
-      <!-- Firestore/API: os cards serao renderizados por landing.js. -->
+      <?php foreach ($produtos as $produto): ?>
+        <?php
+          $id = (string) ($produto['id'] ?? url_title($produto['nome'] ?? 'produto', '-', true));
+          $nome = (string) ($produto['nome'] ?? 'Produto Arace');
+          $artesao = (string) ($produto['artesao'] ?? 'Produtor Arace');
+          $categoria = (string) ($produto['categoria'] ?? 'artesanato');
+          $preco = (float) ($produto['preco'] ?? 0);
+          $avaliacoes = (int) ($produto['avaliacoes'] ?? 0);
+          $estrelas = (float) ($produto['estrelas'] ?? 4);
+          $cor = (string) ($produto['cor'] ?? '#b5a898');
+        ?>
+        <article
+          class="produto"
+          data-cat="<?= esc($categoria) ?>"
+          data-produto-id="<?= esc($id) ?>"
+          data-nome="<?= esc($nome) ?>"
+          data-artesao="<?= esc($artesao) ?>"
+          data-preco="<?= esc((string) $preco) ?>"
+          data-categoria="<?= esc($categoria) ?>"
+          data-cor="<?= esc($cor) ?>"
+        >
+          <div class="produto-img" style="background:<?= esc($cor) ?>">
+            <button class="fav" type="button" aria-label="Favoritar produto">
+              <i data-lucide="heart"></i>
+            </button>
+          </div>
+          <div class="produto-info">
+            <span class="artesao"><?= esc($artesao) ?></span>
+            <a href="/produto/detalhes?id=<?= urlencode($id) ?>" class="nome"><?= esc($nome) ?></a>
+            <div class="stars">
+              <?= araceStars($estrelas) ?>
+              <span>(<?= esc((string) $avaliacoes) ?>)</span>
+            </div>
+            <div class="preco"><strong>R$ <?= number_format($preco, 2, ',', '.') ?></strong></div>
+            <button class="add-cart" type="button" data-produto-id="<?= esc($id) ?>">
+              <i data-lucide="shopping-cart"></i> Adicionar ao carrinho
+            </button>
+          </div>
+        </article>
+      <?php endforeach; ?>
     </div>
 
     <div class="paginacao">
@@ -115,7 +173,13 @@
       <a href="/produtor/painel" class="link-ver">Ver todos <i data-lucide="arrow-right"></i></a>
     </div>
     <div class="produtores-grid" id="produtoresGrid">
-      <!-- Firestore/API: os produtores serao renderizados por landing.js. -->
+      <?php foreach ($produtores as $produtor): ?>
+        <article class="produtor">
+          <div class="avatar"><?= esc($produtor['iniciais'] ?? 'AR') ?></div>
+          <span class="p-nome"><?= esc($produtor['nome'] ?? 'Produtor Arace') ?></span>
+          <span class="p-qtd"><?= esc((string) ($produtor['produtos'] ?? 0)) ?> produtos</span>
+        </article>
+      <?php endforeach; ?>
     </div>
   </div>
 </section>

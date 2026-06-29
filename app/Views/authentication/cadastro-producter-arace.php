@@ -18,11 +18,15 @@
 
     <p class="subtitle item-animado atraso-1">Crie sua conta de produtor</p>
 
-    <form id="formCadastroDono" action="<?= base_url('cadastro/produtora-arace') ?>" method="post" novalidate>
+    <?php if (session('erro')): ?>
+      <p class="erro-campo" style="display:block"><?= esc(session('erro')) ?></p>
+    <?php endif; ?>
+
+    <form id="formCadastroDono" action="/cadastro/produtor/dono" method="post" novalidate>
 
       <div class="input-group-custom item-animado atraso-2">
         <i data-lucide="user"></i>
-        <input type="text" id="nome-dono" name="nome-dono" placeholder="Nome completo" autocomplete="name" required />
+        <input type="text" id="nome-dono" name="nome" placeholder="Nome completo" autocomplete="name" required />
       </div>
 
       <div class="input-group-custom item-animado atraso-2">
@@ -44,7 +48,7 @@
 
       <div class="item-animado atraso-5">
         <label class="permanecer">
-          <input type="checkbox" id="termos" required />
+          <input type="checkbox" id="termos" name="termosAceitos" value="1" required />
           Aceito os <a href="#" target="_blank">termos de uso</a>
         </label>
 

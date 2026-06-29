@@ -86,7 +86,7 @@
    
     <section class="store-banner-wrapper item-animado atraso-1" aria-label="Banner da loja">
       <div class="store-banner">
-        <img src="<?= base_url('images/bahia-vitoria.jpg') ?>" alt="Paneleiras capixabas trabalhando" class="banner-img" />
+        <img src="/images/bahia-vitoria.jpg" alt="Paneleiras capixabas trabalhando" class="banner-img" />
         <div class="banner-overlay" aria-hidden="true"></div>
         <div class="banner-actions">
           <button class="banner-action-btn" id="btn-share">
@@ -100,7 +100,7 @@
 
       <div class="store-profile-header">
         <div class="store-avatar">
-          <img src="<?= base_url('images/arace.png') ?>" alt="Foto de perfil da loja Paneleiras Capixabas" />
+          <img src="/images/arace.png" alt="Foto de perfil da loja Paneleiras Capixabas" />
         </div>
         <div class="store-meta">
           <h1 class="store-title">Paneleiras Capixabas</h1>
@@ -139,7 +139,7 @@
 
         <div class="product-card" data-id="1">
           <div class="product-image">
-            <img src="<?= base_url('images/produtos/panela_convento.png') ?>" alt="Kit Panela de Barro" loading="lazy" />
+            <img src="/images/produtos/panela_convento.png" alt="Kit Panela de Barro" loading="lazy" />
             <span class="product-badge">Destaque</span>
             <button class="product-favorite" aria-label="Favoritar Kit Panela de Barro">
               <i data-lucide="heart"></i>
@@ -158,7 +158,7 @@
 
         <div class="product-card" data-id="2">
           <div class="product-image">
-            <img src="<?= base_url('images/produtos/panela_tres.png') ?>" alt="Panela Individual de Barro" loading="lazy" />
+            <img src="/images/produtos/panela_tres.png" alt="Panela Individual de Barro" loading="lazy" />
             <button class="product-favorite" aria-label="Favoritar Panela Individual">
               <i data-lucide="heart"></i>
             </button>
@@ -176,7 +176,7 @@
 
         <div class="product-card" data-id="3">
           <div class="product-image">
-            <img src="<?= base_url('images/produtos/panela_convento.png') ?>" alt="Travessa de Barro" loading="lazy" />
+            <img src="/images/produtos/panela_convento.png" alt="Travessa de Barro" loading="lazy" />
             <span class="product-badge">Novo</span>
             <button class="product-favorite" aria-label="Favoritar Travessa de Barro">
               <i data-lucide="heart"></i>
@@ -195,7 +195,7 @@
 
         <div class="product-card" data-id="4">
           <div class="product-image">
-            <img src="<?= base_url('images/produtos/panela_tres.png') ?>" alt="Tigela Artesanal" loading="lazy" />
+            <img src="/images/produtos/panela_tres.png" alt="Tigela Artesanal" loading="lazy" />
             <button class="product-favorite" aria-label="Favoritar Tigela Artesanal">
               <i data-lucide="heart"></i>
             </button>
@@ -218,7 +218,7 @@
     <section class="store-section history-section item-animado atraso-3" aria-labelledby="historia-titulo">
       <div class="history-container">
         <div class="history-image">
-          <img src="<?= base_url('images/convento1.jpg') ?>" alt="Artesã modelando panela de barro" loading="lazy" />
+          <img src="/images/convento1.jpg" alt="Artesã modelando panela de barro" loading="lazy" />
         </div>
         <div class="history-text">
           <h2 id="historia-titulo">Nossa história</h2>

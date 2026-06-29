@@ -18,21 +18,32 @@
 
     <p class="subtitle item-animado atraso-1">Crie sua conta</p>
 
-    <form id="formCadastro" action="<?= base_url('cadastro') ?>" method="post" novalidate>
-  
+    <?php if (session('erro')): ?>
+      <p class="erro-campo" style="display:block"><?= esc(session('erro')) ?></p>
+    <?php endif; ?>
+
+    <?php if (session('erros')): ?>
+      <ul class="erro-campo" style="display:block">
+        <?php foreach (session('erros') as $erro): ?>
+          <li><?= esc($erro) ?></li>
+        <?php endforeach; ?>
+      </ul>
+    <?php endif; ?>
+
+    <form id="formCadastro" action="/cadastro/clientes" method="post" novalidate>
       <div class="input-group-custom item-animado atraso-2">
         <i data-lucide="user"></i>
-        <input type="text" id="nome" name="nome" placeholder="Nome completo" autocomplete="name" required />
+        <input type="text" id="nome" name="nome" placeholder="Nome completo" autocomplete="name" value="<?= esc(old('nome')) ?>" required />
       </div>
 
       <div class="input-group-custom item-animado atraso-2">
         <i data-lucide="mail"></i>
-        <input type="email" id="email" name="email" placeholder="E-mail" autocomplete="email" required />
+        <input type="email" id="email" name="email" placeholder="E-mail" autocomplete="email" value="<?= esc(old('email')) ?>" required />
       </div>
 
       <div class="input-group-custom item-animado atraso-3">
         <i data-lucide="phone"></i>
-        <input type="tel" id="telefone" name="telefone" placeholder="Telefone" autocomplete="tel" />
+        <input type="tel" id="telefone" name="telefone" placeholder="Telefone" autocomplete="tel" value="<?= esc(old('telefone')) ?>" />
       </div>
 
       <div class="input-group-custom item-animado atraso-3">
@@ -50,17 +61,18 @@
           <i id="icone-olho-2" data-lucide="eye"></i>
         </button>
       </div>
+      <span id="erro-senha" class="erro-campo" style="display:none">As senhas precisam ser iguais</span>
 
       <div class="item-animado atraso-5">
         <label class="permanecer">
-          <input type="checkbox" id="termos" required />
+          <input type="checkbox" id="termos" name="termosAceitos" value="1" required />
           Aceito os <a href="#" target="_blank">termos de uso</a>
         </label>
 
         <button type="submit" class="btn-login">Criar conta</button>
 
         <div class="links-rodape">
-          <a href="login" class="esqueceu">Já tenho uma conta</a>
+          <a href="/login" class="esqueceu">Já tenho uma conta</a>
         </div>
       </div>
 

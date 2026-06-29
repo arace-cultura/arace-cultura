@@ -36,10 +36,10 @@
     <a class="nav-item" href="/arace-produtos">
       <i data-lucide="shopping-bag"></i> Produtos
     </a>
-    <a class="nav-item " href="/arace-carrinho">
+    <a class="nav-item active" href="/arace-carrinho">
       <i data-lucide="shopping-cart"></i> Carrinho
     </a>
-    <a class="nav-item active" href="/usuario/arace-notificacao">
+    <a class="nav-item" href="/usuario/arace-notificacao">
       <i data-lucide="bell"></i> Notificações
     </a>
     <a class="nav-item" href="/arace-config">
