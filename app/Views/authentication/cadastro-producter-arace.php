@@ -1,9 +1,9 @@
-?<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Aracê - Cadastro Produtor</title>
+  <title>AracÃª - Cadastro Produtor</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex&display=swap" rel="stylesheet" />
@@ -13,7 +13,7 @@
 
   <div class="login-card cadastro-card item-animado">
     <div class="logo-wrap item-animado atraso-1">
-      <img src="<?= base_url('images/arace.png') ?>" alt="Logo Aracê" />
+      <img src="<?= base_url('images/arace.png') ?>" alt="Logo AracÃª" />
     </div>
 
     <p class="subtitle item-animado atraso-1">Crie sua conta de produtor</p>
@@ -32,7 +32,7 @@
       <div class="input-group-custom item-animado atraso-2">
         <i data-lucide="id-card"></i> <input type="text" id="cpf" name="cpf" placeholder="CPF" required />
       </div>
-      <span id="cpf-erro" class="erro-campo" style="display:none">CPF inválido</span>
+      <span id="cpf-erro" class="erro-campo" style="display:none">CPF invÃ¡lido</span>
 
       <div class="input-group-custom item-animado atraso-3">
         <i data-lucide="mail"></i>

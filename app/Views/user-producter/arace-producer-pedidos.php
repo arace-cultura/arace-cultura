@@ -1,9 +1,9 @@
-?<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Aracê — Pedidos</title>
+  <title>AracÃª â€” Pedidos</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex&family=Playfair+Display:wght@700&display=swap" rel="stylesheet" />
@@ -15,7 +15,7 @@
 
 <!-- HEADER -->
 <header>
-  <a href="<?= url_to('home') ?>" class="logo">aracê</a>
+  <a href="<?= url_to('home') ?>" class="logo">aracÃª</a>
 
   <form class="search-wrap" action="<?= url_to('main_pesquisa') ?>" method="get">
     <i data-lucide="search"></i>
@@ -56,10 +56,10 @@
       <i data-lucide="shopping-cart"></i> Carrinho
     </a>
     <a class="nav-item" href="<?= url_to('user_arace_notificacao') ?>">
-      <i data-lucide="bell"></i> Notificações
+      <i data-lucide="bell"></i> NotificaÃ§Ãµes
     </a>
     <a class="nav-item" href="<?= url_to('main_arace_config') ?>">
-      <i data-lucide="settings"></i> Configurações
+      <i data-lucide="settings"></i> ConfiguraÃ§Ãµes
     </a>
     <a class="nav-item" href="<?= url_to('user_arace_perfil') ?>">
       <i data-lucide="user"></i> Perfil
@@ -85,7 +85,7 @@
     <div class="page-header-actions">
       <div class="search-inline">
         <i data-lucide="search"></i>
-        <input type="text" id="searchPedidos" placeholder="Buscar pedido ou cliente…" />
+        <input type="text" id="searchPedidos" placeholder="Buscar pedido ou clienteâ€¦" />
       </div>
       <button class="btn-export"><i data-lucide="download"></i> Exportar</button>
     </div>
@@ -104,7 +104,7 @@
       <div class="stat-icon producao"><i data-lucide="package"></i></div>
       <div>
         <div class="stat-value" id="cnt-producao">2</div>
-        <div class="stat-label">Em produção</div>
+        <div class="stat-label">Em produÃ§Ã£o</div>
       </div>
     </div>
     <div class="stat-card">
@@ -130,7 +130,7 @@
       <span class="dot pendente"></span> Pendente
     </button>
     <button class="filter-chip" data-status="producao">
-      <span class="dot producao"></span> Em produção
+      <span class="dot producao"></span> Em produÃ§Ã£o
     </button>
     <button class="filter-chip" data-status="enviado">
       <span class="dot enviado"></span> Enviado
@@ -154,16 +154,16 @@
           <th>Valor</th>
           <th>Data</th>
           <th>Status</th>
-          <th>Ações</th>
+          <th>AÃ§Ãµes</th>
         </tr>
       </thead>
       <tbody id="pedidosBody"></tbody>
     </table>
   </div>
 
-  <!-- PAGINAÇÃO -->
+  <!-- PAGINAÃ‡ÃƒO -->
   <div class="pedidos-pagination">
-    <span id="paginacaoInfo">Mostrando 1–7 de 27 pedidos</span>
+    <span id="paginacaoInfo">Mostrando 1â€“7 de 27 pedidos</span>
     <div class="pagination-btns">
       <button class="pg-btn"><i data-lucide="chevron-left"></i></button>
       <button class="pg-num active">1</button>

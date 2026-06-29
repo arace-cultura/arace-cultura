@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Aracê — Notificações</title>
+  <title>AracÃª â€” NotificaÃ§Ãµes</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex&family=Playfair+Display:wght@700&display=swap" rel="stylesheet" />
@@ -14,7 +14,7 @@
 <body>
 
 <header>
-    <a href="<?= url_to('home') ?>" class="logo">aracê</a>
+    <a href="<?= url_to('home') ?>" class="logo">aracÃª</a>
     <div class="header-right">
     <button class="cart-btn" type="button" onclick="window.location.href='<?= url_to('main_arace_carrinho') ?>'">
         <i data-lucide="shopping-cart"></i>
@@ -41,10 +41,10 @@
       <i data-lucide="shopping-cart"></i> Carrinho
     </a>
     <a class="nav-item" href="<?= url_to('user_arace_notificacao') ?>">
-      <i data-lucide="bell"></i> Notificações
+      <i data-lucide="bell"></i> NotificaÃ§Ãµes
     </a>
     <a class="nav-item" href="<?= url_to('main_arace_config') ?>">
-      <i data-lucide="settings"></i> Configurações
+      <i data-lucide="settings"></i> ConfiguraÃ§Ãµes
     </a>
     <a class="nav-item" href="<?= url_to('user_arace_perfil') ?>">
       <i data-lucide="user"></i> Perfil
@@ -63,8 +63,8 @@
 
   <div class="notif-header">
     <div>
-      <h1>Notificações</h1>
-      <p id="subtituloHeader">Você tem <strong>4 notificações não lidas</strong></p>
+      <h1>NotificaÃ§Ãµes</h1>
+      <p id="subtituloHeader">VocÃª tem <strong>4 notificaÃ§Ãµes nÃ£o lidas</strong></p>
     </div>
     <div class="notif-header-actions">
       <button class="btn-marcar-tudo" onclick="marcarTodasLidas()">
@@ -84,7 +84,7 @@
       <span class="chip-count" id="cnt-pedido">2</span>
     </button>
     <button class="notif-chip" onclick="filtrar(this,'promo')">
-      <i data-lucide="tag"></i> Promoções
+      <i data-lucide="tag"></i> PromoÃ§Ãµes
       <span class="chip-count" id="cnt-promo">2</span>
     </button>
     <button class="notif-chip" onclick="filtrar(this,'chat')">
@@ -92,7 +92,7 @@
       <span class="chip-count" id="cnt-chat">1</span>
     </button>
     <button class="notif-chip" onclick="filtrar(this,'avaliacao')">
-      <i data-lucide="star"></i> Avaliações
+      <i data-lucide="star"></i> AvaliaÃ§Ãµes
       <span class="chip-count" id="cnt-avaliacao">1</span>
     </button>
     <button class="notif-chip" onclick="filtrar(this,'sistema')">
@@ -107,57 +107,57 @@
 </main>
 
 <script>
-// -- DADOS (substituir por fetch('/api/notificacoes') em produção) ----------
+// -- DADOS (substituir por fetch('/api/notificacoes') em produÃ§Ã£o) ----------
 const NOTIFICACOES = [
   {
     id: 1, tipo: 'pedido', lida: false, dia: 'Hoje',
     titulo: 'Pedido enviado!',
-    desc: 'Seu pedido <strong>#4821</strong> — Panela de barro Capixaba foi enviado e está a caminho.',
-    tempo: 'há 20 min',
+    desc: 'Seu pedido <strong>#4821</strong> â€” Panela de barro Capixaba foi enviado e estÃ¡ a caminho.',
+    tempo: 'hÃ¡ 20 min',
     thumb: 'https://images.unsplash.com/photo-1614613535308-eb5fbd847f51?w=80&q=70',
     cta: { label: 'Rastrear pedido', icon: 'map-pin', href: '#' }
   },
   {
     id: 2, tipo: 'chat', lida: false, dia: 'Hoje',
-    titulo: 'Nova mensagem de Mestre Zé Pedro',
-    desc: 'Olá! Obrigado pelo pedido. A panela está sendo embalada com cuidado para você.',
-    tempo: 'há 1h',
+    titulo: 'Nova mensagem de Mestre ZÃ© Pedro',
+    desc: 'OlÃ¡! Obrigado pelo pedido. A panela estÃ¡ sendo embalada com cuidado para vocÃª.',
+    tempo: 'hÃ¡ 1h',
     cta: { label: 'Ver conversa', icon: 'message-circle', href: '/usuario/chat' }
   },
   {
     id: 3, tipo: 'promo', lida: false, dia: 'Hoje',
-    titulo: 'Cupom exclusivo para você! ??',
-    desc: 'Use o código <strong>CAPIXABA15</strong> e ganhe 15% de desconto em toda a categoria Cerâmica. Válido até domingo.',
-    tempo: 'há 3h',
+    titulo: 'Cupom exclusivo para vocÃª! ??',
+    desc: 'Use o cÃ³digo <strong>CAPIXABA15</strong> e ganhe 15% de desconto em toda a categoria CerÃ¢mica. VÃ¡lido atÃ© domingo.',
+    tempo: 'hÃ¡ 3h',
     cta: { label: 'Usar cupom', icon: 'tag', href: '#' }
   },
   {
     id: 4, tipo: 'avaliacao', lida: false, dia: 'Hoje',
-    titulo: 'Sua avaliação foi curtida',
-    desc: '<strong>12 pessoas</strong> acharam sua avaliação da Preguiça de madeira útil.',
-    tempo: 'há 5h',
-    cta: { label: 'Ver avaliação', icon: 'star', href: '#' }
+    titulo: 'Sua avaliaÃ§Ã£o foi curtida',
+    desc: '<strong>12 pessoas</strong> acharam sua avaliaÃ§Ã£o da PreguiÃ§a de madeira Ãºtil.',
+    tempo: 'hÃ¡ 5h',
+    cta: { label: 'Ver avaliaÃ§Ã£o', icon: 'star', href: '#' }
   },
   {
     id: 5, tipo: 'pedido', lida: true, dia: 'Ontem',
     titulo: 'Pedido entregue com sucesso',
-    desc: 'Seu pedido <strong>#4790</strong> — Colar de pedras do ES foi entregue. Tudo certo?',
-    tempo: 'ontem às 14h32',
+    desc: 'Seu pedido <strong>#4790</strong> â€” Colar de pedras do ES foi entregue. Tudo certo?',
+    tempo: 'ontem Ã s 14h32',
     thumb: 'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=80&q=70',
     cta: { label: 'Avaliar produto', icon: 'star', href: '#' }
   },
   {
     id: 6, tipo: 'promo', lida: true, dia: 'Ontem',
-    titulo: 'Novos produtos dos seus artesãos favoritos',
-    desc: '<strong>Arte Vitória</strong> adicionou 3 novos produtos à loja. Confira antes que esgote!',
-    tempo: 'ontem às 10h15',
+    titulo: 'Novos produtos dos seus artesÃ£os favoritos',
+    desc: '<strong>Arte VitÃ³ria</strong> adicionou 3 novos produtos Ã  loja. Confira antes que esgote!',
+    tempo: 'ontem Ã s 10h15',
     cta: { label: 'Ver produtos', icon: 'shopping-bag', href: '/arace-produtos' }
   },
   {
     id: 7, tipo: 'sistema', lida: true, dia: 'Esta semana',
-    titulo: 'Bem-vinda à Aracê!',
+    titulo: 'Bem-vinda Ã  AracÃª!',
     desc: 'Sua conta foi criada com sucesso. Explore produtos artesanais da cultura capixaba e apoie produtores locais.',
-    tempo: 'há 3 dias',
+    tempo: 'hÃ¡ 3 dias',
     cta: { label: 'Explorar agora', icon: 'compass', href: '/' }
   },
 ];
@@ -192,8 +192,8 @@ function renderNotificacoes() {
     container.innerHTML = `
       <div class="notif-empty">
         <i data-lucide="bell-off"></i>
-        <h2>Nenhuma notificação</h2>
-        <p>Quando houver novidades, elas aparecerão aqui.</p>
+        <h2>Nenhuma notificaÃ§Ã£o</h2>
+        <p>Quando houver novidades, elas aparecerÃ£o aqui.</p>
       </div>`;
     lucide.createIcons(); return;
   }
@@ -238,10 +238,10 @@ function renderNotificacoes() {
 }
 
 function labelTipo(tipo) {
-  return { pedido:'Pedido', promo:'Promoção', chat:'Chat', avaliacao:'Avaliação', sistema:'Sistema', aviso:'Aviso' }[tipo] || tipo;
+  return { pedido:'Pedido', promo:'PromoÃ§Ã£o', chat:'Chat', avaliacao:'AvaliaÃ§Ã£o', sistema:'Sistema', aviso:'Aviso' }[tipo] || tipo;
 }
 
-// -- AÇÕES -----------------------------------------------------------------
+// -- AÃ‡Ã•ES -----------------------------------------------------------------
 function marcarLida(id) {
   const n = NOTIFICACOES.find(n => n.id === id);
   if (n) { n.lida = true; renderNotificacoes(); }
@@ -278,8 +278,8 @@ function atualizarContadores() {
   const sub = document.getElementById('subtituloHeader');
   const qtd = naoLidas.length;
   sub.innerHTML = qtd > 0
-    ? `Você tem <strong>${qtd} notificaç${qtd === 1 ? 'ão não lida' : 'ões não lidas'}</strong>`
-    : 'Tudo em dia! Nenhuma notificação pendente.';
+    ? `VocÃª tem <strong>${qtd} notificaÃ§${qtd === 1 ? 'Ã£o nÃ£o lida' : 'Ãµes nÃ£o lidas'}</strong>`
+    : 'Tudo em dia! Nenhuma notificaÃ§Ã£o pendente.';
 }
 
 // -- INIT ------------------------------------------------------------------

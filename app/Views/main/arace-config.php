@@ -16,7 +16,7 @@ $genero = (string) ($usuario['genero'] ?? '');
   <link href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex&family=Playfair+Display:wght@700&display=swap" rel="stylesheet" />
   <script src="https://unpkg.com/lucide@latest"></script>
   <script src="<?= base_url('js/icons.js') ?>"></script>
-  <link href="<?= base_url('css/config.css') ?>" rel="stylesheet" />
+  <link href="<?= base_url('css/config.css?v=20260629-full') ?>" rel="stylesheet" />
 </head>
 <body>
 
@@ -76,7 +76,7 @@ $genero = (string) ($usuario['genero'] ?? '');
     </div>
   </div>
 
-  <div class="config-layout">
+  <div class="config-layout config-layout-full">
 
     
     <!-- CONTEÚDO -->

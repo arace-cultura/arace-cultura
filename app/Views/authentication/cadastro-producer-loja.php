@@ -1,9 +1,9 @@
-??<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Aracê - Cadastro Produtor</title>
+  <title>AracÃª - Cadastro Produtor</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex&display=swap" rel="stylesheet" />
@@ -13,7 +13,7 @@
 
   <div class="login-card cadastro-card item-animado">
     <div class="logo-wrap item-animado atraso-1">
-      <img src="<?= base_url('images/arace.png') ?>" alt="Logo Aracê" />
+      <img src="<?= base_url('images/arace.png') ?>" alt="Logo AracÃª" />
     </div>
 
     <p class="subtitle item-animado atraso-1">Comece a vender seus produtos</p>
@@ -48,8 +48,8 @@
         <select id="categoria" name="categoria" required>
           <option value="" disabled selected>Categoria principal</option>
           <option value="artesanato">Artesanato</option>
-          <option value="ceramica">Cerâmica</option>
-          <option value="vestuario">Vestuário</option>
+          <option value="ceramica">CerÃ¢mica</option>
+          <option value="vestuario">VestuÃ¡rio</option>
           <option value="praiana">Praiana</option>
           <option value="outros">Outros</option>
         </select>
@@ -69,11 +69,6 @@
       <span id="distritos-erro" class="erro-campo" style="display:none">Selecione um distrito</span>
 
       <div class="item-animado atraso-5">
-        <label class="permanecer">
-          <input type="checkbox" id="termos" name="termosAceitos" value="1" required />
-          Aceito os <a href="#" target="_blank">termos de uso</a>
-        </label>
-
         <button type="submit" class="btn-login">Criar conta da loja</button>
 
         <div class="links-rodape">
