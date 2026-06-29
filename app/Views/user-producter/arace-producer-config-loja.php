@@ -69,7 +69,7 @@
     </a>
     <div class="nav-divider"></div>
     <div class="nav-section">Reportar</div>
-    <a class="nav-item" href="<?= url_to('main_arace_config') ?>">
+    <a class="nav-item" href="<?= url_to('main_arace_config') ?>#pagamento">
       <i data-lucide="hand-coins"></i> Detalhes de pagamento
     </a>
   </aside>
@@ -121,7 +121,6 @@
                     <i data-lucide="upload"></i> Enviar Logo
                   </label>
                   <input type="file" id="avatarInput" accept="image/*" style="display:none" onchange="previewAvatar(this)" />
-                  <button class="btn-secondary" onclick="removerAvatar()">Remover</button>
                 </div>
               </div>
 
@@ -133,9 +132,6 @@
                   <small style="display:block;margin-top:4px;color:var(--faint)">Recomendado: 1200x300px</small>
                 </div>
               </div>
-            </div>
-            <div class="config-card-footer">
-              <button class="btn-primary" onclick="salvar('Mídias da loja atualizadas')"><i data-lucide="check"></i> Salvar Identidade</button>
             </div>
           </div>
 
@@ -152,9 +148,6 @@
                 <label>História / Biografia da Loja</label>
                 <textarea class="input-field" id="lojaBio" rows="4" style="resize:vertical;line-height:1.5">Preservamos uma tradição centenária de produção artesanal de panelas de barro, símbolo da cultura capixaba. Cada peça carrega a identidade, o suor e o amor passado de geração em geração.</textarea>
               </div>
-            </div>
-            <div class="config-card-footer">
-              <button class="btn-primary" onclick="salvar('Apresentação da loja salva')"><i data-lucide="check"></i> Salvar Alterações</button>
             </div>
           </div>
         </section>
@@ -189,9 +182,6 @@
                   <input class="input-field" type="tel" id="lojaTelefone" value="(27) 99999-1234" />
                 </div>
               </div>
-            </div>
-            <div class="config-card-footer">
-              <button class="btn-primary" onclick="salvar('Dados comerciais salvos')"><i data-lucide="check"></i> Salvar Dados</button>
             </div>
           </div>
         </section>
@@ -237,9 +227,6 @@
                 <input class="input-field" type="text" value="Rua das Paneleiras, Nº 50" />
               </div>
             </div>
-            <div class="config-card-footer">
-              <button class="btn-primary" onclick="salvar('Logística atualizada com sucesso')"><i data-lucide="check"></i> Salvar Logística</button>
-            </div>
           </div>
         </section>
 
@@ -282,9 +269,6 @@
                 <input class="input-field" type="text" placeholder="CNPJ, CPF ou e-mail" />
               </div>
             </div>
-            <div class="config-card-footer">
-              <button class="btn-primary" onclick="salvar('Dados bancários atualizados')"><i data-lucide="check"></i> Salvar Conta Bancária</button>
-            </div>
           </div>
         </section>
 
@@ -310,9 +294,6 @@
                 <div style="width: 120px; font-weight: 500;">Domingos</div>
                 <span style="color:var(--muted); font-size:14px; font-style:italic;">Fechado</span>
               </div>
-            </div>
-            <div class="config-card-footer">
-              <button class="btn-primary" onclick="salvar('Horários atualizados')"><i data-lucide="check"></i> Salvar Horários</button>
             </div>
           </div>
         </section>

@@ -5,7 +5,6 @@ function preencherCampo(id, valor) {
 
 function renderPerfilConfig(dados) {
   preencherCampo('nome', dados.nome);
-  preencherCampo('sobrenome', dados.sobrenome);
   preencherCampo('username', dados.username);
   preencherCampo('bio', dados.bio);
   preencherCampo('nascimento', dados.nascimento);
@@ -43,7 +42,6 @@ function renderLojaConfig() {
 function coletarPerfilConfig() {
   return {
     nome: document.getElementById('nome')?.value.trim() || '',
-    sobrenome: document.getElementById('sobrenome')?.value.trim() || '',
     username: document.getElementById('username')?.value.trim() || '',
     bio: document.getElementById('bio')?.value.trim() || '',
     nascimento: document.getElementById('nascimento')?.value || '',
