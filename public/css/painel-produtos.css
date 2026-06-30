@@ -1,0 +1,241 @@
+@import "../css/style-base.css";
+
+.produtos-page-container {
+  display: grid;
+  grid-template-columns: 1fr 380px;
+  gap: 2rem;
+  align-items: start;
+}
+
+/* Fundo topográfico sutil baseado nos mockups */
+.bg-topografia {
+  background-color: #f7f5f0;
+  /* Caso possua imagem de textura topográfica em vetor: */
+  /* background-image: url('../assets/imgs/textura-linhas.svg'); */
+}
+
+.titulo-serif {
+  font-family: 'Playfair Display', serif;
+  color: #2b2b2b;
+  margin-bottom: 0.5rem;
+}
+
+/* Grid de cards de Gerenciamento */
+.produtos-management-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+}
+
+.produto-manage-card {
+  background: #ffffff;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+  border: 1px solid #eaeaea;
+  transition: transform 0.2s;
+}
+
+.produto-manage-card:hover {
+  transform: translateY(-4px);
+}
+
+.card-img-wrapper {
+  position: relative;
+  height: 180px;
+  background: #f0f0f0;
+}
+
+.card-img-wrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Overlay de Ações (Aparece ao passar o mouse ou fixo em mobile) */
+.card-actions-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.produto-manage-card:hover .card-actions-overlay {
+  opacity: 1;
+}
+
+.action-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: white;
+  transition: transform 0.2s;
+}
+
+.action-btn.edit { background-color: #3b82f6; }
+.action-btn.delete { background-color: #ef4444; }
+.action-btn:hover { transform: scale(1.1); }
+
+.card-manage-info {
+  padding: 1rem;
+}
+
+.card-manage-info h3 {
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+  color: #333;
+}
+
+.price-stock-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.price-stock-row .price {
+  font-weight: 700;
+  color: #e26a37;
+}
+
+.stock-badge {
+  font-size: 0.75rem;
+  background: #e6f4ea;
+  color: #137333;
+  padding: 2px 8px;
+  border-radius: 20px;
+}
+
+/* ── ESTILIZAÇÃO DO FORMULÁRIO (FIEL AO MOCKUP) ── */
+.form-card-box {
+  background: #ffffff;
+  padding: 2rem;
+  border-radius: 24px;
+  border: 1px solid #e0dcd3;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.02);
+}
+
+.image-upload-container {
+  width: 100%;
+  height: 200px;
+  border: 1.5px solid #e26a37; /* Borda terracota conforme mockup */
+  border-radius: 12px;
+  margin: 1.5rem 0;
+  overflow: hidden;
+  position: relative;
+  /* Gradiente abstrato em blur simulando o mockup */
+  background: linear-gradient(135deg, #2563eb, #f59e0b, #10b981, #ef4444);
+  background-size: 200% 200%;
+}
+
+.image-upload-placeholder {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backdrop-filter: blur(20px); /* Aplica o efeito borrado do mock */
+  background: rgba(255,255,255,0.2);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.placeholder-icon {
+  width: 32px;
+  height: 32px;
+  color: rgba(255,255,255,0.8);
+}
+
+.btn-choose-img {
+  background: #ffffff;
+  border: 1px solid #2b2b2b;
+  padding: 8px 20px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+/* Campos de Input Terracota */
+.field-group-terracota {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 1rem;
+}
+
+.field-group-terracota label {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #666;
+}
+
+.field-group-terracota input, 
+.field-group-terracota textarea {
+  width: 100%;
+  padding: 12px;
+  border: 1.5px solid #e26a37; /* Borda terracota */
+  border-radius: 8px;
+  background-color: #f9f8f6;
+  font-family: inherit;
+  font-size: 0.95rem;
+  outline: none;
+}
+
+.field-group-terracota input::placeholder {
+  color: #a0a0a0;
+}
+
+/* Botão Pílula Terracota */
+.btn-terracota-submit {
+  width: 100%;
+  background-color: #e26a37;
+  color: white;
+  border: none;
+  padding: 14px;
+  border-radius: 30px; /* Formato Pílula */
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 1rem;
+  transition: background 0.2s;
+}
+
+.btn-terracota-submit:hover {
+  background-color: #cd5928;
+}
+
+.btn-cancel-edit {
+  width: 100%;
+  background: none;
+  border: 1px solid #666;
+  color: #666;
+  padding: 10px;
+  border-radius: 30px;
+  margin-top: 0.5rem;
+  cursor: pointer;
+}
+
+.mobile-only-btn { display: none; }
+
+/* Responsividade para telas menores e celulares */
+@media (max-width: 992px) {
+  .produtos-page-container {
+    grid-template-columns: 1fr;
+  }
+  .mobile-only-btn { display: flex; }
+  .card-actions-overlay { opacity: 1; background: rgba(0,0,0,0.15); align-items: flex-start; padding: 8px; justify-content: flex-end; }
+}
