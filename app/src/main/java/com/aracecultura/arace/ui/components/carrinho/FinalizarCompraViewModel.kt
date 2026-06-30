@@ -19,6 +19,8 @@ import kotlinx.coroutines.withContext
 
 /** Uma linha da tabela do cartão de checkout (um produto da loja). */
 data class LinhaCheckout(
+    // Id do produto (= id do doc no carrinho), para remover a linha da listagem.
+    val id: String,
     val nome: String,
     val quantidade: Int,
     val totalLinha: Double
@@ -89,6 +91,31 @@ class FinalizarCompraViewModel : ViewModel() {
         _estoqueInsuficiente.value = emptyList()
     }
 
+    /**
+     * Remove uma linha da listagem de checkout (sem mexer no carrinho): recalcula
+     * o total da loja e, se a loja ficar sem itens, tira o cartão. Permite finalizar
+     * só alguns pedidos de uma loja, em vez de comprar tudo de uma vez.
+     */
+    fun removerItem(produtorId: String, itemId: String) {
+        val pagamento = _uiState.value as? CheckoutUiState.Pagamento ?: return
+        val lojas = pagamento.lojas.mapNotNull { loja ->
+            if (loja.produtorId != produtorId) return@mapNotNull loja
+            val itens = loja.itens.filterNot { it.id == itemId }
+            if (itens.isEmpty()) return@mapNotNull null
+            loja.copy(
+                itens = itens,
+                total = itens.sumOf { it.totalLinha },
+                cartItemIds = loja.cartItemIds.filterNot { it == itemId },
+                produtosParaEnvio = loja.produtosParaEnvio.filterNot { it.produtoId == itemId }
+            )
+        }
+        _uiState.value = if (lojas.isEmpty()) {
+            CheckoutUiState.Vazio
+        } else {
+            CheckoutUiState.Pagamento(lojas)
+        }
+    }
+
     // Lojas com finalização em voo. Sem a remoção otimista, o cartão fica na tela
     // durante o round-trip; isto impede que um toque-duplo dispare a transação
     // duas vezes (toda a mutação ocorre na main thread do viewModelScope).
@@ -142,7 +169,7 @@ class FinalizarCompraViewModel : ViewModel() {
                 nomeLoja = nomeLoja,
                 chavePix = chavePix,
                 itens = doGrupo.map {
-                    LinhaCheckout(it.produto.nome, it.quantidade, it.produto.preco * it.quantidade)
+                    LinhaCheckout(it.cartId, it.produto.nome, it.quantidade, it.produto.preco * it.quantidade)
                 },
                 total = doGrupo.sumOf { it.produto.preco * it.quantidade },
                 cartItemIds = doGrupo.map { it.cartId },

@@ -202,7 +202,8 @@ fun CheckoutPaymentScreen(
                     LojaCheckoutCard(
                         loja = loja,
                         onCopiar = { clipboard.setText(AnnotatedString(loja.chavePix)) },
-                        onFinalizar = { viewModel.finalizarLoja(uid, loja) }
+                        onFinalizar = { viewModel.finalizarLoja(uid, loja) },
+                        onRemoverItem = { itemId -> viewModel.removerItem(loja.produtorId, itemId) }
                     )
                     Spacer(Modifier.height(20.dp))
                 }
@@ -228,7 +229,8 @@ fun CheckoutPaymentScreen(
 private fun LojaCheckoutCard(
     loja: LojaCheckout,
     onCopiar: () -> Unit,
-    onFinalizar: () -> Unit
+    onFinalizar: () -> Unit,
+    onRemoverItem: (String) -> Unit
 ) {
     var copied by remember(loja.produtorId) { mutableStateOf(false) }
     val laranja = Color(0xFFCE5A14)
@@ -257,25 +259,46 @@ private fun LojaCheckoutCard(
 
         Spacer(Modifier.height(16.dp))
 
+        // Largura reservada para a lixeira à direita; o mesmo vão no cabeçalho
+        // mantém as colunas alinhadas e empurra o conjunto um pouco para a esquerda.
+        val larguraLixeira = 32.dp
+
         // Cabeçalho da tabela
         Row(Modifier.fillMaxWidth()) {
-            Text(stringResource(R.string.checkout_col_produto), Modifier.weight(1.3f), fontWeight = FontWeight.SemiBold, fontSize = 16.sp, color = escuro)
-            Text(stringResource(R.string.checkout_col_quantidade), Modifier.weight(1f), fontWeight = FontWeight.SemiBold, fontSize = 16.sp, color = escuro, textAlign = TextAlign.Center)
-            Text(stringResource(R.string.checkout_col_preco), Modifier.weight(1f), fontWeight = FontWeight.SemiBold, fontSize = 16.sp, color = escuro, textAlign = TextAlign.End)
+            Text(stringResource(R.string.checkout_col_produto), Modifier.weight(1.1f), fontWeight = FontWeight.SemiBold, fontSize = 16.sp, color = escuro, maxLines = 1)
+            Text(stringResource(R.string.checkout_col_quantidade), Modifier.weight(1.2f), fontWeight = FontWeight.SemiBold, fontSize = 16.sp, color = escuro, textAlign = TextAlign.Center, maxLines = 1, softWrap = false)
+            Text(stringResource(R.string.checkout_col_preco), Modifier.weight(1f), fontWeight = FontWeight.SemiBold, fontSize = 16.sp, color = escuro, textAlign = TextAlign.End, maxLines = 1)
+            Spacer(Modifier.width(larguraLixeira))
         }
         Spacer(Modifier.height(8.dp))
         loja.itens.forEach { linha ->
-            Row(Modifier.fillMaxWidth().padding(vertical = 4.dp)) {
+            Row(
+                Modifier.fillMaxWidth().padding(vertical = 4.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
                 Text(
                     text = linha.nome,
-                    modifier = Modifier.weight(1.3f),
+                    modifier = Modifier.weight(1.1f),
                     fontSize = 16.sp,
                     color = escuro,
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis
                 )
-                Text(linha.quantidade.toString(), Modifier.weight(1f), fontSize = 16.sp, color = escuro, textAlign = TextAlign.Center)
+                Text(linha.quantidade.toString(), Modifier.weight(1.2f), fontSize = 16.sp, color = escuro, textAlign = TextAlign.Center)
                 Text(formatarValor(linha.totalLinha), Modifier.weight(1f), fontSize = 16.sp, color = escuro, textAlign = TextAlign.End)
+                Box(
+                    modifier = Modifier.width(larguraLixeira),
+                    contentAlignment = Alignment.CenterEnd
+                ) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_deletar),
+                        contentDescription = stringResource(R.string.cd_remover_carrinho),
+                        tint = escuro,
+                        modifier = Modifier
+                            .size(20.dp)
+                            .clickable { onRemoverItem(linha.id) }
+                    )
+                }
             }
         }
 
