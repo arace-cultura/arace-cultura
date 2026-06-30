@@ -47,12 +47,20 @@ final class FirestoreController extends ResourceController
         }
 
         try {
+            $authUser = service('araceFirebaseAuth')->createUser($payload);
+
             return $this->respondCreated([
-                'source' => 'firestore',
-                'data'   => (new AraceFirestore())->createUser($payload),
+                'source' => 'firebase-auth+firestore',
+                'data'   => (new AraceFirestore())->createUser([...$payload, ...$authUser]),
             ]);
+        } catch (\DomainException $exception) {
+            return $this->failValidationErrors($exception->getMessage());
         } catch (\Throwable) {
-            return $this->failServerError('Nao foi possivel salvar o cliente no Firestore.');
+            if (! empty($authUser['uid'])) {
+                service('araceFirebaseAuth')->deleteUser((string) $authUser['uid']);
+            }
+
+            return $this->failServerError('Nao foi possivel criar o cliente no Firebase Auth.');
         }
     }
 

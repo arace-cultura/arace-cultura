@@ -43,6 +43,7 @@
         <i data-lucide="phone"></i>
         <input type="tel" id="telefone" name="telefone" placeholder="Telefone / Celular" autocomplete="tel" required />
       </div>
+      <span id="telefone-erro" class="erro-campo" style="display:none">Telefone inválido ou DDD não encontrado</span>
 
       
 
@@ -60,6 +61,7 @@
   <script src="https://unpkg.com/lucide@latest"></script>
   <script src="<?= base_url('js/icons.js') ?>"></script>
   <script>lucide.createIcons();</script>
-  <script src="<?= base_url('js/cadastro-produtor.js') ?>"></script>
+  <script src="<?= base_url('js/brasil-api-validacao.js?v=20260630-fix') ?>"></script>
+  <script src="<?= base_url('js/cadastro-produtor.js?v=20260630-fix') ?>"></script>
 </body>
 </html>

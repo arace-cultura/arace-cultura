@@ -32,6 +32,7 @@
         <i data-lucide="file-text"></i>
         <input type="text" id="cnpj" name="cnpj" placeholder="CNPJ (opcional)" />
       </div>
+      <span id="cnpj-erro" class="erro-campo" style="display:none">CNPJ não encontrado na Brasil API</span>
 
       <div class="input-group-custom item-animado atraso-3">
         <i data-lucide="mail"></i>
@@ -42,6 +43,7 @@
         <i data-lucide="phone"></i>
         <input type="tel" id="telefone" name="telefone" placeholder="Telefone / WhatsApp comercial" autocomplete="tel" required />
       </div>
+      <span id="telefone-erro" class="erro-campo" style="display:none">Telefone inválido ou DDD não encontrado</span>
 
       <div class="input-group-custom item-animado atraso-4">
         <i data-lucide="tags"></i>
@@ -82,6 +84,7 @@
   <script src="https://unpkg.com/lucide@latest"></script>
   <script src="<?= base_url('js/icons.js') ?>"></script>
   <script>lucide.createIcons();</script>
-  <script src="<?= base_url('js/cadastro-loja.js') ?>"></script>
+  <script src="<?= base_url('js/brasil-api-validacao.js?v=20260630-fix') ?>"></script>
+  <script src="<?= base_url('js/cadastro-loja.js?v=20260630-fix') ?>"></script>
 </body>
 </html>

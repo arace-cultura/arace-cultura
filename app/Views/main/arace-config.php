@@ -5,6 +5,7 @@ $nomeCompleto = trim((string) ($usuario['nome'] ?? ''));
 $nome = $nomeCompleto;
 $username = (string) ($usuario['username'] ?? '');
 $genero = (string) ($usuario['genero'] ?? '');
+$avatar = trim((string) ($usuario['avatar'] ?? ''));
 ?>
 <html lang="pt-BR">
 <head>
@@ -33,7 +34,11 @@ $genero = (string) ($usuario['genero'] ?? '');
         <span class="cart-count">5 itens</span>
       </button>
       <button class="avatar-btn" type="button" onclick="window.location.href='<?= url_to('user_arace_perfil') ?>'" aria-label="Abrir perfil">
-        <i data-lucide="user"></i>
+        <?php if ($avatar !== ''): ?>
+          <img src="<?= esc($avatar, 'attr') ?>" alt="Avatar do usuario" />
+        <?php else: ?>
+          <i data-lucide="user"></i>
+        <?php endif; ?>
       </button>
     </div>
   </header>
@@ -93,8 +98,8 @@ $genero = (string) ($usuario['genero'] ?? '');
           <div class="config-card-body">
             <div class="avatar-upload-area">
               <div class="avatar-preview" id="avatarPreview">
-                <?php if (! empty($usuario['avatar'])): ?>
-                  <img src="<?= esc($usuario['avatar'], 'attr') ?>" alt="Avatar do usuario" />
+                <?php if ($avatar !== ''): ?>
+                  <img src="<?= esc($avatar, 'attr') ?>" alt="Avatar do usuario" />
                 <?php else: ?>
                   <i data-lucide="user"></i>
                 <?php endif; ?>
@@ -385,12 +390,12 @@ $genero = (string) ($usuario['genero'] ?? '');
               </div>
               <div class="field-group">
                 <label>Bairro</label>
-                <input class="input-field" type="text" placeholder="Bairro" />
+                <input class="input-field" type="text" id="bairro" placeholder="Bairro" />
               </div>
             </div>
             <div class="field-group">
               <label>Rua</label>
-              <input class="input-field" type="text" placeholder="Nome da rua" />
+              <input class="input-field" type="text" id="rua" placeholder="Nome da rua" />
             </div>
             <div class="field-row">
               <div class="field-group">
@@ -508,6 +513,7 @@ $genero = (string) ($usuario['genero'] ?? '');
 </div>
 
 <script src="/js/arace-state.js"></script>
-<script src="/js/config.js"></script>
+<script src="/js/brasil-api-validacao.js?v=20260630-fix"></script>
+<script src="/js/config.js?v=20260630-fix"></script>
 </body>
 </html>

@@ -30,11 +30,8 @@ final class AuthController extends BaseController
         }
 
         try {
-            $user = service('araceFirestore')->authenticateUser($email, $senha);
-
-            if ($user === null) {
-                return $this->loginFailure('E-mail ou senha incorretos.', 401);
-            }
+            $authUser = service('araceFirebaseAuth')->signIn($email, $senha);
+            $user     = $this->profileForAuthenticatedUser($authUser);
 
             session()->regenerate(true);
             session()->set([
@@ -53,9 +50,30 @@ final class AuthController extends BaseController
 
             return redirect()->route('user_arace_perfil');
         } catch (DomainException $e) {
-            return $this->loginFailure($e->getMessage(), 403);
+            $status = $e->getMessage() === 'E-mail ou senha incorretos.' ? 401 : 403;
+
+            return $this->loginFailure($e->getMessage(), $status);
         } catch (\Throwable) {
             return $this->loginFailure('Nao foi possivel verificar a conta agora. Tente novamente.', 503);
+        }
+    }
+
+    private function profileForAuthenticatedUser(array $authUser): array
+    {
+        try {
+            return service('araceFirestore')->userForAuthenticatedUser($authUser);
+        } catch (\Throwable $exception) {
+            log_message('warning', 'Login liberado pelo Firebase Auth sem perfil Firestore: {message}', [
+                'message' => $exception->getMessage(),
+            ]);
+
+            return array_filter([
+                'id'       => (string) ($authUser['uid'] ?? $authUser['id'] ?? ''),
+                'uid'      => (string) ($authUser['uid'] ?? $authUser['id'] ?? ''),
+                'nome'     => (string) ($authUser['nome'] ?? 'Usuario'),
+                'email'    => (string) ($authUser['email'] ?? ''),
+                'telefone' => $authUser['telefone'] ?? null,
+            ], static fn ($value): bool => $value !== null && $value !== '');
         }
     }
 

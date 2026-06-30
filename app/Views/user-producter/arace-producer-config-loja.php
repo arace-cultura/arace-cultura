@@ -304,7 +304,8 @@
         </div>
 
         <script src="/js/arace-state.js"></script>
-        <script src="/js/config.js"></script>
+        <script src="/js/brasil-api-validacao.js?v=20260630-fix"></script>
+        <script src="/js/config.js?v=20260630-fix"></script>
 
       </div></div></main>
 

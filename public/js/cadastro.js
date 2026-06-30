@@ -16,17 +16,31 @@ document.addEventListener('DOMContentLoaded', () => {
   const senha = document.getElementById('senha');
   const confirmarSenha = document.getElementById('confirmarSenha');
   const erroSenha = document.getElementById('erro-senha');
+  const telefone = document.getElementById('telefone');
+  const erroTelefone = document.getElementById('telefone-erro');
+  const validador = window.AraceBrasilApiValidation;
 
   if (!form || !senha || !confirmarSenha) return;
 
-  form.addEventListener('submit', event => {
+  validador?.configurarTelefone(telefone, erroTelefone);
+
+  form.addEventListener('submit', async event => {
+    if (form.dataset.validadoBrasilApi === '1') {
+      delete form.dataset.validadoBrasilApi;
+      return;
+    }
+
+    event.preventDefault();
+
     if (senha.value !== confirmarSenha.value) {
-      event.preventDefault();
       if (erroSenha) erroSenha.style.display = 'block';
       confirmarSenha.focus();
       return;
     }
 
     if (erroSenha) erroSenha.style.display = 'none';
+
+    form.dataset.validadoBrasilApi = '1';
+    form.requestSubmit();
   });
 });

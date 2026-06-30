@@ -2,7 +2,8 @@
 
 namespace App\Controllers;
 
-use App\Libraries\AraceFirestore;
+use App\Libraries\BrasilApiValidator;
+use DomainException;
 
 final class RegistrationController extends BaseController
 {
@@ -27,7 +28,8 @@ final class RegistrationController extends BaseController
         unset($payload['confirmarSenha']);
 
         try {
-            $user = (new AraceFirestore())->createUser($payload);
+            $authUser = service('araceFirebaseAuth')->createUser($payload);
+            $user = service('araceFirestore')->createUser([...$payload, ...$authUser]);
             session()->regenerate(true);
             session()->set([
                 'arace_authenticated' => true,
@@ -36,21 +38,28 @@ final class RegistrationController extends BaseController
             ]);
 
             return redirect()->route('user_arace_perfil')->with('sucesso', 'Conta criada com sucesso.');
+        } catch (DomainException $e) {
+            return redirect()->back()->withInput()->with('erro', $e->getMessage());
         } catch (\Throwable $e) {
-            return redirect()->back()->withInput()->with('erro', 'Nao foi possivel salvar o cadastro no Firestore.');
+            if (! empty($authUser['uid'])) {
+                service('araceFirebaseAuth')->deleteUser((string) $authUser['uid']);
+            }
+
+            return redirect()->back()->withInput()->with('erro', 'Nao foi possivel criar a conta agora.');
         }
     }
 
     public function producerOwner()
     {
         $payload = $this->request->getPost(['nome', 'cpf', 'email', 'telefone']);
+        $brasilApi = new BrasilApiValidator();
 
         if (! $this->validateData($payload, [
             'nome'     => 'required|min_length[2]|max_length[120]',
             'cpf'      => 'required',
             'email'    => 'required|valid_email',
             'telefone' => 'required',
-        ]) || ! $this->validCpf($payload['cpf'])) {
+        ]) || ! $brasilApi->validCpf((string) $payload['cpf'])) {
             return redirect()->back()->withInput()->with('erro', 'Confira os dados do produtor.');
         }
 
@@ -86,26 +95,4 @@ final class RegistrationController extends BaseController
         }
     }
 
-    private function validCpf(string $cpf): bool
-    {
-        $numbers = preg_replace('/\D/', '', $cpf);
-
-        if (strlen($numbers) !== 11 || preg_match('/^(\d)\1+$/', $numbers)) {
-            return false;
-        }
-
-        for ($t = 9; $t < 11; $t++) {
-            $sum = 0;
-            for ($c = 0; $c < $t; $c++) {
-                $sum += (int) $numbers[$c] * (($t + 1) - $c);
-            }
-
-            $digit = ((10 * $sum) % 11) % 10;
-            if ((int) $numbers[$t] !== $digit) {
-                return false;
-            }
-        }
-
-        return true;
-    }
 }

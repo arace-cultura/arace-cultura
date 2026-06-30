@@ -16,7 +16,6 @@ final class UsuarioCollection extends Collection
         'username',
         'email',
         'telefone',
-        'senha',
         'cidade',
         'estado',
         'cpf',
@@ -24,6 +23,9 @@ final class UsuarioCollection extends Collection
         'bio',
         'nascimento',
         'genero',
+        'firebaseUid',
+        'emailVerified',
+        'disabled',
         'createdAt',
     ];
 
@@ -31,6 +33,5 @@ final class UsuarioCollection extends Collection
         'nome'          => 'required|min_length[2]|max_length[120]',
         'email'         => 'required|valid_email',
         'telefone'      => 'permit_empty|max_length[30]',
-        'senha'         => 'required',
     ];
 }

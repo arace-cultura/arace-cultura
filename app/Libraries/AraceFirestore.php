@@ -5,7 +5,6 @@ namespace App\Libraries;
 use App\Collections\UsuarioCollection;
 use App\Collections\ProducerCollection;
 use App\Collections\ProductCollection;
-use DomainException;
 use RuntimeException;
 
 final class AraceFirestore
@@ -65,17 +64,86 @@ final class AraceFirestore
 
     public function createUser(array $payload): array
     {
+        $uid = (string) ($payload['uid'] ?? $payload['id'] ?? $payload['firebaseUid'] ?? '');
+
         $payload['email'] = mb_strtolower(trim((string) ($payload['email'] ?? '')));
         $payload['telefone'] = $this->formatPhone((string) ($payload['telefone'] ?? ''));
+        $payload['nome'] = trim((string) ($payload['nome'] ?? 'Usuario'));
+        $payload['firebaseUid'] = $uid !== '' ? $uid : null;
 
-        if (isset($payload['senha'])) {
-            $payload['senha'] = password_hash((string) $payload['senha'], PASSWORD_DEFAULT);
+        unset($payload['senha'], $payload['confirmarSenha'], $payload['password'], $payload['id']);
+
+        if ($uid !== '') {
+            $payload['uid'] = $uid;
         }
 
         $user = $this->entityPayload($this->collection(UsuarioCollection::class)->add($payload));
-        unset($user['senha']);
 
-        return $user;
+        return $this->safeUser($user);
+    }
+
+    public function userForAuthenticatedUser(array $authUser): array
+    {
+        $uid   = (string) ($authUser['uid'] ?? $authUser['id'] ?? '');
+        $email = mb_strtolower(trim((string) ($authUser['email'] ?? '')));
+        $user  = null;
+
+        try {
+            $collection = $this->collection(UsuarioCollection::class);
+
+            if ($uid !== '') {
+                try {
+                    $entity = $collection->get($uid);
+                    if ($entity !== null) {
+                        $user = $this->entityPayload($entity);
+                    }
+                } catch (\Throwable $exception) {
+                    log_message('warning', 'Perfil do usuario autenticado sera reconstruido: {message}', [
+                        'message' => $exception->getMessage(),
+                    ]);
+                }
+            }
+
+            if ($user === null && $email !== '') {
+                $query = $collection->where('email', '=', $email)->limit(1);
+
+                try {
+                    foreach ($collection->list($query) as $entity) {
+                        $user = $this->entityPayload($entity);
+                        break;
+                    }
+                } catch (\Throwable $exception) {
+                    log_message('warning', 'Perfil legado por e-mail sera ignorado: {message}', [
+                        'message' => $exception->getMessage(),
+                    ]);
+                }
+            }
+        } catch (\Throwable $exception) {
+            log_message('error', 'Falha ao buscar perfil do usuario autenticado: {message}', [
+                'message' => $exception->getMessage(),
+            ]);
+        }
+
+        if ($user === null) {
+            if ($email === '') {
+                return $this->safeUser($authUser);
+            }
+
+            return $this->createUser([
+                'uid'           => $uid,
+                'firebaseUid'   => $uid,
+                'nome'          => $authUser['nome'] ?? $authUser['displayName'] ?? ($email !== '' ? strstr($email, '@', true) : 'Usuario'),
+                'email'         => $email,
+                'telefone'      => $authUser['telefone'] ?? $authUser['phoneNumber'] ?? '',
+                'emailVerified' => $authUser['emailVerified'] ?? false,
+                'disabled'      => $authUser['disabled'] ?? false,
+            ]);
+        }
+
+        $user['uid'] = $uid !== '' ? $uid : ($user['uid'] ?? $user['firebaseUid'] ?? $user['id'] ?? '');
+        $user['firebaseUid'] = $user['uid'];
+
+        return $this->safeUser([...$user, ...$authUser, 'id' => $user['uid']]);
     }
 
     public function userFromSession(array $sessionUser): array
@@ -156,67 +224,11 @@ final class AraceFirestore
         return $this->userFromSession($this->safeUser([...$sessionUser, ...$updates]));
     }
 
-    /**
-     * Confere as credenciais diretamente na colecao Usuarios.
-     * Retorna somente os dados seguros que podem ir para a sessao.
-     */
-    public function authenticateUser(string $email, string $password): ?array
-    {
-        $email      = mb_strtolower(trim($email));
-        $collection = $this->collection(UsuarioCollection::class);
-        $user       = null;
-        $userEntity = null;
-
-        // Cadastros novos usam e-mail normalizado e aproveitam a consulta indexada.
-        $query = $collection->where('email', '=', $email)->limit(1);
-        foreach ($collection->list($query) as $entity) {
-            $userEntity = $entity;
-            $user       = $this->entityPayload($entity);
-            break;
-        }
-
-        // Mantem compatibilidade com contas antigas que tenham letras maiusculas.
-        if ($user === null) {
-            foreach ($collection->list() as $entity) {
-                $candidate = $this->entityPayload($entity);
-                if (mb_strtolower(trim((string) ($candidate['email'] ?? ''))) === $email) {
-                    $userEntity = $entity;
-                    $user       = $candidate;
-                    break;
-                }
-            }
-        }
-
-        if ($user === null || ! $this->passwordMatches($password, (string) ($user['senha'] ?? ''))) {
-            return null;
-        }
-
-        $status = mb_strtolower((string) ($user['status'] ?? 'ativo'));
-        if (($user['ativo'] ?? true) === false
-            || ($user['verificado'] ?? $user['emailVerificado'] ?? true) === false
-            || in_array($status, ['bloqueado', 'inativo', 'pendente'], true)) {
-            throw new DomainException('A conta ainda nao foi verificada ou esta inativa.');
-        }
-
-        // Registros antigos em texto puro sao aceitos uma unica vez e
-        // atualizados imediatamente para o mesmo hash seguro dos cadastros novos.
-        if ($userEntity !== null && password_get_info((string) $user['senha'])['algo'] === null) {
-            try {
-                $collection->update($userEntity, [
-                    'senha' => password_hash($password, PASSWORD_DEFAULT),
-                ]);
-            } catch (\Throwable) {
-                // Uma falha de migracao nao invalida credenciais ja conferidas.
-            }
-        }
-
-        return $this->safeUser($user + ['email' => $email]);
-    }
-
     private function safeUser(array $user): array
     {
         return array_filter([
-            'id'       => (string) ($user['id'] ?? ''),
+            'id'       => (string) ($user['id'] ?? $user['uid'] ?? $user['firebaseUid'] ?? ''),
+            'uid'      => (string) ($user['uid'] ?? $user['firebaseUid'] ?? $user['id'] ?? ''),
             'nome'     => (string) ($user['nome'] ?? 'Usuario'),
             'username' => $user['username'] ?? $user['usuario'] ?? null,
             'email'    => (string) ($user['email'] ?? ''),
@@ -452,19 +464,6 @@ final class AraceFirestore
         $letters = array_map(static fn (string $word): string => mb_substr($word, 0, 1), array_slice($words, 0, 2));
 
         return mb_strtoupper(implode('', $letters)) ?: 'AR';
-    }
-
-    private function passwordMatches(string $plainPassword, string $storedPassword): bool
-    {
-        if ($plainPassword === '' || $storedPassword === '') {
-            return false;
-        }
-
-        // As contas criadas pela aplicacao usam password_hash(). O segundo
-        // caso permite a primeira entrada de registros legados em texto puro.
-        return password_verify($plainPassword, $storedPassword)
-            || (password_get_info($storedPassword)['algo'] === null
-                && hash_equals($storedPassword, $plainPassword));
     }
 
     private function formatPhone(string $phone): string

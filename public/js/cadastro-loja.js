@@ -43,19 +43,37 @@ async function carregarDistritos() {
 function configurarFormularioLoja() {
   const form = document.getElementById('formCadastro');
   const distritos = document.getElementById('distritos');
+  const telefone = document.getElementById('telefone');
+  const telefoneErro = document.getElementById('telefone-erro');
+  const cnpj = document.getElementById('cnpj');
+  const cnpjErro = document.getElementById('cnpj-erro');
+  const validador = window.AraceBrasilApiValidation;
 
   if (!form || !distritos) return;
+
+  validador?.configurarTelefone(telefone, telefoneErro);
+  validador?.configurarCnpj(cnpj, cnpjErro);
 
   distritos.addEventListener('blur', () => {
     mostrarErro('distritos-erro', !distritos.value);
   });
 
-  form.addEventListener('submit', event => {
+  form.addEventListener('submit', async event => {
+    if (form.dataset.validadoBrasilApi === '1') {
+      delete form.dataset.validadoBrasilApi;
+      return;
+    }
+
+    event.preventDefault();
+
     if (!distritos.value) {
-      event.preventDefault();
       mostrarErro('distritos-erro', true);
       distritos.focus();
+      return;
     }
+
+    form.dataset.validadoBrasilApi = '1';
+    form.requestSubmit();
   });
 }
 

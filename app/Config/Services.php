@@ -3,6 +3,7 @@
 namespace Config;
 
 use App\Libraries\AraceFirestore;
+use App\Libraries\AraceFirebaseAuth;
 use CodeIgniter\Config\BaseService;
 
 /**
@@ -27,6 +28,15 @@ class Services extends BaseService
         }
 
         return new AraceFirestore();
+    }
+
+    public static function araceFirebaseAuth(bool $getShared = true): AraceFirebaseAuth
+    {
+        if ($getShared) {
+            return static::getSharedInstance('araceFirebaseAuth');
+        }
+
+        return new AraceFirebaseAuth();
     }
 
     /*

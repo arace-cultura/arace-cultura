@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 
+use App\Libraries\BrasilApiValidator;
 use App\Libraries\SupabaseStorage;
 
 final class AccountController extends BaseController
@@ -43,6 +44,7 @@ final class AccountController extends BaseController
 
         $payload = $this->requestPayload();
         $avatar  = $this->request->getFile('avatar');
+        $brasilApi = new BrasilApiValidator();
 
         if ($avatar !== null && $avatar->isValid() && ! $avatar->hasMoved()) {
             $payload['avatar'] = (new SupabaseStorage())->uploadAvatar(
@@ -63,7 +65,7 @@ final class AccountController extends BaseController
             'estado'     => 'permit_empty|max_length[2]',
             'cpf'        => 'permit_empty|max_length[20]',
             'avatar'     => 'permit_empty',
-        ])) {
+        ]) || (isset($payload['cpf']) && $payload['cpf'] !== '' && ! $brasilApi->validCpf((string) $payload['cpf']))) {
             if (! $this->wantsJson()) {
                 return redirect()
                     ->back()

@@ -15,7 +15,18 @@ function renderPerfilConfig(dados) {
   preencherCampo('estado', dados.estado);
 
   const preview = document.getElementById('avatarPreview');
-  if (preview && dados.avatar) preview.innerHTML = `<img src="${dados.avatar}" alt="Avatar do usuario" />`;
+  if (preview && dados.avatar) {
+    renderAvatarImage(preview, dados.avatar);
+  }
+}
+
+function renderAvatarImage(container, src) {
+  container.replaceChildren();
+
+  const img = document.createElement('img');
+  img.src = src;
+  img.alt = 'Avatar do usuario';
+  container.appendChild(img);
 }
 
 async function carregarConfiguracoes() {
@@ -99,7 +110,7 @@ function previewAvatar(input) {
   reader.onload = event => {
     const preview = document.getElementById('avatarPreview');
     const image = event.target.result;
-    if (preview) preview.innerHTML = `<img src="${image}" alt="Avatar do usuario" />`;
+    if (preview) renderAvatarImage(preview, image);
   };
   reader.readAsDataURL(input.files[0]);
 }
@@ -113,22 +124,27 @@ function removerAvatar() {
 }
 
 function mascaraCEP(el) {
-  let valor = el.value.replace(/\D/g, '').slice(0, 8);
-  if (valor.length > 5) valor = valor.slice(0, 5) + '-' + valor.slice(5);
+  const validador = window.AraceBrasilApiValidation;
+  let valor = validador?.formatarCepValor(el.value) ?? el.value.replace(/\D/g, '').slice(0, 8);
   el.value = valor;
 
-  if (valor.length === 9) buscarCEP(valor.replace('-', ''));
+  if (valor.length === 9) buscarCEP(valor);
 }
 
 async function buscarCEP(cep) {
   try {
-    const resposta = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
-    const dados = await resposta.json();
+    const dados = await window.AraceBrasilApiValidation?.buscarCep(cep);
 
-    if (!dados.erro) {
-      preencherCampo('cidade', dados.localidade || '');
+    if (dados) {
+      preencherCampo('cidade', dados.city || '');
       preencherCampo('estado', dados.uf || '');
+      preencherCampo('bairro', dados.neighborhood || '');
+      preencherCampo('rua', dados.street || '');
+      mostrarToast('CEP encontrado na Brasil API');
+      return;
     }
+
+    mostrarToast('CEP nao encontrado');
   } catch (erro) {
     salvar('Nao foi possivel buscar o CEP agora');
   }
@@ -153,6 +169,8 @@ window.selecionarTema = selecionarTema;
 
 document.addEventListener('DOMContentLoaded', () => {
   carregarConfiguracoes();
+  window.AraceBrasilApiValidation?.configurarTelefone(document.getElementById('tel'), null);
+
   const abaInicial = window.location.hash.replace('#', '');
   if (abaInicial) {
     const botao = document.querySelector(`.config-nav-item[onclick*="'${abaInicial}'"]`);

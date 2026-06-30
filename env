@@ -16,13 +16,13 @@
 # ENVIRONMENT
 #--------------------------------------------------------------------
 
-#CI_ENVIRONMENT = development
+# CI_ENVIRONMENT = development
 
 #--------------------------------------------------------------------
 # APP
 #--------------------------------------------------------------------
 
-# app.baseURL = ''
+# app.baseURL = 'http://localhost/arace-cultura/public/'
 # If you have trouble with `.`, you could also use `_`.
 # app_baseURL = ''
 # app.forceGlobalSecureRequests = false
@@ -70,4 +70,4 @@
 
 # logger.threshold = 4
 
-#GOOGLE_APPLICATION_CREDENTIALS = "C:\\xampp\\htdocs\\arace-cultura\\writable\\firebase-credentials.json"
+# GOOGLE_APPLICATION_CREDENTIALS = "C:\\xampp\\htdocs\\arace-cultura\\writable\\firebase-credentials.json"
