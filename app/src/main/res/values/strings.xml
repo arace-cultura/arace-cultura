@@ -92,7 +92,7 @@
     <string name="cd_compra_confirmada">Compra confirmada</string>
     <string name="cd_imagem_de">Imagem de %1$s</string>
     <string name="cd_imagem_anterior">Imagem anterior</string>
-    <string name="cd_proxima_imagem">Proxima imagem</string>
+    <string name="cd_proxima_imagem">Próxima imagem</string>
 
     <!-- Login / Entrada / Cadastro (auth) -->
     <string name="entrada_slogan">Conectando você\nà cultura material\ncapixaba.</string>
@@ -111,6 +111,8 @@
     <string name="cadastro_titulo">Comece no Aracê</string>
     <string name="cadastro_subtitulo">Cadastre-se nesse acervo capixaba</string>
     <string name="confirme_senha">Confirme sua senha</string>
+    <string name="senha_ocultar">Ocultar</string>
+    <string name="senha_mostrar">Mostrar</string>
     <string name="selecionar_foto_perfil">Selecionar foto de perfil (opcional)</string>
     <string name="concluir">Concluir</string>
 
@@ -283,6 +285,14 @@
     <string name="erro_senha_loja_curta">A senha da loja deve ter no mínimo 8 caracteres, com maiúscula, minúscula, número e símbolo</string>
     <string name="erro_salvar_avaliacao">Não foi possível salvar a avaliação.</string>
     <string name="erro_cep_rede">Não foi possível verificar o CEP. Confira sua conexão e tente novamente.</string>
+    <string name="erro_conta_sem_loja">Conta sem loja vinculada.</string>
+    <string name="erro_processar_imagem">Não foi possível processar a imagem.</string>
+    <string name="erro_salvar_produto">Erro ao salvar produto.</string>
+    <string name="erro_salvar_produtor">Erro ao salvar produtor.</string>
+    <string name="erro_carregar_produtos">Erro ao carregar produtos.</string>
+    <string name="erro_excluir_produto">Erro ao excluir produto.</string>
+    <string name="editar_produto_salvo">Produto salvo.</string>
+    <string name="editar_produto_excluido">Produto excluído.</string>
 
     <!-- Validação de cadastro: pop-up de dados inválidos e rótulos de campo -->
     <string name="dados_invalidos_titulo">Dados inválidos</string>

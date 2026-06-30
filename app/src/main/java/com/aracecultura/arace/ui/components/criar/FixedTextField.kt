@@ -56,12 +56,12 @@ fun FixedTextField(
         maxLines = 1,
         modifier = modifier
             .fillMaxWidth(0.83f)
-            .height(56.dp) // <--- Trava a altura exata do Material Design
+            .height(56.dp)
             .onFocusChanged { isFocused = it.isFocused }
             .clip(RoundedCornerShape(15.dp))
             .background(currentContainerColor)
             .border(currentBorderWidth, currentBorderColor, RoundedCornerShape(15.dp))
-            .padding(horizontal = 12.dp), // Ajustado para horizontal apenas, para o Box centralizar melhor a altura
+            .padding(horizontal = 12.dp),
         decorationBox = { innerTextField ->
             Box(
                 contentAlignment = Alignment.CenterStart

@@ -258,9 +258,6 @@ private fun LojaCheckoutCard(
         )
 
         Spacer(Modifier.height(16.dp))
-
-        // Largura reservada para a lixeira à direita; o mesmo vão no cabeçalho
-        // mantém as colunas alinhadas e empurra o conjunto um pouco para a esquerda.
         val larguraLixeira = 32.dp
 
         // Cabeçalho da tabela
@@ -374,7 +371,7 @@ private fun LojaCheckoutCard(
     }
 }
 
-// Borda tracejada arredondada (o desenho do cartão de Pix).
+// Borda tracejada arredondada.
 private fun Modifier.dashedBorder(
     color: Color,
     cornerRadius: Dp,
@@ -394,7 +391,7 @@ private fun Modifier.dashedBorder(
     )
 }
 
-// Valor em pt-BR sem o símbolo R$ (ex.: 1.234,50), como no desenho.
+// Valor em pt-BR sem o símbolo R$ (ex.: 1.234,50).
 private fun formatarValor(valor: Double): String =
     String.format(Locale("pt", "BR"), "%,.2f", valor)
 

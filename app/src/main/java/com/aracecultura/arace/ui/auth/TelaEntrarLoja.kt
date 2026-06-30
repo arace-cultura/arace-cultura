@@ -22,7 +22,6 @@ import com.aracecultura.arace.ui.theme.GoogleSans
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.launch
 
-/** Compose da antiga `EntrarLojaFragment` (fragment_entrar_loja.xml). Lógica 1:1. */
 @Composable
 fun TelaEntrarLoja(
     onSucesso: () -> Unit,

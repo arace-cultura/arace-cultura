@@ -42,7 +42,6 @@ fun SecaoFinalizarCompra(
 ) {
     if (produtos.isEmpty()) return
 
-    // Multiplica o preço pela quantidade do carrinho
     val valorTotal = produtos.sumOf {
         (it.produto.preco) * it.quantidade
     }

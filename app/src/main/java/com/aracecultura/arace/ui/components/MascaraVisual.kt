@@ -39,7 +39,7 @@ private class MascaraVisual(
 
         val mapeamento = object : OffsetMapping {
             // Cursor no texto cru -> posição no formatado: a posição mais à
-            // direita que ainda tem exatamente `offset` dígitos antes dela, de
+            // direita que ainda tem exatamente n dígitos antes dela, de
             // modo que o cursor fique depois dos separadores e o próximo dígito
             // seja anexado sem retroceder.
             override fun originalToTransformed(offset: Int): Int {

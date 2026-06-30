@@ -42,7 +42,6 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.SetOptions
 import kotlinx.coroutines.launch
 
-/** Compose da antiga `Cadastro` (fragment_cadastro.xml). Lógica de auth/Firestore portada 1:1. */
 @Composable
 fun TelaCadastro(
     onSucesso: () -> Unit,
@@ -80,8 +79,7 @@ fun TelaCadastro(
         if (senha != confirmarSenha) add(CampoCadastro.CONFIRMAR_SENHA)
     }
 
-    // Upload em segundo plano: a navegação não espera as imagens. Usa o escopo
-    // da activity (que sobrevive à saída desta tela), espelhando o Fragment.
+    // Upload em segundo plano: a navegação não espera as imagens.
     fun enviarImagensPerfil(uid: String) {
         if (fotoPerfilUri == null && bannerUri == null) return
         val activity = context as? ComponentActivity ?: return

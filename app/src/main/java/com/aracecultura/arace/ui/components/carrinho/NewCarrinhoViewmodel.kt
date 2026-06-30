@@ -255,8 +255,7 @@ class NewCarrinhoViewModel : ViewModel() {
                 Log.e("Carrinho", "Erro ao remover item ${item.id}", e)
                 return@launch
             }
-            // Efeito colateral best-effort: a contagem de destaque NUNCA pode
-            // desfazer a remoção do carrinho.
+            // A contagem de destaque NUNCA pode desfazer a remoção do carrinho.
             runCatching { removerProdutoDeCarrinho(db, item.id, uid) }
         }
     }

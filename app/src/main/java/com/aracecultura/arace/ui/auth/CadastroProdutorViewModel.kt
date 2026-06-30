@@ -167,7 +167,7 @@ class CadastroProdutorViewModel : ViewModel() {
 
             _resultado.value = ResultadoCadastro.Sucesso
         } catch (e: Exception) {
-            _resultado.value = ResultadoCadastro.Erro(e.message ?: "Erro ao salvar produtor")
+            _resultado.value = ResultadoCadastro.Erro(e.message ?: context.getString(R.string.erro_salvar_produtor))
         }
     }
 
@@ -178,7 +178,7 @@ class CadastroProdutorViewModel : ViewModel() {
         prefixo: String
     ): String {
         val imageBytes = context.contentResolver.openInputStream(imageUri)?.readBytes()
-            ?: throw Exception("Não foi possível processar a imagem.")
+            ?: throw Exception(context.getString(R.string.erro_processar_imagem))
 
         val bucket = supabase.storage.from("imagens")
         val caminhoSeguro = "$uid/produtor/$prefixo-${UUID.randomUUID()}.jpg"

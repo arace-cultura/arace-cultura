@@ -23,9 +23,6 @@ data class Envio(
     val produtoId: String = "",
     val produtorId: String = "",
     val compradorId: String = "",
-    // Telefone do comprador, copiado do cadastro no fechamento da compra. Fica no
-    // próprio Envio para a Tela de Vendas identificar e contatar o cliente sem
-    // uma leitura extra do documento do usuário.
     val telefoneComprador: String = "",
     val nomeComprador: String = "",
     val nome: String = "",

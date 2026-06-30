@@ -208,7 +208,6 @@ private fun ProdutoEditavelCard(
 
     Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
 
-        // Coluna esquerda: imagem + ações
         Column(
             modifier = Modifier.weight(1f),
             verticalArrangement = Arrangement.spacedBy(8.dp)
@@ -235,7 +234,6 @@ private fun ProdutoEditavelCard(
                         modifier = Modifier.fillMaxSize()
                     )
                 }
-                // Scrim 0.3 + ícone de editar imagem
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
@@ -249,7 +247,6 @@ private fun ProdutoEditavelCard(
                 )
             }
 
-            // Excluir produto (contorno + lixeira ic_deletar)
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -270,7 +267,6 @@ private fun ProdutoEditavelCard(
                 Text(stringResource(R.string.excluir_produto), fontSize = 14.sp, color = Color.Black)
             }
 
-            // Salvar edições (preenchido laranja)
             AppButton(
                 text = stringResource(R.string.salvar_edicoes),
                 onClick = { onSalvar(nome, descricao, preco, quantidade, imagemUri) },
@@ -282,7 +278,6 @@ private fun ProdutoEditavelCard(
             )
         }
 
-        // Coluna direita: campos
         Column(
             modifier = Modifier.weight(1f),
             verticalArrangement = Arrangement.spacedBy(12.dp)

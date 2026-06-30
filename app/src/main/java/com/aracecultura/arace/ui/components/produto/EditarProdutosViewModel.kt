@@ -4,6 +4,7 @@ import android.content.Context
 import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.aracecultura.arace.R
 import com.aracecultura.arace.data.ImagemRepository
 import com.aracecultura.arace.data.LojaRepository
 import com.aracecultura.arace.data.model.Produto
@@ -26,9 +27,8 @@ class EditarProdutosViewModel : ViewModel() {
     private val _carregando = MutableStateFlow(true)
     val carregando: StateFlow<Boolean> = _carregando.asStateFlow()
 
-    // Mensagem efêmera para Toast (salvo/excluído/erro)
-    private val _mensagem = MutableStateFlow<String?>(null)
-    val mensagem: StateFlow<String?> = _mensagem.asStateFlow()
+    private val _mensagem = MutableStateFlow<Int?>(null)
+    val mensagem: StateFlow<Int?> = _mensagem.asStateFlow()
 
     fun carregar() {
         val uid = FirebaseAuth.getInstance().currentUser?.uid ?: return
@@ -46,7 +46,7 @@ class EditarProdutosViewModel : ViewModel() {
                         }
                 }
             } catch (e: Exception) {
-                _mensagem.value = e.message ?: "Erro ao carregar produtos."
+                _mensagem.value = R.string.erro_carregar_produtos
             } finally {
                 _carregando.value = false
             }
@@ -94,9 +94,9 @@ class EditarProdutosViewModel : ViewModel() {
                         )
                     } else p
                 }
-                _mensagem.value = "Produto salvo."
+                _mensagem.value = R.string.editar_produto_salvo
             } catch (e: Exception) {
-                _mensagem.value = e.message ?: "Erro ao salvar produto."
+                _mensagem.value = R.string.erro_salvar_produto
             }
         }
     }
@@ -116,9 +116,9 @@ class EditarProdutosViewModel : ViewModel() {
                     produtoRef.delete().await()
                 }
                 _produtos.value = _produtos.value.filter { it.id != produtoId }
-                _mensagem.value = "Produto excluído."
+                _mensagem.value = R.string.editar_produto_excluido
             } catch (e: Exception) {
-                _mensagem.value = e.message ?: "Erro ao excluir produto."
+                _mensagem.value = R.string.erro_excluir_produto
             }
         }
     }

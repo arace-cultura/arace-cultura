@@ -2,6 +2,7 @@ package com.aracecultura.arace.data
 
 import android.content.Context
 import android.net.Uri
+import com.aracecultura.arace.R
 import com.aracecultura.arace.supabase
 import io.github.jan.supabase.storage.storage
 import java.util.UUID
@@ -14,7 +15,7 @@ object ImagemRepository {
      */
     suspend fun upload(context: Context, pasta: String, prefixo: String, uri: Uri): String {
         val bytes = context.contentResolver.openInputStream(uri)?.readBytes()
-            ?: throw Exception("Não foi possível processar a imagem.")
+            ?: throw Exception(context.getString(R.string.erro_processar_imagem))
 
         val bucket = supabase.storage.from("imagens")
         val caminho = "$pasta/$prefixo-${UUID.randomUUID()}.jpg"

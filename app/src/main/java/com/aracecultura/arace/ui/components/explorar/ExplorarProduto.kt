@@ -151,8 +151,6 @@ fun ConteudoExplorar(
 
                 AppButton(
                     modifier = Modifier
-                        // -1dp elimina o fio transparente de antialiasing
-                        // na junção com o header acima
                         .offset(y = (-1).dp)
                         .wrapContentWidth()
                         .height(40.dp),

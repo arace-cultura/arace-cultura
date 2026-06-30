@@ -36,7 +36,7 @@ import com.aracecultura.arace.ui.theme.btColor
 
 fun ProdutoNavegar (
     produto: Produto,
-    onProdutoClick: () -> Unit = {},      // Recebe o clique na linha
+    onProdutoClick: () -> Unit = {},
     onAddToCartClick: () -> Unit = {}
 ) {
     val screenWidth = LocalConfiguration.current.screenWidthDp.dp

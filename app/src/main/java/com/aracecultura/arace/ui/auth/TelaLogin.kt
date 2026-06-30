@@ -28,10 +28,6 @@ import com.aracecultura.arace.R
 import com.aracecultura.arace.ui.theme.GoogleSans
 import com.google.firebase.auth.FirebaseAuth
 
-/**
- * Versão Compose da antiga tela de login (Fragment `Login` + fragment_login.xml).
- * Lógica de autenticação portada 1:1; a navegação sai por callbacks.
- */
 @Composable
 fun TelaLogin(
     onSucesso: () -> Unit,

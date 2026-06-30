@@ -52,7 +52,7 @@ class ProdutoViewModel : ViewModel() {
 
         val userUid = Firebase.auth.currentUser?.uid
         if (userUid == null) {
-            _uiState.value = ProdutoUiState.Error("Usuario nao autenticado.")
+            _uiState.value = ProdutoUiState.Error(context.getString(R.string.erro_usuario_nao_autenticado))
             return
         }
 
@@ -61,7 +61,7 @@ class ProdutoViewModel : ViewModel() {
 
             try {
                 val lojaId = LojaRepository.resolverLojaId(userUid)
-                    ?: throw Exception("Conta sem loja vinculada.")
+                    ?: throw Exception(context.getString(R.string.erro_conta_sem_loja))
 
                 val imageUrls = imageUris.take(3).map { imageUri ->
                     ImagemRepository.upload(context, userUid, "produto", imageUri)
@@ -85,10 +85,10 @@ class ProdutoViewModel : ViewModel() {
 
                 db.collection("Produtos").document(produtoId).set(novoProduto).await()
 
-                _uiState.value = ProdutoUiState.Success("Produto criado com sucesso!")
+                _uiState.value = ProdutoUiState.Success(context.getString(R.string.criar_sucesso))
             } catch (e: Exception) {
                 e.printStackTrace()
-                _uiState.value = ProdutoUiState.Error(e.message ?: "Erro ao salvar produto.")
+                _uiState.value = ProdutoUiState.Error(e.message ?: context.getString(R.string.erro_salvar_produto))
             }
         }
     }

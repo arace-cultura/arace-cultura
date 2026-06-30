@@ -14,7 +14,6 @@ import androidx.compose.ui.unit.sp
 import com.aracecultura.arace.R
 import com.aracecultura.arace.ui.theme.GoogleSans
 
-/** Compose da antiga `EscolhaLojaFragment` (fragment_escolha_loja.xml). */
 @Composable
 fun TelaEscolhaLoja(
     onCriarNova: () -> Unit,

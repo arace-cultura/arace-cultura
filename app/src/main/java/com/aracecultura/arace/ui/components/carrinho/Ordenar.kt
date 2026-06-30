@@ -29,8 +29,6 @@ fun Ordenar(onSelecionar: (String) -> Unit) {
     Box {
         AppButton(
             modifier = Modifier
-                // -1dp sobrepõe a junção com o elemento acima e elimina o
-                // fio transparente causado por antialiasing na fronteira
                 .offset(y = (-1).dp)
                 .width(140.dp)
                 .height(40.dp),

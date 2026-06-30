@@ -12,7 +12,6 @@ data class ItemCarrinho(
     // Estoque atual do produto (lido ao vivo da coleção Produtos). O carrinho
     // guarda só um snapshot do produto, então o estoque não vem do doc do
     // carrinho — é resolvido à parte para sinalizar "Esgotado" e limitar o "+".
-    // MAX_VALUE = estoque ainda desconhecido (não impõe teto até ser resolvido).
     val estoque: Int = Int.MAX_VALUE,
     val esgotado: Boolean = false
 )

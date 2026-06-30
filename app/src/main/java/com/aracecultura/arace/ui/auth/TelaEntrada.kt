@@ -47,7 +47,7 @@ fun TelaEntrada(
             .fillMaxSize()
             .background(CorFundoEntrada),
     ) {
-        // Mantém as proporções do design em telas curtas (paisagem/split-screen).
+
         val contentHeight = maxOf(maxHeight, 640.dp)
         val cardTop = contentHeight * 0.42f
 

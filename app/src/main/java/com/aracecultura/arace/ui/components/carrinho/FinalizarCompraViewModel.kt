@@ -116,9 +116,6 @@ class FinalizarCompraViewModel : ViewModel() {
         }
     }
 
-    // Lojas com finalização em voo. Sem a remoção otimista, o cartão fica na tela
-    // durante o round-trip; isto impede que um toque-duplo dispare a transação
-    // duas vezes (toda a mutação ocorre na main thread do viewModelScope).
     private val lojasFinalizando = mutableSetOf<String>()
 
     fun carregar(uid: String) {

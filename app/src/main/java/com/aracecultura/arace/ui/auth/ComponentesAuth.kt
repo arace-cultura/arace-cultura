@@ -42,17 +42,12 @@ import com.aracecultura.arace.R
 import com.aracecultura.arace.data.CampoCadastro
 import com.aracecultura.arace.ui.theme.GoogleSans
 
-// Cores espelhadas dos recursos XML usados nas telas de auth
-internal val CorBg = Color(0xFFF5F5F5)      // @color/bg
-internal val CorTexto = Color(0xFF333333)   // @color/texto
-internal val CorAzul = Color(0xFF2F5E91)    // @color/arace_blue
-internal val CorVerde = Color(0xFF679662)   // @color/verdeArace
-internal val CorLaranja = Color(0xFFD45D22) // @color/laranja
+internal val CorBg = Color(0xFFF5F5F5)
+internal val CorTexto = Color(0xFF333333)
+internal val CorAzul = Color(0xFF2F5E91)
+internal val CorVerde = Color(0xFF679662)
+internal val CorLaranja = Color(0xFFD45D22)
 
-/**
- * Fundo padrão das telas de auth: cor base + imagem decorativa opcional
- * (alpha 0.15) e um conteúdo rolável com padding de 40dp, como nos XML.
- */
 @Composable
 internal fun FundoAuth(
     comImagem: Boolean = true,
@@ -81,7 +76,6 @@ internal fun FundoAuth(
     }
 }
 
-/** Campo de texto arredondado com borda azul; igual ao TextInputLayout dos XML. */
 @Composable
 internal fun CampoArace(
     valor: String,
@@ -112,7 +106,7 @@ internal fun CampoArace(
         trailingIcon = if (senha) {
             {
                 Text(
-                    text = if (visivel) "Ocultar" else "Mostrar",
+                    text = stringResource(if (visivel) R.string.senha_ocultar else R.string.senha_mostrar),
                     color = CorAzul,
                     fontSize = 13.sp,
                     fontFamily = GoogleSans,
@@ -230,7 +224,6 @@ internal fun DialogoDadosInvalidos(
     )
 }
 
-/** Link "Voltar" em texto, como os TextView de voltar dos XML. */
 @Composable
 internal fun LinkVoltar(onVoltar: () -> Unit, modifier: Modifier = Modifier) {
     Text(
