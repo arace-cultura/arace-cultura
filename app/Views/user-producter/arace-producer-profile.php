@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <?php
 $usuario = $usuario ?? session()->get('arace_user') ?? [];
-$avatar = trim((string) ($usuario['avatar'] ?? ''));
-$localizacao = implode(' - ', array_filter([$usuario['cidade'] ?? null, $usuario['estado'] ?? null]));
-$membroDesde = $usuario['createdAt'] ?? '';
+$avatar = trim((string) ($usuario['fotoUrl'] ?? $usuario['avatar'] ?? ''));
+$sexo = (string) ($usuario['sexo'] ?? $usuario['genero'] ?? '');
+$sexoLabel = ['f' => 'Feminino', 'm' => 'Masculino', 'nb' => 'Não-binário'][$sexo] ?? '';
 ?>
 <html lang="pt-BR">
 <head>
@@ -107,8 +107,8 @@ $membroDesde = $usuario['createdAt'] ?? '';
       <div class="profile-header">
         <div class="avatar-wrap">
           <div class="avatar">
-            <?php if (! empty($usuario['avatar'])): ?>
-              <img src="<?= esc($usuario['avatar'], 'attr') ?>" alt="Avatar do usuario" />
+            <?php if ($avatar !== ''): ?>
+              <img src="<?= esc($avatar, 'attr') ?>" alt="Avatar do usuario" />
             <?php else: ?>
               <i data-lucide="user"></i>
             <?php endif; ?>
@@ -132,30 +132,30 @@ $membroDesde = $usuario['createdAt'] ?? '';
           <div class="field-value"><?= esc($usuario['nome'] ?? 'Usuário') ?></div>
         </div>
         <div class="field">
+          <div class="field-label">Nome de usuário</div>
+          <div class="field-value <?= empty($usuario['username']) ? 'missing' : '' ?>"><?= empty($usuario['username']) ? 'Não informado' : esc($usuario['username']) ?></div>
+        </div>
+        <div class="field">
+          <div class="field-label">Sexo</div>
+          <div class="field-value <?= $sexoLabel === '' ? 'missing' : '' ?>"><?= $sexoLabel === '' ? 'Não informado' : esc($sexoLabel) ?></div>
+        </div>
+        <div class="field">
           <div class="field-label">E-mail</div>
           <div class="field-value"><?= esc($usuario['email'] ?? '') ?></div>
         </div>
         <div class="field">
-          <div class="field-label">Número</div>
+          <div class="field-label">Telefone</div>
           <div class="field-value <?= empty($usuario['telefone']) ? 'missing' : '' ?>">
             <?= empty($usuario['telefone']) ? '<i data-lucide="alert-circle"></i> Não informado' : esc($usuario['telefone']) ?>
           </div>
         </div>
         <div class="field">
-          <div class="field-label">Localização</div>
-          <div class="field-value <?= $localizacao === '' ? 'missing' : '' ?>">
-            <?= $localizacao === '' ? '<i data-lucide="alert-circle"></i> Não informado' : esc($localizacao) ?>
-          </div>
+          <div class="field-label">Data de nascimento</div>
+          <div class="field-value <?= empty($usuario['nascimento']) ? 'missing' : '' ?>"><?= empty($usuario['nascimento']) ? 'Não informado' : esc($usuario['nascimento']) ?></div>
         </div>
         <div class="field">
-          <div class="field-label">Membro desde</div>
-          <div class="field-value"><?= esc($membroDesde) ?></div>
-        </div>
-        <div class="field">
-          <div class="field-label">CPF</div>
-          <div class="field-value <?= empty($usuario['cpf']) ? 'missing' : '' ?>">
-            <?= empty($usuario['cpf']) ? '<i data-lucide="alert-circle"></i> Não informado' : esc($usuario['cpf']) ?>
-          </div>
+          <div class="field-label">Bio</div>
+          <div class="field-value <?= empty($usuario['bio']) ? 'missing' : '' ?>"><?= empty($usuario['bio']) ? 'Não informado' : esc($usuario['bio']) ?></div>
         </div>
       </div>
     </div>

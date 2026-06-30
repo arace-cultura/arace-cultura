@@ -1,4 +1,18 @@
 <!DOCTYPE html>
+<?php
+$usuario = $usuario ?? session()->get('arace_user') ?? [];
+$avatar = trim((string) ($usuario['fotoUrl'] ?? $usuario['avatar'] ?? ''));
+$produtor = $produtor ?? [];
+$lojaNome = (string) ($produtor['lojaNome'] ?? 'Paneleiras Capixabas');
+$lojaBio = (string) ($produtor['lojaBio'] ?? 'Preservamos uma tradicao centenaria de producao artesanal.');
+$lojaCidade = (string) ($produtor['lojaCidade'] ?? '');
+$lojaEstado = (string) ($produtor['lojaEstado'] ?? '');
+$lojaCategoria = (string) ($produtor['lojaCategoria'] ?? $produtor['categoria'] ?? 'Artesanato tradicional');
+$lojaLocal = trim($lojaCidade . ($lojaEstado !== '' ? ', ' . $lojaEstado : ''), ', ');
+$lojaAvatar = trim((string) ($produtor['fotoUrl'] ?? $produtor['lojaAvatar'] ?? $produtor['avatar'] ?? ''));
+$bannerUrl = trim((string) ($produtor['bannerUrl'] ?? $produtor['banner'] ?? ''));
+$bannerSrc = $bannerUrl !== '' ? $bannerUrl : base_url('images/bahia-vitoria.jpg');
+?>
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
@@ -31,8 +45,12 @@
       <i data-lucide="heart"></i>
       <span class="cart-count">5 itens</span>
     </button>
-    <button class="avatar-btn" type="button" onclick="window.location.href='<?= url_to('user_arace_perfil') ?>'">
-      <i data-lucide="user"></i>
+    <button class="avatar-btn" type="button" onclick="window.location.href='<?= url_to('user_arace_perfil') ?>'" aria-label="Abrir perfil">
+      <?php if ($avatar !== ''): ?>
+        <img src="<?= esc($avatar, 'attr') ?>" alt="Avatar do usuario" />
+      <?php else: ?>
+        <i data-lucide="user"></i>
+      <?php endif; ?>
     </button>
   </div>
 </header>
@@ -87,7 +105,7 @@
    
     <section class="store-banner-wrapper item-animado atraso-1" aria-label="Banner da loja">
       <div class="store-banner">
-        <img src="/images/bahia-vitoria.jpg" alt="Paneleiras capixabas trabalhando" class="banner-img" />
+        <img src="<?= esc($bannerSrc, 'attr') ?>" alt="Capa da loja <?= esc($lojaNome, 'attr') ?>" class="banner-img" />
         <div class="banner-overlay" aria-hidden="true"></div>
         <div class="banner-actions">
           <button class="banner-action-btn" id="btn-share">
@@ -101,13 +119,17 @@
 
       <div class="store-profile-header">
         <div class="store-avatar">
-          <img src="/images/arace.png" alt="Foto de perfil da loja Paneleiras Capixabas" />
+          <?php if ($lojaAvatar !== ''): ?>
+            <img src="<?= esc($lojaAvatar, 'attr') ?>" alt="Foto de perfil da loja <?= esc($lojaNome, 'attr') ?>" />
+          <?php else: ?>
+            <i data-lucide="store"></i>
+          <?php endif; ?>
         </div>
         <div class="store-meta">
-          <h1 class="store-title">Paneleiras Capixabas</h1>
+          <h1 class="store-title"><?= esc($lojaNome) ?></h1>
           <p class="store-subtitle">
             <i data-lucide="map-pin"></i>
-            Vitória, ES · Artesanato tradicional
+            <?= esc($lojaLocal !== '' ? $lojaLocal : 'Local nao informado') ?> · <?= esc($lojaCategoria) ?>
           </p>
         </div>
         <div class="store-stats" aria-label="Estatísticas da loja">
@@ -223,11 +245,7 @@
         </div>
         <div class="history-text">
           <h2 id="historia-titulo">Nossa história</h2>
-          <p>
-            Preservamos uma tradição centenária de produção artesanal de panelas de barro,
-            símbolo da cultura capixaba. Cada peça carrega a identidade, o suor e o amor
-            passado de geração em geração.
-          </p>
+          <p><?= esc($lojaBio) ?></p>
           <span class="history-tag">Artesanato certificado</span>
         </div>
       </div>
@@ -241,7 +259,11 @@
     <span id="toast-msg">Adicionado ao carrinho!</span>
   </div>
 
-  <script src="/js/arace-state.js"></script>
-  <script src="/js/loja.js"></script>
+  <script>
+    window.ARACE_AUTH_USER = <?= json_encode($usuario, JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>;
+    window.ARACE_PRODUCER = <?= json_encode($produtor, JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>;
+  </script>
+  <script src="<?= base_url('js/arace-state.js') ?>"></script>
+  <script src="<?= base_url('js/loja.js') ?>"></script>
 </body>
 </html>

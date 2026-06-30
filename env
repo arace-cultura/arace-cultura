@@ -71,3 +71,8 @@
 # logger.threshold = 4
 
 # GOOGLE_APPLICATION_CREDENTIALS = "C:\\xampp\\htdocs\\arace-cultura\\writable\\firebase-credentials.json"
+
+
+# SUPABASE_URL="https://tliyhytinombxvsmdphm.supabase.co"
+# SUPABASE_SERVICE_ROLE_KEY="tliyhytinombxvsmdphm"
+# SUPABASE_AVATAR_BUCKET=avatars

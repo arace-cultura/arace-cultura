@@ -1,4 +1,8 @@
 <!DOCTYPE html>
+<?php
+$usuario = $usuario ?? session()->get('arace_user') ?? [];
+$avatar = trim((string) ($usuario['fotoUrl'] ?? $usuario['avatar'] ?? ''));
+?>
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
@@ -26,7 +30,11 @@
         <span class="cart-count">5 itens</span>
       </button>
       <button class="avatar-btn" type="button" onclick="window.location.href='<?= url_to('user_arace_perfil') ?>'" aria-label="Abrir perfil">
-        <i data-lucide="user"></i>
+        <?php if ($avatar !== ''): ?>
+          <img src="<?= esc($avatar, 'attr') ?>" alt="Avatar do usuario" />
+        <?php else: ?>
+          <i data-lucide="user"></i>
+        <?php endif; ?>
       </button>
     </div>
   </header>

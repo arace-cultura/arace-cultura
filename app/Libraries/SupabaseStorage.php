@@ -21,7 +21,7 @@ final class SupabaseStorage
     public function uploadAvatar(UploadedFile $file, string $userId): string
     {
         if ($this->url === '' || $this->key === '') {
-            return $this->uploadAvatarLocally($file, $userId);
+            throw new RuntimeException('Configure SUPABASE_URL e SUPABASE_SERVICE_ROLE_KEY no .env para enviar imagens.');
         }
 
         if (! $file->isValid() || $file->hasMoved()) {
@@ -29,6 +29,7 @@ final class SupabaseStorage
         }
 
         $extension = strtolower($file->getClientExtension() ?: $file->guessExtension() ?: 'jpg');
+        $extension = in_array($extension, ['jpg', 'jpeg', 'png', 'webp', 'gif'], true) ? $extension : 'jpg';
         $safeUser  = preg_replace('/[^a-zA-Z0-9_-]/', '-', $userId) ?: 'usuario';
         $path      = $safeUser . '/' . date('YmdHis') . '-' . bin2hex(random_bytes(6)) . '.' . $extension;
         $endpoint  = $this->url . '/storage/v1/object/' . rawurlencode($this->bucket) . '/' . str_replace('%2F', '/', rawurlencode($path));
@@ -45,6 +46,43 @@ final class SupabaseStorage
             'x-upsert: true',
         ];
 
+        [$statusCode, $response] = $this->postObject($endpoint, $headers, $contents);
+
+        if ($statusCode < 200 || $statusCode >= 300) {
+            $detail = is_string($response) && $response !== '' ? ' Detalhe: ' . mb_substr($response, 0, 200) : '';
+            throw new RuntimeException('Nao foi possivel enviar a imagem para o Supabase.' . $detail);
+        }
+
+        return $this->url . '/storage/v1/object/public/' . rawurlencode($this->bucket) . '/' . str_replace('%2F', '/', rawurlencode($path));
+    }
+
+    /**
+     * @return array{0:int,1:string}
+     */
+    private function postObject(string $endpoint, array $headers, string $contents): array
+    {
+        if (function_exists('curl_init')) {
+            $curl = curl_init($endpoint);
+            curl_setopt_array($curl, [
+                CURLOPT_POST           => true,
+                CURLOPT_HTTPHEADER     => $headers,
+                CURLOPT_POSTFIELDS     => $contents,
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_HEADER         => false,
+            ]);
+
+            $response = curl_exec($curl);
+            $error    = curl_error($curl);
+            $status   = (int) curl_getinfo($curl, CURLINFO_RESPONSE_CODE);
+            curl_close($curl);
+
+            if ($response === false) {
+                throw new RuntimeException('Falha de conexao com o Supabase: ' . $error);
+            }
+
+            return [$status, (string) $response];
+        }
+
         $context = stream_context_create([
             'http' => [
                 'method'        => 'POST',
@@ -57,31 +95,8 @@ final class SupabaseStorage
         $response = file_get_contents($endpoint, false, $context);
         $status   = $http_response_header[0] ?? '';
 
-        if (! str_contains($status, '200') && ! str_contains($status, '201')) {
-            return $this->uploadAvatarLocally($file, $userId);
-        }
+        preg_match('/\s(\d{3})\s/', $status, $matches);
 
-        return $this->url . '/storage/v1/object/public/' . rawurlencode($this->bucket) . '/' . str_replace('%2F', '/', rawurlencode($path));
-    }
-
-    private function uploadAvatarLocally(UploadedFile $file, string $userId): string
-    {
-        if (! $file->isValid() || $file->hasMoved()) {
-            throw new RuntimeException('Arquivo de avatar invalido.');
-        }
-
-        $extension = strtolower($file->getClientExtension() ?: $file->guessExtension() ?: 'jpg');
-        $extension = in_array($extension, ['jpg', 'jpeg', 'png', 'webp', 'gif'], true) ? $extension : 'jpg';
-        $safeUser  = preg_replace('/[^a-zA-Z0-9_-]/', '-', $userId) ?: 'usuario';
-        $directory = FCPATH . 'uploads' . DIRECTORY_SEPARATOR . 'avatars' . DIRECTORY_SEPARATOR . $safeUser;
-
-        if (! is_dir($directory) && ! mkdir($directory, 0775, true) && ! is_dir($directory)) {
-            throw new RuntimeException('Nao foi possivel criar a pasta local de avatares.');
-        }
-
-        $filename = date('YmdHis') . '-' . bin2hex(random_bytes(6)) . '.' . $extension;
-        $file->move($directory, $filename, true);
-
-        return rtrim((string) config('App')->baseURL, '/') . '/uploads/avatars/' . rawurlencode($safeUser) . '/' . rawurlencode($filename);
+        return [(int) ($matches[1] ?? 0), (string) $response];
     }
 }

@@ -1,17 +1,17 @@
-ï»¿<!DOCTYPE html>
+<!DOCTYPE html>
 <?php
-$usuario = $usuario ?? [];
+$usuario = $usuario ?? session()->get('arace_user') ?? [];
 $nomeCompleto = trim((string) ($usuario['nome'] ?? ''));
 $nome = $nomeCompleto;
 $username = (string) ($usuario['username'] ?? '');
-$genero = (string) ($usuario['genero'] ?? '');
-$avatar = trim((string) ($usuario['avatar'] ?? ''));
+$sexo = (string) ($usuario['sexo'] ?? $usuario['genero'] ?? '');
+$avatar = trim((string) ($usuario['fotoUrl'] ?? $usuario['avatar'] ?? ''));
 ?>
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>AracÃª â€” ConfiguraÃ§Ã£o Perfil Produtor</title>
+  <title>Aracê — Configuração Perfil Produtor</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex&family=Playfair+Display:wght@700&display=swap" rel="stylesheet" />
@@ -23,7 +23,7 @@ $avatar = trim((string) ($usuario['avatar'] ?? ''));
 
   <!-- HEADER -->
 <header>
-  <a href="<?= url_to('home') ?>" class="logo">aracÃª</a>
+  <a href="<?= url_to('home') ?>" class="logo">aracê</a>
 
   <form class="search-wrap" action="<?= url_to('main_pesquisa') ?>" method="get">
     <i data-lucide="search"></i>
@@ -68,10 +68,10 @@ $avatar = trim((string) ($usuario['avatar'] ?? ''));
       <i data-lucide="shopping-cart"></i> Carrinho
     </a>
     <a class="nav-item" href="<?= url_to('user_arace_notificacao') ?>">
-      <i data-lucide="bell"></i> NotificaÃ§Ãµes
+      <i data-lucide="bell"></i> Notificações
     </a>
     <a class="nav-item" href="<?= url_to('main_arace_config') ?>">
-      <i data-lucide="settings"></i> ConfiguraÃ§Ãµes
+      <i data-lucide="settings"></i> Configurações
     </a>
     <a class="nav-item" href="<?= url_to('user_arace_perfil') ?>">
       <i data-lucide="user"></i> Perfil
@@ -88,8 +88,8 @@ $avatar = trim((string) ($usuario['avatar'] ?? ''));
   <main>
   <div class="config-header">
     <div>
-      <h1>ConfiguraÃ§Ãµes</h1>
-      <p>Gerencie suas preferÃªncias e dados da conta</p>
+      <h1>Configurações</h1>
+      <p>Gerencie suas preferências e dados da conta</p>
     </div>
   </div>
 
@@ -101,30 +101,30 @@ $avatar = trim((string) ($usuario['avatar'] ?? ''));
         <i data-lucide="user"></i> Perfil
       </button>
       <button class="config-nav-item" onclick="trocarAba(this,'conta')">
-        <i data-lucide="shield"></i> Conta & SeguranÃ§a
+        <i data-lucide="shield"></i> Conta & Segurança
       </button>
       <button class="config-nav-item" onclick="trocarAba(this,'notificacoes')">
-        <i data-lucide="bell"></i> NotificaÃ§Ãµes
+        <i data-lucide="bell"></i> Notificações
       </button>
       <button class="config-nav-item" onclick="trocarAba(this,'pagamento')">
         <i data-lucide="credit-card"></i> Pagamento
       </button>
       <button class="config-nav-item" onclick="trocarAba(this,'enderecos')">
-        <i data-lucide="map-pin"></i> EndereÃ§os
+        <i data-lucide="map-pin"></i> Endereços
       </button>
       <div class="config-nav-divider"></div>
       <button class="config-nav-item" onclick="trocarAba(this,'aparencia')">
-        <i data-lucide="palette"></i> AparÃªncia
+        <i data-lucide="palette"></i> Aparência
       </button>
       <button class="config-nav-item" onclick="trocarAba(this,'privacidade')">
         <i data-lucide="lock"></i> Privacidade
       </button>
     </nav>
 
-    <!-- CONTEÃšDO -->
+    <!-- CONTEÚDO -->
     <div>
 
-      <!-- â”€â”€ PERFIL â”€â”€ -->
+      <!-- -- PERFIL -- -->
       <section class="config-section active" id="sec-perfil">
         <form action="<?= url_to('user_profile_update') ?>" method="post" enctype="multipart/form-data">
 
@@ -145,7 +145,7 @@ $avatar = trim((string) ($usuario['avatar'] ?? ''));
                 <label for="avatarInput" class="btn-primary" style="cursor:pointer">
                   <i data-lucide="upload"></i> Alterar foto
                 </label>
-                <input type="file" id="avatarInput" name="avatar" accept="image/*" style="display:none" onchange="previewAvatar(this)" />
+                <input type="file" id="avatarInput" name="fotoUrl" accept="image/*" style="display:none" onchange="previewAvatar(this)" />
               </div>
             </div>
           </div>
@@ -153,7 +153,7 @@ $avatar = trim((string) ($usuario['avatar'] ?? ''));
 
         <div class="config-card">
           <div class="config-card-header">
-            <div><h2>InformaÃ§Ãµes pessoais</h2><p>Seus dados bÃ¡sicos</p></div>
+            <div><h2>Informações pessoais</h2><p>Seus dados básicos</p></div>
           </div>
           <div class="config-card-body">
             <div class="field-row">
@@ -163,13 +163,13 @@ $avatar = trim((string) ($usuario['avatar'] ?? ''));
               </div>
             </div>
             <div class="field-group">
-              <label>Nome de usuÃ¡rio</label>
+              <label>Nome de usuário</label>
               <input class="input-field" type="text" id="username" name="username" placeholder="@usuario" value="<?= esc($username, 'attr') ?>" />
-              <small>VisÃ­vel publicamente no seu perfil</small>
+              <small>Visível publicamente no seu perfil</small>
             </div>
             <div class="field-group">
               <label>Bio</label>
-              <textarea class="input-field" id="bio" name="bio" rows="3" placeholder="Uma breve descriÃ§Ã£o sobre vocÃªâ€¦" style="resize:vertical;line-height:1.5"><?= esc($usuario['bio'] ?? '') ?></textarea>
+              <textarea class="input-field" id="bio" name="bio" rows="3" placeholder="Uma breve descrição sobre você…" style="resize:vertical;line-height:1.5"><?= esc($usuario['bio'] ?? '') ?></textarea>
             </div>
             <div class="field-row">
               <div class="field-group">
@@ -177,12 +177,12 @@ $avatar = trim((string) ($usuario['avatar'] ?? ''));
                 <input class="input-field" type="date" id="nascimento" name="nascimento" value="<?= esc($usuario['nascimento'] ?? '', 'attr') ?>" />
               </div>
               <div class="field-group">
-                <label>GÃªnero</label>
-                <select class="input-field" id="genero" name="genero">
-                  <option value="">Prefiro nÃ£o informar</option>
-                  <option value="f" <?= $genero === 'f' ? 'selected' : '' ?>>Feminino</option>
-                  <option value="m" <?= $genero === 'm' ? 'selected' : '' ?>>Masculino</option>
-                  <option value="nb" <?= $genero === 'nb' ? 'selected' : '' ?>>NÃ£o-binÃ¡rio</option>
+                <label>Sexo</label>
+                <select class="input-field" id="sexo" name="sexo">
+                  <option value="">Prefiro não informar</option>
+                  <option value="f" <?= $sexo === 'f' ? 'selected' : '' ?>>Feminino</option>
+                  <option value="m" <?= $sexo === 'm' ? 'selected' : '' ?>>Masculino</option>
+                  <option value="nb" <?= $sexo === 'nb' ? 'selected' : '' ?>>Não-binário</option>
                 </select>
               </div>
             </div>
@@ -199,7 +199,7 @@ $avatar = trim((string) ($usuario['avatar'] ?? ''));
           <div class="config-card-body">
             <div class="field-group">
               <label>E-mail</label>
-              <input class="input-field" type="email" id="email" name="email" value="<?= esc($usuario['email'] ?? '', 'attr') ?>" />
+              <input class="input-field" type="email" id="email" value="<?= esc($usuario['email'] ?? '', 'attr') ?>" readonly />
             </div>
             <div class="field-group">
               <label>Telefone</label>
@@ -213,7 +213,7 @@ $avatar = trim((string) ($usuario['avatar'] ?? ''));
         </form>
       </section>
 
-      <!-- â”€â”€ CONTA & SEGURANÃ‡A â”€â”€ -->
+      <!-- -- CONTA & SEGURANÇA -- -->
       <section class="config-section" id="sec-conta">
 
         <div class="config-card">
@@ -223,31 +223,31 @@ $avatar = trim((string) ($usuario['avatar'] ?? ''));
           <div class="config-card-body">
             <div class="field-group">
               <label>Senha atual</label>
-              <input class="input-field" type="password" placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢" />
+              <input class="input-field" type="password" placeholder="••••••••" />
             </div>
             <div class="field-row">
               <div class="field-group">
                 <label>Nova senha</label>
-                <input class="input-field" type="password" id="novaSenha" placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢" />
+                <input class="input-field" type="password" id="novaSenha" placeholder="••••••••" />
               </div>
               <div class="field-group">
                 <label>Confirmar nova senha</label>
-                <input class="input-field" type="password" id="confirmarSenha" placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢" />
+                <input class="input-field" type="password" id="confirmarSenha" placeholder="••••••••" />
               </div>
             </div>
-            <small style="font-size:12px;color:var(--muted)">MÃ­nimo 8 caracteres, com letras e nÃºmeros.</small>
+            <small style="font-size:12px;color:var(--muted)">Mínimo 8 caracteres, com letras e números.</small>
           </div>
         </div>
 
         <div class="config-card">
           <div class="config-card-header">
-            <div><h2>VerificaÃ§Ã£o em duas etapas</h2><p>Adiciona uma camada extra de seguranÃ§a</p></div>
+            <div><h2>Verificação em duas etapas</h2><p>Adiciona uma camada extra de segurança</p></div>
           </div>
           <div class="config-card-body">
             <div class="toggle-row">
               <div class="toggle-info">
                 <span>SMS</span>
-                <small>Receber cÃ³digo por mensagem de texto</small>
+                <small>Receber código por mensagem de texto</small>
               </div>
               <label class="toggle-switch">
                 <input type="checkbox" checked />
@@ -257,7 +257,7 @@ $avatar = trim((string) ($usuario['avatar'] ?? ''));
             <div class="toggle-row">
               <div class="toggle-info">
                 <span>E-mail</span>
-                <small>Receber cÃ³digo por e-mail</small>
+                <small>Receber código por e-mail</small>
               </div>
               <label class="toggle-switch">
                 <input type="checkbox" />
@@ -279,13 +279,13 @@ $avatar = trim((string) ($usuario['avatar'] ?? ''));
 
         <div class="config-card danger-card">
           <div class="config-card-header">
-            <div><h2>Zona de perigo</h2><p>AÃ§Ãµes irreversÃ­veis</p></div>
+            <div><h2>Zona de perigo</h2><p>Ações irreversíveis</p></div>
           </div>
           <div class="config-card-body">
             <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.75rem">
               <div>
                 <div style="font-size:14px;font-weight:500;color:var(--text)">Desativar conta</div>
-                <div style="font-size:12px;color:var(--muted);margin-top:2px">Sua conta ficarÃ¡ invisÃ­vel temporariamente</div>
+                <div style="font-size:12px;color:var(--muted);margin-top:2px">Sua conta ficará invisível temporariamente</div>
               </div>
             </div>
             <div style="height:.5px;background:rgba(220,38,38,.15);margin:.25rem 0"></div>
@@ -299,11 +299,11 @@ $avatar = trim((string) ($usuario['avatar'] ?? ''));
         </div>
       </section>
 
-      <!-- â”€â”€ NOTIFICAÃ‡Ã•ES â”€â”€ -->
+      <!-- -- NOTIFICAÇÕES -- -->
       <section class="config-section" id="sec-notificacoes">
         <div class="config-card">
           <div class="config-card-header">
-            <div><h2>NotificaÃ§Ãµes por e-mail</h2></div>
+            <div><h2>Notificações por e-mail</h2></div>
           </div>
           <div class="config-card-body">
             <div class="toggle-row">
@@ -311,7 +311,7 @@ $avatar = trim((string) ($usuario['avatar'] ?? ''));
               <label class="toggle-switch"><input type="checkbox" checked /><span class="toggle-slider"></span></label>
             </div>
             <div class="toggle-row">
-              <div class="toggle-info"><span>PromoÃ§Ãµes</span><small>Ofertas exclusivas e cupons</small></div>
+              <div class="toggle-info"><span>Promoções</span><small>Ofertas exclusivas e cupons</small></div>
               <label class="toggle-switch"><input type="checkbox" checked /><span class="toggle-slider"></span></label>
             </div>
             <div class="toggle-row">
@@ -319,44 +319,44 @@ $avatar = trim((string) ($usuario['avatar'] ?? ''));
               <label class="toggle-switch"><input type="checkbox" /><span class="toggle-slider"></span></label>
             </div>
             <div class="toggle-row">
-              <div class="toggle-info"><span>Respostas de avaliaÃ§Ãµes</span><small>Quando alguÃ©m responder sua avaliaÃ§Ã£o</small></div>
+              <div class="toggle-info"><span>Respostas de avaliações</span><small>Quando alguém responder sua avaliação</small></div>
               <label class="toggle-switch"><input type="checkbox" checked /><span class="toggle-slider"></span></label>
             </div>
           </div>
         </div>
         <div class="config-card">
           <div class="config-card-header">
-            <div><h2>NotificaÃ§Ãµes push</h2></div>
+            <div><h2>Notificações push</h2></div>
           </div>
           <div class="config-card-body">
             <div class="toggle-row">
-              <div class="toggle-info"><span>Chat</span><small>Novas mensagens de artesÃ£os</small></div>
+              <div class="toggle-info"><span>Chat</span><small>Novas mensagens de artesãos</small></div>
               <label class="toggle-switch"><input type="checkbox" checked /><span class="toggle-slider"></span></label>
             </div>
             <div class="toggle-row">
-              <div class="toggle-info"><span>Status do pedido</span><small>AtualizaÃ§Ãµes de envio e entrega</small></div>
+              <div class="toggle-info"><span>Status do pedido</span><small>Atualizações de envio e entrega</small></div>
               <label class="toggle-switch"><input type="checkbox" checked /><span class="toggle-slider"></span></label>
             </div>
             <div class="toggle-row">
-              <div class="toggle-info"><span>Novos produtos favoritos</span><small>Produtos novos de artesÃ£os que vocÃª segue</small></div>
+              <div class="toggle-info"><span>Novos produtos favoritos</span><small>Produtos novos de artesãos que você segue</small></div>
               <label class="toggle-switch"><input type="checkbox" /><span class="toggle-slider"></span></label>
             </div>
           </div>
         </div>
       </section>
 
-      <!-- â”€â”€ PAGAMENTO â”€â”€ -->
+      <!-- -- PAGAMENTO -- -->
       <section class="config-section" id="sec-pagamento">
         <div class="config-card">
           <div class="config-card-header">
-            <div><h2>MÃ©todos de pagamento</h2><p>CartÃµes e formas de pagamento salvos</p></div>
+            <div><h2>Métodos de pagamento</h2><p>Cartões e formas de pagamento salvos</p></div>
           </div>
           <div class="config-card-body" id="cartoesList">
             <div style="display:flex;align-items:center;justify-content:space-between;padding:.5rem 0">
               <div style="display:flex;align-items:center;gap:12px">
                 <div style="width:44px;height:28px;background:var(--bg);border:.5px solid var(--border);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:var(--azul)">VISA</div>
                 <div>
-                  <div style="font-size:14px;color:var(--text)">â€¢â€¢â€¢â€¢ â€¢â€¢â€¢â€¢ â€¢â€¢â€¢â€¢ 4242</div>
+                  <div style="font-size:14px;color:var(--text)">•••• •••• •••• 4242</div>
                   <div style="font-size:12px;color:var(--muted)">Expira 12/27</div>
                 </div>
               </div>
@@ -373,23 +373,23 @@ $avatar = trim((string) ($usuario['avatar'] ?? ''));
           <div class="config-card-body">
             <div class="field-group">
               <label>Chave Pix</label>
-              <input class="input-field" type="text" placeholder="CPF, e-mail, telefone ou chave aleatÃ³ria" />
+              <input class="input-field" type="text" placeholder="CPF, e-mail, telefone ou chave aleatória" />
             </div>
           </div>
         </div>
       </section>
 
-      <!-- â”€â”€ ENDEREÃ‡OS â”€â”€ -->
+      <!-- -- ENDEREÇOS -- -->
       <section class="config-section" id="sec-enderecos">
         <div class="config-card">
           <div class="config-card-header">
-            <div><h2>EndereÃ§os salvos</h2></div>
+            <div><h2>Endereços salvos</h2></div>
           </div>
           <div class="config-card-body">
             <div style="display:flex;align-items:flex-start;justify-content:space-between;padding:.25rem 0">
               <div>
                 <div style="font-size:14px;font-weight:500;color:var(--text)">Casa</div>
-                <div style="font-size:13px;color:var(--muted);margin-top:3px;line-height:1.5">Rua das Palmeiras, 123 â€” Jardim da Penha<br/>VitÃ³ria, ES â€” 29060-000</div>
+                <div style="font-size:13px;color:var(--muted);margin-top:3px;line-height:1.5">Rua das Palmeiras, 123 — Jardim da Penha<br/>Vitória, ES — 29060-000</div>
               </div>
               <div style="display:flex;align-items:center;gap:8px">
                 <span style="font-size:11px;background:var(--laranja-l);color:var(--laranja-d);border-radius:99px;padding:2px 10px;font-weight:500">Principal</span>
@@ -400,7 +400,7 @@ $avatar = trim((string) ($usuario['avatar'] ?? ''));
 
         <div class="config-card">
           <div class="config-card-header">
-            <div><h2>Adicionar endereÃ§o</h2></div>
+            <div><h2>Adicionar endereço</h2></div>
           </div>
           <div class="config-card-body">
             <div class="field-row">
@@ -412,8 +412,8 @@ $avatar = trim((string) ($usuario['avatar'] ?? ''));
                 <label>Estado</label>
                 <select class="input-field" id="estado">
                   <option value="">Selecione</option>
-                  <option value="ES" selected>EspÃ­rito Santo</option>
-                  <option value="SP">SÃ£o Paulo</option>
+                  <option value="ES" selected>Espírito Santo</option>
+                  <option value="SP">São Paulo</option>
                   <option value="RJ">Rio de Janeiro</option>
                   <option value="MG">Minas Gerais</option>
                   <option value="BA">Bahia</option>
@@ -423,7 +423,7 @@ $avatar = trim((string) ($usuario['avatar'] ?? ''));
             <div class="field-row">
               <div class="field-group">
                 <label>Cidade</label>
-                <input class="input-field" type="text" id="cidade" placeholder="VitÃ³ria" />
+                <input class="input-field" type="text" id="cidade" placeholder="Vitória" />
               </div>
               <div class="field-group">
                 <label>Bairro</label>
@@ -436,23 +436,23 @@ $avatar = trim((string) ($usuario['avatar'] ?? ''));
             </div>
             <div class="field-row">
               <div class="field-group">
-                <label>NÃºmero</label>
-                <input class="input-field" type="text" placeholder="NÂº" />
+                <label>Número</label>
+                <input class="input-field" type="text" placeholder="Nº" />
               </div>
               <div class="field-group">
                 <label>Complemento</label>
-                <input class="input-field" type="text" placeholder="Apto, blocoâ€¦" />
+                <input class="input-field" type="text" placeholder="Apto, bloco…" />
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      <!-- â”€â”€ APARÃŠNCIA â”€â”€ -->
+      <!-- -- APARÊNCIA -- -->
       <section class="config-section" id="sec-aparencia">
         <div class="config-card">
           <div class="config-card-header">
-            <div><h2>Tema</h2><p>Escolha a aparÃªncia da interface</p></div>
+            <div><h2>Tema</h2><p>Escolha a aparência da interface</p></div>
           </div>
           <div class="config-card-body">
             <div class="theme-options">
@@ -480,20 +480,20 @@ $avatar = trim((string) ($usuario['avatar'] ?? ''));
               <div class="field-group">
                 <label>Idioma</label>
                 <div class="select-with-icon">
-                  <span class="flag">ðŸ‡§ðŸ‡·</span>
+                  <span class="flag">????</span>
                   <select class="input-field" id="idioma">
-                    <option value="pt-BR" selected>PortuguÃªs (Brasil)</option>
+                    <option value="pt-BR" selected>Português (Brasil)</option>
                     <option value="en">English</option>
-                    <option value="es">EspaÃ±ol</option>
+                    <option value="es">Español</option>
                   </select>
                 </div>
               </div>
               <div class="field-group">
                 <label>Moeda</label>
                 <select class="input-field">
-                  <option value="BRL" selected>BRL â€” Real brasileiro</option>
-                  <option value="USD">USD â€” DÃ³lar americano</option>
-                  <option value="EUR">EUR â€” Euro</option>
+                  <option value="BRL" selected>BRL — Real brasileiro</option>
+                  <option value="USD">USD — Dólar americano</option>
+                  <option value="EUR">EUR — Euro</option>
                 </select>
               </div>
             </div>
@@ -501,7 +501,7 @@ $avatar = trim((string) ($usuario['avatar'] ?? ''));
         </div>
       </section>
 
-      <!-- â”€â”€ PRIVACIDADE â”€â”€ -->
+      <!-- -- PRIVACIDADE -- -->
       <section class="config-section" id="sec-privacidade">
         <div class="config-card">
           <div class="config-card-header">
@@ -509,11 +509,11 @@ $avatar = trim((string) ($usuario['avatar'] ?? ''));
           </div>
           <div class="config-card-body">
             <div class="toggle-row">
-              <div class="toggle-info"><span>Perfil pÃºblico</span><small>Outros usuÃ¡rios podem ver seu perfil</small></div>
+              <div class="toggle-info"><span>Perfil público</span><small>Outros usuários podem ver seu perfil</small></div>
               <label class="toggle-switch"><input type="checkbox" checked /><span class="toggle-slider"></span></label>
             </div>
             <div class="toggle-row">
-              <div class="toggle-info"><span>Mostrar lista de favoritos</span><small>Seus produtos favoritos ficam visÃ­veis</small></div>
+              <div class="toggle-info"><span>Mostrar lista de favoritos</span><small>Seus produtos favoritos ficam visíveis</small></div>
               <label class="toggle-switch"><input type="checkbox" /><span class="toggle-slider"></span></label>
             </div>
             <div class="toggle-row">
@@ -528,28 +528,29 @@ $avatar = trim((string) ($usuario['avatar'] ?? ''));
           </div>
           <div class="config-card-body">
             <div class="toggle-row">
-              <div class="toggle-info"><span>Cookies de anÃ¡lise</span><small>Ajuda a melhorar a plataforma</small></div>
+              <div class="toggle-info"><span>Cookies de análise</span><small>Ajuda a melhorar a plataforma</small></div>
               <label class="toggle-switch"><input type="checkbox" checked /><span class="toggle-slider"></span></label>
             </div>
             <div class="toggle-row">
-              <div class="toggle-info"><span>PersonalizaÃ§Ã£o de anÃºncios</span><small>RecomendaÃ§Ãµes baseadas no seu histÃ³rico</small></div>
+              <div class="toggle-info"><span>Personalização de anúncios</span><small>Recomendações baseadas no seu histórico</small></div>
               <label class="toggle-switch"><input type="checkbox" /><span class="toggle-slider"></span></label>
             </div>
           </div>
         </div>
       </section>
-<!-- Toast de confirmaÃ§Ã£o -->
+<!-- Toast de confirmação -->
 <div class="toast" id="toast">
   <i data-lucide="check-circle"></i>
   <span id="toastMsg">Salvo com sucesso</span>
 </div>
 
 
+<script>window.ARACE_AUTH_USER = <?= json_encode($usuario, JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>;</script>
 <script src="/js/arace-state.js"></script>
 <script src="/js/brasil-api-validacao.js?v=20260630-fix"></script>
 <script src="/js/config.js?v=20260630-fix"></script>
 
-    </div><!-- /conteÃºdo -->
+    </div><!-- /conteúdo -->
   </div><!-- /config-layout -->
 </main>
 

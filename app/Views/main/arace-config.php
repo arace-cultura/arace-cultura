@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <?php
-$usuario = $usuario ?? [];
+$usuario = $usuario ?? session()->get('arace_user') ?? [];
 $nomeCompleto = trim((string) ($usuario['nome'] ?? ''));
 $nome = $nomeCompleto;
 $username = (string) ($usuario['username'] ?? '');
-$genero = (string) ($usuario['genero'] ?? '');
-$avatar = trim((string) ($usuario['avatar'] ?? ''));
+$sexo = (string) ($usuario['sexo'] ?? $usuario['genero'] ?? '');
+$avatar = trim((string) ($usuario['fotoUrl'] ?? $usuario['avatar'] ?? ''));
 ?>
 <html lang="pt-BR">
 <head>
@@ -108,7 +108,7 @@ $avatar = trim((string) ($usuario['avatar'] ?? ''));
                 <label for="avatarInput" class="btn-primary" style="cursor:pointer">
                   <i data-lucide="upload"></i> Alterar foto
                 </label>
-                <input type="file" id="avatarInput" name="avatar" accept="image/*" style="display:none" onchange="previewAvatar(this)" />
+                <input type="file" id="avatarInput" name="fotoUrl" accept="image/*" style="display:none" onchange="previewAvatar(this)" />
               </div>
             </div>
           </div>
@@ -140,12 +140,12 @@ $avatar = trim((string) ($usuario['avatar'] ?? ''));
                 <input class="input-field" type="date" id="nascimento" name="nascimento" value="<?= esc($usuario['nascimento'] ?? '', 'attr') ?>" />
               </div>
               <div class="field-group">
-                <label>Gênero</label>
-                <select class="input-field" id="genero" name="genero">
+                <label>Sexo</label>
+                <select class="input-field" id="sexo" name="sexo">
                   <option value="">Prefiro não informar</option>
-                  <option value="f" <?= $genero === 'f' ? 'selected' : '' ?>>Feminino</option>
-                  <option value="m" <?= $genero === 'm' ? 'selected' : '' ?>>Masculino</option>
-                  <option value="nb" <?= $genero === 'nb' ? 'selected' : '' ?>>Não-binário</option>
+                  <option value="f" <?= $sexo === 'f' ? 'selected' : '' ?>>Feminino</option>
+                  <option value="m" <?= $sexo === 'm' ? 'selected' : '' ?>>Masculino</option>
+                  <option value="nb" <?= $sexo === 'nb' ? 'selected' : '' ?>>Não-binário</option>
                 </select>
               </div>
             </div>
@@ -162,7 +162,7 @@ $avatar = trim((string) ($usuario['avatar'] ?? ''));
           <div class="config-card-body">
             <div class="field-group">
               <label>E-mail</label>
-              <input class="input-field" type="email" id="email" name="email" value="<?= esc($usuario['email'] ?? '', 'attr') ?>" />
+              <input class="input-field" type="email" id="email" value="<?= esc($usuario['email'] ?? '', 'attr') ?>" readonly />
             </div>
             <div class="field-group">
               <label>Telefone</label>
@@ -512,6 +512,7 @@ $avatar = trim((string) ($usuario['avatar'] ?? ''));
   <span id="toastMsg">Salvo com sucesso</span>
 </div>
 
+<script>window.ARACE_AUTH_USER = <?= json_encode($usuario, JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>;</script>
 <script src="/js/arace-state.js"></script>
 <script src="/js/brasil-api-validacao.js?v=20260630-fix"></script>
 <script src="/js/config.js?v=20260630-fix"></script>

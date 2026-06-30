@@ -86,12 +86,15 @@ function renderDadosLoja() {
 
   if (title) title.textContent = loja.lojaNome;
   if (subtitle) {
-    subtitle.innerHTML = `<i data-lucide="map-pin"></i> ${loja.lojaCidade}, ${loja.lojaEstado} · Artesanato tradicional`;
+    const local = [loja.lojaCidade, loja.lojaEstado].filter(Boolean).join(', ') || 'Local nao informado';
+    const categoria = loja.lojaCategoria || loja.categoria || 'Artesanato tradicional';
+    subtitle.innerHTML = `<i data-lucide="map-pin"></i> ${local} · ${categoria}`;
   }
   if (history) history.textContent = loja.lojaBio;
-  if (avatar) window.AraceState.renderAvatar(avatar, loja.lojaAvatar, 'store');
+  if (avatar) window.AraceState.renderAvatar(avatar, loja.fotoUrl || loja.lojaAvatar, 'store');
   if (banner) {
-    banner.src = loja.lojaBanner ? araceUrl(loja.lojaBanner) : araceUrl('images/bahia-vitoria.jpg');
+    const bannerUrl = loja.bannerUrl || loja.lojaBanner;
+    banner.src = bannerUrl ? araceUrl(bannerUrl) : araceUrl('images/bahia-vitoria.jpg');
     banner.alt = `Capa da loja ${loja.lojaNome}`;
   }
 }

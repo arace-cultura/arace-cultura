@@ -5,14 +5,22 @@ function textoOuPendente(valor) {
 async function carregarPerfil() {
   const user = window.ARACE_AUTH_USER || {};
   const favoritos = Number(user.favoritos || 0);
+  const sexo = user.sexo || user.genero || '';
+  const sexoLabel = {
+    f: 'Feminino',
+    m: 'Masculino',
+    nb: 'Nao-binario',
+  }[sexo] || '';
+
   return {
     nome: user.nome || 'Usuario',
+    username: user.username || '',
+    sexo: sexoLabel,
     email: user.email || '',
     telefone: user.telefone || '',
-    localizacao: [user.cidade, user.estado].filter(Boolean).join(' - '),
-    membroDesde: user.membroDesde || '',
-    cpf: user.cpf || '',
-    avatar: user.avatar || '',
+    nascimento: user.nascimento || '',
+    bio: user.bio || '',
+    avatar: user.fotoUrl || user.avatar || '',
     pedidos: 12,
     carrinho: 2,
     favoritos,
@@ -35,11 +43,12 @@ function renderPerfil(dados) {
 
   const campos = document.querySelectorAll('.field-value');
   if (campos[0]) campos[0].innerHTML = textoOuPendente(dados.nome);
-  if (campos[1]) campos[1].innerHTML = textoOuPendente(dados.email);
-  if (campos[2]) campos[2].innerHTML = textoOuPendente(dados.telefone);
-  if (campos[3]) campos[3].innerHTML = textoOuPendente(dados.localizacao);
-  if (campos[4]) campos[4].innerHTML = textoOuPendente(dados.membroDesde);
-  if (campos[5]) campos[5].innerHTML = textoOuPendente(dados.cpf);
+  if (campos[1]) campos[1].innerHTML = textoOuPendente(dados.username);
+  if (campos[2]) campos[2].innerHTML = textoOuPendente(dados.sexo);
+  if (campos[3]) campos[3].innerHTML = textoOuPendente(dados.email);
+  if (campos[4]) campos[4].innerHTML = textoOuPendente(dados.telefone);
+  if (campos[5]) campos[5].innerHTML = textoOuPendente(dados.nascimento);
+  if (campos[6]) campos[6].innerHTML = textoOuPendente(dados.bio);
 
   lucide.createIcons();
 }

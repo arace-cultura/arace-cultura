@@ -62,6 +62,22 @@ final class AraceFirestore
         }
     }
 
+    public function producerFromSession(array $sessionUser): array
+    {
+        try {
+            $collection = $this->collection(ProducerCollection::class);
+            $entity     = $this->producerEntityFromSession($collection, $sessionUser);
+
+            return $entity === null ? [] : $this->normalizeProducer($this->entityPayload($entity));
+        } catch (\Throwable $exception) {
+            log_message('error', 'Falha ao buscar produtor atual no Firestore: {message}', [
+                'message' => $exception->getMessage(),
+            ]);
+
+            return [];
+        }
+    }
+
     public function createUser(array $payload): array
     {
         $uid = (string) ($payload['uid'] ?? $payload['id'] ?? $payload['firebaseUid'] ?? '');
@@ -191,15 +207,14 @@ final class AraceFirestore
         $allowed = [
             'nome',
             'username',
-            'email',
             'telefone',
             'cidade',
             'estado',
             'cpf',
-            'avatar',
+            'fotoUrl',
             'bio',
             'nascimento',
-            'genero',
+            'sexo',
         ];
 
         $updates = [];
@@ -209,9 +224,6 @@ final class AraceFirestore
             }
         }
 
-        if (isset($updates['email'])) {
-            $updates['email'] = mb_strtolower((string) $updates['email']);
-        }
         if (isset($updates['telefone'])) {
             $updates['telefone'] = $this->formatPhone((string) $updates['telefone']);
         }
@@ -222,6 +234,77 @@ final class AraceFirestore
         $collection->update($entity, $updates);
 
         return $this->userFromSession($this->safeUser([...$sessionUser, ...$updates]));
+    }
+
+    public function updateProducerFromSession(array $sessionUser, array $payload): array
+    {
+        $collection = $this->collection(ProducerCollection::class);
+        $entity     = $this->producerEntityFromSession($collection, $sessionUser);
+
+        if ($entity === null) {
+            throw new RuntimeException('Produtor autenticado nao foi encontrado no Firestore.');
+        }
+
+        $allowed = [
+            'nomeLoja',
+            'lojaBio',
+            'cnpj',
+            'categoria',
+            'email',
+            'telefone',
+            'fotoUrl',
+            'bannerUrl',
+            'cepOrigem',
+            'cidade',
+            'estado',
+            'endereco',
+            'retiradaLocal',
+            'envioCorreios',
+            'entregaLocal',
+            'banco',
+            'tipoConta',
+            'agencia',
+            'conta',
+            'pix',
+            'horarioSemanaInicio',
+            'horarioSemanaFim',
+            'horarioSabadoInicio',
+            'horarioSabadoFim',
+        ];
+
+        $updates = [];
+        foreach ($allowed as $field) {
+            if (array_key_exists($field, $payload)) {
+                $updates[$field] = is_string($payload[$field]) ? trim($payload[$field]) : $payload[$field];
+            }
+        }
+
+        if (isset($updates['nomeLoja'])) {
+            $updates['nome'] = $updates['nomeLoja'];
+            $updates['nome_loja'] = $updates['nomeLoja'];
+            $updates['iniciais'] = $this->initials((string) $updates['nomeLoja']);
+        }
+        if (isset($updates['lojaBio'])) {
+            $updates['bio'] = $updates['lojaBio'];
+        }
+        if (isset($updates['email'])) {
+            $updates['email'] = mb_strtolower((string) $updates['email']);
+            $updates['email_comercial'] = $updates['email'];
+        }
+        if (isset($updates['telefone'])) {
+            $updates['telefone'] = $this->formatPhone((string) $updates['telefone']);
+            $updates['telefone_comercial'] = $updates['telefone'];
+        }
+        if (isset($updates['categoria'])) {
+            $updates['categoria_principal'] = $updates['categoria'];
+        }
+        $updates['retiradaLocal'] = array_key_exists('retiradaLocal', $payload);
+        $updates['envioCorreios'] = array_key_exists('envioCorreios', $payload);
+        $updates['entregaLocal'] = array_key_exists('entregaLocal', $payload);
+
+        $collection->update($entity, $updates);
+
+        return $this->normalizeProducer([...$this->entityPayload($entity), ...$updates]);
     }
 
     private function safeUser(array $user): array
@@ -236,10 +319,12 @@ final class AraceFirestore
             'cidade'   => $user['cidade'] ?? null,
             'estado'   => $user['estado'] ?? null,
             'cpf'      => isset($user['cpf']) ? $this->formatCpf((string) $user['cpf']) : null,
-            'avatar'   => $user['avatar'] ?? null,
+            'fotoUrl'  => $user['fotoUrl'] ?? $user['avatar'] ?? null,
+            'avatar'   => $user['fotoUrl'] ?? $user['avatar'] ?? null,
             'bio'      => $user['bio'] ?? null,
             'nascimento' => $user['nascimento'] ?? $user['dataNascimento'] ?? null,
-            'genero'   => $user['genero'] ?? null,
+            'sexo'     => $user['sexo'] ?? $user['genero'] ?? null,
+            'genero'   => $user['sexo'] ?? $user['genero'] ?? null,
             'createdAt' => $user['createdAt'] ?? $user['criadoEm'] ?? null,
         ], static fn ($value): bool => $value !== null && $value !== '');
     }
@@ -260,6 +345,40 @@ final class AraceFirestore
 
             foreach ($collection->list($query) as $entity) {
                 return $entity;
+            }
+        }
+
+        return null;
+    }
+
+    private function producerEntityFromSession(object $collection, array $sessionUser): ?object
+    {
+        $ids = array_filter([
+            trim((string) ($sessionUser['producerId'] ?? '')),
+            trim((string) ($sessionUser['produtorId'] ?? '')),
+            trim((string) ($sessionUser['id'] ?? '')),
+            trim((string) ($sessionUser['uid'] ?? '')),
+        ]);
+
+        foreach ($ids as $id) {
+            try {
+                $entity = $collection->get($id);
+                if ($entity !== null) {
+                    return $entity;
+                }
+            } catch (\Throwable) {
+            }
+        }
+
+        if (! empty($sessionUser['email'])) {
+            $email = mb_strtolower(trim((string) $sessionUser['email']));
+            $fields = ['email', 'email_comercial'];
+
+            foreach ($fields as $field) {
+                $query = $collection->where($field, '=', $email)->limit(1);
+                foreach ($collection->list($query) as $entity) {
+                    return $entity;
+                }
             }
         }
 
@@ -448,6 +567,14 @@ final class AraceFirestore
     {
         $producer['id']       = (string) ($producer['id'] ?? $producer['produtor_id'] ?? '');
         $producer['nome']     = $producer['nome'] ?? $producer['nomeLoja'] ?? $producer['nome_loja'] ?? 'Produtor Arace';
+        $producer['nomeLoja'] = $producer['nomeLoja'] ?? $producer['nome_loja'] ?? $producer['nome'];
+        $producer['lojaBio']  = $producer['lojaBio'] ?? $producer['bio'] ?? '';
+        $producer['email']    = $producer['email'] ?? $producer['email_comercial'] ?? '';
+        $producer['telefone'] = isset($producer['telefone']) ? $this->formatPhone((string) $producer['telefone']) : ($producer['telefone_comercial'] ?? '');
+        $producer['categoria'] = $producer['categoria'] ?? $producer['categoria_principal'] ?? '';
+        $producer['fotoUrl'] = $producer['fotoUrl'] ?? $producer['lojaAvatar'] ?? $producer['avatar'] ?? '';
+        $producer['lojaAvatar'] = $producer['fotoUrl'];
+        $producer['bannerUrl'] = $producer['bannerUrl'] ?? $producer['banner'] ?? '';
         $producer['iniciais'] = $producer['iniciais'] ?? $this->initials($producer['nome']);
         $producer['produtos'] = (int) ($producer['produtos'] ?? $producer['total_produtos'] ?? 0);
 

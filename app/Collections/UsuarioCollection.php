@@ -10,6 +10,8 @@ final class UsuarioCollection extends Collection
     public const NAME   = 'Usuarios';
     public const ENTITY = User::class;
 
+    protected bool $skipValidation = true;
+
     // Mantendo a proteção dos campos necessária
     protected array $allowedFields = [
         'nome',
@@ -19,9 +21,10 @@ final class UsuarioCollection extends Collection
         'cidade',
         'estado',
         'cpf',
-        'avatar',
+        'fotoUrl',
         'bio',
         'nascimento',
+        'sexo',
         'genero',
         'firebaseUid',
         'emailVerified',

@@ -96,9 +96,10 @@ $routes->group('produtor', ['filter' => 'auth'], static function (RouteCollectio
     $routes->view('painel', 'user-producter/arace-producer-painel-produtos', ['as' => 'produtor_painel']);
     $routes->view('pedidos', 'user-producter/arace-producer-pedidos', ['as' => 'produtor_pedidos']);
     $routes->get('perfil', 'AccountController::producerProfile', ['as' => 'produtor_perfil']);
-    $routes->view('perfil-loja', 'user-producter/arace-producer-profile-loja', ['as' => 'produtor_perfil_loja']);
+    $routes->get('perfil-loja', 'AccountController::producerStoreProfile', ['as' => 'produtor_perfil_loja']);
     $routes->get('configuracao', 'AccountController::producerConfig', ['as' => 'produtor_config']);
     $routes->get('configuracao-loja', 'AccountController::producerStoreConfig', ['as' => 'produtor_config_loja']);
+    $routes->post('configuracao-loja', 'AccountController::updateProducerStore', ['as' => 'produtor_config_loja_update']);
 });
 
 $routes->get('produtor/produtos', $routeRedirect('produtor_painel'));

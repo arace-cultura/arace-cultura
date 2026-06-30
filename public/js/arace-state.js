@@ -12,11 +12,13 @@
     username: '',
     bio: '',
     nascimento: '',
+    sexo: '',
     genero: '',
     email: '',
     telefone: '',
     cidade: '',
     estado: '',
+    fotoUrl: '',
     avatar: '',
     membroDesde: '',
     cpf: '',
@@ -31,6 +33,8 @@
     lojaEstado: 'ES',
     lojaTelefone: '(27) 99999-1234',
     lojaEmail: 'contato@paneleiras.com',
+    fotoUrl: '',
+    bannerUrl: '/images/bahia-vitoria.jpg',
     lojaAvatar: '',
     lojaBanner: '/images/bahia-vitoria.jpg',
   };
@@ -79,7 +83,14 @@
   }
 
   function getUser() {
-    if (window.ARACE_AUTH_USER) return { ...DEFAULT_USER, ...window.ARACE_AUTH_USER };
+    if (window.ARACE_AUTH_USER) {
+      const user = { ...DEFAULT_USER, ...window.ARACE_AUTH_USER };
+      user.fotoUrl = user.fotoUrl || user.avatar || '';
+      user.avatar = user.fotoUrl;
+      user.sexo = user.sexo || user.genero || '';
+      user.genero = user.sexo;
+      return user;
+    }
 
     return read(KEYS.user, DEFAULT_USER);
   }
@@ -89,7 +100,16 @@
   }
 
   function getProducer() {
-    return read(KEYS.producer, DEFAULT_PRODUCER);
+    const producer = window.ARACE_PRODUCER
+      ? { ...DEFAULT_PRODUCER, ...window.ARACE_PRODUCER }
+      : read(KEYS.producer, DEFAULT_PRODUCER);
+
+    producer.fotoUrl = producer.fotoUrl || producer.lojaAvatar || producer.avatar || '';
+    producer.bannerUrl = producer.bannerUrl || producer.lojaBanner || producer.banner || '';
+    producer.lojaAvatar = producer.fotoUrl;
+    producer.lojaBanner = producer.bannerUrl;
+
+    return producer;
   }
 
   function saveProducer(partial) {
@@ -206,8 +226,10 @@
       if (isFavoriteButton && count) count.textContent = favoritesCount === 1 ? '1 item' : `${favoritesCount} itens`;
     });
 
+    const avatarSrc = user.fotoUrl || user.avatar;
     document.querySelectorAll('.avatar-btn').forEach(avatar => {
-      renderAvatar(avatar, user.avatar);
+      if (!avatarSrc && avatar.querySelector('img')) return;
+      renderAvatar(avatar, avatarSrc);
     });
   }
 

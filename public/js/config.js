@@ -8,15 +8,16 @@ function renderPerfilConfig(dados) {
   preencherCampo('username', dados.username);
   preencherCampo('bio', dados.bio);
   preencherCampo('nascimento', dados.nascimento);
-  preencherCampo('genero', dados.genero);
+  preencherCampo('sexo', dados.sexo || dados.genero);
   preencherCampo('email', dados.email);
   preencherCampo('tel', dados.telefone);
   preencherCampo('cidade', dados.cidade);
   preencherCampo('estado', dados.estado);
 
   const preview = document.getElementById('avatarPreview');
-  if (preview && dados.avatar) {
-    renderAvatarImage(preview, dados.avatar);
+  const fotoUrl = dados.fotoUrl || dados.avatar;
+  if (preview && fotoUrl) {
+    renderAvatarImage(preview, fotoUrl);
   }
 }
 
@@ -35,6 +36,7 @@ async function carregarConfiguracoes() {
 }
 
 function renderLojaConfig() {
+  if (document.querySelector('form[action*="configuracao-loja"]')) return;
   if (!window.AraceState) return;
   const loja = window.AraceState.getProducer();
   preencherCampo('lojaNome', loja.lojaNome);
@@ -56,8 +58,7 @@ function coletarPerfilConfig() {
     username: document.getElementById('username')?.value.trim() || '',
     bio: document.getElementById('bio')?.value.trim() || '',
     nascimento: document.getElementById('nascimento')?.value || '',
-    genero: document.getElementById('genero')?.value || '',
-    email: document.getElementById('email')?.value.trim() || '',
+    sexo: document.getElementById('sexo')?.value || '',
     telefone: document.getElementById('tel')?.value.trim() || '',
     cidade: document.getElementById('cidade')?.value.trim() || '',
     estado: document.getElementById('estado')?.value || '',
