@@ -1,4 +1,5 @@
 (function () {
+  // Utilitarios de mascara e validacao usados nos formularios antes do envio ao backend.
   const BRASIL_API_BASE = 'https://brasilapi.com.br/api';
 
   function somenteDigitos(valor) {

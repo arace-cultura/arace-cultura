@@ -6,12 +6,12 @@ $produtor = session('produtor') ?? $produtor ?? [];
 $avatar = trim((string) ($usuario['fotoUrl'] ?? $usuario['avatar'] ?? ''));
 $lojaAvatar = trim((string) ($produtor['fotoUrl'] ?? $produtor['lojaAvatar'] ?? $produtor['avatar'] ?? ''));
 $bannerUrl = trim((string) ($produtor['bannerUrl'] ?? $produtor['banner'] ?? ''));
-$lojaNome = (string) ($produtor['nomeLoja'] ?? $produtor['nome_loja'] ?? $produtor['nome'] ?? 'Paneleiras Capixabas');
-$lojaBio = (string) ($produtor['lojaBio'] ?? $produtor['bio'] ?? 'Preservamos uma tradição centenária de produção artesanal de panelas de barro, símbolo da cultura capixaba. Cada peça carrega a identidade, o suor e o amor passado de geração em geração.');
-$lojaCategoria = (string) ($produtor['categoria'] ?? $produtor['categoria_principal'] ?? 'ceramica');
-$lojaEmail = (string) ($produtor['email'] ?? $produtor['email_comercial'] ?? 'contato@paneleiras.com');
-$lojaTelefone = (string) ($produtor['telefone'] ?? $produtor['telefone_comercial'] ?? '(27) 99999-1234');
-$lojaCidade = (string) ($produtor['cidade'] ?? 'Vitória');
+$lojaNome = (string) ($produtor['nomeLoja'] ?? $produtor['nome_loja'] ?? $produtor['nome'] ?? '');
+$lojaBio = (string) ($produtor['lojaBio'] ?? $produtor['bio'] ?? '');
+$lojaCategoria = (string) ($produtor['categoria'] ?? $produtor['categoria_principal'] ?? '');
+$lojaEmail = (string) ($produtor['email'] ?? $produtor['email_comercial'] ?? '');
+$lojaTelefone = (string) ($produtor['telefone'] ?? $produtor['telefone_comercial'] ?? '');
+$lojaCidade = (string) ($produtor['cidade'] ?? '');
 $lojaEstado = (string) ($produtor['estado'] ?? 'ES');
 ?>
 <head>
@@ -39,11 +39,11 @@ $lojaEstado = (string) ($produtor['estado'] ?? 'ES');
   <div class="header-right">
     <button class="cart-btn" type="button" onclick="window.location.href='<?= url_to('main_arace_carrinho') ?>'">
       <i data-lucide="shopping-cart"></i>
-      <span class="cart-count">2 itens</span>
+      <span class="cart-count">0 itens</span>
     </button>
     <button class="cart-btn" type="button" onclick="window.location.href='<?= url_to('user_arace_favoritos') ?>'">
       <i data-lucide="heart"></i>
-      <span class="cart-count">5 itens</span>
+      <span class="cart-count">0 itens</span>
     </button>
     <button class="avatar-btn" type="button" onclick="window.location.href='<?= url_to('user_arace_perfil') ?>'" aria-label="Abrir perfil">
       <?php if ($avatar !== ''): ?>
@@ -55,12 +55,6 @@ $lojaEstado = (string) ($produtor['estado'] ?? 'ES');
   </div>
 </header>
 
-<!--Icone de chat-->
-<div class="chat-bubble">
-  <a href="<?= url_to('user_chat') ?>">
-    <i data-lucide="message-circle-more"></i>
-  </a>
-</div>
 
 <!-- SIDEBAR -->
 <aside>
@@ -73,9 +67,6 @@ $lojaEstado = (string) ($produtor['estado'] ?? 'ES');
     <a class="nav-item active" href="<?= url_to('main_arace_carrinho') ?>">
       <i data-lucide="shopping-cart"></i> Carrinho
     </a>
-    <a class="nav-item" href="<?= url_to('user_arace_notificacao') ?>">
-      <i data-lucide="bell"></i> Notificações
-    </a>
     <a class="nav-item" href="<?= url_to('main_arace_config') ?>">
       <i data-lucide="settings"></i> Configurações
     </a>
@@ -87,9 +78,6 @@ $lojaEstado = (string) ($produtor['estado'] ?? 'ES');
     </a>
     <div class="nav-divider"></div>
     <div class="nav-section">Reportar</div>
-    <a class="nav-item" href="<?= url_to('main_arace_config') ?>#pagamento">
-      <i data-lucide="hand-coins"></i> Detalhes de pagamento
-    </a>
   </aside>
 
   <main>
@@ -113,7 +101,7 @@ $lojaEstado = (string) ($produtor['estado'] ?? 'ES');
           <i data-lucide="truck"></i> Frete & Retirada
         </button>
         <button class="config-nav-item" onclick="trocarAba(this,'financeiro')">
-          <i data-lucide="landmark"></i> Conta Bancária
+          <i data-lucide="key-round"></i> Pix
         </button>
         <div class="config-nav-divider"></div>
         <button class="config-nav-item" onclick="trocarAba(this,'horarios')">
@@ -260,7 +248,7 @@ $lojaEstado = (string) ($produtor['estado'] ?? 'ES');
               <div class="field-row">
                 <div class="field-group">
                   <label>CEP de Origem</label>
-                  <input class="input-field" type="text" name="cepOrigem" value="<?= esc($produtor['cepOrigem'] ?? '29023-010', 'attr') ?>" />
+                  <input class="input-field" type="text" name="cepOrigem" value="<?= esc($produtor['cepOrigem'] ?? '', 'attr') ?>" />
                 </div>
                 <div class="field-group">
                   <label>Distrito / Município</label>
@@ -271,7 +259,7 @@ $lojaEstado = (string) ($produtor['estado'] ?? 'ES');
               </div>
               <div class="field-group">
                 <label>Endereço Completo da Oficina</label>
-                <input class="input-field" type="text" name="endereco" value="<?= esc($produtor['endereco'] ?? 'Rua das Paneleiras, Nº 50', 'attr') ?>" />
+                <input class="input-field" type="text" name="endereco" value="<?= esc($produtor['endereco'] ?? '', 'attr') ?>" />
               </div>
             </div>
             <div class="config-card-footer">
@@ -279,48 +267,16 @@ $lojaEstado = (string) ($produtor['estado'] ?? 'ES');
             </div>
           </div>
         </section>
-
         <section class="config-section" id="sec-financeiro">
           <div class="config-card">
             <div class="config-card-header">
-              <div><h2>Conta para Repasse</h2><p>Onde você receberá o saldo das vendas realizadas na Aracê</p></div>
+              <div><h2>Pix</h2><p>Chave que recebera os repasses das vendas realizadas na Arace</p></div>
             </div>
             <div class="config-card-body">
-              <div class="field-row">
-                <div class="field-group">
-                  <label>Banco</label>
-                  <select class="input-field" name="banco">
-                    <option value="banestes" <?= ($produtor['banco'] ?? '') === 'banestes' ? 'selected' : '' ?>>Banestes — 021</option>
-                    <option value="brasil" <?= ($produtor['banco'] ?? '') === 'brasil' ? 'selected' : '' ?>>Banco do Brasil — 001</option>
-                    <option value="caixa" <?= ($produtor['banco'] ?? '') === 'caixa' ? 'selected' : '' ?>>Caixa Econômica — 104</option>
-                    <option value="nubank" <?= ($produtor['banco'] ?? '') === 'nubank' ? 'selected' : '' ?>>Nu Pagamentos — 260</option>
-                  </select>
-                </div>
-                <div class="field-group">
-                  <label>Tipo de Conta</label>
-                  <select class="input-field" name="tipoConta">
-                    <option value="cc" <?= ($produtor['tipoConta'] ?? '') === 'cc' ? 'selected' : '' ?>>Conta Corrente</option>
-                    <option value="cp" <?= ($produtor['tipoConta'] ?? '') === 'cp' ? 'selected' : '' ?>>Conta Poupança</option>
-                  </select>
-                </div>
-              </div>
-              <div class="field-row">
-                <div class="field-group" style="flex:2">
-                  <label>Agência</label>
-                  <input class="input-field" type="text" name="agencia" value="<?= esc($produtor['agencia'] ?? '', 'attr') ?>" placeholder="0000" />
-                </div>
-                <div class="field-group" style="flex:3">
-                  <label>Número da Conta</label>
-                  <input class="input-field" type="text" name="conta" value="<?= esc($produtor['conta'] ?? '', 'attr') ?>" placeholder="000000-0" />
-                </div>
-              </div>
               <div class="field-group">
-                <label>Chave Pix de Backup</label>
+                <label>Chave Pix</label>
                 <input class="input-field" type="text" name="pix" value="<?= esc($produtor['pix'] ?? '', 'attr') ?>" placeholder="CNPJ, CPF ou e-mail" />
               </div>
-            </div>
-            <div class="config-card-footer">
-              <button class="btn-primary" type="submit"><i data-lucide="check"></i> Salvar</button>
             </div>
           </div>
         </section>
@@ -328,7 +284,7 @@ $lojaEstado = (string) ($produtor['estado'] ?? 'ES');
         <section class="config-section" id="sec-horarios">
           <div class="config-card">
             <div class="config-card-header">
-              <div><h2>Horário de Funcionamento</h2><p>Períodos em que a loja responde ao chat ou aceita retiradas</p></div>
+              <div><h2>Horário de Funcionamento</h2><p>Períodos em que a loja aceita retiradas</p></div>
             </div>
             <div class="config-card-body">
               <div class="field-row" style="align-items: center; margin-bottom: 12px;">

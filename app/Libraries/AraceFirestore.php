@@ -2,26 +2,41 @@
 
 namespace App\Libraries;
 
-use App\Collections\UsuarioCollection;
-use App\Collections\ProducerCollection;
-use App\Collections\ProductCollection;
-use RuntimeException;
+use App\Collections\UsuarioCollection;  // Mapeamento da coleção de usuários no Firestore
+use App\Collections\ProducerCollection; // Mapeamento da coleção de produtores/artesãos no Firestore
+use App\Collections\ProductCollection;  // Mapeamento da coleção de produtos no Firestore
+use RuntimeException;                  // Exceção para falhas estruturais ou de drivers ausentes
 
+/**
+ * AraceFirestore centraliza as operações de leitura, escrita e normalização de dados 
+ * utilizando o banco NoSQL Firebase Firestore através da biblioteca Tatter.
+ */
 final class AraceFirestore
 {
+    /**
+     * Lista de produtores reserva (Fallback) usada caso a API do Firestore falhe 
+     * ou o banco de dados retorne vazio, garantindo resiliência à interface.
+     */
     private const FALLBACK_PRODUCERS = [
         ['id' => 'espirito-das-pedras', 'nome' => 'Espirito das Pedras', 'iniciais' => 'EP', 'produtos' => 12],
         ['id' => 'arte-arace', 'nome' => 'Arte Arace', 'iniciais' => 'AA', 'produtos' => 8],
         ['id' => 'nativo-pottery', 'nome' => 'Nativo Pottery', 'iniciais' => 'NP', 'produtos' => 21],
     ];
 
+    /**
+     * Puxa a lista completa de produtos e aplica as normalizações de chaves.
+     * @param bool $featured Se verdadeiro, filtra apenas os produtos marcados como destaque.
+     */
     public function products(bool $featured = false): array
     {
         try {
+            // Busca todos os registros brutos mapeados pela classe de coleção
             $products = $this->collectionItems(ProductCollection::class);
+            // Uniformiza os campos de cada produto para evitar quebras por variação de chaves
             $products = array_map(fn (array $product): array => $this->normalizeProduct($product), $products);
 
             if ($featured) {
+                // Filtra os itens mantendo apenas os sinalizados em destaque
                 $products = array_values(array_filter($products, static fn (array $product): bool => $product['destaque'] ?? true));
             }
 
@@ -31,15 +46,19 @@ final class AraceFirestore
                 'message' => $exception->getMessage(),
             ]);
 
-            return [];
+            return []; // Abordagem tolerante a falhas: retorna uma lista vazia se o banco cair
         }
     }
 
+    /**
+     * Busca um único produto com base no seu ID identificador exclusivo.
+     */
     public function product(string $id): ?array
     {
         try {
             $product = $this->collection(ProductCollection::class)->get($id);
 
+            // Transforma a entidade bruta em um payload limpo e depois normaliza as chaves
             return $product === null ? null : $this->normalizeProduct($this->entityPayload($product));
         } catch (\Throwable $exception) {
             log_message('error', 'Falha ao buscar produto no Firestore: {message}', [
@@ -50,18 +69,25 @@ final class AraceFirestore
         }
     }
 
+    /**
+     * Recupera todos os produtores/lojas parceiras ordenados pelo nome.
+     */
     public function producers(): array
     {
         try {
             $producers = $this->collectionItems(ProducerCollection::class, 'nome');
             $producers = array_map(fn (array $producer): array => $this->normalizeProducer($producer), $producers);
 
+            // Operador Elvis: se o array vier vazio da API, injeta instantaneamente a constante de Fallback
             return $producers ?: self::FALLBACK_PRODUCERS;
         } catch (\Throwable) {
             return self::FALLBACK_PRODUCERS;
         }
     }
 
+    /**
+     * Resgata o perfil do produtor atrelado ao usuário que está atualmente na sessão ativa.
+     */
     public function producerFromSession(array $sessionUser): array
     {
         try {
@@ -78,26 +104,37 @@ final class AraceFirestore
         }
     }
 
+    /**
+     * Cria e persiste o documento inicial de dados complementares de um usuário no Firestore.
+     */
     public function createUser(array $payload): array
     {
+        // Resguarda a captura do UID gerado pelo Firebase Auth sob qualquer variação de nome de chave
         $uid = (string) ($payload['uid'] ?? $payload['id'] ?? $payload['firebaseUid'] ?? '');
 
+        // Limpeza, sanitização e formatação prévia dos inputs recebidos do formulário
         $payload['email'] = mb_strtolower(trim((string) ($payload['email'] ?? '')));
         $payload['telefone'] = $this->formatPhone((string) ($payload['telefone'] ?? ''));
         $payload['nome'] = trim((string) ($payload['nome'] ?? 'Usuario'));
         $payload['firebaseUid'] = $uid !== '' ? $uid : null;
 
+        // PROTEÇÃO DE DADOS: Remove credenciais sensíveis e chaves voláteis antes de salvar no banco NoSQL
         unset($payload['senha'], $payload['confirmarSenha'], $payload['password'], $payload['id']);
 
         if ($uid !== '') {
             $payload['uid'] = $uid;
         }
 
+        // Insere o documento na coleção e extrai o array resultante do modelo criado
         $user = $this->entityPayload($this->collection(UsuarioCollection::class)->add($payload));
 
         return $this->safeUser($user);
     }
 
+    /**
+     * Padrão Just-In-Time (JIT): Retorna o perfil do Firestore para o usuário autenticado. 
+     * Se o documento não existir, ele cria o perfil no banco de forma transparente e em tempo de execução.
+     */
     public function userForAuthenticatedUser(array $authUser): array
     {
         $uid   = (string) ($authUser['uid'] ?? $authUser['id'] ?? '');
@@ -107,6 +144,7 @@ final class AraceFirestore
         try {
             $collection = $this->collection(UsuarioCollection::class);
 
+            // Estratégia de Busca 1: Tenta recuperar o registro apontando direto para o ID do documento (UID)
             if ($uid !== '') {
                 try {
                     $entity = $collection->get($uid);
@@ -120,6 +158,7 @@ final class AraceFirestore
                 }
             }
 
+            // Estratégia de Busca 2: Caso falhe por ID, realiza uma query de busca filtrando pelo e-mail cadastrado
             if ($user === null && $email !== '') {
                 $query = $collection->where('email', '=', $email)->limit(1);
 
@@ -140,6 +179,7 @@ final class AraceFirestore
             ]);
         }
 
+        // AUTO-CADASTRADO JIT: Se após as buscas o usuário ainda não tiver dados no Firestore, cria-os na hora
         if ($user === null) {
             if ($email === '') {
                 return $this->safeUser($authUser);
@@ -156,12 +196,17 @@ final class AraceFirestore
             ]);
         }
 
+        // Sincroniza e garante a coerência dos IDs de autenticação cruzados
         $user['uid'] = $uid !== '' ? $uid : ($user['uid'] ?? $user['firebaseUid'] ?? $user['id'] ?? '');
         $user['firebaseUid'] = $user['uid'];
 
+        // Retorna o cruzamento dos dados do Auth com os dados complementares do Firestore
         return $this->safeUser([...$user, ...$authUser, 'id' => $user['uid']]);
     }
 
+    /**
+     * Sincroniza as informações do usuário contidas na sessão com o estado em tempo real no banco NoSQL.
+     */
     public function userFromSession(array $sessionUser): array
     {
         $user = null;
@@ -192,9 +237,13 @@ final class AraceFirestore
             ]);
         }
 
+        // Se o banco falhar na leitura, o sistema usa os dados armazenados na própria sessão do PHP como escudo
         return $this->safeUser($user ?? $sessionUser);
     }
 
+    /**
+     * Aplica uma lista controlada de atualizações (White-listing) no perfil do usuário de forma segura.
+     */
     public function updateUserFromSession(array $sessionUser, array $payload): array
     {
         $collection = $this->collection(UsuarioCollection::class);
@@ -204,17 +253,10 @@ final class AraceFirestore
             throw new RuntimeException('Usuario autenticado nao foi encontrado no Firestore.');
         }
 
+        // Lista restrita (White-list) de campos autorizados para gravação direta pelo formulário do usuário
         $allowed = [
-            'nome',
-            'username',
-            'telefone',
-            'cidade',
-            'estado',
-            'cpf',
-            'fotoUrl',
-            'bio',
-            'nascimento',
-            'sexo',
+            'nome', 'username', 'telefone', 'cidade', 'estado', 
+            'cpf', 'fotoUrl', 'bio', 'nascimento', 'sexo'
         ];
 
         $updates = [];
@@ -224,6 +266,7 @@ final class AraceFirestore
             }
         }
 
+        // Tratamento de formatação especial em campos padronizados
         if (isset($updates['telefone'])) {
             $updates['telefone'] = $this->formatPhone((string) $updates['telefone']);
         }
@@ -231,11 +274,16 @@ final class AraceFirestore
             $updates['cpf'] = $this->formatCpf((string) $updates['cpf']);
         }
 
+        // Salva de fato a alteração no documento correspondente no Firestore
         $collection->update($entity, $updates);
 
+        // Retorna a representação do usuário completamente recarregada e sincronizada
         return $this->userFromSession($this->safeUser([...$sessionUser, ...$updates]));
     }
 
+    /**
+     * Atualiza dados de configuração e metadados de uma conta do tipo Produtor/Lojas Parceiras.
+     */
     public function updateProducerFromSession(array $sessionUser, array $payload): array
     {
         $collection = $this->collection(ProducerCollection::class);
@@ -246,30 +294,10 @@ final class AraceFirestore
         }
 
         $allowed = [
-            'nomeLoja',
-            'lojaBio',
-            'cnpj',
-            'categoria',
-            'email',
-            'telefone',
-            'fotoUrl',
-            'bannerUrl',
-            'cepOrigem',
-            'cidade',
-            'estado',
-            'endereco',
-            'retiradaLocal',
-            'envioCorreios',
-            'entregaLocal',
-            'banco',
-            'tipoConta',
-            'agencia',
-            'conta',
-            'pix',
-            'horarioSemanaInicio',
-            'horarioSemanaFim',
-            'horarioSabadoInicio',
-            'horarioSabadoFim',
+            'nomeLoja', 'lojaBio', 'cnpj', 'categoria', 'email', 'telefone', 
+            'fotoUrl', 'bannerUrl', 'cepOrigem', 'cidade', 'estado', 'endereco', 
+            'retiradaLocal', 'envioCorreios', 'entregaLocal', 'pix', 
+            'horarioSemanaInicio', 'horarioSemanaFim', 'horarioSabadoInicio', 'horarioSabadoFim'
         ];
 
         $updates = [];
@@ -279,6 +307,7 @@ final class AraceFirestore
             }
         }
 
+        // Normalização interna de aliases e compatibilidade de chaves alternativas do legado
         if (isset($updates['nomeLoja'])) {
             $updates['nome'] = $updates['nomeLoja'];
             $updates['nome_loja'] = $updates['nomeLoja'];
@@ -298,6 +327,8 @@ final class AraceFirestore
         if (isset($updates['categoria'])) {
             $updates['categoria_principal'] = $updates['categoria'];
         }
+        
+        // Atribuição direta para inputs booleanos do tipo checkbox de modalidades de entrega
         $updates['retiradaLocal'] = array_key_exists('retiradaLocal', $payload);
         $updates['envioCorreios'] = array_key_exists('envioCorreios', $payload);
         $updates['entregaLocal'] = array_key_exists('entregaLocal', $payload);
@@ -305,6 +336,286 @@ final class AraceFirestore
         $collection->update($entity, $updates);
 
         return $this->normalizeProducer([...$this->entityPayload($entity), ...$updates]);
+    }
+
+    /**
+     * Cadastra um novo produto na vitrine, associando-o obrigatoriamente à sessão do produtor logado.
+     */
+    public function createProductForProducerSession(array $sessionUser, array $payload): array
+    {
+        $producerCollection = $this->collection(ProducerCollection::class);
+        $producerEntity = $this->producerEntityFromSession($producerCollection, $sessionUser);
+
+        if ($producerEntity === null) {
+            throw new RuntimeException('Produtor autenticado nao foi encontrado no Firestore.');
+        }
+
+        $producer = $this->normalizeProducer($this->entityPayload($producerEntity));
+        $producerId = (string) ($producer['id'] ?? '');
+
+        if ($producerId === '') {
+            throw new RuntimeException('Produtor autenticado nao foi encontrado no Firestore.');
+        }
+
+        $nome = trim((string) ($payload['nome'] ?? ''));
+        if ($nome === '') {
+            throw new RuntimeException('Informe o nome do produto.');
+        }
+
+        $categoria = trim((string) ($payload['categoria'] ?? ''));
+        $preco = (float) str_replace(',', '.', (string) ($payload['preco'] ?? 0)); // Converte padrão de moeda BR (vírgula) para decimal flutuante
+        $estoque = max(0, (int) ($payload['estoque'] ?? 0)); // Impede estoque negativo acidental
+        $imagem = trim((string) ($payload['imagemUrl'] ?? $payload['imagem'] ?? ''));
+
+        // Estrutura de dados completa contendo todas as redundâncias históricas exigidas pelo frontend
+        $product = [
+            'nome'                 => $nome,
+            'nome_produto'         => $nome,
+            'descricao'            => trim((string) ($payload['descricao'] ?? '')),
+            'preco'                => $preco,
+            'preco_produto'        => $preco,
+            'categoria'            => $categoria,
+            'categorias'           => $categoria !== '' ? [$categoria] : [],
+            'estoque'              => $estoque,
+            'disponivel'           => $estoque > 0,
+            'destaque'             => false,
+            'produtorId'           => $producerId,
+            'produtor_id'          => $producerId,
+            'artesao'              => (string) ($producer['nomeLoja'] ?? $producer['nome'] ?? ''),
+            'produtor'             => (string) ($producer['nomeLoja'] ?? $producer['nome'] ?? ''),
+            'nome_produtor'        => (string) ($producer['nome'] ?? ''),
+            'nome_loja'            => (string) ($producer['nomeLoja'] ?? $producer['nome'] ?? ''),
+            'imagens'              => $imagem !== '' ? [$imagem] : [],
+            'imagem'               => $imagem,
+            'imagemUrl'            => $imagem,
+            'img'                  => $imagem,
+            'cor'                  => trim((string) ($payload['cor'] ?? '#b5a898')),
+            'quantidadeAvaliacoes' => 0,
+            'somaAvaliacoes'       => 0,
+            'avaliacoes'           => 0,
+            'estrelas'             => 0,
+            'createdAt'            => date(DATE_ATOM), // Formato ISO 8601 padrão para datas no Firestore
+            'updatedAt'            => date(DATE_ATOM),
+        ];
+
+        // Insere o produto no Firestore
+        $created = $this->entityPayload($this->collection(ProductCollection::class)->add($product));
+        
+        // Incrementa de forma atômica e reativa o contador interno de produtos na conta do produtor parceiro
+        $producerCollection->update($producerEntity, ['produtos' => (int) ($producer['produtos'] ?? 0) + 1]);
+
+        return $this->normalizeProduct([...$product, ...$created]);
+    }
+
+    /**
+     * Resgata de forma reativa a lista de produtos favoritados pelo usuário da sessão.
+     */
+    public function favoritesForSession(array $sessionUser): array
+    {
+        $user = $this->userFromSession($sessionUser);
+        // Garante uma lista limpa, sem IDs duplicados convertidos rigorosamente para string
+        $ids  = array_values(array_unique(array_map('strval', $user['favoritos'] ?? [])));
+
+        // Varre a lista de IDs mapeando cada item individualmente contra o método de busca de produto
+        return array_values(array_filter(array_map(
+            fn (string $id): ?array => $this->product($id),
+            $ids
+        )));
+    }
+
+    /**
+     * Insere um ID de produto na matriz de favoritos de um usuário.
+     */
+    public function saveFavoriteForSession(array $sessionUser, string $productId): array
+    {
+        $productId = trim($productId);
+        if ($productId === '') {
+            throw new RuntimeException('Produto nao informado.');
+        }
+
+        $collection = $this->collection(UsuarioCollection::class);
+        $entity     = $this->userEntityFromSession($collection, $sessionUser);
+
+        if ($entity === null) {
+            throw new RuntimeException('Usuario autenticado nao foi encontrado no Firestore.');
+        }
+
+        $user = $this->entityPayload($entity);
+        // Mescla o ID novo com o array existente e remove redundâncias
+        $ids  = array_values(array_unique([...array_map('strval', $user['favoritos'] ?? []), $productId]));
+        $collection->update($entity, ['favoritos' => $ids]);
+
+        return $this->favoritesForSession([...$sessionUser, 'favoritos' => $ids]);
+    }
+    public function removeFavoriteForSession(array $sessionUser, string $productId): array
+    {
+        $collection = $this->collection(UsuarioCollection::class);
+        $entity     = $this->userEntityFromSession($collection, $sessionUser);
+
+        if ($entity === null) {
+            throw new RuntimeException('Usuario autenticado nao foi encontrado no Firestore.');
+        }
+
+        $user = $this->entityPayload($entity);
+        $ids  = array_values(array_filter(
+            array_map('strval', $user['favoritos'] ?? []),
+            static fn (string $id): bool => $id !== $productId
+        ));
+        $collection->update($entity, ['favoritos' => $ids]);
+
+        return $this->favoritesForSession([...$sessionUser, 'favoritos' => $ids]);
+    }
+
+    public function cartForSession(array $sessionUser): array
+    {
+        $user  = $this->userFromSession($sessionUser);
+        $items = is_array($user['carrinho'] ?? null) ? $user['carrinho'] : [];
+
+        return array_values(array_filter(array_map(function (array $item): ?array {
+            $productId = (string) ($item['produtoId'] ?? $item['productId'] ?? $item['id'] ?? '');
+            if ($productId === '') {
+                return null;
+            }
+
+            $product = $this->product($productId);
+            if ($product === null) {
+                return null;
+            }
+
+            $quantity = max(1, (int) ($item['quantidade'] ?? $item['quantity'] ?? 1));
+
+            return [
+                'produtoId'  => $productId,
+                'quantidade' => $quantity,
+                'produto'    => $product,
+                'subtotal'   => $quantity * (float) ($product['preco'] ?? 0),
+            ];
+        }, $items)));
+    }
+
+    public function addCartItemForSession(array $sessionUser, string $productId, int $quantity = 1): array
+    {
+        return $this->mutateCartForSession($sessionUser, $productId, max(1, $quantity), true);
+    }
+
+    public function updateCartItemForSession(array $sessionUser, string $productId, int $quantity): array
+    {
+        return $this->mutateCartForSession($sessionUser, $productId, max(0, $quantity), false);
+    }
+
+    public function removeCartItemForSession(array $sessionUser, string $productId): array
+    {
+        return $this->mutateCartForSession($sessionUser, $productId, 0, false);
+    }
+
+    public function ordersForProducerSession(array $sessionUser): array
+    {
+        $producer = $this->producerFromSession($sessionUser);
+        $orders   = is_array($producer['pedidos'] ?? null) ? $producer['pedidos'] : [];
+
+        return array_values(array_map(fn (array $order): array => $this->normalizeOrder($order), $orders));
+    }
+
+    public function updateOrderStatusForProducerSession(array $sessionUser, string $orderId, string $status): array
+    {
+        $collection = $this->collection(ProducerCollection::class);
+        $entity     = $this->producerEntityFromSession($collection, $sessionUser);
+
+        if ($entity === null) {
+            throw new RuntimeException('Produtor autenticado nao foi encontrado no Firestore.');
+        }
+
+        $producer = $this->entityPayload($entity);
+        $orders   = is_array($producer['pedidos'] ?? null) ? $producer['pedidos'] : [];
+
+        foreach ($orders as &$order) {
+            if ((string) ($order['id'] ?? '') === $orderId) {
+                $order['status'] = $status;
+                $order['updatedAt'] = date(DATE_ATOM);
+                break;
+            }
+        }
+        unset($order);
+
+        $collection->update($entity, ['pedidos' => $orders]);
+
+        return array_values(array_map(fn (array $order): array => $this->normalizeOrder($order), $orders));
+    }
+
+    public function cartTotals(array $cart): array
+    {
+        $subtotal = array_sum(array_map(static fn (array $item): float => (float) ($item['subtotal'] ?? 0), $cart));
+
+        return [
+            'subtotal' => $subtotal,
+            'desconto' => 0.0,
+            'frete'    => 0.0,
+            'total'    => $subtotal,
+        ];
+    }
+
+    private function mutateCartForSession(array $sessionUser, string $productId, int $quantity, bool $increment): array
+    {
+        $productId = trim($productId);
+        if ($productId === '') {
+            throw new RuntimeException('Produto nao informado.');
+        }
+
+        $collection = $this->collection(UsuarioCollection::class);
+        $entity     = $this->userEntityFromSession($collection, $sessionUser);
+
+        if ($entity === null) {
+            throw new RuntimeException('Usuario autenticado nao foi encontrado no Firestore.');
+        }
+
+        $user  = $this->entityPayload($entity);
+        $items = is_array($user['carrinho'] ?? null) ? $user['carrinho'] : [];
+        $found = false;
+
+        foreach ($items as &$item) {
+            $currentId = (string) ($item['produtoId'] ?? $item['productId'] ?? $item['id'] ?? '');
+            if ($currentId !== $productId) {
+                continue;
+            }
+
+            $currentQuantity = max(1, (int) ($item['quantidade'] ?? $item['quantity'] ?? 1));
+            $nextQuantity = $increment ? $currentQuantity + $quantity : $quantity;
+            $item['produtoId'] = $productId;
+            $item['quantidade'] = $nextQuantity;
+            $found = true;
+            break;
+        }
+        unset($item);
+
+        if (! $found && $quantity > 0) {
+            $items[] = [
+                'produtoId' => $productId,
+                'quantidade' => $quantity,
+                'adicionadoEm' => date(DATE_ATOM),
+            ];
+        }
+
+        $items = array_values(array_filter($items, static fn (array $item): bool => (int) ($item['quantidade'] ?? 0) > 0));
+        $collection->update($entity, ['carrinho' => $items]);
+
+        return $this->cartForSession([...$sessionUser, 'carrinho' => $items]);
+    }
+
+    private function normalizeOrder(array $order): array
+    {
+        $items = is_array($order['itens'] ?? null) ? $order['itens'] : [];
+        $first = $items[0] ?? [];
+
+        return [
+            'id'       => (string) ($order['id'] ?? $order['numero'] ?? ''),
+            'cliente'  => (string) ($order['cliente'] ?? $order['clienteNome'] ?? $order['nomeCliente'] ?? 'Cliente Arace'),
+            'endereco' => (string) ($order['endereco'] ?? $order['local'] ?? ''),
+            'produto'  => (string) ($order['produto'] ?? $first['nome'] ?? $first['produto'] ?? 'Pedido Arace'),
+            'qtd'      => (int) ($order['qtd'] ?? $order['quantidade'] ?? $first['quantidade'] ?? 1),
+            'valor'    => (float) ($order['valor'] ?? $order['total'] ?? 0),
+            'data'     => (string) ($order['data'] ?? $order['createdAt'] ?? ''),
+            'status'   => (string) ($order['status'] ?? 'pendente'),
+        ];
     }
 
     private function safeUser(array $user): array
@@ -326,6 +637,8 @@ final class AraceFirestore
             'sexo'     => $user['sexo'] ?? $user['genero'] ?? null,
             'genero'   => $user['sexo'] ?? $user['genero'] ?? null,
             'createdAt' => $user['createdAt'] ?? $user['criadoEm'] ?? null,
+            'favoritos' => is_array($user['favoritos'] ?? null) ? $user['favoritos'] : [],
+            'carrinho'  => is_array($user['carrinho'] ?? null) ? $user['carrinho'] : [],
         ], static fn ($value): bool => $value !== null && $value !== '');
     }
 
@@ -577,6 +890,7 @@ final class AraceFirestore
         $producer['bannerUrl'] = $producer['bannerUrl'] ?? $producer['banner'] ?? '';
         $producer['iniciais'] = $producer['iniciais'] ?? $this->initials($producer['nome']);
         $producer['produtos'] = (int) ($producer['produtos'] ?? $producer['total_produtos'] ?? 0);
+        $producer['pedidos'] = is_array($producer['pedidos'] ?? null) ? $producer['pedidos'] : [];
 
         if ($producer['id'] === '') {
             $producer['id'] = url_title($producer['nome'], '-', true);
@@ -585,6 +899,8 @@ final class AraceFirestore
         return $producer;
     }
 
+    //Tranformar nome em sigla
+
     private function initials(string $name): string
     {
         $words   = preg_split('/\s+/', trim($name)) ?: [];
@@ -592,7 +908,7 @@ final class AraceFirestore
 
         return mb_strtoupper(implode('', $letters)) ?: 'AR';
     }
-
+//Validação telefone
     private function formatPhone(string $phone): string
     {
         $digits = preg_replace('/\D/', '', $phone) ?? '';
@@ -608,6 +924,8 @@ final class AraceFirestore
         return trim($phone);
     }
 
+
+    //alidação de CPF
     private function formatCpf(string $cpf): string
     {
         $digits = preg_replace('/\D/', '', $cpf) ?? '';

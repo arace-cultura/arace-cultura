@@ -20,23 +20,33 @@ final class SupabaseStorage
 
     public function uploadAvatar(UploadedFile $file, string $userId): string
     {
+        return $this->uploadImage($file, $userId);
+    }
+
+    public function uploadProductImage(UploadedFile $file, string $producerId): string
+    {
+        return $this->uploadImage($file, 'produtos/' . $producerId);
+    }
+
+    public function uploadImage(UploadedFile $file, string $folder): string
+    {
         if ($this->url === '' || $this->key === '') {
             throw new RuntimeException('Configure SUPABASE_URL e SUPABASE_SERVICE_ROLE_KEY no .env para enviar imagens.');
         }
 
         if (! $file->isValid() || $file->hasMoved()) {
-            throw new RuntimeException('Arquivo de avatar invalido.');
+            throw new RuntimeException('Arquivo de imagem invalido.');
         }
 
         $extension = strtolower($file->getClientExtension() ?: $file->guessExtension() ?: 'jpg');
         $extension = in_array($extension, ['jpg', 'jpeg', 'png', 'webp', 'gif'], true) ? $extension : 'jpg';
-        $safeUser  = preg_replace('/[^a-zA-Z0-9_-]/', '-', $userId) ?: 'usuario';
-        $path      = $safeUser . '/' . date('YmdHis') . '-' . bin2hex(random_bytes(6)) . '.' . $extension;
+        $safeFolder = preg_replace('/[^a-zA-Z0-9_\/-]/', '-', trim($folder, '/')) ?: 'imagens';
+        $path      = $safeFolder . '/' . date('YmdHis') . '-' . bin2hex(random_bytes(6)) . '.' . $extension;
         $endpoint  = $this->url . '/storage/v1/object/' . rawurlencode($this->bucket) . '/' . str_replace('%2F', '/', rawurlencode($path));
         $contents  = file_get_contents($file->getTempName());
 
         if ($contents === false) {
-            throw new RuntimeException('Nao foi possivel ler o arquivo de avatar.');
+            throw new RuntimeException('Nao foi possivel ler o arquivo de imagem.');
         }
 
         $headers = [

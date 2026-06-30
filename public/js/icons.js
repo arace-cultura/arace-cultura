@@ -1,4 +1,5 @@
 (function () {
+  // Garante que os icones Lucide sejam renderizados mesmo quando a biblioteca carregar um pouco depois do HTML.
   function renderLucideIcons() {
     if (!window.lucide || typeof window.lucide.createIcons !== 'function') return false;
 

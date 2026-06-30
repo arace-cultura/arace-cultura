@@ -1,3 +1,5 @@
+// Regras de tela para cadastro de cliente: alterna senha e valida confirmacao/telefone.
+
 function alternarSenha(campoId, iconeId) {
   const campo = document.getElementById(campoId);
   const icone = document.getElementById(iconeId);

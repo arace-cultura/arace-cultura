@@ -1,3 +1,5 @@
+// Regras de tela para cadastro do dono/produtor: mascara CPF e valida telefone/CPF.
+
 if (window.lucide) lucide.createIcons();
 
 function validarCPF(cpf) {

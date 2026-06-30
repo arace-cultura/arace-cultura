@@ -87,39 +87,6 @@ body::before {
   opacity: .12; z-index: -1; pointer-events: none;
 }
 a { text-decoration: none; color: inherit; }
-/* Chat bubble */
-.chat-bubble{
-  width: 60px;
-  height: 60px;
-  background-color: var(--azul);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;     
-  justify-content: center;
-  position: fixed;
-  bottom: 20px; 
-  right: 20px;
-  z-index: 999;
-}
-.chat-bubble:hover{
-  cursor: pointer;
-  animation: pulse 1s infinite;
-}
-@keyframes pulse {
-  0% {
-    transform: translateY(-4px);
-  }
-  50% {
-    transform: translateY(1px);
-  }
-  100% {
-    transform: translateY(-4px);
-  }
-}
-.chat-bubble * {
-  stroke: #ffffff !important;
-  color: #ffffff !important;
-}
 /* ── HEADER ── */
 
 header {
@@ -671,6 +638,33 @@ main { grid-area: conteudo; padding: 2rem; display: flex; flex-direction: column
   display: grid;
   gap: .9rem;
 }
+.field-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: .85rem;
+}
+.field-group {
+  display: grid;
+  gap: .4rem;
+}
+.input-field {
+  width: 100%;
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  background: var(--branco);
+  color: var(--text);
+  padding: .7rem .8rem;
+  font: inherit;
+  min-height: 42px;
+}
+.input-field:focus {
+  outline: 2px solid rgba(37, 81, 143, .18);
+  border-color: var(--azul);
+}
+textarea.input-field {
+  resize: vertical;
+  line-height: 1.45;
+}
 .modal-label {
   color: var(--muted);
   font-size: .76rem;
@@ -755,6 +749,7 @@ main { grid-area: conteudo; padding: 2rem; display: flex; flex-direction: column
 }
 
 @media (max-width: 560px) {
+  .field-row { grid-template-columns: 1fr; }
   .metricas-grid,
   .pedidos-stats { grid-template-columns: 1fr; }
   .pedido-mini,

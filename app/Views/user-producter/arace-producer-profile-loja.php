@@ -3,6 +3,7 @@
 $usuario = $usuario ?? session()->get('arace_user') ?? [];
 $avatar = trim((string) ($usuario['fotoUrl'] ?? $usuario['avatar'] ?? ''));
 $produtor = $produtor ?? [];
+$produtos = $produtos ?? [];
 $lojaNome = (string) ($produtor['lojaNome'] ?? 'Paneleiras Capixabas');
 $lojaBio = (string) ($produtor['lojaBio'] ?? 'Preservamos uma tradicao centenaria de producao artesanal.');
 $lojaCidade = (string) ($produtor['lojaCidade'] ?? '');
@@ -12,6 +13,7 @@ $lojaLocal = trim($lojaCidade . ($lojaEstado !== '' ? ', ' . $lojaEstado : ''), 
 $lojaAvatar = trim((string) ($produtor['fotoUrl'] ?? $produtor['lojaAvatar'] ?? $produtor['avatar'] ?? ''));
 $bannerUrl = trim((string) ($produtor['bannerUrl'] ?? $produtor['banner'] ?? ''));
 $bannerSrc = $bannerUrl !== '' ? $bannerUrl : base_url('images/bahia-vitoria.jpg');
+$mediaAvaliacoes = $produtos === [] ? 0 : array_sum(array_map(static fn (array $produto): float => (float) ($produto['estrelas'] ?? 0), $produtos)) / count($produtos);
 ?>
 <html lang="pt-BR">
 <head>
@@ -39,11 +41,11 @@ $bannerSrc = $bannerUrl !== '' ? $bannerUrl : base_url('images/bahia-vitoria.jpg
   <div class="header-right">
     <button class="cart-btn" type="button" onclick="window.location.href='<?= url_to('main_arace_carrinho') ?>'">
       <i data-lucide="shopping-cart"></i>
-      <span class="cart-count">2 itens</span>
+      <span class="cart-count">0 itens</span>
     </button>
     <button class="cart-btn" type="button" onclick="window.location.href='<?= url_to('user_arace_favoritos') ?>'">
       <i data-lucide="heart"></i>
-      <span class="cart-count">5 itens</span>
+      <span class="cart-count">0 itens</span>
     </button>
     <button class="avatar-btn" type="button" onclick="window.location.href='<?= url_to('user_arace_perfil') ?>'" aria-label="Abrir perfil">
       <?php if ($avatar !== ''): ?>
@@ -54,14 +56,6 @@ $bannerSrc = $bannerUrl !== '' ? $bannerUrl : base_url('images/bahia-vitoria.jpg
     </button>
   </div>
 </header>
-
-<!--Icone de chat-->
-<div class="chat-bubble">
-  <a href="<?= url_to('user_chat') ?>">
-    <i data-lucide="message-circle-more"></i>
-  </a>
-</div>
-
 <!-- SIDEBAR -->
 <aside>
     <a class="nav-item" href="<?= url_to('home') ?>">
@@ -72,9 +66,6 @@ $bannerSrc = $bannerUrl !== '' ? $bannerUrl : base_url('images/bahia-vitoria.jpg
     </a>
     <a class="nav-item active" href="<?= url_to('main_arace_carrinho') ?>">
       <i data-lucide="shopping-cart"></i> Carrinho
-    </a>
-    <a class="nav-item" href="<?= url_to('user_arace_notificacao') ?>">
-      <i data-lucide="bell"></i> Notificações
     </a>
     <a class="nav-item" href="<?= url_to('main_arace_config') ?>">
       <i data-lucide="settings"></i> Configurações
@@ -134,15 +125,15 @@ $bannerSrc = $bannerUrl !== '' ? $bannerUrl : base_url('images/bahia-vitoria.jpg
         </div>
         <div class="store-stats" aria-label="Estatísticas da loja">
           <div class="stat-item">
-            <span class="stat-number">42</span>
+            <span class="stat-number"><?= count($produtos) ?></span>
             <span class="stat-label">Produtos</span>
           </div>
           <div class="stat-item">
-            <span class="stat-number">4.9</span>
+            <span class="stat-number"><?= number_format($mediaAvaliacoes, 1, ',', '.') ?></span>
             <span class="stat-label">Avaliação</span>
           </div>
           <div class="stat-item">
-            <span class="stat-number">320</span>
+            <span class="stat-number"><?= (int) ($produtor['vendas'] ?? 0) ?></span>
             <span class="stat-label">Vendas</span>
           </div>
         </div>
@@ -159,81 +150,43 @@ $bannerSrc = $bannerUrl !== '' ? $bannerUrl : base_url('images/bahia-vitoria.jpg
       </div>
 
       <div class="products-grid" id="products-grid">
-
-        <div class="product-card" data-id="1">
-          <div class="product-image">
-            <img src="/images/produtos/panela_convento.png" alt="Kit Panela de Barro" loading="lazy" />
-            <span class="product-badge">Destaque</span>
-            <button class="product-favorite" aria-label="Favoritar Kit Panela de Barro">
-              <i data-lucide="heart"></i>
-            </button>
+        <?php if ($produtos === []): ?>
+          <div class="fav-empty">
+            <i data-lucide="package-open"></i>
+            <h2>Nenhum produto cadastrado</h2>
+            <p>Os produtos da loja aparecerao aqui quando estiverem no Firestore.</p>
           </div>
-          <div class="product-info">
-            <h3 class="product-name">Kit Panela de Barro</h3>
-            <div class="product-footer">
-              <span class="product-price">R$ 200</span>
-              <button class="add-cart-btn" aria-label="Adicionar Kit Panela de Barro ao carrinho">
-                <i data-lucide="plus"></i> Adicionar
+        <?php endif; ?>
+        <?php foreach ($produtos as $produto): ?>
+          <?php
+            $produtoId = (string) ($produto['id'] ?? '');
+            $nomeProduto = (string) ($produto['nome'] ?? 'Produto Arace');
+            $precoProduto = (float) ($produto['preco'] ?? 0);
+            $imagemProduto = (string) ($produto['img'] ?? $produto['imagem'] ?? '');
+          ?>
+          <div class="product-card" data-id="<?= esc($produtoId, 'attr') ?>" data-produto-id="<?= esc($produtoId, 'attr') ?>" data-preco="<?= esc((string) $precoProduto, 'attr') ?>">
+            <div class="product-image">
+              <?php if ($imagemProduto !== ''): ?>
+                <img src="<?= esc($imagemProduto, 'attr') ?>" alt="<?= esc($nomeProduto, 'attr') ?>" loading="lazy" />
+              <?php endif; ?>
+              <?php if (($produto['destaque'] ?? false) || ($produto['desconto'] ?? 0) > 0): ?>
+                <span class="product-badge"><?= ($produto['desconto'] ?? 0) > 0 ? '-' . (int) $produto['desconto'] . '%' : 'Destaque' ?></span>
+              <?php endif; ?>
+              <button class="product-favorite" aria-label="Favoritar <?= esc($nomeProduto, 'attr') ?>">
+                <i data-lucide="heart"></i>
               </button>
             </div>
-          </div>
-        </div>
-
-        <div class="product-card" data-id="2">
-          <div class="product-image">
-            <img src="/images/produtos/panela_tres.png" alt="Panela Individual de Barro" loading="lazy" />
-            <button class="product-favorite" aria-label="Favoritar Panela Individual">
-              <i data-lucide="heart"></i>
-            </button>
-          </div>
-          <div class="product-info">
-            <h3 class="product-name">Panela Individual</h3>
-            <div class="product-footer">
-              <span class="product-price">R$ 90</span>
-              <button class="add-cart-btn" aria-label="Adicionar Panela Individual ao carrinho">
-                <i data-lucide="plus"></i> Adicionar
-              </button>
+            <div class="product-info">
+              <h3 class="product-name"><?= esc($nomeProduto) ?></h3>
+              <div class="product-footer">
+                <span class="product-price">R$ <?= number_format($precoProduto, 2, ',', '.') ?></span>
+                <button class="add-cart-btn" aria-label="Adicionar <?= esc($nomeProduto, 'attr') ?> ao carrinho">
+                  <i data-lucide="plus"></i> Adicionar
+                </button>
+              </div>
             </div>
           </div>
-        </div>
-
-        <div class="product-card" data-id="3">
-          <div class="product-image">
-            <img src="/images/produtos/panela_convento.png" alt="Travessa de Barro" loading="lazy" />
-            <span class="product-badge">Novo</span>
-            <button class="product-favorite" aria-label="Favoritar Travessa de Barro">
-              <i data-lucide="heart"></i>
-            </button>
-          </div>
-          <div class="product-info">
-            <h3 class="product-name">Travessa de Barro</h3>
-            <div class="product-footer">
-              <span class="product-price">R$ 140</span>
-              <button class="add-cart-btn" aria-label="Adicionar Travessa de Barro ao carrinho">
-                <i data-lucide="plus"></i> Adicionar
-              </button>
-            </div>
-          </div>
-        </div>
-
-        <div class="product-card" data-id="4">
-          <div class="product-image">
-            <img src="/images/produtos/panela_tres.png" alt="Tigela Artesanal" loading="lazy" />
-            <button class="product-favorite" aria-label="Favoritar Tigela Artesanal">
-              <i data-lucide="heart"></i>
-            </button>
-          </div>
-          <div class="product-info">
-            <h3 class="product-name">Tigela Artesanal</h3>
-            <div class="product-footer">
-              <span class="product-price">R$ 75</span>
-              <button class="add-cart-btn" aria-label="Adicionar Tigela Artesanal ao carrinho">
-                <i data-lucide="plus"></i> Adicionar
-              </button>
-            </div>
-          </div>
-        </div>
-
+        <?php endforeach; ?>
       </div>
     </section>
 
@@ -262,6 +215,7 @@ $bannerSrc = $bannerUrl !== '' ? $bannerUrl : base_url('images/bahia-vitoria.jpg
   <script>
     window.ARACE_AUTH_USER = <?= json_encode($usuario, JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>;
     window.ARACE_PRODUCER = <?= json_encode($produtor, JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>;
+    window.ARACE_STORE_PRODUCTS = <?= json_encode($produtos, JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>;
   </script>
   <script src="<?= base_url('js/arace-state.js') ?>"></script>
   <script src="<?= base_url('js/loja.js') ?>"></script>

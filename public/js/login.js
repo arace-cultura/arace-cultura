@@ -1,3 +1,4 @@
+// Mostra/oculta senha na tela de login e renderiza icones.
 function alternarSenha() {
   const campo = document.getElementById('senha');
   const icone = document.getElementById('icone-olho');

@@ -1,9 +1,10 @@
 <?php
-
+// Define a "pasta virtual" (namespace) onde este arquivo está localizado no projeto.
+// Isso ajuda a organizar o código e evitar conflitos de nomes.
 namespace App\Collections;
-
-use App\Entities\User; 
-use Tatter\Firebase\Firestore\Collection;
+// Importa arquivos necessários de outras partes do sistema
+use App\Entities\User; // Classe que representa um único registro (Usuário)
+use Tatter\Firebase\Firestore\Collection;// Classe base que fornece os métodos para lidar com o banco de dados Firestore
 
 final class UsuarioCollection extends Collection
 {
@@ -30,6 +31,8 @@ final class UsuarioCollection extends Collection
         'emailVerified',
         'disabled',
         'createdAt',
+        'favoritos',
+        'carrinho',
     ];
 
     protected array $validationRules = [

@@ -33,11 +33,11 @@ $avatar = trim((string) ($usuario['fotoUrl'] ?? $usuario['avatar'] ?? ''));
   <div class="header-right">
     <button class="cart-btn" type="button" onclick="window.location.href='<?= url_to('main_arace_carrinho') ?>'">
       <i data-lucide="shopping-cart"></i>
-      <span class="cart-count">2 itens</span>
+      <span class="cart-count">0 itens</span>
     </button>
     <button class="cart-btn" type="button" onclick="window.location.href='<?= url_to('user_arace_favoritos') ?>'">
       <i data-lucide="heart"></i>
-      <span class="cart-count">5 itens</span>
+      <span class="cart-count">0 itens</span>
     </button>
     <button class="avatar-btn" type="button" onclick="window.location.href='<?= url_to('user_arace_perfil') ?>'" aria-label="Abrir perfil">
       <?php if ($avatar !== ''): ?>
@@ -49,12 +49,6 @@ $avatar = trim((string) ($usuario['fotoUrl'] ?? $usuario['avatar'] ?? ''));
   </div>
 </header>
 
-<!--Icone de chat-->
-<div class="chat-bubble">
-  <a href="<?= url_to('user_chat') ?>">
-    <i data-lucide="message-circle-more"></i>
-  </a>
-</div>
 
 <!-- SIDEBAR -->
 <aside>
@@ -67,9 +61,6 @@ $avatar = trim((string) ($usuario['fotoUrl'] ?? $usuario['avatar'] ?? ''));
     <a class="nav-item active" href="<?= url_to('main_arace_carrinho') ?>">
       <i data-lucide="shopping-cart"></i> Carrinho
     </a>
-    <a class="nav-item" href="<?= url_to('user_arace_notificacao') ?>">
-      <i data-lucide="bell"></i> Notificações
-    </a>
     <a class="nav-item" href="<?= url_to('main_arace_config') ?>">
       <i data-lucide="settings"></i> Configurações
     </a>
@@ -81,9 +72,6 @@ $avatar = trim((string) ($usuario['fotoUrl'] ?? $usuario['avatar'] ?? ''));
     </a>
     <div class="nav-divider"></div>
     <div class="nav-section">Reportar</div>
-    <a class="nav-item" href="<?= url_to('main_arace_config') ?>#pagamento">
-      <i data-lucide="hand-coins"></i> Detalhes de pagamento
-    </a>
   </aside>
   <main>
   <div class="config-header">
@@ -103,14 +91,8 @@ $avatar = trim((string) ($usuario['fotoUrl'] ?? $usuario['avatar'] ?? ''));
       <button class="config-nav-item" onclick="trocarAba(this,'conta')">
         <i data-lucide="shield"></i> Conta & Segurança
       </button>
-      <button class="config-nav-item" onclick="trocarAba(this,'notificacoes')">
-        <i data-lucide="bell"></i> Notificações
-      </button>
       <button class="config-nav-item" onclick="trocarAba(this,'pagamento')">
-        <i data-lucide="credit-card"></i> Pagamento
-      </button>
-      <button class="config-nav-item" onclick="trocarAba(this,'enderecos')">
-        <i data-lucide="map-pin"></i> Endereços
+        <i data-lucide="key-round"></i> Pix
       </button>
       <div class="config-nav-divider"></div>
       <button class="config-nav-item" onclick="trocarAba(this,'aparencia')">
@@ -298,74 +280,8 @@ $avatar = trim((string) ($usuario['fotoUrl'] ?? $usuario['avatar'] ?? ''));
           </div>
         </div>
       </section>
-
-      <!-- -- NOTIFICAÇÕES -- -->
-      <section class="config-section" id="sec-notificacoes">
-        <div class="config-card">
-          <div class="config-card-header">
-            <div><h2>Notificações por e-mail</h2></div>
-          </div>
-          <div class="config-card-body">
-            <div class="toggle-row">
-              <div class="toggle-info"><span>Novos pedidos</span><small>Quando um pedido for feito ou atualizado</small></div>
-              <label class="toggle-switch"><input type="checkbox" checked /><span class="toggle-slider"></span></label>
-            </div>
-            <div class="toggle-row">
-              <div class="toggle-info"><span>Promoções</span><small>Ofertas exclusivas e cupons</small></div>
-              <label class="toggle-switch"><input type="checkbox" checked /><span class="toggle-slider"></span></label>
-            </div>
-            <div class="toggle-row">
-              <div class="toggle-info"><span>Newsletter</span><small>Novidades da cultura capixaba</small></div>
-              <label class="toggle-switch"><input type="checkbox" /><span class="toggle-slider"></span></label>
-            </div>
-            <div class="toggle-row">
-              <div class="toggle-info"><span>Respostas de avaliações</span><small>Quando alguém responder sua avaliação</small></div>
-              <label class="toggle-switch"><input type="checkbox" checked /><span class="toggle-slider"></span></label>
-            </div>
-          </div>
-        </div>
-        <div class="config-card">
-          <div class="config-card-header">
-            <div><h2>Notificações push</h2></div>
-          </div>
-          <div class="config-card-body">
-            <div class="toggle-row">
-              <div class="toggle-info"><span>Chat</span><small>Novas mensagens de artesãos</small></div>
-              <label class="toggle-switch"><input type="checkbox" checked /><span class="toggle-slider"></span></label>
-            </div>
-            <div class="toggle-row">
-              <div class="toggle-info"><span>Status do pedido</span><small>Atualizações de envio e entrega</small></div>
-              <label class="toggle-switch"><input type="checkbox" checked /><span class="toggle-slider"></span></label>
-            </div>
-            <div class="toggle-row">
-              <div class="toggle-info"><span>Novos produtos favoritos</span><small>Produtos novos de artesãos que você segue</small></div>
-              <label class="toggle-switch"><input type="checkbox" /><span class="toggle-slider"></span></label>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- -- PAGAMENTO -- -->
+      <!-- -- PIX -- -->
       <section class="config-section" id="sec-pagamento">
-        <div class="config-card">
-          <div class="config-card-header">
-            <div><h2>Métodos de pagamento</h2><p>Cartões e formas de pagamento salvos</p></div>
-          </div>
-          <div class="config-card-body" id="cartoesList">
-            <div style="display:flex;align-items:center;justify-content:space-between;padding:.5rem 0">
-              <div style="display:flex;align-items:center;gap:12px">
-                <div style="width:44px;height:28px;background:var(--bg);border:.5px solid var(--border);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:var(--azul)">VISA</div>
-                <div>
-                  <div style="font-size:14px;color:var(--text)">•••• •••• •••• 4242</div>
-                  <div style="font-size:12px;color:var(--muted)">Expira 12/27</div>
-                </div>
-              </div>
-              <div style="display:flex;align-items:center;gap:8px">
-                <span style="font-size:11px;background:var(--verde-l);color:var(--verde);border-radius:99px;padding:2px 10px;font-weight:500">Principal</span>
-              </div>
-            </div>
-          </div>
-        </div>
         <div class="config-card">
           <div class="config-card-header">
             <div><h2>Pix</h2><p>Chave Pix cadastrada</p></div>
@@ -373,76 +289,7 @@ $avatar = trim((string) ($usuario['fotoUrl'] ?? $usuario['avatar'] ?? ''));
           <div class="config-card-body">
             <div class="field-group">
               <label>Chave Pix</label>
-              <input class="input-field" type="text" placeholder="CPF, e-mail, telefone ou chave aleatória" />
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- -- ENDEREÇOS -- -->
-      <section class="config-section" id="sec-enderecos">
-        <div class="config-card">
-          <div class="config-card-header">
-            <div><h2>Endereços salvos</h2></div>
-          </div>
-          <div class="config-card-body">
-            <div style="display:flex;align-items:flex-start;justify-content:space-between;padding:.25rem 0">
-              <div>
-                <div style="font-size:14px;font-weight:500;color:var(--text)">Casa</div>
-                <div style="font-size:13px;color:var(--muted);margin-top:3px;line-height:1.5">Rua das Palmeiras, 123 — Jardim da Penha<br/>Vitória, ES — 29060-000</div>
-              </div>
-              <div style="display:flex;align-items:center;gap:8px">
-                <span style="font-size:11px;background:var(--laranja-l);color:var(--laranja-d);border-radius:99px;padding:2px 10px;font-weight:500">Principal</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="config-card">
-          <div class="config-card-header">
-            <div><h2>Adicionar endereço</h2></div>
-          </div>
-          <div class="config-card-body">
-            <div class="field-row">
-              <div class="field-group">
-                <label>CEP</label>
-                <input class="input-field" type="text" id="cep" placeholder="00000-000" maxlength="9" oninput="mascaraCEP(this)" />
-              </div>
-              <div class="field-group">
-                <label>Estado</label>
-                <select class="input-field" id="estado">
-                  <option value="">Selecione</option>
-                  <option value="ES" selected>Espírito Santo</option>
-                  <option value="SP">São Paulo</option>
-                  <option value="RJ">Rio de Janeiro</option>
-                  <option value="MG">Minas Gerais</option>
-                  <option value="BA">Bahia</option>
-                </select>
-              </div>
-            </div>
-            <div class="field-row">
-              <div class="field-group">
-                <label>Cidade</label>
-                <input class="input-field" type="text" id="cidade" placeholder="Vitória" />
-              </div>
-              <div class="field-group">
-                <label>Bairro</label>
-                <input class="input-field" type="text" id="bairro" placeholder="Bairro" />
-              </div>
-            </div>
-            <div class="field-group">
-              <label>Rua</label>
-              <input class="input-field" type="text" id="rua" placeholder="Nome da rua" />
-            </div>
-            <div class="field-row">
-              <div class="field-group">
-                <label>Número</label>
-                <input class="input-field" type="text" placeholder="Nº" />
-              </div>
-              <div class="field-group">
-                <label>Complemento</label>
-                <input class="input-field" type="text" placeholder="Apto, bloco…" />
-              </div>
+              <input class="input-field" type="text" name="pix" placeholder="CPF, e-mail, telefone ou chave aleatoria" />
             </div>
           </div>
         </div>

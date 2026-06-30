@@ -2,6 +2,7 @@
 <?php
 $usuario = $usuario ?? session()->get('arace_user') ?? [];
 $avatar = trim((string) ($usuario['fotoUrl'] ?? $usuario['avatar'] ?? ''));
+$favoritos = $favoritos ?? [];
 ?>
 <html lang="pt-BR">
 <head>
@@ -29,11 +30,11 @@ $avatar = trim((string) ($usuario['fotoUrl'] ?? $usuario['avatar'] ?? ''));
   <div class="header-right">
     <button class="cart-btn" type="button" onclick="window.location.href='<?= url_to('main_arace_carrinho') ?>'">
       <i data-lucide="shopping-cart"></i>
-      <span class="cart-count">2 itens</span>
+      <span class="cart-count">0 itens</span>
     </button>
     <button class="cart-btn" type="button" onclick="window.location.href='<?= url_to('user_arace_favoritos') ?>'">
       <i data-lucide="heart"></i>
-      <span class="cart-count">5 itens</span>
+      <span class="cart-count"><?= count($favoritos) === 1 ? '1 item' : count($favoritos) . ' itens' ?></span>
     </button>
     <button class="avatar-btn" type="button" onclick="window.location.href='<?= url_to('user_arace_perfil') ?>'" aria-label="Abrir perfil">
       <?php if ($avatar !== ''): ?>
@@ -44,14 +45,6 @@ $avatar = trim((string) ($usuario['fotoUrl'] ?? $usuario['avatar'] ?? ''));
     </button>
   </div>
 </header>
-
-<!--Icone de chat-->
-<div class="chat-bubble">
-  <a href="<?= url_to('user_chat') ?>">
-    <i data-lucide="message-circle-more"></i>
-  </a>
-</div>
-
 <!-- SIDEBAR -->
 <aside>
     <a class="nav-item" href="<?= url_to('home') ?>">
@@ -62,9 +55,6 @@ $avatar = trim((string) ($usuario['fotoUrl'] ?? $usuario['avatar'] ?? ''));
     </a>
     <a class="nav-item active" href="<?= url_to('main_arace_carrinho') ?>">
       <i data-lucide="shopping-cart"></i> Carrinho
-    </a>
-    <a class="nav-item" href="<?= url_to('user_arace_notificacao') ?>">
-      <i data-lucide="bell"></i> Notificações
     </a>
     <a class="nav-item" href="<?= url_to('main_arace_config') ?>">
       <i data-lucide="settings"></i> Configurações
@@ -86,7 +76,7 @@ $avatar = trim((string) ($usuario['fotoUrl'] ?? $usuario['avatar'] ?? ''));
 
   <div class="fav-page-header">
     <div>
-      <h1>Meus Favoritos <span class="fav-count-badge" id="headerCount">5</span></h1>
+      <h1>Meus Favoritos <span class="fav-count-badge" id="headerCount"><?= count($favoritos) ?></span></h1>
       <p>Produtos que você salvou para comprar depois</p>
     </div>
   </div>
@@ -140,6 +130,9 @@ $avatar = trim((string) ($usuario['fotoUrl'] ?? $usuario['avatar'] ?? ''));
 
 </main>
 
+<script>
+  window.ARACE_FAVORITES = <?= json_encode($favoritos, JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>;
+</script>
 <script src="/js/arace-state.js"></script>
 <script src="/js/favoritos.js"></script>
 </body>

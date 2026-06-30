@@ -60,7 +60,7 @@ $routes->get('pesquisa', 'ProductController::index', ['as' => 'main_pesquisa']);
 $routes->get('produto/detalhes', 'ProductController::show', ['as' => 'main_produto_detalhes']);
 $routes->get('produto/(:segment)', 'ProductController::show/$1', ['as' => 'main_produto']);
 
-$routes->view('arace-carrinho', 'main/arace-carrinho', ['as' => 'main_arace_carrinho']);
+$routes->get('arace-carrinho', 'AccountController::cart', ['as' => 'main_arace_carrinho', 'filter' => 'auth']);
 $routes->get('arace-config', 'AccountController::config', ['as' => 'main_arace_config', 'filter' => 'auth']);
 
 // Aliases curtos para URLs antigas ou manuais.
@@ -77,15 +77,11 @@ $routes->get('configuracoes', $routeRedirect('main_arace_config'));
 $routes->group('usuario', ['filter' => 'auth'], static function (RouteCollection $routes): void {
     $routes->get('arace-perfil', 'AccountController::profile', ['as' => 'user_arace_perfil']);
     $routes->post('perfil', 'AccountController::updateProfile', ['as' => 'user_profile_update']);
-    $routes->view('chat', 'user/arace-chat', ['as' => 'user_chat']);
-    $routes->view('arace-favoritos', 'user/arace-favoritos', ['as' => 'user_arace_favoritos']);
-    $routes->view('arace-notificacao', 'user/arace-notificacao', ['as' => 'user_arace_notificacao']);
+    $routes->get('arace-favoritos', 'AccountController::favorites', ['as' => 'user_arace_favoritos']);
 });
 
 $routes->get('perfil', $routeRedirect('user_arace_perfil'));
 $routes->get('favoritos', $routeRedirect('user_arace_favoritos'));
-$routes->get('notificacoes', $routeRedirect('user_arace_notificacao'));
-$routes->get('chat', $routeRedirect('user_chat'));
 
 /*
 |--------------------------------------------------------------------------
@@ -93,8 +89,8 @@ $routes->get('chat', $routeRedirect('user_chat'));
 |--------------------------------------------------------------------------
 */
 $routes->group('produtor', ['filter' => 'auth'], static function (RouteCollection $routes): void {
-    $routes->view('painel', 'user-producter/arace-producer-painel-produtos', ['as' => 'produtor_painel']);
-    $routes->view('pedidos', 'user-producter/arace-producer-pedidos', ['as' => 'produtor_pedidos']);
+    $routes->get('painel', 'AccountController::producerDashboard', ['as' => 'produtor_painel']);
+    $routes->get('pedidos', 'AccountController::producerOrders', ['as' => 'produtor_pedidos']);
     $routes->get('perfil', 'AccountController::producerProfile', ['as' => 'produtor_perfil']);
     $routes->get('perfil-loja', 'AccountController::producerStoreProfile', ['as' => 'produtor_perfil_loja']);
     $routes->get('configuracao', 'AccountController::producerConfig', ['as' => 'produtor_config']);
@@ -115,6 +111,16 @@ $routes->group('api', ['namespace' => 'App\Controllers\Api'], static function (R
     $routes->get('products', 'FirestoreController::products', ['as' => 'api_products']);
     $routes->get('products/(:segment)', 'FirestoreController::product/$1', ['as' => 'api_product']);
     $routes->get('producers', 'FirestoreController::producers', ['as' => 'api_producers']);
+    $routes->get('favorites', 'FirestoreController::favorites', ['as' => 'api_favorites', 'filter' => 'auth']);
+    $routes->post('favorites', 'FirestoreController::saveFavorite', ['as' => 'api_favorites_store', 'filter' => 'auth']);
+    $routes->delete('favorites/(:segment)', 'FirestoreController::removeFavorite/$1', ['as' => 'api_favorites_delete', 'filter' => 'auth']);
+    $routes->get('cart', 'FirestoreController::cart', ['as' => 'api_cart', 'filter' => 'auth']);
+    $routes->post('cart', 'FirestoreController::addCartItem', ['as' => 'api_cart_store', 'filter' => 'auth']);
+    $routes->patch('cart/(:segment)', 'FirestoreController::updateCartItem/$1', ['as' => 'api_cart_update', 'filter' => 'auth']);
+    $routes->delete('cart/(:segment)', 'FirestoreController::removeCartItem/$1', ['as' => 'api_cart_delete', 'filter' => 'auth']);
+    $routes->get('producer/orders', 'FirestoreController::producerOrders', ['as' => 'api_producer_orders', 'filter' => 'auth']);
+    $routes->patch('producer/orders/(:segment)', 'FirestoreController::updateProducerOrder/$1', ['as' => 'api_producer_order_update', 'filter' => 'auth']);
+    $routes->post('producer/products', 'FirestoreController::createProducerProduct', ['as' => 'api_producer_products_store', 'filter' => 'auth']);
     $routes->post('user', 'FirestoreController::createUser', ['as' => 'api_user_store']);
     $routes->post('producers', 'FirestoreController::createProducer', ['as' => 'api_producer_store']);
 });

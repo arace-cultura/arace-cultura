@@ -74,13 +74,9 @@ if ($imagens === []) {
   <a class="nav-item" href="<?= url_to('home') ?>"><i data-lucide="house"></i> Home page</a>
   <a class="nav-item active" href="<?= url_to('arace_produtos') ?>"><i data-lucide="shopping-bag"></i> Produtos</a>
   <a class="nav-item" href="<?= url_to('main_arace_carrinho') ?>"><i data-lucide="shopping-cart"></i> Carrinho</a>
-  <a class="nav-item" href="<?= url_to('user_arace_notificacao') ?>"><i data-lucide="bell"></i> Notificacoes</a>
   <a class="nav-item" href="<?= url_to('main_arace_config') ?>"><i data-lucide="settings"></i> Configuracoes</a>
   <a class="nav-item" href="<?= url_to('user_arace_perfil') ?>"><i data-lucide="user"></i> Perfil</a>
   <a class="nav-item" href="<?= url_to('auth_cadastro_produtor') ?>"><i data-lucide="box"></i> Quero ser produtor</a>
-  <div class="nav-divider"></div>
-  <div class="nav-section">Reportar</div>
-  <a class="nav-item" href="<?= url_to('main_arace_config') ?>"><i data-lucide="hand-coins"></i> Detalhes de pagamento</a>
 </aside>
 
 <main id="main-content">
@@ -143,8 +139,6 @@ if ($imagens === []) {
 
       <div class="action-row">
         <button class="btn-icon" title="Favoritar" type="button"><i data-lucide="heart"></i></button>
-        <button class="btn-icon" title="Compartilhar" type="button"><i data-lucide="share-2"></i></button>
-        <button class="btn-icon" title="Comparar" type="button"><i data-lucide="scale"></i></button>
         <button class="btn-add" type="button" data-produto-id="<?= esc($id) ?>"><i data-lucide="shopping-cart"></i> Adicionar</button>
         <button class="btn-buy" type="button"><i data-lucide="zap"></i> Comprar</button>
       </div>

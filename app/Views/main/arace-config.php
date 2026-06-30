@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <?php
 $usuario = $usuario ?? session()->get('arace_user') ?? [];
 $nomeCompleto = trim((string) ($usuario['nome'] ?? ''));
@@ -27,11 +27,11 @@ $avatar = trim((string) ($usuario['fotoUrl'] ?? $usuario['avatar'] ?? ''));
     <div class="header-right">
     <button class="cart-btn" type="button" onclick="window.location.href='<?= url_to('main_arace_carrinho') ?>'">
         <i data-lucide="shopping-cart"></i>
-        <span class="cart-count">2 itens</span>
+        <span class="cart-count">0 itens</span>
       </button>
     <button class="cart-btn" type="button" onclick="window.location.href='<?= url_to('user_arace_favoritos') ?>'">
         <i data-lucide="heart"></i>
-        <span class="cart-count">5 itens</span>
+        <span class="cart-count">0 itens</span>
       </button>
       <button class="avatar-btn" type="button" onclick="window.location.href='<?= url_to('user_arace_perfil') ?>'" aria-label="Abrir perfil">
         <?php if ($avatar !== ''): ?>
@@ -54,9 +54,6 @@ $avatar = trim((string) ($usuario['fotoUrl'] ?? $usuario['avatar'] ?? ''));
     <a class="nav-item active" href="<?= url_to('main_arace_carrinho') ?>">
       <i data-lucide="shopping-cart"></i> Carrinho
     </a>
-    <a class="nav-item" href="<?= url_to('user_arace_notificacao') ?>">
-      <i data-lucide="bell"></i> Notificações
-    </a>
     <a class="nav-item" href="<?= url_to('main_arace_config') ?>">
       <i data-lucide="settings"></i> Configurações
     </a>
@@ -66,18 +63,13 @@ $avatar = trim((string) ($usuario['fotoUrl'] ?? $usuario['avatar'] ?? ''));
     <a class="nav-item" href="<?= url_to('auth_cadastro_produtor') ?>">
       <i data-lucide="box"></i> Quero ser produtor
     </a>
-    <div class="nav-divider"></div>
-    <div class="nav-section">Reportar</div>
-    <a class="nav-item" href="<?= url_to('main_arace_config') ?>#pagamento">
-      <i data-lucide="hand-coins"></i> Detalhes de pagamento
-    </a>
+   
   </aside>
 
 <main>
   <div class="config-header">
     <div>
       <h1>Configurações</h1>
-      <p>Gerencie suas preferências e dados da conta</p>
     </div>
   </div>
 
@@ -202,55 +194,13 @@ $avatar = trim((string) ($usuario['fotoUrl'] ?? $usuario['avatar'] ?? ''));
           </div>
         </div>
 
-        <div class="config-card">
-          <div class="config-card-header">
-            <div><h2>Verificação em duas etapas</h2><p>Adiciona uma camada extra de segurança</p></div>
-          </div>
-          <div class="config-card-body">
-            <div class="toggle-row">
-              <div class="toggle-info">
-                <span>SMS</span>
-                <small>Receber código por mensagem de texto</small>
-              </div>
-              <label class="toggle-switch">
-                <input type="checkbox" checked />
-                <span class="toggle-slider"></span>
-              </label>
-            </div>
-            <div class="toggle-row">
-              <div class="toggle-info">
-                <span>E-mail</span>
-                <small>Receber código por e-mail</small>
-              </div>
-              <label class="toggle-switch">
-                <input type="checkbox" />
-                <span class="toggle-slider"></span>
-              </label>
-            </div>
-            <div class="toggle-row">
-              <div class="toggle-info">
-                <span>App autenticador</span>
-                <small>Google Authenticator, Authy, etc.</small>
-              </div>
-              <label class="toggle-switch">
-                <input type="checkbox" />
-                <span class="toggle-slider"></span>
-              </label>
-            </div>
-          </div>
-        </div>
+        
 
         <div class="config-card danger-card">
           <div class="config-card-header">
-            <div><h2>Zona de perigo</h2><p>Ações irreversíveis</p></div>
+            <div><h2>Excluir conta</h2></div>
           </div>
           <div class="config-card-body">
-            <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.75rem">
-              <div>
-                <div style="font-size:14px;font-weight:500;color:var(--text)">Desativar conta</div>
-                <div style="font-size:12px;color:var(--muted);margin-top:2px">Sua conta ficará invisível temporariamente</div>
-              </div>
-            </div>
             <div style="height:.5px;background:rgba(220,38,38,.15);margin:.25rem 0"></div>
             <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.75rem">
               <div>
@@ -262,73 +212,8 @@ $avatar = trim((string) ($usuario['fotoUrl'] ?? $usuario['avatar'] ?? ''));
         </div>
       </section>
 
-      <!-- -- NOTIFICAÇÕES -- -->
-      <section class="config-section" id="sec-notificacoes">
-        <div class="config-card">
-          <div class="config-card-header">
-            <div><h2>Notificações por e-mail</h2></div>
-          </div>
-          <div class="config-card-body">
-            <div class="toggle-row">
-              <div class="toggle-info"><span>Novos pedidos</span><small>Quando um pedido for feito ou atualizado</small></div>
-              <label class="toggle-switch"><input type="checkbox" checked /><span class="toggle-slider"></span></label>
-            </div>
-            <div class="toggle-row">
-              <div class="toggle-info"><span>Promoções</span><small>Ofertas exclusivas e cupons</small></div>
-              <label class="toggle-switch"><input type="checkbox" checked /><span class="toggle-slider"></span></label>
-            </div>
-            <div class="toggle-row">
-              <div class="toggle-info"><span>Newsletter</span><small>Novidades da cultura capixaba</small></div>
-              <label class="toggle-switch"><input type="checkbox" /><span class="toggle-slider"></span></label>
-            </div>
-            <div class="toggle-row">
-              <div class="toggle-info"><span>Respostas de avaliações</span><small>Quando alguém responder sua avaliação</small></div>
-              <label class="toggle-switch"><input type="checkbox" checked /><span class="toggle-slider"></span></label>
-            </div>
-          </div>
-        </div>
-        <div class="config-card">
-          <div class="config-card-header">
-            <div><h2>Notificações push</h2></div>
-          </div>
-          <div class="config-card-body">
-            <div class="toggle-row">
-              <div class="toggle-info"><span>Chat</span><small>Novas mensagens de artesãos</small></div>
-              <label class="toggle-switch"><input type="checkbox" checked /><span class="toggle-slider"></span></label>
-            </div>
-            <div class="toggle-row">
-              <div class="toggle-info"><span>Status do pedido</span><small>Atualizações de envio e entrega</small></div>
-              <label class="toggle-switch"><input type="checkbox" checked /><span class="toggle-slider"></span></label>
-            </div>
-            <div class="toggle-row">
-              <div class="toggle-info"><span>Novos produtos favoritos</span><small>Produtos novos de artesãos que você segue</small></div>
-              <label class="toggle-switch"><input type="checkbox" /><span class="toggle-slider"></span></label>
-            </div>
-          </div>
-        </div>
-      </section>
-
       <!-- -- PAGAMENTO -- -->
       <section class="config-section" id="sec-pagamento">
-        <div class="config-card">
-          <div class="config-card-header">
-            <div><h2>Métodos de pagamento</h2><p>Cartões e formas de pagamento salvos</p></div>
-          </div>
-          <div class="config-card-body" id="cartoesList">
-            <div style="display:flex;align-items:center;justify-content:space-between;padding:.5rem 0">
-              <div style="display:flex;align-items:center;gap:12px">
-                <div style="width:44px;height:28px;background:var(--bg);border:.5px solid var(--border);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:var(--azul)">VISA</div>
-                <div>
-                  <div style="font-size:14px;color:var(--text)">•••• •••• •••• 4242</div>
-                  <div style="font-size:12px;color:var(--muted)">Expira 12/27</div>
-                </div>
-              </div>
-              <div style="display:flex;align-items:center;gap:8px">
-                <span style="font-size:11px;background:var(--verde-l);color:var(--verde);border-radius:99px;padding:2px 10px;font-weight:500">Principal</span>
-              </div>
-            </div>
-          </div>
-        </div>
         <div class="config-card">
           <div class="config-card-header">
             <div><h2>Pix</h2><p>Chave Pix cadastrada</p></div>
@@ -342,165 +227,13 @@ $avatar = trim((string) ($usuario['fotoUrl'] ?? $usuario['avatar'] ?? ''));
         </div>
       </section>
 
-      <!-- -- ENDEREÇOS -- -->
-      <section class="config-section" id="sec-enderecos">
-        <div class="config-card">
-          <div class="config-card-header">
-            <div><h2>Endereços salvos</h2></div>
-          </div>
-          <div class="config-card-body">
-            <div style="display:flex;align-items:flex-start;justify-content:space-between;padding:.25rem 0">
-              <div>
-                <div style="font-size:14px;font-weight:500;color:var(--text)">Casa</div>
-                <div style="font-size:13px;color:var(--muted);margin-top:3px;line-height:1.5">Rua das Palmeiras, 123 — Jardim da Penha<br/>Vitória, ES — 29060-000</div>
-              </div>
-              <div style="display:flex;align-items:center;gap:8px">
-                <span style="font-size:11px;background:var(--laranja-l);color:var(--laranja-d);border-radius:99px;padding:2px 10px;font-weight:500">Principal</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="config-card">
-          <div class="config-card-header">
-            <div><h2>Adicionar endereço</h2></div>
-          </div>
-          <div class="config-card-body">
-            <div class="field-row">
-              <div class="field-group">
-                <label>CEP</label>
-                <input class="input-field" type="text" id="cep" placeholder="00000-000" maxlength="9" oninput="mascaraCEP(this)" />
-              </div>
-              <div class="field-group">
-                <label>Estado</label>
-                <select class="input-field" id="estado">
-                  <option value="">Selecione</option>
-                  <option value="ES" selected>Espírito Santo</option>
-                  <option value="SP">São Paulo</option>
-                  <option value="RJ">Rio de Janeiro</option>
-                  <option value="MG">Minas Gerais</option>
-                  <option value="BA">Bahia</option>
-                </select>
-              </div>
-            </div>
-            <div class="field-row">
-              <div class="field-group">
-                <label>Cidade</label>
-                <input class="input-field" type="text" id="cidade" placeholder="Vitória" />
-              </div>
-              <div class="field-group">
-                <label>Bairro</label>
-                <input class="input-field" type="text" id="bairro" placeholder="Bairro" />
-              </div>
-            </div>
-            <div class="field-group">
-              <label>Rua</label>
-              <input class="input-field" type="text" id="rua" placeholder="Nome da rua" />
-            </div>
-            <div class="field-row">
-              <div class="field-group">
-                <label>Número</label>
-                <input class="input-field" type="text" placeholder="Nº" />
-              </div>
-              <div class="field-group">
-                <label>Complemento</label>
-                <input class="input-field" type="text" placeholder="Apto, bloco…" />
-              </div>
-            </div>
+      
+        
           </div>
         </div>
       </section>
 
-      <!-- -- APARÊNCIA -- -->
-      <section class="config-section" id="sec-aparencia">
-        <div class="config-card">
-          <div class="config-card-header">
-            <div><h2>Tema</h2><p>Escolha a aparência da interface</p></div>
-          </div>
-          <div class="config-card-body">
-            <div class="theme-options">
-              <div class="theme-option active" onclick="selecionarTema(this)">
-                <div class="theme-swatch" style="background:linear-gradient(135deg,#f4f2ed,#fff)"></div>
-                <span class="theme-label">Claro</span>
-              </div>
-              <div class="theme-option" onclick="selecionarTema(this)">
-                <div class="theme-swatch" style="background:linear-gradient(135deg,#1a1a18,#2a2a25)"></div>
-                <span class="theme-label">Escuro</span>
-              </div>
-              <div class="theme-option" onclick="selecionarTema(this)">
-                <div class="theme-swatch" style="background:linear-gradient(135deg,#f4f2ed 50%,#1a1a18 50%)"></div>
-                <span class="theme-label">Sistema</span>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="config-card">
-          <div class="config-card-header">
-            <div><h2>Idioma e moeda</h2></div>
-          </div>
-          <div class="config-card-body">
-            <div class="field-row">
-              <div class="field-group">
-                <label>Idioma</label>
-                <div class="select-with-icon">
-                  <span class="flag">BR</span>
-                  <select class="input-field" id="idioma">
-                    <option value="pt-BR" selected>Português (Brasil)</option>
-                    <option value="en">English</option>
-                    <option value="es">Español</option>
-                  </select>
-                </div>
-              </div>
-              <div class="field-group">
-                <label>Moeda</label>
-                <select class="input-field">
-                  <option value="BRL" selected>BRL — Real brasileiro</option>
-                  <option value="USD">USD — Dólar americano</option>
-                  <option value="EUR">EUR — Euro</option>
-                </select>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- -- PRIVACIDADE -- -->
-      <section class="config-section" id="sec-privacidade">
-        <div class="config-card">
-          <div class="config-card-header">
-            <div><h2>Visibilidade do perfil</h2></div>
-          </div>
-          <div class="config-card-body">
-            <div class="toggle-row">
-              <div class="toggle-info"><span>Perfil público</span><small>Outros usuários podem ver seu perfil</small></div>
-              <label class="toggle-switch"><input type="checkbox" checked /><span class="toggle-slider"></span></label>
-            </div>
-            <div class="toggle-row">
-              <div class="toggle-info"><span>Mostrar lista de favoritos</span><small>Seus produtos favoritos ficam visíveis</small></div>
-              <label class="toggle-switch"><input type="checkbox" /><span class="toggle-slider"></span></label>
-            </div>
-            <div class="toggle-row">
-              <div class="toggle-info"><span>Aparecer nas buscas</span><small>Seu perfil aparece nos resultados de pesquisa</small></div>
-              <label class="toggle-switch"><input type="checkbox" checked /><span class="toggle-slider"></span></label>
-            </div>
-          </div>
-        </div>
-        <div class="config-card">
-          <div class="config-card-header">
-            <div><h2>Dados e privacidade</h2></div>
-          </div>
-          <div class="config-card-body">
-            <div class="toggle-row">
-              <div class="toggle-info"><span>Cookies de análise</span><small>Ajuda a melhorar a plataforma</small></div>
-              <label class="toggle-switch"><input type="checkbox" checked /><span class="toggle-slider"></span></label>
-            </div>
-            <div class="toggle-row">
-              <div class="toggle-info"><span>Personalização de anúncios</span><small>Recomendações baseadas no seu histórico</small></div>
-              <label class="toggle-switch"><input type="checkbox" /><span class="toggle-slider"></span></label>
-            </div>
-          </div>
-        </div>
-      </section>
+      
 
     </div><!-- /conteúdo -->
   </div><!-- /config-layout -->

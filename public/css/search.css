@@ -23,38 +23,6 @@
   --body:      'Google Sans Flex', 'Google Sans', sans-serif;
 }
 
-.chat-bubble{
-  width: 60px;
-  height: 60px;
-  background-color: var(--azul);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;     
-  justify-content: center;
-  position: fixed;
-  bottom: 20px; 
-  right: 20px;
-  z-index: 999;
-}
-.chat-bubble:hover{
-  cursor: pointer;
-  animation: pulse 1s infinite;
-}
-@keyframes pulse {
-  0% {
-    transform: translateY(-4px);
-  }
-  50% {
-    transform: translateY(1px);
-  }
-  100% {
-    transform: translateY(-4px);
-  }
-}
-.chat-bubble * {
-  stroke: #ffffff !important;
-  color: #ffffff !important;
-} 
 html { scroll-behavior: smooth; }
 body {
   font-family: var(--body); color: var(--text);

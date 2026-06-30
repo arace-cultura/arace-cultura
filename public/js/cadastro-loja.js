@@ -1,4 +1,6 @@
-const DISTRITOS_FALLBACK = [
+// Valida o cadastro de loja e preenche distritos reais do IBGE.
+
+const DISTRITOS_PADRAO_ES = [
   { id: 'vitoria', nome: 'Vitoria' },
   { id: 'vila-velha', nome: 'Vila Velha' },
   { id: 'serra', nome: 'Serra' },
@@ -36,7 +38,7 @@ async function carregarDistritos() {
     const distritos = await resposta.json();
     preencherDistritos(distritos);
   } catch {
-    preencherDistritos(DISTRITOS_FALLBACK);
+    preencherDistritos(DISTRITOS_PADRAO_ES);
   }
 }
 

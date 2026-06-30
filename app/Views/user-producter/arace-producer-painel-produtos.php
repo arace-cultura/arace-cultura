@@ -2,6 +2,9 @@
 <?php
 $usuario = $usuario ?? session()->get('arace_user') ?? [];
 $avatar = trim((string) ($usuario['fotoUrl'] ?? $usuario['avatar'] ?? ''));
+$produtos = $produtos ?? [];
+$pedidos = $pedidos ?? [];
+$metricas = $metricas ?? ['faturamento' => 0, 'pedidos' => 0, 'pendentes' => 0, 'avaliacao' => 0];
 ?>
 <html lang="pt-BR">
 <head>
@@ -29,11 +32,11 @@ $avatar = trim((string) ($usuario['fotoUrl'] ?? $usuario['avatar'] ?? ''));
   <div class="header-right">
     <button class="cart-btn" type="button" onclick="window.location.href='<?= url_to('main_arace_carrinho') ?>'">
       <i data-lucide="shopping-cart"></i>
-      <span class="cart-count">2 itens</span>
+      <span class="cart-count">0 itens</span>
     </button>
     <button class="cart-btn" type="button" onclick="window.location.href='<?= url_to('user_arace_favoritos') ?>'">
       <i data-lucide="heart"></i>
-      <span class="cart-count">5 itens</span>
+      <span class="cart-count">0 itens</span>
     </button>
     <button class="avatar-btn" type="button" onclick="window.location.href='<?= url_to('user_arace_perfil') ?>'" aria-label="Abrir perfil">
       <?php if ($avatar !== ''): ?>
@@ -44,14 +47,6 @@ $avatar = trim((string) ($usuario['fotoUrl'] ?? $usuario['avatar'] ?? ''));
     </button>
   </div>
 </header>
-
-<!--Icone de chat-->
-<div class="chat-bubble">
-  <a href="<?= url_to('user_chat') ?>">
-    <i data-lucide="message-circle-more"></i>
-  </a>
-</div>
-
 <!-- SIDEBAR -->
 <aside>
     <a class="nav-item" href="<?= url_to('home') ?>">
@@ -62,9 +57,6 @@ $avatar = trim((string) ($usuario['fotoUrl'] ?? $usuario['avatar'] ?? ''));
     </a>
     <a class="nav-item active" href="<?= url_to('main_arace_carrinho') ?>">
       <i data-lucide="shopping-cart"></i> Carrinho
-    </a>
-    <a class="nav-item" href="<?= url_to('user_arace_notificacao') ?>">
-      <i data-lucide="bell"></i> Notificações
     </a>
     <a class="nav-item" href="<?= url_to('main_arace_config') ?>">
       <i data-lucide="settings"></i> Configurações
@@ -90,9 +82,9 @@ $avatar = trim((string) ($usuario['fotoUrl'] ?? $usuario['avatar'] ?? ''));
       <h1>Bom dia! </h1>
       <p>Aqui está um resumo da sua loja hoje — <span id="dataHoje"></span></p>
     </div>
-    <a href="<?= url_to('produtor_painel') ?>" class="btn-novo-produto">
+    <button type="button" class="btn-novo-produto" data-open-product-modal>
       <i data-lucide="plus"></i> Novo produto
-    </a>
+    </button>
   </div>
 
   <!-- MÉTRICAS PRINCIPAIS -->
@@ -101,23 +93,23 @@ $avatar = trim((string) ($usuario['fotoUrl'] ?? $usuario['avatar'] ?? ''));
       <div class="metrica-icon verde"><i data-lucide="circle-dollar-sign"></i></div>
       <div class="metrica-info">
         <span class="metrica-label">Faturamento (mês)</span>
-        <span class="metrica-value">R$ 3.840,00</span>
-        <span class="metrica-delta positivo"><i data-lucide="trending-up"></i> +12% vs mês anterior</span>
+        <span class="metrica-value">R$ <?= number_format((float) ($metricas['faturamento'] ?? 0), 2, ',', '.') ?></span>
+        <span class="metrica-delta neutro">Dados do Firestore</span>
       </div>
     </div>
     <div class="metrica-card">
       <div class="metrica-icon azul"><i data-lucide="package"></i></div>
       <div class="metrica-info">
         <span class="metrica-label">Pedidos (mês)</span>
-        <span class="metrica-value">27</span>
-        <span class="metrica-delta positivo"><i data-lucide="trending-up"></i> +5 vs mês anterior</span>
+        <span class="metrica-value"><?= (int) ($metricas['pedidos'] ?? 0) ?></span>
+        <span class="metrica-delta neutro">Total registrado</span>
       </div>
     </div>
     <div class="metrica-card">
       <div class="metrica-icon laranja"><i data-lucide="clock"></i></div>
       <div class="metrica-info">
         <span class="metrica-label">Pedidos pendentes</span>
-        <span class="metrica-value">3</span>
+        <span class="metrica-value"><?= (int) ($metricas['pendentes'] ?? 0) ?></span>
         <span class="metrica-delta neutro">Aguardando ação</span>
       </div>
     </div>
@@ -125,171 +117,151 @@ $avatar = trim((string) ($usuario['fotoUrl'] ?? $usuario['avatar'] ?? ''));
       <div class="metrica-icon amarelo"><i data-lucide="star"></i></div>
       <div class="metrica-info">
         <span class="metrica-label">Avaliação média</span>
-        <span class="metrica-value">4,8</span>
-        <span class="metrica-delta positivo"><i data-lucide="trending-up"></i> +0,2 este mês</span>
+        <span class="metrica-value"><?= number_format((float) ($metricas['avaliacao'] ?? 0), 1, ',', '.') ?></span>
+        <span class="metrica-delta neutro">Media dos produtos</span>
       </div>
     </div>
   </div>
 
   <!-- GRID CENTRAL -->
   <div class="painel-grid">
-
-    <!-- PEDIDOS RECENTES -->
     <div class="painel-card pedidos-recentes">
       <div class="card-head">
         <h2>Pedidos recentes</h2>
         <a href="<?= url_to('produtor_pedidos') ?>" class="link-ver-todos">Ver todos <i data-lucide="arrow-right"></i></a>
       </div>
       <div class="pedidos-mini-list">
-
-        <div class="pedido-mini" data-href="<?= url_to('produtor_pedidos') ?>">
-          <div class="pedido-mini-id">#4821</div>
-          <div class="pedido-mini-info">
-            <span class="pedido-mini-cliente">Ana Clara Silva</span>
-            <span class="pedido-mini-produto">Kit Panela de Barro</span>
+        <?php if ($pedidos === []): ?>
+          <div class="pedido-mini">
+            <div class="pedido-mini-info">
+              <span class="pedido-mini-cliente">Nenhum pedido recebido</span>
+              <span class="pedido-mini-produto">Os pedidos da loja aparecerao aqui quando estiverem no Firestore.</span>
+            </div>
           </div>
-          <span class="status-badge pendente">Pendente</span>
-          <span class="pedido-mini-valor">R$200</span>
-        </div>
-
-        <div class="pedido-mini" data-href="<?= url_to('produtor_pedidos') ?>">
-          <div class="pedido-mini-id">#4820</div>
-          <div class="pedido-mini-info">
-            <span class="pedido-mini-cliente">Marcos Oliveira</span>
-            <span class="pedido-mini-produto">Panela Trad. M ×2</span>
+        <?php endif; ?>
+        <?php foreach (array_slice($pedidos, 0, 5) as $pedido): ?>
+          <div class="pedido-mini" data-href="<?= url_to('produtor_pedidos') ?>">
+            <div class="pedido-mini-id">#<?= esc((string) ($pedido['id'] ?? '')) ?></div>
+            <div class="pedido-mini-info">
+              <span class="pedido-mini-cliente"><?= esc($pedido['cliente'] ?? 'Cliente Arace') ?></span>
+              <span class="pedido-mini-produto"><?= esc($pedido['produto'] ?? 'Pedido Arace') ?> x<?= (int) ($pedido['qtd'] ?? 1) ?></span>
+            </div>
+            <span class="status-badge <?= esc($pedido['status'] ?? 'pendente', 'attr') ?>"><?= esc($pedido['status'] ?? 'pendente') ?></span>
+            <span class="pedido-mini-valor">R$<?= number_format((float) ($pedido['valor'] ?? 0), 2, ',', '.') ?></span>
           </div>
-          <span class="status-badge producao">Em produção</span>
-          <span class="pedido-mini-valor">R$170</span>
-        </div>
-
-        <div class="pedido-mini" data-href="<?= url_to('produtor_pedidos') ?>">
-          <div class="pedido-mini-id">#4819</div>
-          <div class="pedido-mini-info">
-            <span class="pedido-mini-cliente">Fernanda Costa</span>
-            <span class="pedido-mini-produto">Prato de Cerâmica ×3</span>
-          </div>
-          <span class="status-badge enviado">Enviado</span>
-          <span class="pedido-mini-valor">R$135</span>
-        </div>
-
-        <div class="pedido-mini" data-href="<?= url_to('produtor_pedidos') ?>">
-          <div class="pedido-mini-id">#4818</div>
-          <div class="pedido-mini-info">
-            <span class="pedido-mini-cliente">João Pedro Matos</span>
-            <span class="pedido-mini-produto">Kit Panela de Barro</span>
-          </div>
-          <span class="status-badge entregue">Entregue</span>
-          <span class="pedido-mini-valor">R$200</span>
-        </div>
-
-        <div class="pedido-mini" data-href="<?= url_to('produtor_pedidos') ?>">
-          <div class="pedido-mini-id">#4817</div>
-          <div class="pedido-mini-info">
-            <span class="pedido-mini-cliente">Luciana Ferreira</span>
-            <span class="pedido-mini-produto">Vaso Artesanal Grande</span>
-          </div>
-          <span class="status-badge pendente">Pendente</span>
-          <span class="pedido-mini-valor">R$95</span>
-        </div>
-
+        <?php endforeach; ?>
       </div>
     </div>
 
-    <!-- COLUNA DIREITA -->
     <div class="painel-col-right">
-
-      <!-- PRODUTOS DA LOJA -->
       <div class="painel-card">
         <div class="card-head">
           <h2>Meus produtos</h2>
           <a href="<?= url_to('produtor_painel') ?>" class="link-ver-todos">Gerenciar <i data-lucide="arrow-right"></i></a>
         </div>
         <div class="produtos-mini-list">
-
-          <div class="produto-mini">
-            <div class="produto-mini-img" style="background:#b5a898"></div>
-            <div class="produto-mini-info">
-              <span class="produto-mini-nome">Kit Panela de Barro</span>
-              <span class="produto-mini-preco">R$ 200,00</span>
+          <?php if ($produtos === []): ?>
+            <div class="produto-mini">
+              <div class="produto-mini-info">
+                <span class="produto-mini-nome">Nenhum produto cadastrado</span>
+                <span class="produto-mini-preco">Cadastre produtos no Firestore para listar aqui.</span>
+              </div>
             </div>
-            <span class="stock-badge">Em estoque</span>
-            <div class="produto-mini-actions">
-              <button type="button" data-href="<?= url_to('produtor_painel') ?>" title="Editar"><i data-lucide="pencil"></i></button>
-              <button class="del" title="Excluir"><i data-lucide="trash-2"></i></button>
+          <?php endif; ?>
+          <?php foreach (array_slice($produtos, 0, 3) as $produto): ?>
+            <div class="produto-mini">
+              <div class="produto-mini-img" style="background:<?= esc($produto['cor'] ?? '#b5a898', 'attr') ?>"></div>
+              <div class="produto-mini-info">
+                <span class="produto-mini-nome"><?= esc($produto['nome'] ?? 'Produto Arace') ?></span>
+                <span class="produto-mini-preco">R$ <?= number_format((float) ($produto['preco'] ?? 0), 2, ',', '.') ?></span>
+              </div>
+              <span class="stock-badge"><?= ($produto['disponivel'] ?? true) ? 'Em estoque' : 'Indisponivel' ?></span>
+              <div class="produto-mini-actions">
+                <button type="button" data-href="<?= url_to('produtor_painel') ?>" title="Editar"><i data-lucide="pencil"></i></button>
+              </div>
             </div>
-          </div>
-
-          <div class="produto-mini">
-            <div class="produto-mini-img" style="background:#a09880"></div>
-            <div class="produto-mini-info">
-              <span class="produto-mini-nome">Panela Tradicional M</span>
-              <span class="produto-mini-preco">R$ 85,00</span>
-            </div>
-            <span class="stock-badge">Em estoque</span>
-            <div class="produto-mini-actions">
-              <button type="button" data-href="<?= url_to('produtor_painel') ?>" title="Editar"><i data-lucide="pencil"></i></button>
-              <button class="del" title="Excluir"><i data-lucide="trash-2"></i></button>
-            </div>
-          </div>
-
-          <div class="produto-mini">
-            <div class="produto-mini-img" style="background:#c4b49a"></div>
-            <div class="produto-mini-info">
-              <span class="produto-mini-nome">Prato de Cerâmica</span>
-              <span class="produto-mini-preco">R$ 45,00</span>
-            </div>
-            <span class="stock-badge esgotado">Esgotado</span>
-            <div class="produto-mini-actions">
-              <button type="button" data-href="<?= url_to('produtor_painel') ?>" title="Editar"><i data-lucide="pencil"></i></button>
-              <button class="del" title="Excluir"><i data-lucide="trash-2"></i></button>
-            </div>
-          </div>
-
+          <?php endforeach; ?>
         </div>
 
-        <a href="<?= url_to('produtor_painel') ?>" class="btn-add-produto">
+        <button type="button" class="btn-add-produto" data-open-product-modal>
           <i data-lucide="plus"></i> Adicionar produto
-        </a>
+        </button>
       </div>
 
-      <!-- AVALIAÇÕES RECENTES -->
       <div class="painel-card">
         <div class="card-head">
-          <h2>Avaliações recentes</h2>
+          <h2>Avaliacoes recentes</h2>
         </div>
         <div class="avaliacoes-list">
-
           <div class="avaliacao-mini">
-            <div class="avaliacao-header">
-              <span class="avaliacao-user">Ana Clara Silva</span>
-              <div class="mini-stars">
-                <i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i>
-                <i data-lucide="star"></i><i data-lucide="star"></i>
-              </div>
-            </div>
-            <p class="avaliacao-text">Panela maravilhosa! Já fiz moqueca duas vezes, ficou perfeita.</p>
-            <span class="avaliacao-produto">Kit Panela de Barro · há 2 dias</span>
+            <p>Ainda nao ha avaliacoes registradas no Firestore.</p>
           </div>
-
-          <div class="avaliacao-mini">
-            <div class="avaliacao-header">
-              <span class="avaliacao-user">João Pedro Matos</span>
-              <div class="mini-stars">
-                <i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i>
-                <i data-lucide="star"></i><i data-lucide="star" style="opacity:.3"></i>
-              </div>
-            </div>
-            <p class="avaliacao-text">Produto de excelente qualidade, bem embalado. Recomendo!</p>
-            <span class="avaliacao-produto">Panela Tradicional M · há 5 dias</span>
-          </div>
-
         </div>
       </div>
-
     </div>
   </div>
-
 </main>
+
+<div class="modal-overlay" id="produtoModal" aria-hidden="true">
+  <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="produtoModalTitulo">
+    <form id="produtoForm" enctype="multipart/form-data">
+      <div class="modal-header">
+        <div>
+          <h2 id="produtoModalTitulo">Novo produto</h2>
+          <p class="modal-sub">Os dados serao salvos no Firestore e a imagem no Supabase.</p>
+        </div>
+        <button class="modal-close" type="button" data-close-product-modal aria-label="Fechar">
+          <i data-lucide="x"></i>
+        </button>
+      </div>
+
+      <div class="modal-body">
+        <label class="modal-label" for="produtoNome">Nome do produto</label>
+        <input class="input-field" type="text" id="produtoNome" name="nome" required maxlength="140" />
+
+        <label class="modal-label" for="produtoDescricao">Descricao</label>
+        <textarea class="input-field" id="produtoDescricao" name="descricao" rows="4" maxlength="1200"></textarea>
+
+        <div class="field-row">
+          <div class="field-group">
+            <label class="modal-label" for="produtoPreco">Preco</label>
+            <input class="input-field" type="number" id="produtoPreco" name="preco" min="0" step="0.01" required />
+          </div>
+          <div class="field-group">
+            <label class="modal-label" for="produtoEstoque">Estoque</label>
+            <input class="input-field" type="number" id="produtoEstoque" name="estoque" min="0" step="1" value="1" />
+          </div>
+        </div>
+
+        <div class="field-row">
+          <div class="field-group">
+            <label class="modal-label" for="produtoCategoria">Categoria</label>
+            <input class="input-field" type="text" id="produtoCategoria" name="categoria" />
+          </div>
+          <div class="field-group">
+            <label class="modal-label" for="produtoCor">Cor do placeholder</label>
+            <input class="input-field" type="color" id="produtoCor" name="cor" value="#b5a898" />
+          </div>
+        </div>
+
+        <label class="modal-label" for="produtoImagemArquivo">Imagem do produto</label>
+        <input class="input-field" type="file" id="produtoImagemArquivo" name="imagemArquivo" accept="image/*" />
+
+        <label class="modal-label" for="produtoImagemUrl">Ou URL publica da imagem</label>
+        <input class="input-field" type="url" id="produtoImagemUrl" name="imagemUrl" placeholder="https://..." />
+
+        <p class="modal-sub" id="produtoFormFeedback" aria-live="polite"></p>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn-status-action" type="button" data-close-product-modal>Cancelar</button>
+        <button class="btn-status-action" type="submit">
+          <i data-lucide="save"></i> Salvar produto
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
 
 <script src="/js/arace-state.js"></script>
 <script src="/js/producer-painel-produtos.js"></script>

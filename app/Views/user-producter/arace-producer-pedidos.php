@@ -2,6 +2,8 @@
 <?php
 $usuario = $usuario ?? session()->get('arace_user') ?? [];
 $avatar = trim((string) ($usuario['fotoUrl'] ?? $usuario['avatar'] ?? ''));
+$pedidos = $pedidos ?? [];
+$pedidoStats = $pedidoStats ?? ['pendente' => 0, 'producao' => 0, 'enviado' => 0, 'entregue' => 0];
 ?>
 <html lang="pt-BR">
 <head>
@@ -29,11 +31,11 @@ $avatar = trim((string) ($usuario['fotoUrl'] ?? $usuario['avatar'] ?? ''));
   <div class="header-right">
     <button class="cart-btn" type="button" onclick="window.location.href='<?= url_to('main_arace_carrinho') ?>'">
       <i data-lucide="shopping-cart"></i>
-      <span class="cart-count">2 itens</span>
+      <span class="cart-count">0 itens</span>
     </button>
     <button class="cart-btn" type="button" onclick="window.location.href='<?= url_to('user_arace_favoritos') ?>'">
       <i data-lucide="heart"></i>
-      <span class="cart-count">5 itens</span>
+      <span class="cart-count">0 itens</span>
     </button>
     <button class="avatar-btn" type="button" onclick="window.location.href='<?= url_to('user_arace_perfil') ?>'" aria-label="Abrir perfil">
       <?php if ($avatar !== ''): ?>
@@ -44,14 +46,6 @@ $avatar = trim((string) ($usuario['fotoUrl'] ?? $usuario['avatar'] ?? ''));
     </button>
   </div>
 </header>
-
-<!--Icone de chat-->
-<div class="chat-bubble">
-  <a href="<?= url_to('user_chat') ?>">
-    <i data-lucide="message-circle-more"></i>
-  </a>
-</div>
-
 <!-- SIDEBAR -->
 <aside>
     <a class="nav-item" href="<?= url_to('home') ?>">
@@ -62,9 +56,6 @@ $avatar = trim((string) ($usuario['fotoUrl'] ?? $usuario['avatar'] ?? ''));
     </a>
     <a class="nav-item active" href="<?= url_to('main_arace_carrinho') ?>">
       <i data-lucide="shopping-cart"></i> Carrinho
-    </a>
-    <a class="nav-item" href="<?= url_to('user_arace_notificacao') ?>">
-      <i data-lucide="bell"></i> Notificações
     </a>
     <a class="nav-item" href="<?= url_to('main_arace_config') ?>">
       <i data-lucide="settings"></i> Configurações
@@ -104,28 +95,28 @@ $avatar = trim((string) ($usuario['fotoUrl'] ?? $usuario['avatar'] ?? ''));
     <div class="stat-card">
       <div class="stat-icon pendente"><i data-lucide="clock"></i></div>
       <div>
-        <div class="stat-value" id="cnt-pendente">3</div>
+        <div class="stat-value" id="cnt-pendente"><?= (int) ($pedidoStats['pendente'] ?? 0) ?></div>
         <div class="stat-label">Pendentes</div>
       </div>
     </div>
     <div class="stat-card">
       <div class="stat-icon producao"><i data-lucide="package"></i></div>
       <div>
-        <div class="stat-value" id="cnt-producao">2</div>
+        <div class="stat-value" id="cnt-producao"><?= (int) ($pedidoStats['producao'] ?? 0) ?></div>
         <div class="stat-label">Em produção</div>
       </div>
     </div>
     <div class="stat-card">
       <div class="stat-icon enviado"><i data-lucide="truck"></i></div>
       <div>
-        <div class="stat-value" id="cnt-enviado">4</div>
+        <div class="stat-value" id="cnt-enviado"><?= (int) ($pedidoStats['enviado'] ?? 0) ?></div>
         <div class="stat-label">Enviados</div>
       </div>
     </div>
     <div class="stat-card">
       <div class="stat-icon entregue"><i data-lucide="circle-check"></i></div>
       <div>
-        <div class="stat-value" id="cnt-entregue">18</div>
+        <div class="stat-value" id="cnt-entregue"><?= (int) ($pedidoStats['entregue'] ?? 0) ?></div>
         <div class="stat-label">Entregues</div>
       </div>
     </div>
@@ -169,7 +160,7 @@ $avatar = trim((string) ($usuario['fotoUrl'] ?? $usuario['avatar'] ?? ''));
     </table>
   </div>
 
-  <!-- PAGINAÇÃO -->
+  <!-- PAGINACAO -->
   <div class="pedidos-pagination">
     <span id="paginacaoInfo">Mostrando 1–7 de 27 pedidos</span>
     <div class="pagination-btns">
@@ -188,7 +179,7 @@ $avatar = trim((string) ($usuario['fotoUrl'] ?? $usuario['avatar'] ?? ''));
   <div class="modal-box">
     <div class="modal-header">
       <div>
-        <h2 id="modalTitulo">Pedido #4821</h2>
+        <h2 id="modalTitulo">Pedido</h2>
         <p id="modalData" class="modal-sub"></p>
       </div>
       <button class="modal-close" type="button"><i data-lucide="x"></i></button>
@@ -222,6 +213,9 @@ $avatar = trim((string) ($usuario['fotoUrl'] ?? $usuario['avatar'] ?? ''));
   </div>
 </div>
 
+<script>
+  window.ARACE_PEDIDOS = <?= json_encode($pedidos, JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>;
+</script>
 <script src="/js/arace-state.js"></script>
 <script src="/js/producer-pedidos.js"></script>
 </body>

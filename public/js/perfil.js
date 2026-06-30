@@ -1,10 +1,28 @@
+// Monta a pagina de perfil com dados reais da sessao e das APIs do Firestore.
+// Quando alguma API nao responde, a tela mostra zero em vez de usar numeros falsos.
 function textoOuPendente(valor) {
   return valor || '<i data-lucide="alert-circle"></i> Nao informado';
 }
 
+async function buscarTotalApi(caminho, extrairTotal) {
+  try {
+    const resposta = await fetch(caminho, { headers: { Accept: 'application/json' } });
+    if (!resposta.ok) return 0;
+
+    const payload = await resposta.json();
+    return extrairTotal(payload);
+  } catch {
+    return 0;
+  }
+}
+
 async function carregarPerfil() {
   const user = window.ARACE_AUTH_USER || {};
-  const favoritos = Number(user.favoritos || 0);
+  const favoritos = await buscarTotalApi('/api/favorites', payload => Array.isArray(payload.data) ? payload.data.length : 0);
+  const carrinho = await buscarTotalApi('/api/cart', payload => {
+    const items = payload.data?.items || [];
+    return items.reduce((total, item) => total + Number(item.quantidade || 1), 0);
+  });
   const sexo = user.sexo || user.genero || '';
   const sexoLabel = {
     f: 'Feminino',
@@ -21,12 +39,13 @@ async function carregarPerfil() {
     nascimento: user.nascimento || '',
     bio: user.bio || '',
     avatar: user.fotoUrl || user.avatar || '',
-    pedidos: 12,
-    carrinho: 2,
+    pedidos: Number(user.pedidos || 0),
+    carrinho,
     favoritos,
   };
 }
 
+// Atualiza os cards e campos do perfil sem alterar os dados no servidor.
 function renderPerfil(dados) {
   const stats = document.querySelectorAll('.stat-value');
   if (stats[0]) stats[0].textContent = dados.pedidos;

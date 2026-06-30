@@ -64,13 +64,9 @@ if (! function_exists('araceStars')) {
     <a class="nav-item" href="<?= url_to('home') ?>"><i data-lucide="house"></i> Home page</a>
     <a class="nav-item active" href="<?= url_to('arace_produtos') ?>"><i data-lucide="shopping-bag"></i> Produtos</a>
     <a class="nav-item" href="<?= url_to('main_arace_carrinho') ?>"><i data-lucide="shopping-cart"></i> Carrinho</a>
-    <a class="nav-item" href="<?= url_to('user_arace_notificacao') ?>"><i data-lucide="bell"></i> Notificacoes</a>
     <a class="nav-item" href="<?= url_to('main_arace_config') ?>"><i data-lucide="settings"></i> Configuracoes</a>
     <a class="nav-item" href="<?= url_to('user_arace_perfil') ?>"><i data-lucide="user"></i> Perfil</a>
     <a class="nav-item" href="<?= url_to('auth_cadastro_produtor') ?>"><i data-lucide="box"></i> Quero ser produtor</a>
-    <div class="nav-divider"></div>
-    <div class="nav-section">Reportar</div>
-    <a class="nav-item" href="<?= url_to('main_arace_config') ?>"><i data-lucide="hand-coins"></i> Detalhes de pagamento</a>
   </aside>
 
   <div class="search-main">
@@ -178,22 +174,7 @@ if (! function_exists('araceStars')) {
       <label class="filter-check"><input type="checkbox" name="categoria" value="acessorios" /> Acessorios</label>
     </div>
 
-    <div class="filter-group">
-      <p class="filter-group-label">Precos</p>
-      <div class="range-wrap">
-        <div class="range-track"><div class="range-fill" id="rangeFill"></div></div>
-        <input type="range" class="range" id="rangeMin" min="0" max="1000" value="80" />
-        <input type="range" class="range" id="rangeMax" min="0" max="1000" value="205" />
-      </div>
-      <div class="range-vals">
-        <span id="valMin">R$80</span>
-        <span id="valMax">R$205</span>
-      </div>
-      <div class="price-inputs">
-        <div class="price-input-group"><span>Valor minimo</span><input type="number" id="inputMin" value="80" /></div>
-        <div class="price-input-group"><span>Valor maximo</span><input type="number" id="inputMax" value="205" /></div>
-      </div>
-    </div>
+    
 
     <div class="filter-group">
       <p class="filter-group-label">Filtrar por Cidades</p>

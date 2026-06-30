@@ -1,16 +1,12 @@
+// Interacoes da pagina de loja do produtor. Produtos, carrinho e favoritos usam dados do Firestore.
 const lojaState = {
-  cartCount: 2,
+  cartCount: (window.ARACE_CART?.items || []).reduce((total, item) => total + Number(item.quantidade || 1), 0),
 };
 
 const araceUrl = path => window.AraceState?.url(path) || path;
 const araceGo = path => window.AraceState?.go(path) || (window.location.href = path);
 
-const produtosLoja = [
-  { id: 'loja-kit-panela', nome: 'Kit Panela de Barro', preco: 200, categoria: 'ceramica', colecao: 'ceramica', cor: '#b5a898', artesao: 'Paneleiras Capixabas', estrelas: 4.9, avaliacoes: 42 },
-  { id: 'loja-panela-individual', nome: 'Panela Individual', preco: 90, categoria: 'ceramica', colecao: 'ceramica', cor: '#a89880', artesao: 'Paneleiras Capixabas', estrelas: 4.8, avaliacoes: 31 },
-  { id: 'loja-travessa-barro', nome: 'Travessa de Barro', preco: 140, categoria: 'ceramica', colecao: 'ceramica', cor: '#9c8c78', artesao: 'Paneleiras Capixabas', estrelas: 4.7, avaliacoes: 18 },
-  { id: 'loja-tigela-artesanal', nome: 'Tigela Artesanal', preco: 75, categoria: 'ceramica', colecao: 'ceramica', cor: '#c4b49a', artesao: 'Paneleiras Capixabas', estrelas: 4.6, avaliacoes: 16 },
-];
+const produtosLoja = Array.isArray(window.ARACE_STORE_PRODUCTS) ? window.ARACE_STORE_PRODUCTS : [];
 
 function showToast(message, duration = 2600) {
   const toast = document.getElementById('toast');
@@ -33,7 +29,6 @@ function asideCliente() {
     <a class="nav-item" href="${araceUrl('')}"><i data-lucide="house"></i> Home page</a>
     <a class="nav-item" href="${araceUrl('pesquisa')}"><i data-lucide="shopping-bag"></i> Produtos</a>
     <a class="nav-item" href="${araceUrl('arace-carrinho')}"><i data-lucide="shopping-cart"></i> Carrinho</a>
-    <a class="nav-item" href="${araceUrl('usuario/arace-notificacao')}"><i data-lucide="bell"></i> Notificacoes</a>
     <a class="nav-item" href="${araceUrl('arace-config')}"><i data-lucide="settings"></i> Configuracoes</a>
     <a class="nav-item" href="${araceUrl('usuario/arace-perfil')}"><i data-lucide="user"></i> Perfil</a>
     <a class="nav-item" href="${araceUrl('cadastro/produtor')}"><i data-lucide="box"></i> Quero ser produtor</a>
@@ -100,14 +95,15 @@ function renderDadosLoja() {
 }
 
 function produtoPorCard(card) {
-  const index = Number(card.dataset.id) - 1;
-  const base = produtosLoja[index] || produtosLoja[0];
-  const nome = card.querySelector('.product-name')?.textContent.trim() || base.nome;
-  const precoTexto = card.querySelector('.product-price')?.textContent || String(base.preco);
+  const id = card.dataset.produtoId || card.dataset.id;
+  const base = produtosLoja.find(produto => String(produto.id) === String(id)) || {};
+  const nome = card.querySelector('.product-name')?.textContent.trim() || base.nome || 'Produto Arace';
+  const precoTexto = card.querySelector('.product-price')?.textContent || String(base.preco || 0);
   return {
     ...base,
+    id,
     nome,
-    preco: Number(precoTexto.replace(/[^\d,]/g, '').replace(',', '.')) || base.preco,
+    preco: Number(precoTexto.replace(/[^\d,]/g, '').replace(',', '.')) || Number(base.preco || 0),
   };
 }
 
@@ -135,8 +131,13 @@ function configurarProdutos() {
     if (addCart) {
       event.stopPropagation();
       const produto = produtoPorCard(addCart.closest('.product-card'));
-      lojaState.cartCount += 1;
-      atualizarCarrinho();
+      window.AraceState?.addCartItem(produto.id, 1).then(cart => {
+        lojaState.cartCount = (cart?.items || []).reduce((total, item) => total + Number(item.quantidade || 1), 0);
+        atualizarCarrinho();
+      }).catch(() => {
+        lojaState.cartCount += 1;
+        atualizarCarrinho();
+      });
       showToast(`"${produto.nome}" adicionado ao carrinho`);
     }
   });

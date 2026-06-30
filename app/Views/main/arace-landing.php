@@ -49,11 +49,11 @@ function araceStars(float $nota): string
     <!-- Deveriam ser <a></a> -->
     <button class="cart-btn" type="button" onclick="window.location.href='<?= url_to('main_arace_carrinho') ?>'">
       <i data-lucide="shopping-cart"></i>
-      <span class="cart-count">2 itens</span>
+      <span class="cart-count">0 itens</span>
     </button>
     <button class="cart-btn" type="button" onclick="window.location.href='<?= url_to('user_arace_favoritos') ?>'">
       <i data-lucide="heart"></i>
-      <span class="cart-count">5 itens</span>
+      <span class="cart-count">0 itens</span>
     </button>
     <button class="avatar-btn" type="button" onclick="window.location.href='<?= url_to('auth_login') ?>'">
       <i data-lucide="user"></i>
@@ -74,14 +74,6 @@ function araceStars(float $nota): string
     <div class="hero-dots" id="heroDots" aria-label="Slides em destaque"></div>
   </div>
 </section>
-
-<!--Icone de chat-->
-<div class="chat-bubble">
-  <a href="<?= url_to('user_chat') ?>">
-    <i data-lucide="message-circle-more"></i>
-  </a>
-</div>
-
 <!-- CATEGORIAS -->
 <section class="section" id="categorias">
   <div class="wrap">
@@ -208,15 +200,16 @@ function araceStars(float $nota): string
 
       <!-- Lojas (esquerda) -->
       <div class="lojas-col">
-        <div class="loja loja-azul">
-          <div class="loja-info"><span class="loja-tag">Artesanato</span><strong>Nome da Loja</strong><a href="<?= url_to('main_pesquisa') ?>" class="loja-ver">Visitar loja <i data-lucide="arrow-right"></i></a></div>
-        </div>
-        <div class="loja loja-laranja">
-          <div class="loja-info"><span class="loja-tag">Estabelecimento</span><strong>Nome da Loja</strong><a href="<?= url_to('main_pesquisa') ?>" class="loja-ver">Visitar loja <i data-lucide="arrow-right"></i></a></div>
-        </div>
-        <div class="loja loja-amarelo">
-          <div class="loja-info"><span class="loja-tag">Estabelecimento</span><strong>Nome da Loja</strong><a href="<?= url_to('main_pesquisa') ?>" class="loja-ver">Visitar loja <i data-lucide="arrow-right"></i></a></div>
-        </div>
+        <?php foreach (array_slice($produtores, 0, 3) as $indice => $produtor): ?>
+          <?php $classeLoja = ['loja-azul', 'loja-laranja', 'loja-amarelo'][$indice] ?? 'loja-azul'; ?>
+          <div class="loja <?= esc($classeLoja, 'attr') ?>">
+            <div class="loja-info">
+              <span class="loja-tag"><?= esc($produtor['categoria'] ?? 'Artesanato') ?></span>
+              <strong><?= esc($produtor['nome'] ?? 'Produtor Arace') ?></strong>
+              <a href="<?= url_to('main_pesquisa') ?>" class="loja-ver">Visitar loja <i data-lucide="arrow-right"></i></a>
+            </div>
+          </div>
+        <?php endforeach; ?>
       </div>
 
       <!-- Mapa (direita) -->

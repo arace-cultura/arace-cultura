@@ -1,4 +1,8 @@
-let favoritos = window.AraceState ? window.AraceState.getFavorites() : [];
+// Renderiza favoritos vindos do Firestore e envia remocoes/adicoes ao carrinho pela API.
+
+let favoritos = Array.isArray(window.ARACE_FAVORITES)
+  ? window.ARACE_FAVORITES
+  : (window.AraceState ? window.AraceState.getFavorites() : []);
 let filtroAtivo = 'todos';
 let colecaoAtiva = 'todos';
 let buscaAtiva = '';
@@ -128,15 +132,23 @@ function trocarView(modo) {
   btnGrade.classList.toggle('active', !lista);
 }
 
-function removerFavorito(id) {
+async function removerFavorito(id) {
   favoritos = favoritos.filter(item => String(item.id) !== String(id));
-  if (window.AraceState) window.AraceState.saveFavorites(favoritos);
+  if (window.AraceState) {
+    await window.AraceState.removeFavorite(id);
+  }
   renderCards(getListaFiltrada());
 }
 
-function addCarrinho(id) {
+async function addCarrinho(id) {
   const produto = favoritos.find(item => String(item.id) === String(id));
-  if (produto) showToast(`"${produto.nome}" adicionado ao carrinho`);
+  if (!produto) return;
+
+  if (window.AraceState) {
+    await window.AraceState.addCartItem(id, 1);
+  }
+
+  showToast(`"${produto.nome}" adicionado ao carrinho`);
 }
 
 function compartilhar() {
@@ -162,6 +174,8 @@ window.moverColecao = moverColecao;
 window.novaColecao = novaColecao;
 
 document.addEventListener('DOMContentLoaded', () => {
-  favoritos = window.AraceState ? window.AraceState.getFavorites() : favoritos;
+  favoritos = Array.isArray(window.ARACE_FAVORITES)
+    ? window.ARACE_FAVORITES
+    : (window.AraceState ? window.AraceState.getFavorites() : favoritos);
   renderCards(favoritos);
 });

@@ -1,4 +1,7 @@
 (() => {
+  // Centraliza estado compartilhado entre paginas: usuario, favoritos, carrinho, tema e modo produtor/cliente.
+
+
   const KEYS = {
     user: 'arace:user',
     producer: 'arace:producer',
@@ -53,10 +56,9 @@
     window.location.href = url(path);
   }
 
-  const DEFAULT_FAVORITES = [
-    { id: 'fav-panela-capixaba', nome: 'Panela de barro Capixaba', artesao: 'Mestre Ze Pedro', preco: 260, precoAntigo: 300, estrelas: 4.5, avaliacoes: 142, img: '', colecao: 'ceramica', disponivel: true, desconto: 13, cor: '#b5a898' },
-    { id: 'fav-preguica-madeira', nome: 'Preguica esculpida em madeira', artesao: 'Atelier Capixaba', preco: 200, precoAntigo: null, estrelas: 5, avaliacoes: 38, img: '', colecao: 'madeira', disponivel: true, desconto: 0, cor: '#8F5E35' },
-  ];
+  const DEFAULT_FAVORITES = [];
+
+  // Leitura local e usada apenas como cache/apoio visual quando a pagina ainda nao recebeu dados do servidor.
 
   function read(key, fallback) {
     try {
@@ -81,6 +83,9 @@
     window.dispatchEvent(new CustomEvent('arace:state-change', { detail: { key, value } }));
     return value;
   }
+
+  // Usuario injetado pelo PHP, porque ele veio do Firestore na renderizacao da pagina.
+
 
   function getUser() {
     if (window.ARACE_AUTH_USER) {
@@ -116,11 +121,16 @@
     return write(KEYS.producer, { ...getProducer(), ...partial });
   }
 
+  // Favoritos injetados pelo PHP; localStorage fica so como cache para paginas publicas.
   function getFavorites() {
+    if (Array.isArray(window.ARACE_FAVORITES)) return window.ARACE_FAVORITES;
+
     return readArray(KEYS.favorites, DEFAULT_FAVORITES);
   }
 
   function saveFavorites(items) {
+    window.ARACE_FAVORITES = items;
+
     return write(KEYS.favorites, items);
   }
 
@@ -145,19 +155,51 @@
     return getFavorites().some(item => String(item.id) === String(id));
   }
 
-  function addFavorite(product) {
+  // Wrapper simples para falar com endpoints CodeIgniter que persistem no Firestore.
+  async function api(path, options = {}) {
+    const response = await fetch(url(path), {
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json', ...(options.headers || {}) },
+      ...options,
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}`);
+    }
+
+    return response.json();
+  }
+
+  // Favoritar grava no Firestore; se a API falhar, mantem um cache local para nao quebrar a UX.
+
+  async function addFavorite(product) {
     const item = normalizeProduct(product);
-    const favorites = getFavorites();
-    if (!favorites.some(fav => String(fav.id) === item.id)) {
-      favorites.push(item);
-      saveFavorites(favorites);
+    try {
+      const payload = await api('api/favorites', {
+        method: 'POST',
+        body: JSON.stringify({ produtoId: item.id }),
+      });
+      if (Array.isArray(payload.data)) saveFavorites(payload.data);
+    } catch {
+      const favorites = getFavorites();
+      if (!favorites.some(fav => String(fav.id) === item.id)) {
+        favorites.push(item);
+        saveFavorites(favorites);
+      }
     }
     return item;
   }
 
-  function removeFavorite(id) {
-    const favorites = getFavorites().filter(item => String(item.id) !== String(id));
-    saveFavorites(favorites);
+  async function removeFavorite(id) {
+    try {
+      const payload = await api(`api/favorites/${encodeURIComponent(id)}`, { method: 'DELETE' });
+      if (Array.isArray(payload.data)) {
+        saveFavorites(payload.data);
+        return;
+      }
+    } catch {
+    }
+
+    saveFavorites(getFavorites().filter(item => String(item.id) !== String(id)));
   }
 
   function toggleFavorite(product) {
@@ -168,6 +210,18 @@
     }
     addFavorite(product);
     return true;
+  }
+
+  // Carrinho sempre tenta persistir no Firestore via /api/cart.
+
+  async function addCartItem(productId, quantity = 1) {
+    const payload = await api('api/cart', {
+      method: 'POST',
+      body: JSON.stringify({ produtoId: productId, quantidade: quantity }),
+    });
+    window.ARACE_CART = payload.data;
+    syncHeader();
+    return payload.data;
   }
 
   function setMode(mode) {
@@ -214,16 +268,22 @@
     target.classList.remove('has-image');
   }
 
+  // Sincroniza contadores e avatar de cabecalhos repetidos nas paginas.
+
   function syncHeader() {
     const user = getUser();
     const favoritesCount = getFavorites().length;
+    const cartItems = window.ARACE_CART?.items || [];
+    const cartCount = cartItems.reduce((total, item) => total + Number(item.quantidade || 1), 0);
 
     document.querySelectorAll('.cart-btn, .icon-btn').forEach(button => {
       const text = button.textContent.toLowerCase();
       const icon = button.querySelector('[data-lucide]');
       const isFavoriteButton = text.includes('favorito') || icon?.getAttribute('data-lucide') === 'heart';
+      const isCartButton = icon?.getAttribute('data-lucide') === 'shopping-cart';
       const count = button.querySelector('.cart-count, #fav-label');
       if (isFavoriteButton && count) count.textContent = favoritesCount === 1 ? '1 item' : `${favoritesCount} itens`;
+      if (isCartButton && count) count.textContent = cartCount === 1 ? '1 item' : `${cartCount} itens`;
     });
 
     const avatarSrc = user.fotoUrl || user.avatar;
@@ -233,6 +293,7 @@
     });
   }
 
+  // Redireciona links de cadastro quando o usuario ja é produtor.
   function setupProducerTransition() {
     document.addEventListener('click', event => {
       const link = event.target.closest('a[href*="cadastro/produtor"], a[href*="cadastro-produtor"], a[href*="cadastro-producer"]');
@@ -247,6 +308,7 @@
     });
   }
 
+  // Aplica tema salvo e destaca item ativo do menu lateral.
   function applyPageStyles() {
     applyTheme();
 
@@ -258,11 +320,12 @@
           item.classList.add('active');
         }
       } catch {
-        // Links parciais ou placeholders nao precisam participar do destaque.
+        // Links parciais nao precisam participar do destaque.
       }
     });
   }
 
+  // Inicializa o mapa com geolocalizacao quando a pagina tiver um elemento #mapa.
   function initMap(targetId = 'mapa') {
     const mapaEl = document.getElementById(targetId);
     if (!mapaEl || !window.L || mapaEl.dataset.araceMapReady === '1') return null;
@@ -321,6 +384,7 @@
     saveFavorites,
     addFavorite,
     removeFavorite,
+    addCartItem,
     toggleFavorite,
     isFavorite,
     getMode,
