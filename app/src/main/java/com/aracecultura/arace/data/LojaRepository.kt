@@ -142,10 +142,7 @@ object LojaRepository {
         )
         lote.set(
             db.collection("Usuarios").document(uid),
-            mapOf(
-                "lojaId" to FieldValue.delete(),
-                "isProdutor" to false
-            ),
+            mapOf("lojaId" to FieldValue.delete()),
             SetOptions.merge()
         )
         lote.commit().await()
@@ -154,7 +151,7 @@ object LojaRepository {
     private suspend fun vincularUsuario(uid: String, lojaId: String) {
         db.collection("Usuarios")
             .document(uid)
-            .set(mapOf("lojaId" to lojaId, "isProdutor" to true), SetOptions.merge())
+            .set(mapOf("lojaId" to lojaId), SetOptions.merge())
             .await()
     }
 
