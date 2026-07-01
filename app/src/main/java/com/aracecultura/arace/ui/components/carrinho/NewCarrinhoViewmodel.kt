@@ -8,6 +8,7 @@ import com.aracecultura.arace.data.model.Produto
 import com.aracecultura.arace.data.registrarProdutoEmCarrinho
 import com.aracecultura.arace.data.removerProdutoDeCarrinho
 import com.google.firebase.Firebase
+import com.google.firebase.firestore.FieldPath
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.SetOptions
@@ -31,6 +32,10 @@ class NewCarrinhoViewModel : ViewModel() {
     private val db: FirebaseFirestore = Firebase.firestore
     private var uidObservado: String? = null
     private var produtosComMarcadorSincronizado = emptySet<String>()
+    // Teto de estoque por produto, lido do BD UMA vez e reusado. Sem cache, cada
+    // +/- gera um snapshot -> nova consulta de estoque, e o round-trip de rede
+    // trava a manipulação da quantidade. Só consultamos ids ainda desconhecidos.
+    private var estoquePorProduto = emptyMap<String, Int>()
 
     // null = ainda carregando (distingue de carrinho vazio)
     private val _itens = MutableStateFlow<List<ItemCarrinho>?>(null)
@@ -48,6 +53,7 @@ class NewCarrinhoViewModel : ViewModel() {
         if (uid.isBlank() || uid == uidObservado) return
         uidObservado = uid
         produtosComMarcadorSincronizado = emptySet()
+        estoquePorProduto = emptyMap()
         viewModelScope.launch {
             registrarDocumentoCarrinho(uid)
             itensFlow(uid)
@@ -115,31 +121,43 @@ class NewCarrinhoViewModel : ViewModel() {
     }
 
     /**
-     * Marca cada item como esgotado lendo o estoque atual da coleção Produtos.
-     * O doc do carrinho só tem um snapshot do produto (e seu campo "quantidade"
-     * é a quantidade escolhida pelo comprador, não o estoque), então o estoque
-     * precisa ser buscado à parte. Em caso de falha, retorna os itens sem alterar
-     * (default não-esgotado), para não bloquear o carrinho por um erro de leitura.
+     * Marca cada item como esgotado usando o estoque da coleção Produtos. O doc
+     * do carrinho só tem um snapshot do produto (e seu campo "quantidade" é a
+     * quantidade escolhida pelo comprador, não o estoque), então o estoque é
+     * buscado à parte — mas só UMA vez por produto: o resultado fica em
+     * [estoquePorProduto] e reusado nas emissões seguintes. Assim, alterar a
+     * quantidade não dispara nova leitura de estoque a cada toque. Itens cujo
+     * estoque não pôde ser lido ficam sem teto (default não-esgotado), para não
+     * bloquear o carrinho por um erro de leitura. O checkout revalida o estoque.
      */
     private suspend fun marcarEsgotados(itens: List<ItemCarrinho>): List<ItemCarrinho> {
         if (itens.isEmpty()) return itens
-        return try {
-            val estoques = mutableMapOf<String, Long>()
-            // whereIn aceita no máximo 10 ids por consulta.
-            itens.map { it.id }.chunked(10).forEach { grupo ->
-                db.collection("Produtos")
-                    .whereIn(com.google.firebase.firestore.FieldPath.documentId(), grupo)
-                    .get().await()
-                    .documents.forEach { doc -> estoques[doc.id] = doc.getLong("quantidade") ?: 0L }
+
+        val faltando = itens.map { it.id }.filter { it !in estoquePorProduto }
+        if (faltando.isNotEmpty()) {
+            try {
+                val novos = mutableMapOf<String, Int>()
+                // whereIn aceita no máximo 10 ids por consulta.
+                faltando.chunked(10).forEach { grupo ->
+                    db.collection("Produtos")
+                        .whereIn(FieldPath.documentId(), grupo)
+                        .get().await()
+                        .documents.forEach { doc ->
+                            novos[doc.id] = (doc.getLong("quantidade") ?: 0L)
+                                .coerceIn(0L, Int.MAX_VALUE.toLong()).toInt()
+                        }
+                }
+                // Produto ausente (ex.: excluído) conta como esgotado (estoque 0).
+                faltando.forEach { id -> novos.putIfAbsent(id, 0) }
+                estoquePorProduto = estoquePorProduto + novos
+            } catch (e: Exception) {
+                Log.e("Carrinho", "Erro ao verificar estoque dos itens", e)
             }
-            // Produto ausente (ex.: excluído) conta como esgotado (estoque 0).
-            itens.map {
-                val estoque = (estoques[it.id] ?: 0L).coerceAtMost(Int.MAX_VALUE.toLong()).toInt()
-                it.copy(estoque = estoque, esgotado = estoque <= 0)
-            }
-        } catch (e: Exception) {
-            Log.e("Carrinho", "Erro ao verificar estoque dos itens", e)
-            itens
+        }
+
+        return itens.map {
+            val estoque = estoquePorProduto[it.id] ?: return@map it
+            it.copy(estoque = estoque, esgotado = estoque <= 0)
         }
     }
 
