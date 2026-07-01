@@ -353,5 +353,8 @@
     <string name="sim_sair_loja">Sim, sair</string>
     <string name="erro_deletar_conta">Não foi possível deletar a conta.</string>
     <string name="erro_deletar_conta_login_recente">Entre novamente e tente deletar a conta em seguida.</string>
+    <string name="reautenticar_titulo">Confirme sua identidade</string>
+    <string name="reautenticar_msg">Para deletar sua conta, entre novamente com sua senha.</string>
+    <string name="senha_incorreta">Senha incorreta.</string>
     <string name="erro_sair_loja">Não foi possível sair da loja.</string>
 </resources>
