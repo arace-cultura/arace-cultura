@@ -36,9 +36,9 @@
     lojaTelefone: '(27) 99999-1234',
     lojaEmail: 'contato@paneleiras.com',
     fotoUrl: '',
-    bannerUrl: '/images/bahia-vitoria.jpg',
+    bannerUrl: 'images/bahia-vitoria.jpg',
     lojaAvatar: '',
-    lojaBanner: '/images/bahia-vitoria.jpg',
+    lojaBanner: 'images/bahia-vitoria.jpg',
   };
 
   const stateScript = document.currentScript || document.querySelector('script[src*="/js/arace-state.js"]');
@@ -99,6 +99,12 @@
 
     producer.fotoUrl = producer.fotoUrl || producer.lojaAvatar || producer.avatar || '';
     producer.bannerUrl = producer.bannerUrl || producer.lojaBanner || producer.banner || '';
+
+    // Resolve caminhos locais (ex.: 'images/...') contra a baseUrl do app, que roda
+    // em subdiretório. url() devolve URLs absolutas (http/data/blob) sem alterar.
+    producer.fotoUrl = producer.fotoUrl ? url(producer.fotoUrl) : '';
+    producer.bannerUrl = producer.bannerUrl ? url(producer.bannerUrl) : '';
+
     producer.lojaAvatar = producer.fotoUrl;
     producer.lojaBanner = producer.bannerUrl;
 

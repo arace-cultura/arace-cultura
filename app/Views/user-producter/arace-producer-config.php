@@ -382,7 +382,7 @@ $avatar = trim((string) ($usuario['fotoUrl'] ?? $usuario['avatar'] ?? ''));
 <script>window.ARACE_AUTH_USER = <?= json_encode($usuario, JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>;</script>
 <script src="/js/arace-state.js"></script>
 <script src="/js/brasil-api-validacao.js?v=20260630-fix"></script>
-<script src="/js/config.js?v=20260630-fix"></script>
+<script src="/js/config.js?v=20260701-avatar-sync"></script>
 
     </div><!-- /conte�do -->
   </div><!-- /config-layout -->

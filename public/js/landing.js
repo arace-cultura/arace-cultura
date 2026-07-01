@@ -59,6 +59,10 @@ function configurarAcoesProdutos() {
   });
 }
 
+// Referência global do temporizador de rotação, para evitar múltiplos timers
+// acumulados quando o carrossel é reinicializado (ex.: retorno via bfcache).
+let heroTimer = null;
+
 /**
  * Controla o carrossel de destaque (Hero Carousel).
  * Cria os indicadores de paginação (dots) dinamicamente e gerencia a rotação automática.
@@ -68,7 +72,15 @@ function configurarHeroCarousel() {
   const dotsContainer = document.getElementById('heroDots');
   if (!slides.length) return; // Encerra se não houver slides
 
+  // Limpa qualquer temporizador anterior antes de recriar o carrossel,
+  // evitando que timers duplicados disputem o slide ativo.
+  clearInterval(heroTimer);
+
+  // Garante um estado inicial válido: exatamente o primeiro slide visível.
+  // Sem isso, ao restaurar a página do bfcache o hero pode ficar sem nenhum
+  // slide ativo (todos com opacity: 0) e a imagem inicial "desaparece".
   let atual = 0;   // Índice do slide visível no momento
+  slides.forEach((slide, index) => slide.classList.toggle('active', index === atual));
   let timer = null; // Armazena a referência do setInterval de rotação
 
   // Gera dinamicamente os botões de navegação baseando-se na quantidade de slides
@@ -103,6 +115,7 @@ function configurarHeroCarousel() {
   function iniciar() {
     clearInterval(timer);
     timer = setInterval(() => irPara(atual + 1), 5000);
+    heroTimer = timer; // Mantém a referência global sincronizada para futuras reinicializações
   }
 
   // Associa o clique nos "dots" para pular direto para um slide e reiniciar o timer
@@ -161,4 +174,13 @@ document.addEventListener('DOMContentLoaded', () => {
   configurarAcoesProdutos();   // Liga os seletores de clique para fav/carrinho no grid
   configurarHeroCarousel();    // Dá partida no carrossel do banner principal
   configurarMapa();            // Renderiza o mapa interativo
+});
+
+// Ao retornar para a página pelo botão "voltar" do navegador, ela é restaurada
+// do bfcache e o DOMContentLoaded NÃO dispara novamente. Reinicializamos apenas
+// o carrossel (idempotente) para restaurar a imagem inicial do hero.
+window.addEventListener('pageshow', event => {
+  if (event.persisted) {
+    configurarHeroCarousel();
+  }
 });

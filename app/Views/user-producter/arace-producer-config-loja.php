@@ -237,7 +237,7 @@ $fotosHistoria = array_values(array_filter(array_map('strval', is_array($produto
         </script>
         <script src="/js/arace-state.js"></script>
         <script src="/js/brasil-api-validacao.js?v=20260630-fix"></script>
-        <script src="/js/config.js?v=20260630-fix"></script>
+        <script src="/js/config.js?v=20260701-avatar-sync"></script>
 
       </div></div></main>
 

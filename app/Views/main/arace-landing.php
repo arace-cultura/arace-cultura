@@ -58,9 +58,9 @@ function araceStars(float $nota): string
 <!-- HERO -->
 <section class="hero">
   <div class="hero-slides">
-    <div class="hero-slide active" style="background-image: url('/images/bahia-vitoria.jpg')"></div>
-    <div class="hero-slide" style="background-image: url('/images/baiavitoria2.jpg')"></div>
-    <div class="hero-slide" style="background-image: url('/images/convento1.jpg')"></div>
+    <div class="hero-slide active" style="background-image: url('<?= base_url('images/bahia-vitoria.jpg') ?>')"></div>
+    <div class="hero-slide" style="background-image: url('<?= base_url('images/baiavitoria2.jpg') ?>')"></div>
+    <div class="hero-slide" style="background-image: url('<?= base_url('images/convento1.jpg') ?>')"></div>
   </div>
   <div class="hero-overlay"></div>
   <div class="hero-content">
@@ -234,8 +234,8 @@ function araceStars(float $nota): string
 
 
 
-<script src="/js/arace-state.js"></script>
-<script src="/js/landing.js"></script>
-<script src="/js/search-navigation.js"></script>
+<script src="<?= base_url('js/arace-state.js') ?>"></script>
+<script src="<?= base_url('js/landing.js') ?>"></script>
+<script src="<?= base_url('js/search-navigation.js') ?>"></script>
 </body>
 </html>

@@ -39,7 +39,6 @@ function asideProdutor() {
     <div class="nav-divider"></div>
     <a class="nav-item" href="${araceUrl('produtor/perfil')}"><i data-lucide="user"></i> Perfil</a>
     <a class="nav-item" href="${araceUrl('produtor/configuracao-loja')}"><i data-lucide="settings"></i> Configurações da loja</a>
-    <button class="nav-item nav-button" type="button" id="verComoCliente"><i data-lucide="eye"></i> Ver como cliente</button>
     <form class="logout-form" action="${araceUrl('sair')}" method="post">
       <button class="nav-item logout-button" type="submit"><i data-lucide="log-out"></i> Sair da conta</button>
     </form>
@@ -51,12 +50,6 @@ function configurarAside() {
   if (!aside || !window.AraceState) return;
 
   aside.innerHTML = asideProdutor();
-
-  document.getElementById('verComoCliente')?.addEventListener('click', () => {
-    window.AraceState.setMode('cliente');
-    configurarAside();
-    lucide.createIcons();
-  });
 }
 
 function configurarProdutos() {

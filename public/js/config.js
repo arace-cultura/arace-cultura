@@ -77,24 +77,46 @@ function mostrarToast(msg) {
   setTimeout(() => toast.classList.remove('show'), 2800);
 }
 
+// Aplica a mesma imagem no preview grande e, opcionalmente, em todos os
+// botoes de avatar do header (mantendo cada icone de avatar sincronizado).
+function aplicarAvatar(src, incluirHeader) {
+  const preview = document.getElementById('avatarPreview');
+  if (preview) renderAvatarImage(preview, src);
+
+  if (incluirHeader) {
+    document.querySelectorAll('.avatar-btn').forEach(el => renderAvatarImage(el, src));
+  }
+}
+
+// Reseta o preview e, se pedido, os avatares do header para o icone padrao.
+function resetarAvatar(incluirHeader) {
+  const alvos = incluirHeader
+    ? [document.getElementById('avatarPreview'), ...document.querySelectorAll('.avatar-btn')]
+    : [document.getElementById('avatarPreview')];
+
+  alvos.forEach(el => {
+    if (el) el.innerHTML = '<i data-lucide="user"></i>';
+  });
+  lucide.createIcons();
+}
+
+// O logo da loja nao deve trocar o avatar pessoal exibido no header.
+function ehLogoDaLoja(input) {
+  const acao = input?.closest('form')?.getAttribute('action') || '';
+  return acao.includes('configuracao-loja');
+}
+
 function previewAvatar(input) {
   if (!input.files || !input.files[0]) return;
 
+  const sincronizarHeader = !ehLogoDaLoja(input);
   const reader = new FileReader();
-  reader.onload = event => {
-    const preview = document.getElementById('avatarPreview');
-    const image = event.target.result;
-    if (preview) renderAvatarImage(preview, image);
-  };
+  reader.onload = event => aplicarAvatar(event.target.result, sincronizarHeader);
   reader.readAsDataURL(input.files[0]);
 }
 
-function removerAvatar() {
-  const preview = document.getElementById('avatarPreview');
-  if (!preview) return;
-
-  preview.innerHTML = '<i data-lucide="user"></i>';
-  lucide.createIcons();
+function removerAvatar(input) {
+  resetarAvatar(!ehLogoDaLoja(input));
 }
 
 function selecionarTema(el) {

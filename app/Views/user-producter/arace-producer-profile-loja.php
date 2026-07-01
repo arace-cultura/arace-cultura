@@ -24,7 +24,7 @@ $fotosHistoria = array_values(array_filter(array_map('strval', is_array($produto
   <link href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex&family=Playfair+Display:wght@700&display=swap" rel="stylesheet" />
   <script src="https://unpkg.com/lucide@latest"></script>
   <script src="<?= base_url('js/icons.js') ?>"></script>
-  <link href="<?= base_url('css/loja.css?v=20260701-logout-style') ?>" rel="stylesheet" />
+  <link href="<?= base_url('css/loja.css?v=20260701-profile-logout') ?>" rel="stylesheet" />
 </head>
 <body>
 <header>
@@ -130,6 +130,11 @@ $fotosHistoria = array_values(array_filter(array_map('strval', is_array($produto
           </div>
         </div>
       <?php endif; ?>
+      <form class="store-profile-logout" action="<?= site_url('sair') ?>" method="post">
+        <button class="store-logout-button" type="submit">
+          <i data-lucide="log-out"></i> Sair da conta
+        </button>
+      </form>
     </div>
   </section>
 
@@ -190,17 +195,27 @@ $fotosHistoria = array_values(array_filter(array_map('strval', is_array($produto
 
   <?php if ($lojaBio !== '' || $fotosHistoria !== []): ?>
     <section class="store-section history-section item-animado atraso-3" aria-labelledby="historia-titulo">
-      <div class="history-container">
+      <div class="history-heading">
+        <div>
+          <span class="history-kicker">Memória da loja</span>
+          <h2 id="historia-titulo">Nossa história</h2>
+        </div>
+        <?php if ($fotosHistoria !== []): ?>
+          <span class="history-count"><?= count($fotosHistoria) ?> foto<?= count($fotosHistoria) === 1 ? '' : 's' ?></span>
+        <?php endif; ?>
+      </div>
+      <div class="history-container <?= $fotosHistoria === [] ? 'only-text' : '' ?> <?= $lojaBio === '' ? 'only-gallery' : '' ?>">
         <?php if ($fotosHistoria !== []): ?>
           <div class="history-images">
-            <?php foreach ($fotosHistoria as $fotoHistoria): ?>
-              <img src="<?= esc($fotoHistoria, 'attr') ?>" alt="Foto da história da loja <?= esc($lojaNome, 'attr') ?>" loading="lazy" />
+            <?php foreach ($fotosHistoria as $indiceFoto => $fotoHistoria): ?>
+              <figure class="history-photo <?= $indiceFoto === 0 ? 'featured' : '' ?>">
+                <img src="<?= esc($fotoHistoria, 'attr') ?>" alt="Foto da história da loja <?= esc($lojaNome, 'attr') ?>" loading="lazy" />
+              </figure>
             <?php endforeach; ?>
           </div>
         <?php endif; ?>
         <?php if ($lojaBio !== ''): ?>
           <div class="history-text">
-            <h2 id="historia-titulo">Nossa história</h2>
             <p><?= esc($lojaBio) ?></p>
           </div>
         <?php endif; ?>
@@ -215,6 +230,6 @@ $fotosHistoria = array_values(array_filter(array_map('strval', is_array($produto
   window.ARACE_STORE_PRODUCTS = <?= json_encode($produtos, JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>;
 </script>
 <script src="<?= base_url('js/arace-state.js') ?>"></script>
-<script src="<?= base_url('js/loja.js?v=20260701-produtor-aside') ?>"></script>
+<script src="<?= base_url('js/loja.js?v=20260701-no-client-view') ?>"></script>
 </body>
 </html>

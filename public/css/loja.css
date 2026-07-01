@@ -131,6 +131,41 @@
   margin-top: 0.75rem;
 }
 
+.store-profile-logout {
+  margin-top: 1rem;
+}
+
+.store-logout-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: .45rem;
+  min-height: 40px;
+  padding: .65rem 1rem;
+  border: 1px solid rgba(242, 96, 26, .28);
+  border-radius: var(--r);
+  background: var(--laranja-l);
+  color: var(--laranja-d);
+  font-family: var(--body);
+  font-size: .9rem;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(242, 96, 26, .08);
+  transition: background .15s, color .15s, border-color .15s, transform .15s;
+}
+
+.store-logout-button svg {
+  width: 16px;
+  height: 16px;
+}
+
+.store-logout-button:hover {
+  background: var(--laranja);
+  color: #fff;
+  border-color: var(--laranja);
+  transform: translateY(-1px);
+}
+
 /* ── SEÇÕES DA VITRINE ── */
 .store-section {
   background: var(--branco);
@@ -277,48 +312,108 @@
   text-align: right;
 }
 
-.history-container {
-  display: flex;
-  gap: 1.5rem;
-  margin-top: 1rem;
-  align-items: center;
-}
-
-.history-image {
-  width: 150px;
-  height: 150px;
-  border-radius: var(--r-lg);
+.history-section {
   overflow: hidden;
-  flex-shrink: 0;
-  border: 1px solid var(--border);
 }
 
-.history-image img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+.history-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-bottom: 1rem;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.history-kicker {
+  display: block;
+  margin-bottom: .25rem;
+  color: var(--laranja-d);
+  font-size: .74rem;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.history-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 30px;
+  padding: .25rem .7rem;
+  border-radius: 999px;
+  background: var(--laranja-l);
+  color: var(--laranja-d);
+  font-size: .78rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.history-container {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(280px, .85fr);
+  gap: 1.25rem;
+  align-items: stretch;
+}
+
+.history-container.only-text,
+.history-container.only-gallery {
+  grid-template-columns: 1fr;
 }
 
 .history-images {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-  gap: .75rem;
-  flex: 1;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-auto-rows: minmax(104px, 1fr);
+  gap: .65rem;
 }
 
-.history-images img {
-  width: 100%;
-  aspect-ratio: 1 / 1;
-  object-fit: cover;
+.history-photo {
+  position: relative;
+  min-height: 104px;
   border-radius: var(--r-lg);
+  overflow: hidden;
   border: 1px solid var(--border);
+  background: var(--bg);
+  box-shadow: var(--sh-sm);
+}
+
+.history-photo.featured {
+  grid-column: span 2;
+  grid-row: span 2;
+  min-height: 250px;
+}
+
+.history-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform .22s ease, filter .22s ease;
+}
+
+.history-photo:hover img {
+  transform: scale(1.035);
+  filter: saturate(1.04);
 }
 
 .history-text {
-  font-family: var(--body);
-  font-size: 0.95rem;
-  line-height: 1.6;
+  display: flex;
+  align-items: center;
+  min-height: 100%;
+  padding: 1.25rem;
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  background: linear-gradient(180deg, rgba(254,240,233,.72), rgba(255,255,255,.86));
   color: var(--muted);
+  font-family: var(--body);
+  font-size: .98rem;
+  line-height: 1.7;
+}
+
+.history-text p {
+  max-width: 64ch;
 }
 
 /* RESPONSIVIDADE (Para telas menores/Mobile) */
@@ -338,8 +433,7 @@
   }
 
   .history-container {
-    flex-direction: column;
-    text-align: center;
+    grid-template-columns: 1fr;
   }
 
   .payment-info {
@@ -351,13 +445,22 @@
     text-align: left;
   }
   
-  .history-image {
-    width: 100%;
-    max-width: 200px;
-    height: 200px;
-  }
-
   .history-images {
     width: 100%;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-auto-rows: 130px;
+  }
+
+  .history-photo.featured {
+    grid-column: 1 / -1;
+    min-height: 220px;
+  }
+
+  .history-heading {
+    flex-direction: column;
+  }
+
+  .history-text {
+    padding: 1rem;
   }
 }
