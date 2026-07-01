@@ -27,10 +27,6 @@ $formatarMoeda = static fn (float $valor): string => 'R$' . number_format($valor
         <i data-lucide="shopping-cart"></i>
         <span class="cart-count"><?= count($carrinho) === 1 ? '1 item' : count($carrinho) . ' itens' ?></span>
       </button>
-      <button class="cart-btn" type="button" onclick="window.location.href='<?= url_to('user_arace_favoritos') ?>'">
-        <i data-lucide="heart"></i>
-        <span class="cart-count">Favoritos</span>
-      </button>
       <button class="avatar-btn" type="button" onclick="window.location.href='<?= url_to('user_arace_perfil') ?>'" aria-label="Abrir perfil">
         <?php if ($avatar !== ''): ?>
           <img src="<?= esc($avatar, 'attr') ?>" alt="Avatar do usuario" />
@@ -76,7 +72,13 @@ $formatarMoeda = static fn (float $valor): string => 'R$' . number_format($valor
       </div>
       <h2>Seu carrinho esta vazio</h2>
       <p>Explore nossa colecao e encontre algo especial para voce.</p>
-      <a href="<?= url_to('arace_produtos') ?>" class="btn-primary-arace">Ver produtos</a>
+      <button
+        type="button"
+        class="btn-primary-arace"
+        data-products-url="<?= url_to('arace_produtos') ?>"
+      >
+        Ir para produtos
+      </button>
     </div>
 
     <div class="cart-layout <?= $carrinho === [] ? 'hidden' : '' ?>" id="cartContent">

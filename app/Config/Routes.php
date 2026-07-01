@@ -77,11 +77,9 @@ $routes->get('configuracoes', $routeRedirect('main_arace_config'));
 $routes->group('usuario', ['filter' => 'auth'], static function (RouteCollection $routes): void {
     $routes->get('arace-perfil', 'AccountController::profile', ['as' => 'user_arace_perfil']);
     $routes->post('perfil', 'AccountController::updateProfile', ['as' => 'user_profile_update']);
-    $routes->get('arace-favoritos', 'AccountController::favorites', ['as' => 'user_arace_favoritos']);
 });
 
 $routes->get('perfil', $routeRedirect('user_arace_perfil'));
-$routes->get('favoritos', $routeRedirect('user_arace_favoritos'));
 
 /*
 |--------------------------------------------------------------------------
@@ -111,9 +109,6 @@ $routes->group('api', ['namespace' => 'App\Controllers\Api'], static function (R
     $routes->get('products', 'FirestoreController::products', ['as' => 'api_products']);
     $routes->get('products/(:segment)', 'FirestoreController::product/$1', ['as' => 'api_product']);
     $routes->get('producers', 'FirestoreController::producers', ['as' => 'api_producers']);
-    $routes->get('favorites', 'FirestoreController::favorites', ['as' => 'api_favorites', 'filter' => 'auth']);
-    $routes->post('favorites', 'FirestoreController::saveFavorite', ['as' => 'api_favorites_store', 'filter' => 'auth']);
-    $routes->delete('favorites/(:segment)', 'FirestoreController::removeFavorite/$1', ['as' => 'api_favorites_delete', 'filter' => 'auth']);
     $routes->get('cart', 'FirestoreController::cart', ['as' => 'api_cart', 'filter' => 'auth']);
     $routes->post('cart', 'FirestoreController::addCartItem', ['as' => 'api_cart_store', 'filter' => 'auth']);
     $routes->patch('cart/(:segment)', 'FirestoreController::updateCartItem/$1', ['as' => 'api_cart_update', 'filter' => 'auth']);

@@ -15,7 +15,9 @@ use Tatter\Firebase\Firestore\Collection; // Classe base que fornece os métodos
 final class ProducerCollection extends Collection
 {
     // Define o nome exato da coleção lá no banco de dados Firestore.
-    public const NAME   = 'produtores';
+    // Atenção: o Firestore diferencia maiúsculas/minúsculas, então o nome precisa
+    // bater exatamente com a coleção "Produtores" existente no banco.
+    public const NAME   = 'Produtores';
     
     // Define qual classe será usada para transformar os dados do banco em objetos no código.
     // Cada documento retornado do banco será transformado em um objeto "Producer".
@@ -30,6 +32,15 @@ final class ProducerCollection extends Collection
     // Nota: Há algumas duplicações (ex: 'nomeLoja' e 'nome_loja'), o que indica suporte a diferentes padrões de nomenclatura antigos/novos.
     protected array $allowedFields = [
         'nome',
+        // Estrutura aninhada da coleção "Produtores": os dados de identificação
+        // do artesão ficam dentro do mapa/lista "membros".
+        'membros',
+        'nomeCompleto',
+        'tipoArtesanato',
+        'tipoPessoa',
+        'categoriaProduto',
+        'cep',
+        'stability',
         'nomeLoja',
         'nome_loja',
         'lojaBio',

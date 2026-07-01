@@ -56,10 +56,6 @@ if ($imagens === []) {
       <i data-lucide="shopping-cart"></i>
       <span class="cart-count">2 itens</span>
     </button>
-    <button class="cart-btn" type="button" onclick="window.location.href='<?= url_to('user_arace_favoritos') ?>'">
-      <i data-lucide="heart"></i>
-      <span class="cart-count">5 itens</span>
-    </button>
     <button class="avatar-btn" type="button" onclick="window.location.href='<?= url_to('user_arace_perfil') ?>'" aria-label="Abrir perfil">
       <?php if ($avatar !== ''): ?>
         <img src="<?= esc($avatar, 'attr') ?>" alt="Avatar do usuario" />
@@ -138,7 +134,6 @@ if ($imagens === []) {
       </div>
 
       <div class="action-row">
-        <button class="btn-icon" title="Favoritar" type="button"><i data-lucide="heart"></i></button>
         <button class="btn-add" type="button" data-produto-id="<?= esc($id) ?>"><i data-lucide="shopping-cart"></i> Adicionar</button>
         <button class="btn-buy" type="button"><i data-lucide="zap"></i> Comprar</button>
       </div>

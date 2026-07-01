@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Libraries\BrasilApiValidator;
+use App\Libraries\AraceFirestore;
 use DomainException;
 
 final class RegistrationController extends BaseController

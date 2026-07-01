@@ -8,7 +8,7 @@ use App\Libraries\BrasilApiValidator; // Validador customizado (ex: checar CPF)
 use App\Libraries\SupabaseStorage;   // Gerenciador de uploads para o Supabase
 
 /**
- * AccountController lida com as páginas da conta do usuário comum (perfil, carrinho, favoritos)
+ * AccountController lida com as páginas da conta do usuário comum (perfil, carrinho)
  * e com o painel gerencial do produtor (dashboard, produtos, pedidos, configurações da loja).
  */
 final class AccountController extends BaseController
@@ -44,19 +44,6 @@ final class AccountController extends BaseController
             ...$data,
             'carrinho' => $cart,
             'totais'   => service('araceFirestore')->cartTotals($cart),
-        ]);
-    }
-
-    /**
-     * Carrega a página de produtos favoritos do usuário.
-     */
-    public function favorites()
-    {
-        $data = $this->accountData();
-
-        return view('user/arace-favoritos', [
-            ...$data,
-            'favoritos' => service('araceFirestore')->favoritesForSession($data['usuario'] ?? []),
         ]);
     }
 

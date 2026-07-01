@@ -34,10 +34,6 @@ $metricas = $metricas ?? ['faturamento' => 0, 'pedidos' => 0, 'pendentes' => 0, 
       <i data-lucide="shopping-cart"></i>
       <span class="cart-count">0 itens</span>
     </button>
-    <button class="cart-btn" type="button" onclick="window.location.href='<?= url_to('user_arace_favoritos') ?>'">
-      <i data-lucide="heart"></i>
-      <span class="cart-count">0 itens</span>
-    </button>
     <button class="avatar-btn" type="button" onclick="window.location.href='<?= url_to('user_arace_perfil') ?>'" aria-label="Abrir perfil">
       <?php if ($avatar !== ''): ?>
         <img src="<?= esc($avatar, 'attr') ?>" alt="Avatar do usuario" />

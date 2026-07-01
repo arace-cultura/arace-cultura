@@ -53,44 +53,6 @@ final class FirestoreController extends ResourceController
     }
 
     /**
-     * Retorna a lista de produtos favoritados pelo usuário logado no momento.
-     */
-    public function favorites(): ResponseInterface
-    {
-        return $this->respond([
-            'source' => 'firestore',
-            // Utiliza o helper sessionUser() para identificar quem está logado
-            'data'   => service('araceFirestore')->favoritesForSession($this->sessionUser()),
-        ]);
-    }
-
-    /**
-     * Salva um produto na lista de favoritos do usuário logado.
-     */
-    public function saveFavorite(): ResponseInterface
-    {
-        // Tenta pegar os dados enviados no formato JSON. Se não houver, tenta pegar como formulário padrão (POST).
-        $payload = $this->request->getJSON(true) ?? $this->request->getPost();
-
-        return $this->respond([
-            'source' => 'firestore',
-            // Aceita tanto 'produtoId' quanto 'productId' para ser mais flexível com o frontend
-            'data'   => service('araceFirestore')->saveFavoriteForSession($this->sessionUser(), (string) ($payload['produtoId'] ?? $payload['productId'] ?? '')),
-        ]);
-    }
-
-    /**
-     * Remove um produto da lista de favoritos do usuário.
-     */
-    public function removeFavorite(string $productId): ResponseInterface
-    {
-        return $this->respond([
-            'source' => 'firestore',
-            'data'   => service('araceFirestore')->removeFavoriteForSession($this->sessionUser(), $productId),
-        ]);
-    }
-
-    /**
      * Retorna os itens que estão no carrinho de compras do usuário logado e os totais calculados.
      */
     public function cart(): ResponseInterface

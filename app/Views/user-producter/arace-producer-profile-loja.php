@@ -43,10 +43,6 @@ $mediaAvaliacoes = $produtos === [] ? 0 : array_sum(array_map(static fn (array $
       <i data-lucide="shopping-cart"></i>
       <span class="cart-count">0 itens</span>
     </button>
-    <button class="cart-btn" type="button" onclick="window.location.href='<?= url_to('user_arace_favoritos') ?>'">
-      <i data-lucide="heart"></i>
-      <span class="cart-count">0 itens</span>
-    </button>
     <button class="avatar-btn" type="button" onclick="window.location.href='<?= url_to('user_arace_perfil') ?>'" aria-label="Abrir perfil">
       <?php if ($avatar !== ''): ?>
         <img src="<?= esc($avatar, 'attr') ?>" alt="Avatar do usuario" />
@@ -172,9 +168,6 @@ $mediaAvaliacoes = $produtos === [] ? 0 : array_sum(array_map(static fn (array $
               <?php if (($produto['destaque'] ?? false) || ($produto['desconto'] ?? 0) > 0): ?>
                 <span class="product-badge"><?= ($produto['desconto'] ?? 0) > 0 ? '-' . (int) $produto['desconto'] . '%' : 'Destaque' ?></span>
               <?php endif; ?>
-              <button class="product-favorite" aria-label="Favoritar <?= esc($nomeProduto, 'attr') ?>">
-                <i data-lucide="heart"></i>
-              </button>
             </div>
             <div class="product-info">
               <h3 class="product-name"><?= esc($nomeProduto) ?></h3>

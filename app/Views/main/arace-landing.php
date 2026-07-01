@@ -51,10 +51,6 @@ function araceStars(float $nota): string
       <i data-lucide="shopping-cart"></i>
       <span class="cart-count">0 itens</span>
     </button>
-    <button class="cart-btn" type="button" onclick="window.location.href='<?= url_to('user_arace_favoritos') ?>'">
-      <i data-lucide="heart"></i>
-      <span class="cart-count">0 itens</span>
-    </button>
     <button class="avatar-btn" type="button" onclick="window.location.href='<?= url_to('auth_login') ?>'">
       <i data-lucide="user"></i>
     </button>
@@ -93,7 +89,7 @@ function araceStars(float $nota): string
   </div>
 </section>
 
-<!-- PRODUTOS -->
+<<!-- PRODUTOS 
 <section class="section" id="produtos">
   <div class="wrap">
     <div class="section-head">
@@ -138,9 +134,6 @@ function araceStars(float $nota): string
             <?php if ($imagem !== ''): ?>
               <img src="<?= esc($imagem) ?>" alt="<?= esc($nome) ?>" loading="lazy" />
             <?php endif; ?>
-            <button class="fav" type="button" aria-label="Favoritar produto">
-              <i data-lucide="heart"></i>
-            </button>
           </div>
           <div class="produto-info">
             <span class="artesao"><?= esc($artesao) ?></span>
@@ -169,15 +162,17 @@ function araceStars(float $nota): string
   </div>
 </section>
 
+-->
+
 <!-- PRODUTORES -->
 <section class="section produtores-bg">
   <div class="wrap">
     <div class="section-head">
       <h2>Destaques Produtores</h2>
-      <a href="<?= url_to('produtor_painel') ?>" class="link-ver">Ver todos <i data-lucide="arrow-right"></i></a>
+      <a href="<?= url_to('main_pesquisa') ?>" class="link-ver">Ver todos <i data-lucide="arrow-right"></i></a>
     </div>
     <div class="produtores-grid" id="produtoresGrid">
-      <?php foreach ($produtores as $produtor): ?>
+      <?php foreach (array_slice($produtores, 0, 4) as $produtor): ?>
         <article class="produtor">
           <div class="avatar"><?= esc($produtor['iniciais'] ?? 'AR') ?></div>
           <span class="p-nome"><?= esc($produtor['nome'] ?? 'Produtor Arace') ?></span>

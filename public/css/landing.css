@@ -242,18 +242,6 @@ header {
   height: 100%;
   object-fit: cover;
 }
-.fav {
-  position: absolute; top: .6rem; right: .6rem;
-  width: 30px; height: 30px; border-radius: 50%;
-  border: 1px solid rgba(0,0,0,.08); background: var(--branco);
-  display: flex; align-items: center; justify-content: center;
-  cursor: pointer; color: var(--muted); transition: color .15s, border-color .15s;
-}
-.fav svg { width: .9rem; height: .9rem; }
-
-.fav:hover { color: var(--laranja); border-color: var(--laranja); }
-.fav.active { color: var(--branco); background: var(--laranja); border-color: var(--laranja); }
-
 .tag {
   position: absolute; top: .6rem; left: .6rem;
   font-size: .63rem; font-weight: 700; border-radius: 99px; padding: .18rem .6rem;

@@ -37,10 +37,15 @@ function atualizarResumo(cart) {
   const items = cart?.items || [];
   const totais = cart?.totais || {};
 
-  document.getElementById('summarySubtotal').textContent = formatarMoeda(totais.subtotal);
-  document.getElementById('summaryDiscount').textContent = `-${formatarMoeda(totais.desconto)}`;
-  document.getElementById('summaryShipping').textContent = formatarMoeda(totais.frete);
-  document.getElementById('summaryTotal').textContent = formatarMoeda(totais.total);
+  const subtotal = document.getElementById('summarySubtotal');
+  const discount = document.getElementById('summaryDiscount');
+  const shipping = document.getElementById('summaryShipping');
+  const total = document.getElementById('summaryTotal');
+
+  if (subtotal) subtotal.textContent = formatarMoeda(totais.subtotal);
+  if (discount) discount.textContent = `-${formatarMoeda(totais.desconto)}`;
+  if (shipping) shipping.textContent = formatarMoeda(totais.frete);
+  if (total) total.textContent = formatarMoeda(totais.total);
 
   document.querySelectorAll('.cart-count').forEach(label => {
     if (!label.closest('.cart-btn')?.querySelector('[data-lucide="shopping-cart"]')) return;
@@ -58,6 +63,12 @@ function atualizarResumo(cart) {
 
 
 function bindCarrinho() {
+  document.querySelectorAll('[data-products-url]').forEach(button => {
+    button.addEventListener('click', () => {
+      window.location.href = button.dataset.productsUrl;
+    });
+  });
+
   document.getElementById('cartContent')?.addEventListener('click', async event => {
     const button = event.target.closest('[data-item-id]');
     if (!button) return;

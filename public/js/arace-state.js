@@ -1,11 +1,10 @@
 (() => {
-  // Centraliza estado compartilhado entre paginas: usuario, favoritos, carrinho, tema e modo produtor/cliente.
+  // Centraliza estado compartilhado entre paginas: usuario, carrinho, tema e modo produtor/cliente.
 
 
   const KEYS = {
     user: 'arace:user',
     producer: 'arace:producer',
-    favorites: 'arace:favorites',
     mode: 'arace:viewMode',
     theme: 'arace:theme',
   };
@@ -56,8 +55,6 @@
     window.location.href = url(path);
   }
 
-  const DEFAULT_FAVORITES = [];
-
   // Leitura local e usada apenas como cache/apoio visual quando a pagina ainda nao recebeu dados do servidor.
 
   function read(key, fallback) {
@@ -66,15 +63,6 @@
       return value ? { ...fallback, ...JSON.parse(value) } : { ...fallback };
     } catch {
       return { ...fallback };
-    }
-  }
-
-  function readArray(key, fallback) {
-    try {
-      const value = localStorage.getItem(key);
-      return value ? JSON.parse(value) : [...fallback];
-    } catch {
-      return [...fallback];
     }
   }
 
@@ -121,40 +109,6 @@
     return write(KEYS.producer, { ...getProducer(), ...partial });
   }
 
-  // Favoritos injetados pelo PHP; localStorage fica so como cache para paginas publicas.
-  function getFavorites() {
-    if (Array.isArray(window.ARACE_FAVORITES)) return window.ARACE_FAVORITES;
-
-    return readArray(KEYS.favorites, DEFAULT_FAVORITES);
-  }
-
-  function saveFavorites(items) {
-    window.ARACE_FAVORITES = items;
-
-    return write(KEYS.favorites, items);
-  }
-
-  function normalizeProduct(product) {
-    return {
-      id: String(product.id || product.nome || Date.now()),
-      nome: product.nome || 'Produto Arace',
-      artesao: product.artesao || product.produtor || 'Produtor Arace',
-      preco: Number(product.preco || 0),
-      precoAntigo: product.precoAntigo ?? null,
-      estrelas: Number(product.estrelas || 4),
-      avaliacoes: Number(product.avaliacoes || 0),
-      img: product.img || product.imagem || '',
-      colecao: product.colecao || product.categoria || 'artesanato',
-      disponivel: product.disponivel ?? true,
-      desconto: Number(product.desconto || 0),
-      cor: product.cor || '#b5a898',
-    };
-  }
-
-  function isFavorite(id) {
-    return getFavorites().some(item => String(item.id) === String(id));
-  }
-
   // Wrapper simples para falar com endpoints CodeIgniter que persistem no Firestore.
   async function api(path, options = {}) {
     const response = await fetch(url(path), {
@@ -167,49 +121,6 @@
     }
 
     return response.json();
-  }
-
-  // Favoritar grava no Firestore; se a API falhar, mantem um cache local para nao quebrar a UX.
-
-  async function addFavorite(product) {
-    const item = normalizeProduct(product);
-    try {
-      const payload = await api('api/favorites', {
-        method: 'POST',
-        body: JSON.stringify({ produtoId: item.id }),
-      });
-      if (Array.isArray(payload.data)) saveFavorites(payload.data);
-    } catch {
-      const favorites = getFavorites();
-      if (!favorites.some(fav => String(fav.id) === item.id)) {
-        favorites.push(item);
-        saveFavorites(favorites);
-      }
-    }
-    return item;
-  }
-
-  async function removeFavorite(id) {
-    try {
-      const payload = await api(`api/favorites/${encodeURIComponent(id)}`, { method: 'DELETE' });
-      if (Array.isArray(payload.data)) {
-        saveFavorites(payload.data);
-        return;
-      }
-    } catch {
-    }
-
-    saveFavorites(getFavorites().filter(item => String(item.id) !== String(id)));
-  }
-
-  function toggleFavorite(product) {
-    const id = String(product.id || product.nome);
-    if (isFavorite(id)) {
-      removeFavorite(id);
-      return false;
-    }
-    addFavorite(product);
-    return true;
   }
 
   // Carrinho sempre tenta persistir no Firestore via /api/cart.
@@ -272,17 +183,13 @@
 
   function syncHeader() {
     const user = getUser();
-    const favoritesCount = getFavorites().length;
     const cartItems = window.ARACE_CART?.items || [];
     const cartCount = cartItems.reduce((total, item) => total + Number(item.quantidade || 1), 0);
 
     document.querySelectorAll('.cart-btn, .icon-btn').forEach(button => {
-      const text = button.textContent.toLowerCase();
       const icon = button.querySelector('[data-lucide]');
-      const isFavoriteButton = text.includes('favorito') || icon?.getAttribute('data-lucide') === 'heart';
       const isCartButton = icon?.getAttribute('data-lucide') === 'shopping-cart';
       const count = button.querySelector('.cart-count, #fav-label');
-      if (isFavoriteButton && count) count.textContent = favoritesCount === 1 ? '1 item' : `${favoritesCount} itens`;
       if (isCartButton && count) count.textContent = cartCount === 1 ? '1 item' : `${cartCount} itens`;
     });
 
@@ -380,13 +287,7 @@
     saveUser,
     getProducer,
     saveProducer,
-    getFavorites,
-    saveFavorites,
-    addFavorite,
-    removeFavorite,
     addCartItem,
-    toggleFavorite,
-    isFavorite,
     getMode,
     setMode,
     getTheme,

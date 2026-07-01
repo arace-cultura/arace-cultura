@@ -41,10 +41,6 @@ if (! function_exists('araceStars')) {
       <i data-lucide="shopping-cart"></i>
       <span class="cart-count">2 itens</span>
     </button>
-    <button class="cart-btn" type="button" onclick="window.location.href='<?= url_to('user_arace_favoritos') ?>'">
-      <i data-lucide="heart"></i>
-      <span class="cart-count">5 itens</span>
-    </button>
     <button class="avatar-btn" type="button" onclick="window.location.href='<?= url_to('user_arace_perfil') ?>'" aria-label="Abrir perfil">
       <?php if ($avatar !== ''): ?>
         <img src="<?= esc($avatar, 'attr') ?>" alt="Avatar do usuario" />
@@ -55,9 +51,7 @@ if (! function_exists('araceStars')) {
   </div>
 </header>
 
-<div class="chat-bubble">
-  <a href="<?= url_to('user_chat') ?>"><i data-lucide="message-circle-more"></i></a>
-</div>
+
 
 <div class="page-body">
   <aside>
@@ -131,7 +125,6 @@ if (! function_exists('araceStars')) {
             <?php if ($imagem !== ''): ?>
               <img src="<?= esc($imagem) ?>" alt="<?= esc($nome) ?>" loading="lazy" />
             <?php endif; ?>
-            <button class="fav" type="button" aria-label="Favoritar produto"><i data-lucide="heart"></i></button>
           </div>
           <div class="produto-info">
             <a href="<?= url_to('main_produto_detalhes') ?>?id=<?= urlencode($id) ?>" class="nome"><?= esc($nome) ?></a>

@@ -1,23 +1,6 @@
 
 
 /**
- * Extrai e estrutura os dados de um produto a partir dos atributos 'data-*' do HTML do card.
- * @param {HTMLElement} card - O elemento DOM que representa o card do produto.
- * @returns {Object} Objeto contendo as propriedades do produto mapeadas.
- */
-function produtoDoCard(card) {
-  return {
-    id: card.dataset.produtoId,
-    nome: card.dataset.nome,
-    artesao: card.dataset.artesao,
-    preco: Number(card.dataset.preco || 0), // Garante o tipo numérico, usando 0 como fallback
-    categoria: card.dataset.categoria,
-    cor: card.dataset.cor || '#b5a898',     // Cor padrão caso não esteja definida
-    img: card.dataset.img || '',
-  };
-}
-
-/**
  * Configura os botões de filtro de categoria.
  * Gerencia a alternância de classes ativas e exibe/oculta os cards correspondentes.
  */
@@ -43,37 +26,15 @@ function configurarFiltros() {
 }
 
 /**
- * Gerencia as ações dos produtos (favoritar e adicionar ao carrinho).
+ * Gerencia as ações dos produtos (adicionar ao carrinho).
  * Utiliza delegação de eventos (Event Delegation) no container do grid para melhor performance.
  */
 function configurarAcoesProdutos() {
   const grid = document.getElementById('produtosGrid');
   if (!grid) return; // Encerra se o grid de produtos não existir na página atual
 
-  // Sincronização inicial: Marca os corações (favoritos) como ativos caso já estejam salvos no estado global
-  grid.querySelectorAll('.produto').forEach(card => {
-    const fav = card.querySelector('.fav');
-    if (fav && window.AraceState?.isFavorite(card.dataset.produtoId)) {
-      fav.classList.add('active');
-    }
-  });
-
   // Ouvinte único no grid para interceptar cliques nos botões internos dos cards
   grid.addEventListener('click', event => {
-    
-    // --- FLUXO DE FAVORITAR ---
-    const favorito = event.target.closest('.fav');
-    if (favorito) {
-      const card = favorito.closest('.produto');
-      // Alterna o estado global (se existir) ou apenas inverte a classe localmente
-      const ativo = window.AraceState
-        ? window.AraceState.toggleFavorite(produtoDoCard(card))
-        : !favorito.classList.contains('active');
-      
-      favorito.classList.toggle('active', ativo);
-      return; // Interrompe a execução para não avaliar o bloco do carrinho
-    }
-
     // --- FLUXO DE ADICIONAR AO CARRINHO ---
     const addCart = event.target.closest('.add-cart');
     if (addCart) {

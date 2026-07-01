@@ -1,4 +1,4 @@
-// Interacoes da pagina de produto: galeria, favorito e adicionar ao carrinho via Firestore.
+// Interacoes da pagina de produto: galeria e adicionar ao carrinho via Firestore.
 
 function trocarImagem(src) {
   const mainImg = document.getElementById('mainImg');
@@ -28,12 +28,6 @@ document.addEventListener('DOMContentLoaded', () => {
     window.AraceState?.addCartItem(produtoId, 1).catch(() => {});
     event.currentTarget.innerHTML = '<i data-lucide="check"></i> Adicionado';
     lucide.createIcons();
-  });
-
-  document.querySelector('.action-row .btn-icon[title="Favoritar"]')?.addEventListener('click', event => {
-    if (!window.ARACE_PRODUCT) return;
-    const active = window.AraceState ? window.AraceState.toggleFavorite(window.ARACE_PRODUCT) : !event.currentTarget.classList.contains('active');
-    event.currentTarget.classList.toggle('active', active);
   });
 
   lucide.createIcons();

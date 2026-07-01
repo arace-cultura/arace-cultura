@@ -1,4 +1,4 @@
-// Interacoes da pagina de loja do produtor. Produtos, carrinho e favoritos usam dados do Firestore.
+// Interacoes da pagina de loja do produtor. Produtos e carrinho usam dados do Firestore.
 const lojaState = {
   cartCount: (window.ARACE_CART?.items || []).reduce((total, item) => total + Number(item.quantidade || 1), 0),
 };
@@ -111,22 +111,9 @@ function configurarProdutos() {
   document.querySelectorAll('.product-card').forEach(card => {
     const produto = produtoPorCard(card);
     card.dataset.produtoId = produto.id;
-
-    const fav = card.querySelector('.product-favorite');
-    if (fav && window.AraceState?.isFavorite(produto.id)) fav.classList.add('active');
   });
 
   document.getElementById('products-grid')?.addEventListener('click', event => {
-    const fav = event.target.closest('.product-favorite');
-    if (fav) {
-      event.stopPropagation();
-      const produto = produtoPorCard(fav.closest('.product-card'));
-      const ativo = window.AraceState ? window.AraceState.toggleFavorite(produto) : !fav.classList.contains('active');
-      fav.classList.toggle('active', ativo);
-      showToast(ativo ? `"${produto.nome}" adicionado aos favoritos` : `"${produto.nome}" removido dos favoritos`);
-      return;
-    }
-
     const addCart = event.target.closest('.add-cart-btn');
     if (addCart) {
       event.stopPropagation();
@@ -146,10 +133,6 @@ function configurarProdutos() {
 function configurarHeader() {
   document.getElementById('btn-cart')?.addEventListener('click', () => {
     araceGo('arace-carrinho');
-  });
-
-  document.getElementById('btn-fav')?.addEventListener('click', () => {
-    araceGo('usuario/arace-favoritos');
   });
 
   document.querySelector('header .avatar-btn')?.addEventListener('click', () => {

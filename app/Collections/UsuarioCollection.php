@@ -31,7 +31,6 @@ final class UsuarioCollection extends Collection
         'emailVerified',
         'disabled',
         'createdAt',
-        'favoritos',
         'carrinho',
     ];
 

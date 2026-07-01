@@ -11,7 +11,6 @@ final class Product extends Entity
         'precoAntigo' => '?float',
         'estrelas'   => 'float',
         'avaliacoes' => 'integer',
-        'favorito'   => 'boolean',
         'disponivel' => 'boolean',
         'destaque'   => 'boolean',
         'desconto'   => 'integer',

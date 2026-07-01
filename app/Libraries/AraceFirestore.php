@@ -75,8 +75,13 @@ final class AraceFirestore
     public function producers(): array
     {
         try {
-            $producers = $this->collectionItems(ProducerCollection::class, 'nome');
+            // Não ordenamos direto no Firestore: como os documentos da coleção "Produtores"
+            // guardam o nome dentro de "membros", uma query orderBy('nome') descartaria
+            // qualquer documento sem o campo raiz "nome". Buscamos tudo e ordenamos em PHP.
+            $producers = $this->collectionItems(ProducerCollection::class);
             $producers = array_map(fn (array $producer): array => $this->normalizeProducer($producer), $producers);
+
+            usort($producers, static fn (array $a, array $b): int => strcasecmp((string) ($a['nome'] ?? ''), (string) ($b['nome'] ?? '')));
 
             // Operador Elvis: se o array vier vazio da API, injeta instantaneamente a constante de Fallback
             return $producers ?: self::FALLBACK_PRODUCERS;
@@ -407,65 +412,6 @@ final class AraceFirestore
         return $this->normalizeProduct([...$product, ...$created]);
     }
 
-    /**
-     * Resgata de forma reativa a lista de produtos favoritados pelo usuário da sessão.
-     */
-    public function favoritesForSession(array $sessionUser): array
-    {
-        $user = $this->userFromSession($sessionUser);
-        // Garante uma lista limpa, sem IDs duplicados convertidos rigorosamente para string
-        $ids  = array_values(array_unique(array_map('strval', $user['favoritos'] ?? [])));
-
-        // Varre a lista de IDs mapeando cada item individualmente contra o método de busca de produto
-        return array_values(array_filter(array_map(
-            fn (string $id): ?array => $this->product($id),
-            $ids
-        )));
-    }
-
-    /**
-     * Insere um ID de produto na matriz de favoritos de um usuário.
-     */
-    public function saveFavoriteForSession(array $sessionUser, string $productId): array
-    {
-        $productId = trim($productId);
-        if ($productId === '') {
-            throw new RuntimeException('Produto nao informado.');
-        }
-
-        $collection = $this->collection(UsuarioCollection::class);
-        $entity     = $this->userEntityFromSession($collection, $sessionUser);
-
-        if ($entity === null) {
-            throw new RuntimeException('Usuario autenticado nao foi encontrado no Firestore.');
-        }
-
-        $user = $this->entityPayload($entity);
-        // Mescla o ID novo com o array existente e remove redundâncias
-        $ids  = array_values(array_unique([...array_map('strval', $user['favoritos'] ?? []), $productId]));
-        $collection->update($entity, ['favoritos' => $ids]);
-
-        return $this->favoritesForSession([...$sessionUser, 'favoritos' => $ids]);
-    }
-    public function removeFavoriteForSession(array $sessionUser, string $productId): array
-    {
-        $collection = $this->collection(UsuarioCollection::class);
-        $entity     = $this->userEntityFromSession($collection, $sessionUser);
-
-        if ($entity === null) {
-            throw new RuntimeException('Usuario autenticado nao foi encontrado no Firestore.');
-        }
-
-        $user = $this->entityPayload($entity);
-        $ids  = array_values(array_filter(
-            array_map('strval', $user['favoritos'] ?? []),
-            static fn (string $id): bool => $id !== $productId
-        ));
-        $collection->update($entity, ['favoritos' => $ids]);
-
-        return $this->favoritesForSession([...$sessionUser, 'favoritos' => $ids]);
-    }
-
     public function cartForSession(array $sessionUser): array
     {
         $user  = $this->userFromSession($sessionUser);
@@ -637,7 +583,6 @@ final class AraceFirestore
             'sexo'     => $user['sexo'] ?? $user['genero'] ?? null,
             'genero'   => $user['sexo'] ?? $user['genero'] ?? null,
             'createdAt' => $user['createdAt'] ?? $user['criadoEm'] ?? null,
-            'favoritos' => is_array($user['favoritos'] ?? null) ? $user['favoritos'] : [],
             'carrinho'  => is_array($user['carrinho'] ?? null) ? $user['carrinho'] : [],
         ], static fn ($value): bool => $value !== null && $value !== '');
     }
@@ -876,15 +821,53 @@ final class AraceFirestore
         return $images;
     }
 
+    /**
+     * Extrai o "membro principal" do campo "membros" da coleção Produtores.
+     * O campo pode chegar como um mapa único (chaves nomeadas) ou como uma lista
+     * de membros; nos dois casos devolvemos um array associativo com os dados do membro.
+     */
+    private function primaryMember(mixed $membros): array
+    {
+        if (! is_array($membros) || $membros === []) {
+            return [];
+        }
+
+        // Lista sequencial (0,1,2...) => é uma lista de membros, pegamos o primeiro.
+        if (array_keys($membros) === range(0, count($membros) - 1)) {
+            $first = $membros[0] ?? [];
+
+            return is_array($first) ? $first : [];
+        }
+
+        // Caso contrário já é o mapa de um único membro.
+        return $membros;
+    }
+
     private function normalizeProducer(array $producer): array
     {
-        $producer['id']       = (string) ($producer['id'] ?? $producer['produtor_id'] ?? '');
-        $producer['nome']     = $producer['nome'] ?? $producer['nomeLoja'] ?? $producer['nome_loja'] ?? 'Produtor Arace';
-        $producer['nomeLoja'] = $producer['nomeLoja'] ?? $producer['nome_loja'] ?? $producer['nome'];
+        // A coleção "Produtores" guarda os dados de identificação do artesão dentro de "membros"
+        // (que pode vir como um mapa único ou como uma lista de membros). Extraímos o membro
+        // principal para conseguir ler nomeLoja/nomeCompleto/telefone/tipoArtesanato/tipoPessoa.
+        $membro = $this->primaryMember($producer['membros'] ?? null);
+
+        $nomeLoja     = (string) ($membro['nomeLoja'] ?? $producer['nomeLoja'] ?? $producer['nome_loja'] ?? '');
+        $nomeCompleto = (string) ($membro['nomeCompleto'] ?? $producer['nomeCompleto'] ?? '');
+        $telefoneRaw  = (string) ($membro['telefone'] ?? $producer['telefone'] ?? $producer['telefone_comercial'] ?? '');
+
+        $producer['id']            = (string) ($producer['id'] ?? $producer['produtor_id'] ?? '');
+        $producer['nome']          = $nomeLoja ?: ((string) ($producer['nome'] ?? '') ?: ($nomeCompleto ?: 'Produtor Arace'));
+        $producer['nomeLoja']      = $nomeLoja ?: $producer['nome'];
+        $producer['nomeCompleto']  = $nomeCompleto;
+        $producer['tipoArtesanato'] = (string) ($membro['tipoArtesanato'] ?? $producer['tipoArtesanato'] ?? '');
+        $producer['tipoPessoa']    = (string) ($membro['tipoPessoa'] ?? $producer['tipoPessoa'] ?? '');
+        $producer['categoriaProduto'] = (string) ($producer['categoriaProduto'] ?? $producer['categoria'] ?? '');
+        $producer['cep']           = (string) ($producer['cep'] ?? $producer['cepOrigem'] ?? '');
+        $producer['endereco']      = (string) ($producer['endereco'] ?? '');
+        $producer['stability']     = $producer['stability'] ?? '';
         $producer['lojaBio']  = $producer['lojaBio'] ?? $producer['bio'] ?? '';
         $producer['email']    = $producer['email'] ?? $producer['email_comercial'] ?? '';
-        $producer['telefone'] = isset($producer['telefone']) ? $this->formatPhone((string) $producer['telefone']) : ($producer['telefone_comercial'] ?? '');
-        $producer['categoria'] = $producer['categoria'] ?? $producer['categoria_principal'] ?? '';
+        $producer['telefone'] = $telefoneRaw !== '' ? $this->formatPhone($telefoneRaw) : '';
+        $producer['categoria'] = $producer['categoriaProduto'] ?: ($producer['categoria_principal'] ?? $producer['tipoArtesanato'] ?? '');
         $producer['fotoUrl'] = $producer['fotoUrl'] ?? $producer['lojaAvatar'] ?? $producer['avatar'] ?? '';
         $producer['lojaAvatar'] = $producer['fotoUrl'];
         $producer['bannerUrl'] = $producer['bannerUrl'] ?? $producer['banner'] ?? '';

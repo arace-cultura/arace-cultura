@@ -302,18 +302,6 @@ aside.nav-aside {
   object-fit: cover;
 }
 
-.fav {
-  position: absolute; top: .5rem; right: .5rem;
-  width: 28px; height: 28px; border-radius: 50%;
-  border: 1px solid rgba(0,0,0,.1); background: var(--branco);
-  display: flex; align-items: center; justify-content: center;
-  cursor: pointer; color: var(--muted);
-  transition: color .15s, border-color .15s, background .15s;
-}
-.fav svg { width: .85rem; height: .85rem; }
-.fav:hover { color: var(--laranja); border-color: var(--laranja); }
-.fav.active { color: var(--branco); background: var(--laranja); border-color: var(--laranja); }
-
 .produto-info { padding: .7rem .8rem; }
 .nome { display: block; font-size: .84rem; font-weight: 600; color: var(--text); margin-bottom: .2rem; }
 .nome:hover { color: var(--azul); }

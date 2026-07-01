@@ -17,7 +17,7 @@ $lojaEstado = (string) ($produtor['estado'] ?? 'ES');
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Aracê — Configuração da Loja</title>
+  <title>Aracï¿½ ï¿½ Configuraï¿½ï¿½o da Loja</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex&family=Playfair+Display:wght@700&display=swap" rel="stylesheet" />
@@ -29,7 +29,7 @@ $lojaEstado = (string) ($produtor['estado'] ?? 'ES');
 
   <!-- HEADER -->
 <header>
-  <a href="<?= url_to('home') ?>" class="logo">aracê</a>
+  <a href="<?= url_to('home') ?>" class="logo">aracï¿½</a>
 
   <form class="search-wrap" action="<?= url_to('main_pesquisa') ?>" method="get">
     <i data-lucide="search"></i>
@@ -39,10 +39,6 @@ $lojaEstado = (string) ($produtor['estado'] ?? 'ES');
   <div class="header-right">
     <button class="cart-btn" type="button" onclick="window.location.href='<?= url_to('main_arace_carrinho') ?>'">
       <i data-lucide="shopping-cart"></i>
-      <span class="cart-count">0 itens</span>
-    </button>
-    <button class="cart-btn" type="button" onclick="window.location.href='<?= url_to('user_arace_favoritos') ?>'">
-      <i data-lucide="heart"></i>
       <span class="cart-count">0 itens</span>
     </button>
     <button class="avatar-btn" type="button" onclick="window.location.href='<?= url_to('user_arace_perfil') ?>'" aria-label="Abrir perfil">
@@ -68,7 +64,7 @@ $lojaEstado = (string) ($produtor['estado'] ?? 'ES');
       <i data-lucide="shopping-cart"></i> Carrinho
     </a>
     <a class="nav-item" href="<?= url_to('main_arace_config') ?>">
-      <i data-lucide="settings"></i> Configurações
+      <i data-lucide="settings"></i> Configuraï¿½ï¿½es
     </a>
     <a class="nav-item" href="<?= url_to('user_arace_perfil') ?>">
       <i data-lucide="user"></i> Perfil
@@ -83,8 +79,8 @@ $lojaEstado = (string) ($produtor['estado'] ?? 'ES');
   <main>
     <div class="config-header">
       <div>
-        <h1>Configurações da Loja</h1>
-        <p>Gerencie a identidade, dados comerciais e logística do seu negócio</p>
+        <h1>Configuraï¿½ï¿½es da Loja</h1>
+        <p>Gerencie a identidade, dados comerciais e logï¿½stica do seu negï¿½cio</p>
       </div>
     </div>
 
@@ -105,7 +101,7 @@ $lojaEstado = (string) ($produtor['estado'] ?? 'ES');
         </button>
         <div class="config-nav-divider"></div>
         <button class="config-nav-item" onclick="trocarAba(this,'horarios')">
-          <i data-lucide="clock"></i> Horários de Funcionamento
+          <i data-lucide="clock"></i> Horï¿½rios de Funcionamento
         </button>
       </nav>
 
@@ -127,7 +123,7 @@ $lojaEstado = (string) ($produtor['estado'] ?? 'ES');
         <section class="config-section active" id="sec-identidade">
           <div class="config-card">
             <div class="config-card-header">
-              <div><h2>Logotipo e Capa da Loja</h2><p>Imagens que aparecem na sua vitrine pública</p></div>
+              <div><h2>Logotipo e Capa da Loja</h2><p>Imagens que aparecem na sua vitrine pï¿½blica</p></div>
             </div>
             <div class="config-card-body">
               <label style="display:block;margin-bottom:8px;font-size:13px;font-weight:500;color:var(--text)">Logotipo da Loja</label>
@@ -151,7 +147,7 @@ $lojaEstado = (string) ($produtor['estado'] ?? 'ES');
                 <label>Imagem de Capa (Banner)</label>
                 <div style="border:2px dashed var(--border);border-radius:var(--r);padding:2rem;text-align:center;background:var(--branco)">
                   <i data-lucide="image" style="width:32px;height:32px;color:var(--muted);margin-bottom:8px"></i>
-                  <label for="bannerInput" style="display:block;font-size:14px;color:var(--text);cursor:pointer">Clique para enviar um banner panorâmico</label>
+                  <label for="bannerInput" style="display:block;font-size:14px;color:var(--text);cursor:pointer">Clique para enviar um banner panorï¿½mico</label>
                   <small style="display:block;margin-top:4px;color:var(--faint)">Recomendado: 1200x300px</small>
                   <?php if ($bannerUrl !== ''): ?>
                     <small style="display:block;margin-top:8px;color:var(--verde)">Banner cadastrado</small>
@@ -164,7 +160,7 @@ $lojaEstado = (string) ($produtor['estado'] ?? 'ES');
 
           <div class="config-card">
             <div class="config-card-header">
-              <div><h2>Apresentação</h2><p>Como os clientes visualizam seu negócio</p></div>
+              <div><h2>Apresentaï¿½ï¿½o</h2><p>Como os clientes visualizam seu negï¿½cio</p></div>
             </div>
             <div class="config-card-body">
               <div class="field-group">
@@ -172,7 +168,7 @@ $lojaEstado = (string) ($produtor['estado'] ?? 'ES');
                 <input class="input-field" type="text" id="lojaNome" name="nomeLoja" value="<?= esc($lojaNome, 'attr') ?>" />
               </div>
               <div class="field-group">
-                <label>História / Biografia da Loja</label>
+                <label>Histï¿½ria / Biografia da Loja</label>
                 <textarea class="input-field" id="lojaBio" name="lojaBio" rows="4" style="resize:vertical;line-height:1.5"><?= esc($lojaBio) ?></textarea>
               </div>
             </div>
@@ -185,7 +181,7 @@ $lojaEstado = (string) ($produtor['estado'] ?? 'ES');
         <section class="config-section" id="sec-dados-comerciais">
           <div class="config-card">
             <div class="config-card-header">
-              <div><h2>Documentação Jurídica</h2><p>Informações de registro da loja</p></div>
+              <div><h2>Documentaï¿½ï¿½o Jurï¿½dica</h2><p>Informaï¿½ï¿½es de registro da loja</p></div>
             </div>
             <div class="config-card-body">
               <div class="field-row">
@@ -196,7 +192,7 @@ $lojaEstado = (string) ($produtor['estado'] ?? 'ES');
                 <div class="field-group">
                   <label>Categoria Principal</label>
                   <select class="input-field" id="lojaCategoria" name="categoria">
-                    <option value="ceramica" <?= $lojaCategoria === 'ceramica' ? 'selected' : '' ?>>Cerâmica & Panelas de Barro</option>
+                    <option value="ceramica" <?= $lojaCategoria === 'ceramica' ? 'selected' : '' ?>>Cerï¿½mica & Panelas de Barro</option>
                     <option value="artesanato" <?= $lojaCategoria === 'artesanato' ? 'selected' : '' ?>>Artesanato Geral</option>
                     <option value="alimentos" <?= $lojaCategoria === 'alimentos' ? 'selected' : '' ?>>Doces & Alimentos Caseiros</option>
                   </select>
@@ -222,15 +218,15 @@ $lojaEstado = (string) ($produtor['estado'] ?? 'ES');
         <section class="config-section" id="sec-logistica">
           <div class="config-card">
             <div class="config-card-header">
-              <div><h2>Métodos de Entrega Ativos</h2><p>Configure como seus produtos chegam aos clientes</p></div>
+              <div><h2>Mï¿½todos de Entrega Ativos</h2><p>Configure como seus produtos chegam aos clientes</p></div>
             </div>
             <div class="config-card-body">
               <div class="toggle-row">
-                <div class="toggle-info"><span>Permitir Retirada no Local</span><small>Os clientes buscam no endereço da sua oficina/loja</small></div>
+                <div class="toggle-info"><span>Permitir Retirada no Local</span><small>Os clientes buscam no endereï¿½o da sua oficina/loja</small></div>
                 <label class="toggle-switch"><input type="checkbox" name="retiradaLocal" value="1" <?= ($produtor['retiradaLocal'] ?? true) ? 'checked' : '' ?> /><span class="toggle-slider"></span></label>
               </div>
               <div class="toggle-row">
-                <div class="toggle-info"><span>Envio via Correios (PAC/Sedex)</span><small>Cálculo de peso baseado na tabela oficial dos Correios</small></div>
+                <div class="toggle-info"><span>Envio via Correios (PAC/Sedex)</span><small>Cï¿½lculo de peso baseado na tabela oficial dos Correios</small></div>
                 <label class="toggle-switch"><input type="checkbox" name="envioCorreios" value="1" <?= ($produtor['envioCorreios'] ?? true) ? 'checked' : '' ?> /><span class="toggle-slider"></span></label>
               </div>
               <div class="toggle-row">
@@ -242,7 +238,7 @@ $lojaEstado = (string) ($produtor['estado'] ?? 'ES');
 
           <div class="config-card">
             <div class="config-card-header">
-              <div><h2>Endereço de Postagem / Origem</h2></div>
+              <div><h2>Endereï¿½o de Postagem / Origem</h2></div>
             </div>
             <div class="config-card-body">
               <div class="field-row">
@@ -251,14 +247,14 @@ $lojaEstado = (string) ($produtor['estado'] ?? 'ES');
                   <input class="input-field" type="text" name="cepOrigem" value="<?= esc($produtor['cepOrigem'] ?? '', 'attr') ?>" />
                 </div>
                 <div class="field-group">
-                  <label>Distrito / Município</label>
+                  <label>Distrito / Municï¿½pio</label>
                   <input class="input-field" type="text" id="lojaCidade" value="<?= esc($lojaCidade . ' - ' . $lojaEstado, 'attr') ?>" readonly style="background:var(--bg)" />
                   <input type="hidden" name="cidade" value="<?= esc($lojaCidade, 'attr') ?>" />
                   <input type="hidden" name="estado" value="<?= esc($lojaEstado, 'attr') ?>" />
                 </div>
               </div>
               <div class="field-group">
-                <label>Endereço Completo da Oficina</label>
+                <label>Endereï¿½o Completo da Oficina</label>
                 <input class="input-field" type="text" name="endereco" value="<?= esc($produtor['endereco'] ?? '', 'attr') ?>" />
               </div>
             </div>
@@ -284,19 +280,19 @@ $lojaEstado = (string) ($produtor['estado'] ?? 'ES');
         <section class="config-section" id="sec-horarios">
           <div class="config-card">
             <div class="config-card-header">
-              <div><h2>Horário de Funcionamento</h2><p>Períodos em que a loja aceita retiradas</p></div>
+              <div><h2>Horï¿½rio de Funcionamento</h2><p>Perï¿½odos em que a loja aceita retiradas</p></div>
             </div>
             <div class="config-card-body">
               <div class="field-row" style="align-items: center; margin-bottom: 12px;">
                 <div style="width: 120px; font-weight: 500;">Segunda a Sexta</div>
                 <input class="input-field" type="time" name="horarioSemanaInicio" value="<?= esc($produtor['horarioSemanaInicio'] ?? '08:00', 'attr') ?>" style="max-width: 100px;" />
-                <span>às</span>
+                <span>ï¿½s</span>
                 <input class="input-field" type="time" name="horarioSemanaFim" value="<?= esc($produtor['horarioSemanaFim'] ?? '18:00', 'attr') ?>" style="max-width: 100px;" />
               </div>
               <div class="field-row" style="align-items: center; margin-bottom: 12px;">
-                <div style="width: 120px; font-weight: 500;">Sábados</div>
+                <div style="width: 120px; font-weight: 500;">Sï¿½bados</div>
                 <input class="input-field" type="time" name="horarioSabadoInicio" value="<?= esc($produtor['horarioSabadoInicio'] ?? '08:00', 'attr') ?>" style="max-width: 100px;" />
-                <span>às</span>
+                <span>ï¿½s</span>
                 <input class="input-field" type="time" name="horarioSabadoFim" value="<?= esc($produtor['horarioSabadoFim'] ?? '12:00', 'attr') ?>" style="max-width: 100px;" />
               </div>
               <div class="field-row" style="align-items: center;">

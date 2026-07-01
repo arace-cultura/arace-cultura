@@ -11,7 +11,7 @@ $avatar = trim((string) ($usuario['fotoUrl'] ?? $usuario['avatar'] ?? ''));
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Aracê — Configuração Perfil Produtor</title>
+  <title>Aracï¿½ ï¿½ Configuraï¿½ï¿½o Perfil Produtor</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex&family=Playfair+Display:wght@700&display=swap" rel="stylesheet" />
@@ -23,7 +23,7 @@ $avatar = trim((string) ($usuario['fotoUrl'] ?? $usuario['avatar'] ?? ''));
 
   <!-- HEADER -->
 <header>
-  <a href="<?= url_to('home') ?>" class="logo">aracê</a>
+  <a href="<?= url_to('home') ?>" class="logo">aracï¿½</a>
 
   <form class="search-wrap" action="<?= url_to('main_pesquisa') ?>" method="get">
     <i data-lucide="search"></i>
@@ -33,10 +33,6 @@ $avatar = trim((string) ($usuario['fotoUrl'] ?? $usuario['avatar'] ?? ''));
   <div class="header-right">
     <button class="cart-btn" type="button" onclick="window.location.href='<?= url_to('main_arace_carrinho') ?>'">
       <i data-lucide="shopping-cart"></i>
-      <span class="cart-count">0 itens</span>
-    </button>
-    <button class="cart-btn" type="button" onclick="window.location.href='<?= url_to('user_arace_favoritos') ?>'">
-      <i data-lucide="heart"></i>
       <span class="cart-count">0 itens</span>
     </button>
     <button class="avatar-btn" type="button" onclick="window.location.href='<?= url_to('user_arace_perfil') ?>'" aria-label="Abrir perfil">
@@ -62,7 +58,7 @@ $avatar = trim((string) ($usuario['fotoUrl'] ?? $usuario['avatar'] ?? ''));
       <i data-lucide="shopping-cart"></i> Carrinho
     </a>
     <a class="nav-item" href="<?= url_to('main_arace_config') ?>">
-      <i data-lucide="settings"></i> Configurações
+      <i data-lucide="settings"></i> Configuraï¿½ï¿½es
     </a>
     <a class="nav-item" href="<?= url_to('user_arace_perfil') ?>">
       <i data-lucide="user"></i> Perfil
@@ -76,8 +72,8 @@ $avatar = trim((string) ($usuario['fotoUrl'] ?? $usuario['avatar'] ?? ''));
   <main>
   <div class="config-header">
     <div>
-      <h1>Configurações</h1>
-      <p>Gerencie suas preferências e dados da conta</p>
+      <h1>Configuraï¿½ï¿½es</h1>
+      <p>Gerencie suas preferï¿½ncias e dados da conta</p>
     </div>
   </div>
 
@@ -89,21 +85,21 @@ $avatar = trim((string) ($usuario['fotoUrl'] ?? $usuario['avatar'] ?? ''));
         <i data-lucide="user"></i> Perfil
       </button>
       <button class="config-nav-item" onclick="trocarAba(this,'conta')">
-        <i data-lucide="shield"></i> Conta & Segurança
+        <i data-lucide="shield"></i> Conta & Seguranï¿½a
       </button>
       <button class="config-nav-item" onclick="trocarAba(this,'pagamento')">
         <i data-lucide="key-round"></i> Pix
       </button>
       <div class="config-nav-divider"></div>
       <button class="config-nav-item" onclick="trocarAba(this,'aparencia')">
-        <i data-lucide="palette"></i> Aparência
+        <i data-lucide="palette"></i> Aparï¿½ncia
       </button>
       <button class="config-nav-item" onclick="trocarAba(this,'privacidade')">
         <i data-lucide="lock"></i> Privacidade
       </button>
     </nav>
 
-    <!-- CONTEÚDO -->
+    <!-- CONTEï¿½DO -->
     <div>
 
       <!-- -- PERFIL -- -->
@@ -135,7 +131,7 @@ $avatar = trim((string) ($usuario['fotoUrl'] ?? $usuario['avatar'] ?? ''));
 
         <div class="config-card">
           <div class="config-card-header">
-            <div><h2>Informações pessoais</h2><p>Seus dados básicos</p></div>
+            <div><h2>Informaï¿½ï¿½es pessoais</h2><p>Seus dados bï¿½sicos</p></div>
           </div>
           <div class="config-card-body">
             <div class="field-row">
@@ -145,13 +141,13 @@ $avatar = trim((string) ($usuario['fotoUrl'] ?? $usuario['avatar'] ?? ''));
               </div>
             </div>
             <div class="field-group">
-              <label>Nome de usuário</label>
+              <label>Nome de usuï¿½rio</label>
               <input class="input-field" type="text" id="username" name="username" placeholder="@usuario" value="<?= esc($username, 'attr') ?>" />
-              <small>Visível publicamente no seu perfil</small>
+              <small>Visï¿½vel publicamente no seu perfil</small>
             </div>
             <div class="field-group">
               <label>Bio</label>
-              <textarea class="input-field" id="bio" name="bio" rows="3" placeholder="Uma breve descrição sobre você…" style="resize:vertical;line-height:1.5"><?= esc($usuario['bio'] ?? '') ?></textarea>
+              <textarea class="input-field" id="bio" name="bio" rows="3" placeholder="Uma breve descriï¿½ï¿½o sobre vocï¿½" style="resize:vertical;line-height:1.5"><?= esc($usuario['bio'] ?? '') ?></textarea>
             </div>
             <div class="field-row">
               <div class="field-group">
@@ -161,10 +157,10 @@ $avatar = trim((string) ($usuario['fotoUrl'] ?? $usuario['avatar'] ?? ''));
               <div class="field-group">
                 <label>Sexo</label>
                 <select class="input-field" id="sexo" name="sexo">
-                  <option value="">Prefiro não informar</option>
+                  <option value="">Prefiro nï¿½o informar</option>
                   <option value="f" <?= $sexo === 'f' ? 'selected' : '' ?>>Feminino</option>
                   <option value="m" <?= $sexo === 'm' ? 'selected' : '' ?>>Masculino</option>
-                  <option value="nb" <?= $sexo === 'nb' ? 'selected' : '' ?>>Não-binário</option>
+                  <option value="nb" <?= $sexo === 'nb' ? 'selected' : '' ?>>Nï¿½o-binï¿½rio</option>
                 </select>
               </div>
             </div>
@@ -195,7 +191,7 @@ $avatar = trim((string) ($usuario['fotoUrl'] ?? $usuario['avatar'] ?? ''));
         </form>
       </section>
 
-      <!-- -- CONTA & SEGURANÇA -- -->
+      <!-- -- CONTA & SEGURANï¿½A -- -->
       <section class="config-section" id="sec-conta">
 
         <div class="config-card">
@@ -205,31 +201,31 @@ $avatar = trim((string) ($usuario['fotoUrl'] ?? $usuario['avatar'] ?? ''));
           <div class="config-card-body">
             <div class="field-group">
               <label>Senha atual</label>
-              <input class="input-field" type="password" placeholder="••••••••" />
+              <input class="input-field" type="password" placeholder="ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½" />
             </div>
             <div class="field-row">
               <div class="field-group">
                 <label>Nova senha</label>
-                <input class="input-field" type="password" id="novaSenha" placeholder="••••••••" />
+                <input class="input-field" type="password" id="novaSenha" placeholder="ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½" />
               </div>
               <div class="field-group">
                 <label>Confirmar nova senha</label>
-                <input class="input-field" type="password" id="confirmarSenha" placeholder="••••••••" />
+                <input class="input-field" type="password" id="confirmarSenha" placeholder="ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½" />
               </div>
             </div>
-            <small style="font-size:12px;color:var(--muted)">Mínimo 8 caracteres, com letras e números.</small>
+            <small style="font-size:12px;color:var(--muted)">Mï¿½nimo 8 caracteres, com letras e nï¿½meros.</small>
           </div>
         </div>
 
         <div class="config-card">
           <div class="config-card-header">
-            <div><h2>Verificação em duas etapas</h2><p>Adiciona uma camada extra de segurança</p></div>
+            <div><h2>Verificaï¿½ï¿½o em duas etapas</h2><p>Adiciona uma camada extra de seguranï¿½a</p></div>
           </div>
           <div class="config-card-body">
             <div class="toggle-row">
               <div class="toggle-info">
                 <span>SMS</span>
-                <small>Receber código por mensagem de texto</small>
+                <small>Receber cï¿½digo por mensagem de texto</small>
               </div>
               <label class="toggle-switch">
                 <input type="checkbox" checked />
@@ -239,7 +235,7 @@ $avatar = trim((string) ($usuario['fotoUrl'] ?? $usuario['avatar'] ?? ''));
             <div class="toggle-row">
               <div class="toggle-info">
                 <span>E-mail</span>
-                <small>Receber código por e-mail</small>
+                <small>Receber cï¿½digo por e-mail</small>
               </div>
               <label class="toggle-switch">
                 <input type="checkbox" />
@@ -261,13 +257,13 @@ $avatar = trim((string) ($usuario['fotoUrl'] ?? $usuario['avatar'] ?? ''));
 
         <div class="config-card danger-card">
           <div class="config-card-header">
-            <div><h2>Zona de perigo</h2><p>Ações irreversíveis</p></div>
+            <div><h2>Zona de perigo</h2><p>Aï¿½ï¿½es irreversï¿½veis</p></div>
           </div>
           <div class="config-card-body">
             <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.75rem">
               <div>
                 <div style="font-size:14px;font-weight:500;color:var(--text)">Desativar conta</div>
-                <div style="font-size:12px;color:var(--muted);margin-top:2px">Sua conta ficará invisível temporariamente</div>
+                <div style="font-size:12px;color:var(--muted);margin-top:2px">Sua conta ficarï¿½ invisï¿½vel temporariamente</div>
               </div>
             </div>
             <div style="height:.5px;background:rgba(220,38,38,.15);margin:.25rem 0"></div>
@@ -295,11 +291,11 @@ $avatar = trim((string) ($usuario['fotoUrl'] ?? $usuario['avatar'] ?? ''));
         </div>
       </section>
 
-      <!-- -- APARÊNCIA -- -->
+      <!-- -- APARï¿½NCIA -- -->
       <section class="config-section" id="sec-aparencia">
         <div class="config-card">
           <div class="config-card-header">
-            <div><h2>Tema</h2><p>Escolha a aparência da interface</p></div>
+            <div><h2>Tema</h2><p>Escolha a aparï¿½ncia da interface</p></div>
           </div>
           <div class="config-card-body">
             <div class="theme-options">
@@ -329,18 +325,18 @@ $avatar = trim((string) ($usuario['fotoUrl'] ?? $usuario['avatar'] ?? ''));
                 <div class="select-with-icon">
                   <span class="flag">????</span>
                   <select class="input-field" id="idioma">
-                    <option value="pt-BR" selected>Português (Brasil)</option>
+                    <option value="pt-BR" selected>Portuguï¿½s (Brasil)</option>
                     <option value="en">English</option>
-                    <option value="es">Español</option>
+                    <option value="es">Espaï¿½ol</option>
                   </select>
                 </div>
               </div>
               <div class="field-group">
                 <label>Moeda</label>
                 <select class="input-field">
-                  <option value="BRL" selected>BRL — Real brasileiro</option>
-                  <option value="USD">USD — Dólar americano</option>
-                  <option value="EUR">EUR — Euro</option>
+                  <option value="BRL" selected>BRL ï¿½ Real brasileiro</option>
+                  <option value="USD">USD ï¿½ Dï¿½lar americano</option>
+                  <option value="EUR">EUR ï¿½ Euro</option>
                 </select>
               </div>
             </div>
@@ -356,12 +352,8 @@ $avatar = trim((string) ($usuario['fotoUrl'] ?? $usuario['avatar'] ?? ''));
           </div>
           <div class="config-card-body">
             <div class="toggle-row">
-              <div class="toggle-info"><span>Perfil público</span><small>Outros usuários podem ver seu perfil</small></div>
+              <div class="toggle-info"><span>Perfil pï¿½blico</span><small>Outros usuï¿½rios podem ver seu perfil</small></div>
               <label class="toggle-switch"><input type="checkbox" checked /><span class="toggle-slider"></span></label>
-            </div>
-            <div class="toggle-row">
-              <div class="toggle-info"><span>Mostrar lista de favoritos</span><small>Seus produtos favoritos ficam visíveis</small></div>
-              <label class="toggle-switch"><input type="checkbox" /><span class="toggle-slider"></span></label>
             </div>
             <div class="toggle-row">
               <div class="toggle-info"><span>Aparecer nas buscas</span><small>Seu perfil aparece nos resultados de pesquisa</small></div>
@@ -375,17 +367,17 @@ $avatar = trim((string) ($usuario['fotoUrl'] ?? $usuario['avatar'] ?? ''));
           </div>
           <div class="config-card-body">
             <div class="toggle-row">
-              <div class="toggle-info"><span>Cookies de análise</span><small>Ajuda a melhorar a plataforma</small></div>
+              <div class="toggle-info"><span>Cookies de anï¿½lise</span><small>Ajuda a melhorar a plataforma</small></div>
               <label class="toggle-switch"><input type="checkbox" checked /><span class="toggle-slider"></span></label>
             </div>
             <div class="toggle-row">
-              <div class="toggle-info"><span>Personalização de anúncios</span><small>Recomendações baseadas no seu histórico</small></div>
+              <div class="toggle-info"><span>Personalizaï¿½ï¿½o de anï¿½ncios</span><small>Recomendaï¿½ï¿½es baseadas no seu histï¿½rico</small></div>
               <label class="toggle-switch"><input type="checkbox" /><span class="toggle-slider"></span></label>
             </div>
           </div>
         </div>
       </section>
-<!-- Toast de confirmação -->
+<!-- Toast de confirmaï¿½ï¿½o -->
 <div class="toast" id="toast">
   <i data-lucide="check-circle"></i>
   <span id="toastMsg">Salvo com sucesso</span>
@@ -397,7 +389,7 @@ $avatar = trim((string) ($usuario['fotoUrl'] ?? $usuario['avatar'] ?? ''));
 <script src="/js/brasil-api-validacao.js?v=20260630-fix"></script>
 <script src="/js/config.js?v=20260630-fix"></script>
 
-    </div><!-- /conteúdo -->
+    </div><!-- /conteï¿½do -->
   </div><!-- /config-layout -->
 </main>
 

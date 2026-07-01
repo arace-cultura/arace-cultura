@@ -18,7 +18,6 @@ async function buscarTotalApi(caminho, extrairTotal) {
 
 async function carregarPerfil() {
   const user = window.ARACE_AUTH_USER || {};
-  const favoritos = await buscarTotalApi('/api/favorites', payload => Array.isArray(payload.data) ? payload.data.length : 0);
   const carrinho = await buscarTotalApi('/api/cart', payload => {
     const items = payload.data?.items || [];
     return items.reduce((total, item) => total + Number(item.quantidade || 1), 0);
@@ -41,7 +40,6 @@ async function carregarPerfil() {
     avatar: user.fotoUrl || user.avatar || '',
     pedidos: Number(user.pedidos || 0),
     carrinho,
-    favoritos,
   };
 }
 
@@ -50,7 +48,6 @@ function renderPerfil(dados) {
   const stats = document.querySelectorAll('.stat-value');
   if (stats[0]) stats[0].textContent = dados.pedidos;
   if (stats[1]) stats[1].textContent = dados.carrinho;
-  if (stats[2]) stats[2].textContent = dados.favoritos;
 
   const nome = document.querySelector('.profile-name');
   const email = document.querySelector('.profile-email');
