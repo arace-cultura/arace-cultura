@@ -96,14 +96,23 @@ $formatarMoeda = static fn (float $valor): string => 'R$' . number_format($valor
             $produto = $item['produto'] ?? [];
             $produtoId = (string) ($item['produtoId'] ?? $produto['id'] ?? '');
             $quantidade = (int) ($item['quantidade'] ?? 1);
-            $imagem = (string) ($produto['img'] ?? $produto['imagem'] ?? '');
+            $produtoImagens = is_array($produto['imagens'] ?? null) ? $produto['imagens'] : [];
+            $imagem = trim((string) ($produtoImagens[0] ?? $produto['img'] ?? $produto['imagem'] ?? $produto['imagemUrl'] ?? ''));
           ?>
           <div class="cart-item item-animado atraso-1" data-item-id="<?= esc($produtoId, 'attr') ?>">
             <div class="cart-item-image">
               <?php if ($imagem !== ''): ?>
                 <img src="<?= esc($imagem, 'attr') ?>" alt="<?= esc($produto['nome'] ?? 'Produto') ?>" />
               <?php else: ?>
-                <div class="img-placeholder" style="background:<?= esc($produto['cor'] ?? '#C1734A', 'attr') ?>"></div>
+                <?php
+                  $produtoImagens = is_array($produto['imagens'] ?? null) ? $produto['imagens'] : [];
+                  $produtoImagem = trim((string) ($produtoImagens[0] ?? $produto['img'] ?? $produto['imagem'] ?? $produto['imagemUrl'] ?? ''));
+                ?>
+                <div class="img-placeholder" style="background:<?= esc($produto['cor'] ?? '#C1734A', 'attr') ?>">
+                  <?php if ($produtoImagem !== ''): ?>
+                    <img src="<?= esc($produtoImagem, 'attr') ?>" alt="<?= esc($produto['nome'] ?? 'Produto Arace', 'attr') ?>" loading="lazy" />
+                  <?php endif; ?>
+                </div>
               <?php endif; ?>
             </div>
             <div class="cart-item-info">

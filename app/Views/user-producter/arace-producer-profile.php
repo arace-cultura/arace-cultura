@@ -60,28 +60,9 @@ $sexoLabel = ['f' => 'Feminino', 'm' => 'Masculino', 'nb' => 'Não-binário'][$s
     </a>
     <div class="nav-divider"></div>
     <div class="nav-section">Reportar</div>
-    <a class="nav-item" href="<?= url_to('main_arace_config') ?>">
-      <i data-lucide="hand-coins"></i> Detalhes de pagamento
-    </a>
+    
   </aside>
 
-  <main>
-    <!-- Stats -->
-    <div class="stats-row item-animado atraso-1">
-      <div class="stat-card">
-        <div class="stat-label">Vendas realizadas</div>
-        <div class="stat-value">120</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-label">Produtos para entrega</div>
-        <div class="stat-value">10</div>
-      </div>
-      
-      <div class="stat-card">
-        <div class="stat-label">Pendentes</div>
-        <div class="stat-value">5</div>
-      </div>
-    </div>
 
     <!-- Profile Card -->
     <div class="profile-card item-animado atraso-2">
