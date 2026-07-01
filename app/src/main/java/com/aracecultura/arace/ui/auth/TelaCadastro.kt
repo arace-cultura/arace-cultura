@@ -117,8 +117,7 @@ fun TelaCadastro(
                         db.collection("Usuarios").document(uid)
                             .set(hashMapOf(
                                 "nome" to nome.trim(),
-                                "telefone" to Formatadores.telefone(telefone),
-                                "isProdutor" to false
+                                "telefone" to Formatadores.telefone(telefone)
                             ))
                             .addOnFailureListener {
                                 Log.e("Cadastro", "Falha ao salvar dados do usuário", it)

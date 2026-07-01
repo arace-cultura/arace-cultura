@@ -139,13 +139,10 @@ fun PerfilCliente(
 
                 BotaoVisualizacao(
                     // Estar nesta tela = modo cliente. O radio reflete a tela
-                    // atual, não usuario.isProdutor (que indica "tem loja" e
-                    // ficaria preso em Produtor para contas produtoras).
+                    // atual, ficaria preso em Produtor para contas produtoras
+                    // se refletisse se a conta tem loja.
                     modoAtualIsProdutor = false,
-                    onModoChanged = { isProdutor ->
-                        viewModel.alterarModoVisualizacao(isProdutor, uid)
-                        onModoChanged(isProdutor)
-                    },
+                    onModoChanged = onModoChanged,
                     modifier = Modifier.align(Alignment.TopEnd).offset(y = (-2).dp)
                 )
 

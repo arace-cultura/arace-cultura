@@ -33,8 +33,7 @@ data class Usuario(
     val email: String = "",
     val telefone: String = "",
     val fotoUrl: String = "",
-    val bannerUrl: String = "",
-    val isProdutor: Boolean = false
+    val bannerUrl: String = ""
 )
 
 class PerfilViewModel : ViewModel() {
@@ -79,28 +78,17 @@ class PerfilViewModel : ViewModel() {
             usuarioDocFlow(uid)
                 .catch { it.printStackTrace() }
                 .collect { document ->
-                    val possuiCadastroProdutor = withContext(Dispatchers.IO) {
-                        LojaRepository.resolverLojaId(uid) != null
-                    }
                     val emailAutenticado = FirebaseAuth.getInstance().currentUser?.email.orEmpty()
 
                     val userData = document.toObject(Usuario::class.java)
-                        ?.copy(id = document.id, isProdutor = possuiCadastroProdutor)
+                        ?.copy(id = document.id)
 
                     if (userData != null) {
                         _usuario.value = userData.copy(
                             email = userData.email.ifBlank { emailAutenticado }
                         )
-                        if (possuiCadastroProdutor && document.getBoolean("isProdutor") != true) {
-                            withContext(Dispatchers.IO) {
-                                db.collection("Usuarios")
-                                    .document(uid)
-                                    .set(mapOf("isProdutor" to true), SetOptions.merge())
-                                    .await()
-                            }
-                        }
                     } else {
-                        _usuario.value = Usuario(id = uid, nome = "Usuário", email = emailAutenticado, isProdutor = possuiCadastroProdutor)
+                        _usuario.value = Usuario(id = uid, nome = "Usuário", email = emailAutenticado)
                     }
                 }
         }
@@ -130,22 +118,6 @@ class PerfilViewModel : ViewModel() {
         awaitClose { registro.remove() }
     }
 
-    // Altera o modo de visualização entre Cliente e Produtor
-    fun alterarModoVisualizacao(isProdutor: Boolean, uid: String) {
-        // Guarda o estado anterior caso a requisição falhe
-        val estadoAnterior = _usuario.value
-        _usuario.value = _usuario.value.copy(isProdutor = isProdutor)
-
-        viewModelScope.launch(Dispatchers.IO) {
-            try {
-                db.collection("Usuarios").document(uid)
-                    .update("isProdutor", isProdutor)
-                    .await()
-            } catch (e: Exception) {
-                _usuario.value = estadoAnterior
-            }
-        }
-    }
     // Troca a senha da loja. Distingue "senha atual incorreta" (onSenhaIncorreta)
     // dos demais erros, para a UI mostrar o texto vermelho no campo certo.
     fun alterarSenhaLoja(
