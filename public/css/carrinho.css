@@ -60,10 +60,18 @@ main {
   flex-shrink: 0;
 }
 .cart-item-image .img-placeholder {
-  width: 100%; height: 100%;
+  width: 100%;
+  height: 100%;
   border-radius: var(--r);
+  overflow: hidden;
 }
 
+.cart-item-image .img-placeholder img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
 .cart-item-info {
   display: flex;
   flex-direction: column;

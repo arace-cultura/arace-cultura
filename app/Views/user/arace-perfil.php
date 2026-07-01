@@ -65,11 +65,7 @@ $sexoLabel = ['f' => 'Feminino', 'm' => 'Masculino', 'nb' => 'Não-binário'][$s
         <i data-lucide="box"></i> Quero ser produtor
       </a>
     <?php endif; ?>
-    <div class="nav-divider"></div>
-    <div class="nav-section">Reportar</div>
-    <a class="nav-item" href="<?= url_to('main_arace_config') ?>#pagamento">
-      <i data-lucide="hand-coins"></i> Detalhes de pagamento
-    </a>
+    
     <form class="logout-form" action="<?= site_url('sair') ?>" method="post">
       <button class="nav-item logout-button" type="submit">
         <i data-lucide="log-out"></i> Sair da conta

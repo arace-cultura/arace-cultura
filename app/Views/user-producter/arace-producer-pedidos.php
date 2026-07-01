@@ -60,10 +60,7 @@ $pedidoStats = $pedidoStats ?? ['pendente' => 0, 'producao' => 0, 'enviado' => 0
       <i data-lucide="user"></i> Perfil
     </a>
     <div class="nav-divider"></div>
-    <div class="nav-section">Reportar</div>
-    <a class="nav-item" href="<?= url_to('main_arace_config') ?>">
-      <i data-lucide="hand-coins"></i> Detalhes de pagamento
-    </a>
+   
   </aside>
 
 <main>
