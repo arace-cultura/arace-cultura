@@ -1,6 +1,6 @@
-@import "../css/style-base.css";
+﻿@import "../css/style-base.css";
 
-/* ── BREADCRUMB ── */
+/* â”€â”€ BREADCRUMB â”€â”€ */
 .breadcrumb {
   display: flex; align-items: center; gap: 6px;
   font-size: 12px; color: var(--muted); margin-bottom: 1.5rem;
@@ -9,7 +9,7 @@
 .breadcrumb a:hover { color: var(--laranja); }
 .breadcrumb svg { width: 12px; height: 12px; }
 
-/* ── PRODUCT HERO ── */
+/* â”€â”€ PRODUCT HERO â”€â”€ */
 .product-hero {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -122,78 +122,15 @@
 .btn-buy:hover { background: var(--laranja-d); }
 .btn-buy svg { width: 15px; height: 15px; }
 
-/* ── DETAILS SECTION ── */
+/* â”€â”€ DETAILS SECTION â”€â”€ */
 .section-title {
   font-size: 18px; font-weight: 500; color: var(--text);
   margin-bottom: 1.25rem; padding-bottom: .5rem;
   border-bottom: 1px solid var(--border);
 }
 
-.product-details-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 2rem;
-  margin-bottom: 2rem;
-}
 
-/* Reviews */
-.reviews-header {
-  display: flex; align-items: center;
-  justify-content: space-between;
-  margin-bottom: 1rem;
-}
-.reviews-meta { display: flex; align-items: center; gap: 8px; }
-.reviews-meta .big-rating {
-  font-size: 28px; font-weight: 700; color: var(--text);
-}
-.reviews-filters { display: flex; align-items: center; gap: 8px; }
-.select-filter {
-  font-family: var(--body); font-size: 13px;
-  border: .5px solid var(--border); border-radius: var(--r);
-  padding: 6px 10px; background: var(--branco); color: var(--text);
-  cursor: pointer; outline: none;
-}
-.btn-escrever {
-  display: inline-flex; align-items: center; gap: 6px;
-  padding: 7px 16px; border: none; border-radius: var(--r);
-  font-size: 13px; font-weight: 500; font-family: var(--body);
-  background: var(--laranja); color: #fff;
-  cursor: pointer; transition: background .15s;
-}
-.btn-escrever:hover { background: var(--laranja-d); }
-
-.review-list { display: flex; flex-direction: column; gap: .75rem; }
-.review-card {
-  background: var(--branco);
-  border: .5px solid var(--border);
-  border-radius: var(--r);
-  padding: 1rem 1.25rem;
-}
-.review-card-header {
-  display: flex; align-items: center;
-  justify-content: space-between; margin-bottom: .5rem;
-}
-.review-user { font-size: 14px; font-weight: 500; color: var(--text); }
-.review-more { background: none; border: none; cursor: pointer; color: var(--faint); padding: 2px; }
-.review-more svg { width: 16px; height: 16px; }
-.review-text { font-size: 13px; color: var(--muted); line-height: 1.6; margin: .35rem 0; }
-.review-date { font-size: 11px; color: var(--faint); }
-
-/* Avaliações col */
-.avaliacoes-col {
-  background: var(--branco);
-  border: .5px solid var(--border);
-  border-radius: var(--r-lg);
-  padding: 1.5rem;
-}
-.comentarios-col {
-  background: var(--branco);
-  border: .5px solid var(--border);
-  border-radius: var(--r-lg);
-  padding: 1.5rem;
-}
-
-/* ── YOU MAY ALSO LIKE ── */
+/* â”€â”€ YOU MAY ALSO LIKE â”€â”€ */
 .rec-section { margin-top: 1rem; }
 .rec-grid {
   display: grid;
@@ -237,3 +174,9 @@
   border-radius: 6px;
 }
 @keyframes shimmer { from { background-position: 200% 0; } to { background-position: -200% 0; } }
+
+aside {
+  align-self: start;
+  height: fit-content;
+  padding: 0;
+}

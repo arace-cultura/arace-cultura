@@ -47,12 +47,6 @@ function atualizarResumo(cart) {
   if (shipping) shipping.textContent = formatarMoeda(totais.frete);
   if (total) total.textContent = formatarMoeda(totais.total);
 
-  document.querySelectorAll('.cart-count').forEach(label => {
-    if (!label.closest('.cart-btn')?.querySelector('[data-lucide="shopping-cart"]')) return;
-    const total = items.reduce((acc, item) => acc + Number(item.quantidade || 1), 0);
-    label.textContent = total === 1 ? '1 item' : `${total} itens`;
-  });
-
   const empty = document.getElementById('emptyCart');
   const content = document.getElementById('cartContent');
   empty?.classList.toggle('hidden', items.length > 0);

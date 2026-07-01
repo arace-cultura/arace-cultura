@@ -112,6 +112,75 @@ final class AccountController extends BaseController
     }
 
     /**
+     * Exibe a página dedicada de criação de um novo produto para o produtor logado.
+     */
+    public function producerCreateProduct()
+    {
+        $data = $this->accountData();
+
+        // Recupera o produtor vinculado à sessão para exibir o nome da loja no cabeçalho da página.
+        $data['produtor'] = service('araceFirestore')->producerFromSession($data['usuario'] ?? []);
+
+        return view('user-producter/arace-producer-criar-produto', $data);
+    }
+
+    /**
+     * PROCESSA O FORMULÁRIO: cria um novo produto na coleção Produtos a partir do envio da página.
+     * Todo o fluxo (upload da imagem, validação e gravação) é resolvido no servidor, sem JavaScript.
+     */
+    public function storeProducerProduct()
+    {
+        // Bloqueia a ação caso a sessão do produtor tenha expirado.
+        $sessionUser = session()->get('arace_user') ?? [];
+        if (! is_array($sessionUser) || $sessionUser === []) {
+            return redirect()->route('auth_login')->with('erro', 'Sessao expirada. Entre novamente.');
+        }
+
+        $payload = $this->request->getPost();
+
+        // Regras de validação equivalentes às da API, agora aplicadas no envio tradicional do formulário.
+        if (! $this->validateData($payload, [
+            'nome'       => 'required|min_length[2]|max_length[140]',
+            'descricao'  => 'permit_empty|max_length[1200]',
+            'preco'      => 'required',
+            'categoria'  => 'permit_empty|max_length[80]',
+            'quantidade' => 'permit_empty|integer',
+            'imagemUrl'  => 'permit_empty|valid_url_strict',
+        ])) {
+            return redirect()
+                ->back()
+                ->withInput()
+                ->with('erro', 'Confira os dados do produto.')
+                ->with('erros', $this->validator->getErrors());
+        }
+
+        try {
+            $firestore = service('araceFirestore');
+            $produtor  = $firestore->producerFromSession($sessionUser);
+
+            // Se o produtor anexou um arquivo de imagem, envia para o Supabase e usa a URL pública gerada.
+            $imagem = $this->uploadedFile('imagemArquivo');
+            if ($imagem !== null) {
+                $payload['imagemUrl'] = (new SupabaseStorage())->uploadProductImage(
+                    $imagem,
+                    (string) ($produtor['id'] ?? $sessionUser['id'] ?? $sessionUser['email'] ?? 'produtor')
+                );
+            }
+
+            // Grava o produto na coleção Produtos vinculando-o ao produtor logado.
+            $firestore->createProductForProducerSession($sessionUser, $payload);
+
+            return redirect()->route('produtor_painel')->with('sucesso', 'Produto criado com sucesso.');
+        } catch (\Throwable $exception) {
+            log_message('error', 'Nao foi possivel criar produto: {message}', [
+                'message' => $exception->getMessage(),
+            ]);
+
+            return redirect()->back()->withInput()->with('erro', 'Nao foi possivel salvar o produto agora. Confira o envio da imagem para o Supabase.');
+        }
+    }
+
+    /**
      * Carrega a página de configurações internas do produtor.
      */
     public function producerConfig()

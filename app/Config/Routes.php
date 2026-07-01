@@ -88,6 +88,8 @@ $routes->get('perfil', $routeRedirect('user_arace_perfil'));
 */
 $routes->group('produtor', ['filter' => 'auth'], static function (RouteCollection $routes): void {
     $routes->get('painel', 'AccountController::producerDashboard', ['as' => 'produtor_painel']);
+    $routes->get('produtos/novo', 'AccountController::producerCreateProduct', ['as' => 'produtor_produto_novo']);
+    $routes->post('produtos/novo', 'AccountController::storeProducerProduct', ['as' => 'produtor_produto_store']);
     $routes->get('pedidos', 'AccountController::producerOrders', ['as' => 'produtor_pedidos']);
     $routes->get('perfil', 'AccountController::producerProfile', ['as' => 'produtor_perfil']);
     $routes->get('perfil-loja', 'AccountController::producerStoreProfile', ['as' => 'produtor_perfil_loja']);

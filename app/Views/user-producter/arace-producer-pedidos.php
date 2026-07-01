@@ -31,7 +31,6 @@ $pedidoStats = $pedidoStats ?? ['pendente' => 0, 'producao' => 0, 'enviado' => 0
   <div class="header-right">
     <button class="cart-btn" type="button" onclick="window.location.href='<?= url_to('main_arace_carrinho') ?>'">
       <i data-lucide="shopping-cart"></i>
-      <span class="cart-count">0 itens</span>
     </button>
     <button class="avatar-btn" type="button" onclick="window.location.href='<?= url_to('user_arace_perfil') ?>'" aria-label="Abrir perfil">
       <?php if ($avatar !== ''): ?>

@@ -24,7 +24,7 @@ $fotosHistoria = array_values(array_filter(array_map('strval', is_array($produto
   <link href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex&family=Playfair+Display:wght@700&display=swap" rel="stylesheet" />
   <script src="https://unpkg.com/lucide@latest"></script>
   <script src="<?= base_url('js/icons.js') ?>"></script>
-  <link href="<?= base_url('css/loja.css') ?>" rel="stylesheet" />
+  <link href="<?= base_url('css/loja.css?v=20260701-logout-style') ?>" rel="stylesheet" />
 </head>
 <body>
 <header>
@@ -38,7 +38,6 @@ $fotosHistoria = array_values(array_filter(array_map('strval', is_array($produto
   <div class="header-right">
     <button class="cart-btn" type="button" onclick="window.location.href='<?= url_to('main_arace_carrinho') ?>'">
       <i data-lucide="shopping-cart"></i>
-      <span class="cart-count">0 itens</span>
     </button>
     <button class="avatar-btn" type="button" onclick="window.location.href='<?= url_to('user_arace_perfil') ?>'" aria-label="Abrir perfil">
       <?php if ($avatar !== ''): ?>
@@ -50,27 +49,38 @@ $fotosHistoria = array_values(array_filter(array_map('strval', is_array($produto
   </div>
 </header>
 
-<aside>
+<aside aria-label="Navegação principal">
   <a class="nav-item" href="<?= url_to('home') ?>">
     <i data-lucide="house"></i> Home page
   </a>
-  <a class="nav-item" href="<?= url_to('arace_produtos') ?>">
-    <i data-lucide="shopping-bag"></i> Produtos
+  <a class="nav-item" href="<?= url_to('produtor_painel') ?>">
+    <i data-lucide="layout-dashboard"></i> Painel
   </a>
-  <a class="nav-item" href="<?= url_to('main_arace_carrinho') ?>">
-    <i data-lucide="shopping-cart"></i> Carrinho
+  <a class="nav-item" href="<?= url_to('produtor_produto_novo') ?>">
+    <i data-lucide="plus"></i> Criar produto
   </a>
-  <a class="nav-item" href="<?= url_to('main_arace_config') ?>">
-    <i data-lucide="settings"></i> Configurações
+  <a class="nav-item" href="<?= url_to('produtor_painel') ?>">
+    <i data-lucide="shopping-bag"></i> Meus produtos
   </a>
-  <a class="nav-item" href="<?= url_to('user_arace_perfil') ?>">
+  <a class="nav-item" href="<?= url_to('produtor_pedidos') ?>">
+    <i data-lucide="package"></i> Pedidos
+  </a>
+  <a class="nav-item active" href="<?= url_to('produtor_perfil_loja') ?>" aria-current="page">
+    <i data-lucide="store"></i> Minha loja
+  </a>
+  <a class="nav-item" href="<?= url_to('produtor_perfil') ?>">
     <i data-lucide="user"></i> Perfil
   </a>
   <div class="nav-divider"></div>
-  <div class="nav-section">Reportar</div>
-  <a class="nav-item" href="<?= url_to('main_arace_config') ?>">
-    <i data-lucide="hand-coins"></i> Detalhes de pagamento
+  <div class="nav-section">Suporte</div>
+  <a class="nav-item" href="<?= url_to('produtor_config_loja') ?>">
+    <i data-lucide="settings"></i> Configurações da loja
   </a>
+  <form class="logout-form" action="<?= site_url('sair') ?>" method="post">
+    <button class="nav-item logout-button" type="submit">
+      <i data-lucide="log-out"></i> Sair da conta
+    </button>
+  </form>
 </aside>
 
 <main>
@@ -126,8 +136,8 @@ $fotosHistoria = array_values(array_filter(array_map('strval', is_array($produto
   <section class="store-section item-animado atraso-2" aria-labelledby="produtos-titulo">
     <div class="section-header">
       <h2 id="produtos-titulo">Nossos produtos</h2>
-      <a href="<?= url_to('arace_produtos') ?>" class="view-all-link">
-        Todos os produtos <i data-lucide="arrow-right"></i>
+      <a href="<?= url_to('produtor_produto_novo') ?>" class="add-product-link" aria-label="Criar produto">
+        <i data-lucide="plus"></i>
       </a>
     </div>
 
@@ -159,9 +169,6 @@ $fotosHistoria = array_values(array_filter(array_map('strval', is_array($produto
             <h3 class="product-name"><?= esc($nomeProduto) ?></h3>
             <div class="product-footer">
               <span class="product-price">R$ <?= number_format($precoProduto, 2, ',', '.') ?></span>
-              <button class="add-cart-btn" aria-label="Adicionar <?= esc($nomeProduto, 'attr') ?> ao carrinho">
-                <i data-lucide="plus"></i> Adicionar
-              </button>
             </div>
           </div>
         </div>
@@ -202,17 +209,12 @@ $fotosHistoria = array_values(array_filter(array_map('strval', is_array($produto
   <?php endif; ?>
 </main>
 
-<div class="toast" id="toast" role="status" aria-live="polite">
-  <i data-lucide="check-circle"></i>
-  <span id="toast-msg">Adicionado ao carrinho!</span>
-</div>
-
 <script>
   window.ARACE_AUTH_USER = <?= json_encode($usuario, JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>;
   window.ARACE_PRODUCER = <?= json_encode($produtor, JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>;
   window.ARACE_STORE_PRODUCTS = <?= json_encode($produtos, JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>;
 </script>
 <script src="<?= base_url('js/arace-state.js') ?>"></script>
-<script src="<?= base_url('js/loja.js') ?>"></script>
+<script src="<?= base_url('js/loja.js?v=20260701-produtor-aside') ?>"></script>
 </body>
 </html>

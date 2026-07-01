@@ -166,18 +166,19 @@ final class FirestoreController extends ResourceController
         
         // Limpa os dados enviados, garantindo que apenas os campos permitidos continuem no array
         $payload = $this->cleanPayload($payload, [
-            'nome', 'descricao', 'preco', 'categoria', 'estoque', 'imagem', 'imagemUrl', 'cor',
+            'nome', 'descricao', 'preco', 'categoria', 'quantidade', 'estoque', 'imagem', 'imagemUrl', 'cor',
         ]);
 
         // Regras de validação de segurança e formato dos dados
         if (! $this->validateData($payload, [
-            'nome'      => 'required|min_length[2]|max_length[140]',
-            'descricao' => 'permit_empty|max_length[1200]',
-            'preco'     => 'required',
-            'categoria' => 'permit_empty|max_length[80]',
-            'estoque'   => 'permit_empty|integer',
-            'imagemUrl' => 'permit_empty|valid_url_strict',
-            'imagem'    => 'permit_empty|valid_url_strict',
+            'nome'       => 'required|min_length[2]|max_length[140]',
+            'descricao'  => 'permit_empty|max_length[1200]',
+            'preco'      => 'required',
+            'categoria'  => 'permit_empty|max_length[80]',
+            'quantidade' => 'permit_empty|integer',
+            'estoque'    => 'permit_empty|integer',
+            'imagemUrl'  => 'permit_empty|valid_url_strict',
+            'imagem'     => 'permit_empty|valid_url_strict',
         ])) {
             // Se falhar na validação, devolve os erros para o frontend
             return $this->failValidationErrors($this->validator->getErrors());

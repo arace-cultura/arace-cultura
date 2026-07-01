@@ -61,53 +61,16 @@ document.querySelectorAll('[data-filter-param]').forEach(btn => {
   });
 });
 
-// Ação do botão principal "Aplicar Filtro" (Geralmente em modais ou barras laterais de filtro)
-document.getElementById('btnAplicarFiltro').addEventListener('click', () => {
-  const p = new URLSearchParams(window.location.search);
-  const cat = document.querySelector('input[name="categoria"]:checked');
 
-  // Se houver uma categoria checada, atualiza na URL; caso contrário, remove o parâmetro
-  cat ? p.set('categoria', cat.value) : p.delete('categoria');
+// CARD DO PRODUTO CLICÁVEL
 
-  // Recarrega a página com a nova combinação de parâmetros (se existirem)
-  window.location.href = `${araceUrl('pesquisa')}${p.toString() ? '?' + p : ''}`;
+// Faz o card inteiro do produto navegar para a página de detalhes ao ser clicado.
+document.querySelectorAll('.produto[data-href]').forEach(card => {
+  card.style.cursor = 'pointer';
+  card.addEventListener('click', e => {
+    // Ignora se o clique foi em um link interno (ex: o nome), que já leva ao destino
+    if (e.target.closest('a')) return;
+    window.location.href = card.dataset.href;
+  });
 });
 
-// RENDERIZAÇÃO DO RANGE DUPLO DE PREÇO (SLIDER)
-const rMin = document.getElementById('rangeMin');   // Input range do valor mínimo
-const rMax = document.getElementById('rangeMax');   // Input range do valor máximo
-const fill = document.getElementById('rangeFill');  // A faixa colorida que fica entre os dois ponteiros
-
-/**
- * Calcula os percentuais, atualiza a faixa colorida do slider (CSS)
- * e sincroniza os textos/inputs escondidos de valor numérico na tela.
- */
-function updateRange() {
-  let min = parseInt(rMin.value), max = parseInt(rMax.value);
-
-  // Inversão de segurança: se o usuário arrastar o mínimo para além do máximo, eles trocam de valor
-  if (min > max) { const t = min; min = max; max = t; }
-
-  // Transforma os valores em porcentagem baseados em um teto máximo de R$ 1000,00
-  const pMin = (min / 1000) * 100;
-  const pMax = (max / 1000) * 100;
-
-  // Atualiza a posição inicial e a largura da faixa preenchida (CSS) dinamicamente
-  fill.style.left  = pMin + '%';
-  fill.style.width = (pMax - pMin) + '%';
-
-  // Exibe o valor formatado textualmente para o usuário
-  document.getElementById('valMin').textContent = 'R$' + min;
-  document.getElementById('valMax').textContent = 'R$' + max;
-
-  // Atualiza os inputs do tipo 'hidden' ou text que farão o envio do formulário
-  document.getElementById('inputMin').value = min;
-  document.getElementById('inputMax').value = max;
-}
-
-// Ouve as movimentações arrastadas nos seletores de preço para recalcular em tempo real
-rMin.addEventListener('input', updateRange);
-rMax.addEventListener('input', updateRange);
-
-// Executa a primeira vez no load da página para desenhar o slider no estado correto vindo do HTML
-updateRange();

@@ -55,7 +55,6 @@ if ($imagens === []) {
   <div class="header-right">
     <button class="cart-btn" type="button" onclick="window.location.href='<?= url_to('main_arace_carrinho') ?>'">
       <i data-lucide="shopping-cart"></i>
-      <span class="cart-count">2 itens</span>
     </button>
     <button class="avatar-btn" type="button" onclick="window.location.href='<?= url_to('user_arace_perfil') ?>'" aria-label="Abrir perfil">
       <?php if ($avatar !== ''): ?>
@@ -139,49 +138,6 @@ if ($imagens === []) {
       <div class="action-row">
         <button class="btn-add" type="button" data-produto-id="<?= esc($id) ?>"><i data-lucide="shopping-cart"></i> Adicionar</button>
         <button class="btn-buy" type="button"><i data-lucide="zap"></i> Comprar</button>
-      </div>
-    </div>
-  </div>
-
-  <h2 class="section-title">Detalhes do Produto</h2>
-
-  <div class="product-details-grid">
-    <div class="avaliacoes-col">
-      <div class="reviews-header">
-        <div class="reviews-meta">
-          <span class="big-rating"><?= number_format($estrelas, 1, ',', '.') ?></span>
-          <?= araceStars($estrelas) ?>
-          <span style="font-size:13px;color:var(--muted)">(<?= esc((string) $avaliacoes) ?>)</span>
-        </div>
-      </div>
-      <h3 style="font-size:15px;font-weight:500;margin-bottom:.75rem;">Avaliacoes</h3>
-      <div class="review-list">
-        <div class="review-card">
-          <div class="review-card-header">
-            <div><?= araceStars($estrelas) ?><span class="review-user">Media dos clientes</span></div>
-            <button class="review-more" type="button"><i data-lucide="more-horizontal"></i></button>
-          </div>
-          <p class="review-text">Este produto soma <?= esc((string) ($produto['somaAvaliacoes'] ?? 0)) ?> pontos em <?= esc((string) $avaliacoes) ?> avaliacoes.</p>
-        </div>
-      </div>
-    </div>
-
-    <div class="comentarios-col">
-      <div class="reviews-header">
-        <span style="font-size:15px;font-weight:500;">Comentarios</span>
-        <div class="reviews-filters">
-          <select class="select-filter">
-            <option>Recentes</option>
-            <option>Melhores</option>
-            <option>Piores</option>
-          </select>
-          <button class="btn-escrever" type="button"><i data-lucide="pen-line"></i> Escrever</button>
-        </div>
-      </div>
-      <div class="review-list" style="margin-top:.75rem">
-        <div class="review-card">
-          <p class="review-text">Ainda nao ha comentarios cadastrados para este produto.</p>
-        </div>
       </div>
     </div>
   </div>

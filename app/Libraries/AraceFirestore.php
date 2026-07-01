@@ -357,10 +357,17 @@ final class AraceFirestore
             $updates['membros'] = $this->normalizeMembersPayload([...$current, ...$updates]);
         }
         
-        // Atribuição direta para inputs booleanos do tipo checkbox de modalidades de entrega
-        $updates['retiradaLocal'] = array_key_exists('retiradaLocal', $payload);
-        $updates['envioCorreios'] = array_key_exists('envioCorreios', $payload);
-        $updates['entregaLocal'] = array_key_exists('entregaLocal', $payload);
+        // Atribuição direta para inputs booleanos do tipo checkbox de modalidades de entrega.
+        // Só altera quando a tela realmente envia algum campo de entrega.
+        if (
+            array_key_exists('retiradaLocal', $payload)
+            || array_key_exists('envioCorreios', $payload)
+            || array_key_exists('entregaLocal', $payload)
+        ) {
+            $updates['retiradaLocal'] = array_key_exists('retiradaLocal', $payload);
+            $updates['envioCorreios'] = array_key_exists('envioCorreios', $payload);
+            $updates['entregaLocal'] = array_key_exists('entregaLocal', $payload);
+        }
 
         $collection->update($entity, $updates);
 
@@ -393,7 +400,7 @@ final class AraceFirestore
 
         $categoria = trim((string) ($payload['categoria'] ?? ''));
         $preco = (float) str_replace(',', '.', (string) ($payload['preco'] ?? 0)); // Converte padrão de moeda BR (vírgula) para decimal flutuante
-        $estoque = max(0, (int) ($payload['estoque'] ?? 0)); // Impede estoque negativo acidental
+        $quantidade = max(0, (int) ($payload['quantidade'] ?? $payload['estoque'] ?? 0)); // Impede quantidade negativa acidental
         $imagem = trim((string) ($payload['imagemUrl'] ?? $payload['imagem'] ?? ''));
 
         // Estrutura de dados completa contendo todas as redundâncias históricas exigidas pelo frontend
@@ -405,8 +412,9 @@ final class AraceFirestore
             'preco_produto'        => $preco,
             'categoria'            => $categoria,
             'categorias'           => $categoria !== '' ? [$categoria] : [],
-            'estoque'              => $estoque,
-            'disponivel'           => $estoque > 0,
+            'quantidade'           => $quantidade,
+            'estoque'              => $quantidade,
+            'disponivel'           => $quantidade > 0,
             'destaque'             => false,
             'produtorId'           => $producerId,
             'produtor_id'          => $producerId,
@@ -422,6 +430,7 @@ final class AraceFirestore
             'quantidadeAvaliacoes' => 0,
             'somaAvaliacoes'       => 0,
             'avaliacoes'           => 0,
+            'avaliacao'            => 0,
             'estrelas'             => 0,
             'createdAt'            => date(DATE_ATOM), // Formato ISO 8601 padrão para datas no Firestore
             'updatedAt'            => date(DATE_ATOM),
@@ -1084,10 +1093,21 @@ final class AraceFirestore
         $producer['email']    = $producer['email'] ?? $producer['email_comercial'] ?? $membro['email'] ?? '';
         $producer['telefone'] = $telefoneRaw !== '' ? $this->formatPhone($telefoneRaw) : '';
         $producer['categoria'] = $producer['categoriaProduto'] ?: ($producer['categoria_principal'] ?? $producer['tipoArtesanato'] ?? '');
-        $producer['fotoUrl'] = $producer['fotoUrl'] ?? $producer['lojaAvatar'] ?? $producer['avatar'] ?? '';
-        $producer['lojaAvatar'] = $producer['fotoUrl'];
-        $producer['bannerUrl'] = $producer['bannerUrl'] ?? $producer['banner'] ?? '';
         $producer['fotosHistoria'] = $this->normalizeUrlList($producer['fotosHistoria'] ?? []);
+        $producer['fotoUrl'] = $producer['fotoUrl']
+            ?? $producer['lojaAvatar']
+            ?? $producer['avatar']
+            ?? $producer['imagemUrl']
+            ?? $producer['imagem']
+            ?? $producer['img']
+            ?? $producer['foto']
+            ?? '';
+        $producer['lojaAvatar'] = $producer['fotoUrl'];
+        $producer['bannerUrl'] = $producer['bannerUrl']
+            ?? $producer['banner']
+            ?? $producer['capaUrl']
+            ?? $producer['lojaBanner']
+            ?? ($producer['fotosHistoria'][0] ?? '');
         $producer['iniciais'] = $producer['iniciais'] ?? $this->initials($producer['nome']);
         $producer['produtos'] = (int) ($producer['produtos'] ?? $producer['total_produtos'] ?? 0);
         $producer['pedidos'] = is_array($producer['pedidos'] ?? null) ? $producer['pedidos'] : [];

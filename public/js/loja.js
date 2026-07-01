@@ -6,19 +6,6 @@ const lojaState = {
 const araceUrl = path => window.AraceState?.url(path) || path;
 const araceGo = path => window.AraceState?.go(path) || (window.location.href = path);
 
-const produtosLoja = Array.isArray(window.ARACE_STORE_PRODUCTS) ? window.ARACE_STORE_PRODUCTS : [];
-
-function showToast(message, duration = 2600) {
-  const toast = document.getElementById('toast');
-  const msg = document.getElementById('toast-msg');
-  if (!toast || !msg) return;
-
-  msg.textContent = message;
-  toast.classList.add('show');
-  clearTimeout(showToast.timer);
-  showToast.timer = setTimeout(() => toast.classList.remove('show'), duration);
-}
-
 function atualizarCarrinho() {
   const label = document.getElementById('cart-label');
   if (label) label.textContent = lojaState.cartCount === 1 ? '1 item' : `${lojaState.cartCount} itens`;
@@ -35,9 +22,9 @@ function asideCliente() {
     <a class="nav-item" href="${araceUrl('arace-config')}"><i data-lucide="settings"></i> Configurações</a>
     <a class="nav-item" href="${araceUrl('usuario/arace-perfil')}"><i data-lucide="user"></i> Perfil</a>
     ${cadastroProdutor}
-    <div class="nav-divider"></div>
-    <div class="nav-section">Reportar</div>
-    <a class="nav-item" href="${araceUrl('arace-config#pagamento')}"><i data-lucide="hand-coins"></i> Detalhes de pagamento</a>
+    <form class="logout-form" action="${araceUrl('sair')}" method="post">
+      <button class="nav-item logout-button" type="submit"><i data-lucide="log-out"></i> Sair da conta</button>
+    </form>
   `;
 }
 
@@ -45,6 +32,7 @@ function asideProdutor() {
   return `
     <a class="nav-item" href="${araceUrl('')}"><i data-lucide="house"></i> Home page</a>
     <a class="nav-item" href="${araceUrl('produtor/painel')}"><i data-lucide="layout-dashboard"></i> Painel</a>
+    <a class="nav-item" href="${araceUrl('produtor/produtos/novo')}"><i data-lucide="plus"></i> Criar produto</a>
     <a class="nav-item" href="${araceUrl('produtor/painel')}"><i data-lucide="shopping-bag"></i> Meus produtos</a>
     <a class="nav-item" href="${araceUrl('produtor/pedidos')}"><i data-lucide="package"></i> Pedidos</a>
     <a class="nav-item active" href="${araceUrl('produtor/perfil-loja')}" aria-current="page"><i data-lucide="store"></i> Minha loja</a>
@@ -52,18 +40,17 @@ function asideProdutor() {
     <a class="nav-item" href="${araceUrl('produtor/perfil')}"><i data-lucide="user"></i> Perfil</a>
     <a class="nav-item" href="${araceUrl('produtor/configuracao-loja')}"><i data-lucide="settings"></i> Configurações da loja</a>
     <button class="nav-item nav-button" type="button" id="verComoCliente"><i data-lucide="eye"></i> Ver como cliente</button>
-    <div class="nav-section">Suporte</div>
-    <a class="nav-item" href="${araceUrl('arace-config#pagamento')}"><i data-lucide="hand-coins"></i> Pagamentos</a>
+    <form class="logout-form" action="${araceUrl('sair')}" method="post">
+      <button class="nav-item logout-button" type="submit"><i data-lucide="log-out"></i> Sair da conta</button>
+    </form>
   `;
 }
 
 function configurarAside() {
-  const aside = document.querySelector('aside[aria-label="Navegação principal"]');
+  const aside = document.querySelector('aside');
   if (!aside || !window.AraceState) return;
 
-  const produtor = window.AraceState.getProducer();
-  const modo = window.AraceState.getMode();
-  aside.innerHTML = produtor.cadastrado && modo === 'produtor' ? asideProdutor() : asideCliente();
+  aside.innerHTML = asideProdutor();
 
   document.getElementById('verComoCliente')?.addEventListener('click', () => {
     window.AraceState.setMode('cliente');
@@ -72,39 +59,9 @@ function configurarAside() {
   });
 }
 
-function produtoPorCard(card) {
-  const id = card.dataset.produtoId || card.dataset.id;
-  const base = produtosLoja.find(produto => String(produto.id) === String(id)) || {};
-  const nome = card.querySelector('.product-name')?.textContent.trim() || base.nome || '';
-  const precoTexto = card.querySelector('.product-price')?.textContent || String(base.preco || 0);
-  return {
-    ...base,
-    id,
-    nome,
-    preco: Number(precoTexto.replace(/[^\d,]/g, '').replace(',', '.')) || Number(base.preco || 0),
-  };
-}
-
 function configurarProdutos() {
   document.querySelectorAll('.product-card').forEach(card => {
-    const produto = produtoPorCard(card);
-    card.dataset.produtoId = produto.id;
-  });
-
-  document.getElementById('products-grid')?.addEventListener('click', event => {
-    const addCart = event.target.closest('.add-cart-btn');
-    if (addCart) {
-      event.stopPropagation();
-      const produto = produtoPorCard(addCart.closest('.product-card'));
-      window.AraceState?.addCartItem(produto.id, 1).then(cart => {
-        lojaState.cartCount = (cart?.items || []).reduce((total, item) => total + Number(item.quantidade || 1), 0);
-        atualizarCarrinho();
-      }).catch(() => {
-        lojaState.cartCount += 1;
-        atualizarCarrinho();
-      });
-      showToast(`"${produto.nome}" adicionado ao carrinho`);
-    }
+    card.dataset.produtoId = card.dataset.produtoId || card.dataset.id || '';
   });
 }
 

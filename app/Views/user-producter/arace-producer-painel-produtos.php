@@ -32,7 +32,6 @@ $metricas = $metricas ?? ['faturamento' => 0, 'pedidos' => 0, 'pendentes' => 0, 
   <div class="header-right">
     <button class="cart-btn" type="button" onclick="window.location.href='<?= url_to('main_arace_carrinho') ?>'">
       <i data-lucide="shopping-cart"></i>
-      <span class="cart-count">0 itens</span>
     </button>
     <button class="avatar-btn" type="button" onclick="window.location.href='<?= url_to('user_arace_perfil') ?>'" aria-label="Abrir perfil">
       <?php if ($avatar !== ''): ?>
@@ -75,45 +74,9 @@ $metricas = $metricas ?? ['faturamento' => 0, 'pedidos' => 0, 'pendentes' => 0, 
       <h1>Bom dia! </h1>
       <p>Aqui está um resumo da sua loja hoje — <span id="dataHoje"></span></p>
     </div>
-    <button type="button" class="btn-novo-produto" data-open-product-modal>
+    <a class="btn-novo-produto" href="<?= url_to('produtor_produto_novo') ?>">
       <i data-lucide="plus"></i> Novo produto
-    </button>
-  </div>
-
-  <!-- MÉTRICAS PRINCIPAIS -->
-  <div class="metricas-grid">
-    <div class="metrica-card">
-      <div class="metrica-icon verde"><i data-lucide="circle-dollar-sign"></i></div>
-      <div class="metrica-info">
-        <span class="metrica-label">Faturamento (mês)</span>
-        <span class="metrica-value">R$ <?= number_format((float) ($metricas['faturamento'] ?? 0), 2, ',', '.') ?></span>
-        <span class="metrica-delta neutro">Dados do Firestore</span>
-      </div>
-    </div>
-    <div class="metrica-card">
-      <div class="metrica-icon azul"><i data-lucide="package"></i></div>
-      <div class="metrica-info">
-        <span class="metrica-label">Pedidos (mês)</span>
-        <span class="metrica-value"><?= (int) ($metricas['pedidos'] ?? 0) ?></span>
-        <span class="metrica-delta neutro">Total registrado</span>
-      </div>
-    </div>
-    <div class="metrica-card">
-      <div class="metrica-icon laranja"><i data-lucide="clock"></i></div>
-      <div class="metrica-info">
-        <span class="metrica-label">Pedidos pendentes</span>
-        <span class="metrica-value"><?= (int) ($metricas['pendentes'] ?? 0) ?></span>
-        <span class="metrica-delta neutro">Aguardando ação</span>
-      </div>
-    </div>
-    <div class="metrica-card">
-      <div class="metrica-icon amarelo"><i data-lucide="star"></i></div>
-      <div class="metrica-info">
-        <span class="metrica-label">Avaliação média</span>
-        <span class="metrica-value"><?= number_format((float) ($metricas['avaliacao'] ?? 0), 1, ',', '.') ?></span>
-        <span class="metrica-delta neutro">Media dos produtos</span>
-      </div>
-    </div>
+    </a>
   </div>
 
   <!-- GRID CENTRAL -->
@@ -176,9 +139,9 @@ $metricas = $metricas ?? ['faturamento' => 0, 'pedidos' => 0, 'pendentes' => 0, 
           <?php endforeach; ?>
         </div>
 
-        <button type="button" class="btn-add-produto" data-open-product-modal>
+        <a class="btn-add-produto" href="<?= url_to('produtor_produto_novo') ?>">
           <i data-lucide="plus"></i> Adicionar produto
-        </button>
+        </a>
       </div>
 
       <div class="painel-card">
@@ -194,67 +157,6 @@ $metricas = $metricas ?? ['faturamento' => 0, 'pedidos' => 0, 'pendentes' => 0, 
     </div>
   </div>
 </main>
-
-<div class="modal-overlay" id="produtoModal" aria-hidden="true">
-  <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="produtoModalTitulo">
-    <form id="produtoForm" enctype="multipart/form-data">
-      <div class="modal-header">
-        <div>
-          <h2 id="produtoModalTitulo">Novo produto</h2>
-          <p class="modal-sub">Os dados serao salvos no Firestore e a imagem no Supabase.</p>
-        </div>
-        <button class="modal-close" type="button" data-close-product-modal aria-label="Fechar">
-          <i data-lucide="x"></i>
-        </button>
-      </div>
-
-      <div class="modal-body">
-        <label class="modal-label" for="produtoNome">Nome do produto</label>
-        <input class="input-field" type="text" id="produtoNome" name="nome" required maxlength="140" />
-
-        <label class="modal-label" for="produtoDescricao">Descricao</label>
-        <textarea class="input-field" id="produtoDescricao" name="descricao" rows="4" maxlength="1200"></textarea>
-
-        <div class="field-row">
-          <div class="field-group">
-            <label class="modal-label" for="produtoPreco">Preco</label>
-            <input class="input-field" type="number" id="produtoPreco" name="preco" min="0" step="0.01" required />
-          </div>
-          <div class="field-group">
-            <label class="modal-label" for="produtoEstoque">Estoque</label>
-            <input class="input-field" type="number" id="produtoEstoque" name="estoque" min="0" step="1" value="1" />
-          </div>
-        </div>
-
-        <div class="field-row">
-          <div class="field-group">
-            <label class="modal-label" for="produtoCategoria">Categoria</label>
-            <input class="input-field" type="text" id="produtoCategoria" name="categoria" />
-          </div>
-          <div class="field-group">
-            <label class="modal-label" for="produtoCor">Cor do placeholder</label>
-            <input class="input-field" type="color" id="produtoCor" name="cor" value="#b5a898" />
-          </div>
-        </div>
-
-        <label class="modal-label" for="produtoImagemArquivo">Imagem do produto</label>
-        <input class="input-field" type="file" id="produtoImagemArquivo" name="imagemArquivo" accept="image/*" />
-
-        <label class="modal-label" for="produtoImagemUrl">Ou URL publica da imagem</label>
-        <input class="input-field" type="url" id="produtoImagemUrl" name="imagemUrl" placeholder="https://..." />
-
-        <p class="modal-sub" id="produtoFormFeedback" aria-live="polite"></p>
-      </div>
-
-      <div class="modal-footer">
-        <button class="btn-status-action" type="button" data-close-product-modal>Cancelar</button>
-        <button class="btn-status-action" type="submit">
-          <i data-lucide="save"></i> Salvar produto
-        </button>
-      </div>
-    </form>
-  </div>
-</div>
 
 <script src="/js/arace-state.js"></script>
 <script src="/js/producer-painel-produtos.js"></script>

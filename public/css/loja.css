@@ -1,5 +1,39 @@
 @import "../css/style-base.css";
 
+.logout-form {
+  margin-top: auto;
+  padding: .9rem 1rem 0;
+  border-top: .5px solid var(--border);
+}
+
+.logout-button {
+  justify-content: flex-start;
+  width: 100%;
+  min-height: 42px;
+  padding: .7rem .85rem;
+  border: 1px solid rgba(242, 96, 26, .24);
+  border-radius: var(--r);
+  background: var(--laranja-l);
+  color: var(--laranja-d);
+  font-weight: 600;
+  box-shadow: 0 2px 8px rgba(242, 96, 26, .08);
+}
+
+.logout-button svg {
+  color: var(--laranja-d);
+}
+
+.logout-button:hover {
+  background: var(--laranja);
+  color: #fff;
+  border-color: var(--laranja);
+  border-right: 1px solid var(--laranja);
+}
+
+.logout-button:hover svg {
+  color: #fff;
+}
+
 .store-banner-wrapper {
   position: relative;
   background: var(--branco);
@@ -110,6 +144,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: .75rem;
   margin-bottom: 1.25rem;
 }
 
@@ -121,6 +156,9 @@
 }
 
 .view-all-link {
+  display: inline-flex;
+  align-items: center;
+  gap: .25rem;
   font-size: 0.9rem;
   color: var(--muted);
   transition: color 0.2s;
@@ -128,6 +166,38 @@
 
 .view-all-link:hover {
   color: var(--laranja);
+}
+
+.section-actions {
+  display: flex;
+  align-items: center;
+  gap: .7rem;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.add-product-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: var(--r);
+  background: var(--laranja);
+  color: #fff;
+  box-shadow: var(--sh-sm);
+  transition: transform .15s, background .15s, box-shadow .15s;
+}
+
+.add-product-link:hover {
+  background: var(--laranja-d);
+  transform: translateY(-1px);
+  box-shadow: var(--sh-md);
+}
+
+.add-product-link svg {
+  width: 18px;
+  height: 18px;
 }
 
 /* ── GRID DE PRODUTOS ── */
@@ -255,6 +325,16 @@
 @media (max-width: 768px) {
   .banner-action-btn {
     width: min(100%, 260px);
+  }
+
+  .section-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .section-actions {
+    width: 100%;
+    justify-content: space-between;
   }
 
   .history-container {

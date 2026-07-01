@@ -188,15 +188,6 @@
 
   function syncHeader() {
     const user = getUser();
-    const cartItems = window.ARACE_CART?.items || [];
-    const cartCount = cartItems.reduce((total, item) => total + Number(item.quantidade || 1), 0);
-
-    document.querySelectorAll('.cart-btn, .icon-btn').forEach(button => {
-      const icon = button.querySelector('[data-lucide]');
-      const isCartButton = icon?.getAttribute('data-lucide') === 'shopping-cart';
-      const count = button.querySelector('.cart-count, #fav-label');
-      if (isCartButton && count) count.textContent = cartCount === 1 ? '1 item' : `${cartCount} itens`;
-    });
 
     const avatarSrc = user.fotoUrl || user.avatar;
     document.querySelectorAll('.avatar-btn').forEach(avatar => {

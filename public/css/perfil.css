@@ -100,13 +100,6 @@ header {
 }
 .cart-btn:hover { background: var(--laranja-l); color: var(--laranja-d); }
 .cart-btn svg { width: 20px; height: 20px; color: var(--azul); }
-.cart-count {
-  color: var(--azul);
-  font-weight: 500;
-  background: rgba(243,166,33,.18);
-  border-radius: 999px;
-  padding: 2px 8px;
-}
 
 .avatar-btn {
   width: 34px; height: 34px; border-radius: 50%;
@@ -662,7 +655,6 @@ main { grid-area: conteudo; padding: 2rem; display: flex; flex-direction: column
     max-width: none;
   }
   .header-right { gap: .5rem; }
-  .cart-count { display: none; }
   aside {
     position: sticky;
     top: 0;

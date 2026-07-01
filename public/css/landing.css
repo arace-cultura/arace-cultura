@@ -94,7 +94,6 @@ header {
 }
 .cart-btn:hover { background: var(--bg); }
 .cart-btn svg { width: 20px; height: 20px; color: var(--azul); }
-.cart-count { color: var(--azul); font-weight: 500; }
 
 .avatar-btn {
   width: 34px; height: 34px; border-radius: 50%;
@@ -305,10 +304,16 @@ header {
 .avatar {
   width: 56px; height: 56px; border-radius: 50%;
   display: flex; align-items: center; justify-content: center;
+  overflow: hidden;
+  background: var(--azul);
   font-size: 1rem; font-weight: 700; color: var(--branco);
 }
+.avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
 .p-nome { font-size: .8rem; font-weight: 600; line-height: 1.3; }
-.p-qtd  { font-size: .68rem; color: var(--muted); }
 
 /* ── LOJAS ── */
 .lojas-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: .85rem; }
@@ -322,9 +327,17 @@ header {
 .loja-azul    { background: linear-gradient(135deg, #1a3a6b, #25518f); }
 .loja-laranja { background: linear-gradient(135deg, var(--laranja), var(--laranja-d)); }
 .loja-amarelo { background: linear-gradient(135deg, var(--amarelo), #c47e10); }
+.loja-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
 .loja::before {
   content: ''; position: absolute; inset: 0;
   background: linear-gradient(to top, rgba(0,0,0,.6), transparent 60%);
+  z-index: 1;
 }
 .loja-info {
   position: relative; z-index: 2; padding: 1.1rem;

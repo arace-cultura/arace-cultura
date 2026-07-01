@@ -49,7 +49,6 @@ function araceStars(float $nota): string
     <!-- Deveriam ser <a></a> -->
     <button class="cart-btn" type="button" onclick="window.location.href='<?= url_to('main_arace_carrinho') ?>'">
       <i data-lucide="shopping-cart"></i>
-      <span class="cart-count">0 itens</span>
     </button>
     <button class="avatar-btn" type="button" onclick="window.location.href='<?= url_to('auth_login') ?>'">
       <i data-lucide="user"></i>
@@ -173,10 +172,19 @@ function araceStars(float $nota): string
     </div>
     <div class="produtores-grid" id="produtoresGrid">
       <?php foreach (array_slice($produtores, 0, 4) as $produtor): ?>
+        <?php
+          $produtorNome = (string) ($produtor['nome'] ?? 'Produtor Arace');
+          $produtorFoto = trim((string) ($produtor['fotoUrl'] ?? $produtor['lojaAvatar'] ?? $produtor['avatar'] ?? ''));
+        ?>
         <article class="produtor">
-          <div class="avatar"><?= esc($produtor['iniciais'] ?? 'AR') ?></div>
-          <span class="p-nome"><?= esc($produtor['nome'] ?? 'Produtor Arace') ?></span>
-          <span class="p-qtd"><?= esc((string) ($produtor['produtos'] ?? 0)) ?> produtos</span>
+          <div class="avatar">
+            <?php if ($produtorFoto !== ''): ?>
+              <img src="<?= esc($produtorFoto, 'attr') ?>" alt="Foto de <?= esc($produtorNome, 'attr') ?>" loading="lazy" />
+            <?php else: ?>
+              <?= esc($produtor['iniciais'] ?? 'AR') ?>
+            <?php endif; ?>
+          </div>
+          <span class="p-nome"><?= esc($produtorNome) ?></span>
         </article>
       <?php endforeach; ?>
     </div>
@@ -196,11 +204,19 @@ function araceStars(float $nota): string
       <!-- Lojas (esquerda) -->
       <div class="lojas-col">
         <?php foreach (array_slice($produtores, 0, 3) as $indice => $produtor): ?>
-          <?php $classeLoja = ['loja-azul', 'loja-laranja', 'loja-amarelo'][$indice] ?? 'loja-azul'; ?>
+          <?php
+            $classeLoja = ['loja-azul', 'loja-laranja', 'loja-amarelo'][$indice] ?? 'loja-azul';
+            $produtorNome = (string) ($produtor['nome'] ?? 'Produtor Arace');
+            $fotosHistoria = is_array($produtor['fotosHistoria'] ?? null) ? $produtor['fotosHistoria'] : [];
+            $lojaImagem = trim((string) ($produtor['bannerUrl'] ?? $produtor['fotoUrl'] ?? $produtor['lojaAvatar'] ?? $produtor['avatar'] ?? ($fotosHistoria[0] ?? '')));
+          ?>
           <div class="loja <?= esc($classeLoja, 'attr') ?>">
+            <?php if ($lojaImagem !== ''): ?>
+              <img class="loja-img" src="<?= esc($lojaImagem, 'attr') ?>" alt="Imagem da loja <?= esc($produtorNome, 'attr') ?>" loading="lazy" />
+            <?php endif; ?>
             <div class="loja-info">
               <span class="loja-tag"><?= esc($produtor['categoria'] ?? 'Artesanato') ?></span>
-              <strong><?= esc($produtor['nome'] ?? 'Produtor Arace') ?></strong>
+              <strong><?= esc($produtorNome) ?></strong>
               <a href="<?= url_to('main_pesquisa') ?>" class="loja-ver">Visitar loja <i data-lucide="arrow-right"></i></a>
             </div>
           </div>

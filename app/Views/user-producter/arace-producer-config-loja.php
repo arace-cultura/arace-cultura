@@ -42,7 +42,6 @@ $fotosHistoria = array_values(array_filter(array_map('strval', is_array($produto
   <div class="header-right">
     <button class="cart-btn" type="button" onclick="window.location.href='<?= url_to('main_arace_carrinho') ?>'">
       <i data-lucide="shopping-cart"></i>
-      <span class="cart-count">0 itens</span>
     </button>
     <button class="avatar-btn" type="button" onclick="window.location.href='<?= url_to('user_arace_perfil') ?>'" aria-label="Abrir perfil">
       <?php if ($avatar !== ''): ?>
@@ -205,54 +204,6 @@ $fotosHistoria = array_values(array_filter(array_map('strval', is_array($produto
           </div>
         </section>
 
-        <section class="config-section" id="sec-logistica">
-          <div class="config-card">
-            <div class="config-card-header">
-              <div><h2>Métodos de Entrega Ativos</h2><p>Configure como seus produtos chegam aos clientes</p></div>
-            </div>
-            <div class="config-card-body">
-              <div class="toggle-row">
-                <div class="toggle-info"><span>Permitir Retirada no Local</span><small>Os clientes buscam no endereço da sua oficina/loja</small></div>
-                <label class="toggle-switch"><input type="checkbox" name="retiradaLocal" value="1" <?= ($produtor['retiradaLocal'] ?? true) ? 'checked' : '' ?> /><span class="toggle-slider"></span></label>
-              </div>
-              <div class="toggle-row">
-                <div class="toggle-info"><span>Envio via Correios (PAC/Sedex)</span><small>Cálculo de peso baseado na tabela oficial dos Correios</small></div>
-                <label class="toggle-switch"><input type="checkbox" name="envioCorreios" value="1" <?= ($produtor['envioCorreios'] ?? true) ? 'checked' : '' ?> /><span class="toggle-slider"></span></label>
-              </div>
-              <div class="toggle-row">
-                <div class="toggle-info"><span>Entrega Local / Motoboy</span><small>Taxa fixa para distritos vizinhos ou mesma cidade</small></div>
-                <label class="toggle-switch"><input type="checkbox" name="entregaLocal" value="1" <?= ($produtor['entregaLocal'] ?? false) ? 'checked' : '' ?> /><span class="toggle-slider"></span></label>
-              </div>
-            </div>
-          </div>
-
-          <div class="config-card">
-            <div class="config-card-header">
-              <div><h2>Endereço de Postagem / Origem</h2></div>
-            </div>
-            <div class="config-card-body">
-              <div class="field-row">
-                <div class="field-group">
-                  <label>CEP de Origem</label>
-                  <input class="input-field" type="text" name="cepOrigem" value="<?= esc($produtor['cepOrigem'] ?? '', 'attr') ?>" />
-                </div>
-                <div class="field-group">
-                  <label>Distrito / Município</label>
-                  <input class="input-field" type="text" id="lojaCidade" value="<?= esc($lojaLocal, 'attr') ?>" readonly style="background:var(--bg)" />
-                  <input type="hidden" name="cidade" value="<?= esc($lojaCidade, 'attr') ?>" />
-                  <input type="hidden" name="estado" value="<?= esc($lojaEstado, 'attr') ?>" />
-                </div>
-              </div>
-              <div class="field-group">
-                <label>Endereço Completo da Oficina</label>
-                <input class="input-field" type="text" name="endereco" value="<?= esc($produtor['endereco'] ?? '', 'attr') ?>" />
-              </div>
-            </div>
-            <div class="config-card-footer">
-              <button class="btn-primary" type="submit"><i data-lucide="check"></i> Salvar</button>
-            </div>
-          </div>
-        </section>
         <section class="config-section" id="sec-financeiro">
           <div class="config-card">
             <div class="config-card-header">
@@ -262,35 +213,6 @@ $fotosHistoria = array_values(array_filter(array_map('strval', is_array($produto
               <div class="field-group">
                 <label>Chave Pix</label>
                 <input class="input-field" type="text" name="pix" value="<?= esc($lojaPix, 'attr') ?>" placeholder="CNPJ, CPF, e-mail, telefone ou chave aleatória" />
-              </div>
-            </div>
-            <div class="config-card-footer">
-              <button class="btn-primary" type="submit"><i data-lucide="check"></i> Salvar</button>
-            </div>
-          </div>
-        </section>
-
-        <section class="config-section" id="sec-horarios">
-          <div class="config-card">
-            <div class="config-card-header">
-              <div><h2>Horário de Funcionamento</h2><p>Períodos em que a loja aceita retiradas</p></div>
-            </div>
-            <div class="config-card-body">
-              <div class="field-row" style="align-items: center; margin-bottom: 12px;">
-                <div style="width: 120px; font-weight: 500;">Segunda a Sexta</div>
-                <input class="input-field" type="time" name="horarioSemanaInicio" value="<?= esc($produtor['horarioSemanaInicio'] ?? '08:00', 'attr') ?>" style="max-width: 100px;" />
-                <span>às</span>
-                <input class="input-field" type="time" name="horarioSemanaFim" value="<?= esc($produtor['horarioSemanaFim'] ?? '18:00', 'attr') ?>" style="max-width: 100px;" />
-              </div>
-              <div class="field-row" style="align-items: center; margin-bottom: 12px;">
-                <div style="width: 120px; font-weight: 500;">Sábados</div>
-                <input class="input-field" type="time" name="horarioSabadoInicio" value="<?= esc($produtor['horarioSabadoInicio'] ?? '08:00', 'attr') ?>" style="max-width: 100px;" />
-                <span>às</span>
-                <input class="input-field" type="time" name="horarioSabadoFim" value="<?= esc($produtor['horarioSabadoFim'] ?? '12:00', 'attr') ?>" style="max-width: 100px;" />
-              </div>
-              <div class="field-row" style="align-items: center;">
-                <div style="width: 120px; font-weight: 500;">Domingos</div>
-                <span style="color:var(--muted); font-size:14px; font-style:italic;">Fechado</span>
               </div>
             </div>
             <div class="config-card-footer">

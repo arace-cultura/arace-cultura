@@ -40,7 +40,6 @@ if (! function_exists('araceStars')) {
   <div class="header-right">
     <button class="cart-btn" type="button" onclick="window.location.href='<?= url_to('main_arace_carrinho') ?>'">
       <i data-lucide="shopping-cart"></i>
-      <span class="cart-count">2 itens</span>
     </button>
     <button class="avatar-btn" type="button" onclick="window.location.href='<?= url_to('user_arace_perfil') ?>'" aria-label="Abrir perfil">
       <?php if ($avatar !== ''): ?>
@@ -55,7 +54,7 @@ if (! function_exists('araceStars')) {
 
 
 <div class="page-body">
-  <aside>
+  <aside class="nav-aside">
     <a class="nav-item" href="<?= url_to('home') ?>"><i data-lucide="house"></i> Home page</a>
     <a class="nav-item active" href="<?= url_to('arace_produtos') ?>"><i data-lucide="shopping-bag"></i> Produtos</a>
     <a class="nav-item" href="<?= url_to('main_arace_carrinho') ?>"><i data-lucide="shopping-cart"></i> Carrinho</a>
@@ -115,14 +114,16 @@ if (! function_exists('araceStars')) {
           $imagem     = (string) ($imagens[0] ?? $produto['img'] ?? $produto['imagem'] ?? '');
           $cat        = (string) ($produto['categoria'] ?? 'artesanato');
         ?>
-        <div
+        <a
           class="produto"
+          href="<?= url_to('main_produto_detalhes') ?>?id=<?= urlencode($id) ?>"
           data-produto-id="<?= esc($id) ?>"
           data-nome="<?= esc($nome) ?>"
           data-preco="<?= esc((string) $preco) ?>"
           data-categoria="<?= esc($cat) ?>"
           data-cor="<?= esc($cor) ?>"
           data-img="<?= esc($imagem) ?>"
+          data-href="<?= url_to('main_produto_detalhes') ?>?id=<?= urlencode($id) ?>"
         >
           <div class="produto-img" style="background:<?= esc($cor) ?>">
             <?php if ($imagem !== ''): ?>
@@ -130,14 +131,14 @@ if (! function_exists('araceStars')) {
             <?php endif; ?>
           </div>
           <div class="produto-info">
-            <a href="<?= url_to('main_produto_detalhes') ?>?id=<?= urlencode($id) ?>" class="nome"><?= esc($nome) ?></a>
+            <span class="nome"><?= esc($nome) ?></span>
             <div class="stars">
               <?= araceStars($estrelas) ?>
               <span>(<?= esc((string) $avaliacoes) ?>)</span>
             </div>
             <div class="preco"><strong>R$ <?= number_format($preco, 2, ',', '.') ?></strong></div>
           </div>
-        </div>
+        </a>
       <?php endforeach; ?>
     </div>
 
@@ -152,48 +153,6 @@ if (! function_exists('araceStars')) {
       <button class="pg-btn">Proxima <i data-lucide="chevron-right"></i></button>
     </div>
   </div>
-
-  <aside class="filtros-aside">
-    <div class="aside-head">
-      <span>Filtros</span>
-      <button class="btn-limpar" type="button"><i data-lucide="sliders-horizontal"></i></button>
-    </div>
-
-    <div class="filter-group">
-      <p class="filter-group-label">categorias</p>
-      <label class="filter-check"><input type="checkbox" name="categoria" value="pinturas" /> Pinturas</label>
-      <label class="filter-check"><input type="checkbox" name="categoria" value="casa-e-vida" /> Casa & Vida</label>
-      <label class="filter-check"><input type="checkbox" name="categoria" value="retro" /> Retro</label>
-      <label class="filter-check"><input type="checkbox" name="categoria" value="joias" /> Joias</label>
-      <label class="filter-check"><input type="checkbox" name="categoria" value="ceramica" /> Ceramica</label>
-      <label class="filter-check"><input type="checkbox" name="categoria" value="roupas" /> Roupas</label>
-      <label class="filter-check"><input type="checkbox" name="categoria" value="acessorios" /> Acessorios</label>
-    </div>
-
-    
-
-    <div class="filter-group">
-      <p class="filter-group-label">Filtrar por Cidades</p>
-      <button class="filter-city" type="button" data-filter-param="cidade" data-filter-value="municipio">Municipio <i data-lucide="chevron-right"></i></button>
-      <button class="filter-city" type="button" data-filter-param="cidade" data-filter-value="interior">Interior <i data-lucide="chevron-right"></i></button>
-      <button class="filter-city" type="button" data-filter-param="cidade" data-filter-value="litoraneas">Litoraneas <i data-lucide="chevron-right"></i></button>
-      <button class="filter-city" type="button" data-filter-param="cidade" data-filter-value="montanhas">Montanhas <i data-lucide="chevron-right"></i></button>
-    </div>
-
-    <div class="filter-group">
-      <p class="filter-group-label">Filtrar por Tags</p>
-      <div class="tags-wrap">
-        <button class="tag-btn" type="button" data-filter-param="tag" data-filter-value="pequeno">Pequeno</button>
-        <button class="tag-btn" type="button" data-filter-param="tag" data-filter-value="casual">Casual</button>
-        <button class="tag-btn" type="button" data-filter-param="tag" data-filter-value="artesanal">Artesanal</button>
-        <button class="tag-btn" type="button" data-filter-param="tag" data-filter-value="rustico">Rustico</button>
-        <button class="tag-btn" type="button" data-filter-param="tag" data-filter-value="barro">Barro</button>
-        <button class="tag-btn" type="button" data-filter-param="tag" data-filter-value="peca">Peca</button>
-      </div>
-    </div>
-
-    <button class="btn-aplicar" type="button" id="btnAplicarFiltro">Aplicar Filtro</button>
-  </aside>
 </div>
 
 <script src="/js/arace-state.js"></script>
