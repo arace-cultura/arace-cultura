@@ -7,6 +7,12 @@ use RuntimeException;
 
 final class SupabaseStorage
 {
+    /** Tamanho maximo aceito por imagem (bytes). Evita estourar limites do PHP/Supabase. */
+    private const MAX_FILE_SIZE = 8 * 1024 * 1024; // 8 MB
+
+    /** Extensoes de imagem aceitas no bucket. */
+    private const ALLOWED_EXTENSIONS = ['jpg', 'jpeg', 'png', 'webp', 'gif'];
+
     private string $url;
     private string $key;
     private string $bucket;
@@ -16,6 +22,14 @@ final class SupabaseStorage
         $this->url    = rtrim((string) env('SUPABASE_URL', ''), '/');
         $this->key    = (string) (env('SUPABASE_SERVICE_ROLE_KEY') ?: env('SUPABASE_ANON_KEY', ''));
         $this->bucket = (string) env('SUPABASE_AVATAR_BUCKET', 'avatars');
+    }
+
+    /**
+     * Confere se as credenciais do Supabase estao configuradas no .env.
+     */
+    public function isConfigured(): bool
+    {
+        return $this->url !== '' && $this->key !== '';
     }
 
     public function uploadAvatar(UploadedFile $file, string $userId): string
@@ -30,7 +44,7 @@ final class SupabaseStorage
 
     public function uploadImage(UploadedFile $file, string $folder): string
     {
-        if ($this->url === '' || $this->key === '') {
+        if (! $this->isConfigured()) {
             throw new RuntimeException('Configure SUPABASE_URL e SUPABASE_SERVICE_ROLE_KEY no .env para enviar imagens.');
         }
 
@@ -38,8 +52,17 @@ final class SupabaseStorage
             throw new RuntimeException('Arquivo de imagem invalido.');
         }
 
+        if ($file->getSize() > self::MAX_FILE_SIZE) {
+            throw new RuntimeException('A imagem excede o tamanho maximo de 8 MB.');
+        }
+
+        $mimeType = (string) ($file->getMimeType() ?: '');
+        if ($mimeType !== '' && ! str_starts_with($mimeType, 'image/')) {
+            throw new RuntimeException('Envie apenas arquivos de imagem (JPG, PNG, WEBP ou GIF).');
+        }
+
         $extension = strtolower($file->getClientExtension() ?: $file->guessExtension() ?: 'jpg');
-        $extension = in_array($extension, ['jpg', 'jpeg', 'png', 'webp', 'gif'], true) ? $extension : 'jpg';
+        $extension = in_array($extension, self::ALLOWED_EXTENSIONS, true) ? $extension : 'jpg';
         $safeFolder = preg_replace('/[^a-zA-Z0-9_\/-]/', '-', trim($folder, '/')) ?: 'imagens';
         $path      = $safeFolder . '/' . date('YmdHis') . '-' . bin2hex(random_bytes(6)) . '.' . $extension;
         $endpoint  = $this->url . '/storage/v1/object/' . rawurlencode($this->bucket) . '/' . str_replace('%2F', '/', rawurlencode($path));
@@ -49,10 +72,14 @@ final class SupabaseStorage
             throw new RuntimeException('Nao foi possivel ler o arquivo de imagem.');
         }
 
+        // Garante um Content-Type de imagem: usa o MIME real ou deriva da extensao,
+        // evitando 'application/octet-stream' que impede a exibicao inline no navegador.
+        $contentType = $mimeType !== '' ? $mimeType : ('image/' . ($extension === 'jpg' ? 'jpeg' : $extension));
+
         $headers = [
             'Authorization: Bearer ' . $this->key,
             'apikey: ' . $this->key,
-            'Content-Type: ' . ($file->getMimeType() ?: 'application/octet-stream'),
+            'Content-Type: ' . $contentType,
             'x-upsert: true',
         ];
 
