@@ -99,6 +99,7 @@ $routes->group('produtor', ['filter' => 'auth'], static function (RouteCollectio
 $routes->get('produtor/produtos', $routeRedirect('produtor_painel'));
 $routes->get('produtor/config', $routeRedirect('produtor_config'));
 $routes->get('produtor/config-loja', $routeRedirect('produtor_config_loja'));
+$routes->get('arace-config-producer-loja', $routeRedirect('produtor_config_loja'), ['filter' => 'auth']);
 
 /*
 |--------------------------------------------------------------------------

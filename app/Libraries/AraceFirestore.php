@@ -123,6 +123,12 @@ final class AraceFirestore
         $payload['nome'] = trim((string) ($payload['nome'] ?? 'Usuario'));
         $payload['firebaseUid'] = $uid !== '' ? $uid : null;
 
+        // Marca se o usuario ja e produtor. Por padrao todo usuario nasce como cliente (false).
+        // O vinculo usuario<->produtor no banco e feito pelo uid.
+        $payload['isProdutor'] = array_key_exists('isProdutor', $payload)
+            ? (bool) $payload['isProdutor']
+            : ($uid !== '' && $this->producerExistsForUid($uid));
+
         // PROTEÇÃO DE DADOS: Remove credenciais sensíveis e chaves voláteis antes de salvar no banco NoSQL
         unset($payload['senha'], $payload['confirmarSenha'], $payload['password'], $payload['id']);
 
@@ -160,6 +166,16 @@ final class AraceFirestore
                     log_message('warning', 'Perfil do usuario autenticado sera reconstruido: {message}', [
                         'message' => $exception->getMessage(),
                     ]);
+                }
+            }
+
+            if ($user === null && $uid !== '') {
+                foreach (['uid', 'firebaseUid'] as $field) {
+                    $query = $collection->where($field, '=', $uid)->limit(1);
+                    foreach ($collection->list($query) as $entity) {
+                        $user = $this->entityPayload($entity);
+                        break 2;
+                    }
                 }
             }
 
@@ -302,7 +318,8 @@ final class AraceFirestore
             'nomeLoja', 'lojaBio', 'cnpj', 'categoria', 'email', 'telefone', 
             'fotoUrl', 'bannerUrl', 'cepOrigem', 'cidade', 'estado', 'endereco', 
             'retiradaLocal', 'envioCorreios', 'entregaLocal', 'pix', 
-            'horarioSemanaInicio', 'horarioSemanaFim', 'horarioSabadoInicio', 'horarioSabadoFim'
+            'horarioSemanaInicio', 'horarioSemanaFim', 'horarioSabadoInicio', 'horarioSabadoFim',
+            'fotosHistoria'
         ];
 
         $updates = [];
@@ -331,6 +348,13 @@ final class AraceFirestore
         }
         if (isset($updates['categoria'])) {
             $updates['categoria_principal'] = $updates['categoria'];
+        }
+        if (isset($updates['fotosHistoria'])) {
+            $updates['fotosHistoria'] = $this->normalizeUrlList($updates['fotosHistoria']);
+        }
+        if (isset($updates['nomeLoja']) || isset($updates['email']) || isset($updates['telefone']) || isset($updates['categoria'])) {
+            $current = $this->entityPayload($entity);
+            $updates['membros'] = $this->normalizeMembersPayload([...$current, ...$updates]);
         }
         
         // Atribuição direta para inputs booleanos do tipo checkbox de modalidades de entrega
@@ -584,6 +608,7 @@ final class AraceFirestore
             'genero'   => $user['sexo'] ?? $user['genero'] ?? null,
             'createdAt' => $user['createdAt'] ?? $user['criadoEm'] ?? null,
             'carrinho'  => is_array($user['carrinho'] ?? null) ? $user['carrinho'] : [],
+            'isProdutor' => (bool) ($user['isProdutor'] ?? false),
         ], static fn ($value): bool => $value !== null && $value !== '');
     }
 
@@ -594,6 +619,16 @@ final class AraceFirestore
             $entity = $collection->get($id);
             if ($entity !== null) {
                 return $entity;
+            }
+        }
+
+        $uid = trim((string) ($sessionUser['uid'] ?? $sessionUser['id'] ?? $sessionUser['firebaseUid'] ?? ''));
+        if ($uid !== '') {
+            foreach (['uid', 'firebaseUid'] as $field) {
+                $query = $collection->where($field, '=', $uid)->limit(1);
+                foreach ($collection->list($query) as $entity) {
+                    return $entity;
+                }
             }
         }
 
@@ -628,6 +663,16 @@ final class AraceFirestore
             }
         }
 
+        $uid = trim((string) ($sessionUser['uid'] ?? $sessionUser['id'] ?? $sessionUser['firebaseUid'] ?? ''));
+        if ($uid !== '') {
+            foreach (['uid', 'firebaseUid'] as $field) {
+                $query = $collection->where($field, '=', $uid)->limit(1);
+                foreach ($collection->list($query) as $entity) {
+                    return $entity;
+                }
+            }
+        }
+
         if (! empty($sessionUser['email'])) {
             $email = mb_strtolower(trim((string) $sessionUser['email']));
             $fields = ['email', 'email_comercial'];
@@ -645,6 +690,12 @@ final class AraceFirestore
 
     public function createProducer(array $payload): array
     {
+        $uid = trim((string) ($payload['uid'] ?? $payload['firebaseUid'] ?? ''));
+        if ($uid !== '') {
+            $payload['uid'] = $uid;
+            $payload['firebaseUid'] = $uid;
+        }
+
         if (isset($payload['telefone'])) {
             $payload['telefone'] = $this->formatPhone((string) $payload['telefone']);
         }
@@ -662,8 +713,133 @@ final class AraceFirestore
         $payload['telefone_comercial']  = $payload['telefone'] ?? null;
         $payload['categoria_principal'] = $payload['categoria'] ?? null;
         $payload['distrito_id']         = $payload['distritoId'] ?? null;
+        $payload['fotosHistoria']       = $this->normalizeUrlList($payload['fotosHistoria'] ?? []);
+        $payload['membros']             = $this->normalizeMembersPayload($payload);
 
-        return $this->entityPayload($this->collection(ProducerCollection::class)->add($payload));
+        $producer = $this->entityPayload($this->collection(ProducerCollection::class)->add($payload));
+
+        // Reflete o novo papel no perfil do usuario: quem cadastra uma loja passa a ser produtor.
+        // O vinculo usuario<->produtor e feito pelo uid; o e-mail e usado apenas como fallback.
+        $uid   = (string) ($payload['uid'] ?? $payload['firebaseUid'] ?? '');
+        $email = mb_strtolower(trim((string) ($payload['email'] ?? '')));
+        if ($uid !== '' || $email !== '') {
+            $this->markUserAsProducer($uid, $email);
+        }
+
+        return $producer;
+    }
+
+    /**
+     * Marca o usuario (coleção Usuarios) como produtor (isProdutor = true).
+     * Localiza pelo uid (ID do documento do usuario) e, em ultimo caso, pelo e-mail.
+     * Falha de forma silenciosa: o cadastro do produtor nao deve quebrar se o usuario ainda nao existir.
+     */
+    private function markUserAsProducer(string $uid, string $email = ''): void
+    {
+        try {
+            $collection = $this->collection(UsuarioCollection::class);
+
+            // Busca principal: pelo uid, que e o proprio ID do documento do usuario.
+            $uid = trim($uid);
+            if ($uid !== '') {
+                $entity = $collection->get($uid);
+                if ($entity !== null) {
+                    $collection->update($entity, ['isProdutor' => true]);
+
+                    return;
+                }
+
+                foreach (['uid', 'firebaseUid'] as $field) {
+                    $query = $collection->where($field, '=', $uid)->limit(1);
+                    foreach ($collection->list($query) as $entity) {
+                        $collection->update($entity, ['isProdutor' => true]);
+
+                        return;
+                    }
+                }
+            }
+
+            // Fallback: pelo e-mail.
+            $email = mb_strtolower(trim($email));
+            if ($email !== '') {
+                $query = $collection->where('email', '=', $email)->limit(1);
+                foreach ($collection->list($query) as $entity) {
+                    $collection->update($entity, ['isProdutor' => true]);
+
+                    return;
+                }
+            }
+        } catch (\Throwable $exception) {
+            log_message('warning', 'Nao foi possivel marcar usuario como produtor: {message}', [
+                'message' => $exception->getMessage(),
+            ]);
+        }
+    }
+
+    /**
+     * Verifica se existe um documento na coleção Produtores atrelado ao uid informado.
+     * O vinculo pode estar no proprio ID do documento (uid) ou num campo uid/firebaseUid.
+     */
+    private function producerExistsForUid(string $uid): bool
+    {
+        $uid = trim($uid);
+        if ($uid === '') {
+            return false;
+        }
+
+        try {
+            $collection = $this->collection(ProducerCollection::class);
+
+            // O vinculo pode estar no proprio ID do documento (uid) ...
+            if ($collection->get($uid) !== null) {
+                return true;
+            }
+
+            // ... ou num campo uid/firebaseUid dentro do documento.
+            foreach (['uid', 'firebaseUid'] as $field) {
+                $query = $collection->where($field, '=', $uid)->limit(1);
+                foreach ($collection->list($query) as $entity) {
+                    return true;
+                }
+            }
+        } catch (\Throwable) {
+            return false;
+        }
+
+        return false;
+    }
+
+    /**
+     * Backfill: garante que TODOS os usuarios da coleção tenham o campo booleano "isProdutor".
+     * Para cada usuario, o valor e definido como true quando existe uma loja/produtor associada
+     * ao mesmo e-mail e false caso contrario. Retorna um resumo da operação.
+     *
+     * @return array{total:int, produtores:int, clientes:int, atualizados:int}
+     */
+    public function backfillIsProdutor(bool $force = false): array
+    {
+        $collection = $this->collection(UsuarioCollection::class);
+        $resumo     = ['total' => 0, 'produtores' => 0, 'clientes' => 0, 'atualizados' => 0];
+
+        foreach ($collection->list() as $entity) {
+            $resumo['total']++;
+
+            $payload = $this->entityPayload($entity);
+            // O ID do documento do usuario e o proprio uid; o vinculo com Produtores e por uid.
+            $uid     = trim((string) ($payload['id'] ?? $payload['uid'] ?? $payload['firebaseUid'] ?? ''));
+            $isProdutor = $uid !== '' && $this->producerExistsForUid($uid);
+
+            $isProdutor ? $resumo['produtores']++ : $resumo['clientes']++;
+
+            // Só grava se o campo ainda não existir ou se estiver divergente (ou quando forçado).
+            $atual = array_key_exists('isProdutor', $payload) ? (bool) $payload['isProdutor'] : null;
+            if ($force || $atual === null || $atual !== $isProdutor) {
+                $collection->update($entity, ['isProdutor' => $isProdutor]);
+                $resumo['atualizados']++;
+            }
+        }
+
+        return $resumo;
     }
 
     private function collection(string $class): object
@@ -843,6 +1019,46 @@ final class AraceFirestore
         return $membros;
     }
 
+    private function normalizeMembersPayload(array $producer): array
+    {
+        $existing = $producer['membros'] ?? [];
+        $member = $this->primaryMember(is_array($existing) ? $existing : []);
+
+        $nomeLoja = (string) ($producer['nomeLoja'] ?? $producer['nome_loja'] ?? $producer['nome'] ?? '');
+        $email = mb_strtolower(trim((string) ($producer['email'] ?? $producer['email_comercial'] ?? '')));
+        $telefone = (string) ($producer['telefone'] ?? $producer['telefone_comercial'] ?? '');
+
+        $member = [
+            ...$member,
+            'uid' => (string) ($producer['uid'] ?? $producer['firebaseUid'] ?? $member['uid'] ?? ''),
+            'nome' => $nomeLoja,
+            'nomeLoja' => $nomeLoja,
+            'nomeCompleto' => (string) ($producer['nomeCompleto'] ?? $member['nomeCompleto'] ?? $producer['nome'] ?? $nomeLoja),
+            'email' => $email,
+            'telefone' => $telefone !== '' ? $this->formatPhone($telefone) : '',
+            'tipoArtesanato' => (string) ($producer['categoria'] ?? $producer['categoria_principal'] ?? $member['tipoArtesanato'] ?? ''),
+            'tipoPessoa' => (string) ($producer['tipoPessoa'] ?? $member['tipoPessoa'] ?? (! empty($producer['cnpj']) ? 'juridica' : 'fisica')),
+        ];
+
+        return [array_filter($member, static fn ($value): bool => $value !== null && $value !== '')];
+    }
+
+    private function normalizeUrlList(mixed $urls): array
+    {
+        if (is_string($urls)) {
+            $urls = preg_split('/[\r\n,]+/', $urls) ?: [];
+        }
+
+        if (! is_array($urls)) {
+            return [];
+        }
+
+        return array_values(array_unique(array_filter(array_map(
+            static fn ($url): string => trim((string) $url),
+            $urls
+        ), static fn (string $url): bool => $url !== '')));
+    }
+
     private function normalizeProducer(array $producer): array
     {
         // A coleção "Produtores" guarda os dados de identificação do artesão dentro de "membros"
@@ -855,7 +1071,7 @@ final class AraceFirestore
         $telefoneRaw  = (string) ($membro['telefone'] ?? $producer['telefone'] ?? $producer['telefone_comercial'] ?? '');
 
         $producer['id']            = (string) ($producer['id'] ?? $producer['produtor_id'] ?? '');
-        $producer['nome']          = $nomeLoja ?: ((string) ($producer['nome'] ?? '') ?: ($nomeCompleto ?: 'Produtor Arace'));
+        $producer['nome']          = $nomeLoja ?: ((string) ($producer['nome'] ?? '') ?: $nomeCompleto);
         $producer['nomeLoja']      = $nomeLoja ?: $producer['nome'];
         $producer['nomeCompleto']  = $nomeCompleto;
         $producer['tipoArtesanato'] = (string) ($membro['tipoArtesanato'] ?? $producer['tipoArtesanato'] ?? '');
@@ -865,12 +1081,13 @@ final class AraceFirestore
         $producer['endereco']      = (string) ($producer['endereco'] ?? '');
         $producer['stability']     = $producer['stability'] ?? '';
         $producer['lojaBio']  = $producer['lojaBio'] ?? $producer['bio'] ?? '';
-        $producer['email']    = $producer['email'] ?? $producer['email_comercial'] ?? '';
+        $producer['email']    = $producer['email'] ?? $producer['email_comercial'] ?? $membro['email'] ?? '';
         $producer['telefone'] = $telefoneRaw !== '' ? $this->formatPhone($telefoneRaw) : '';
         $producer['categoria'] = $producer['categoriaProduto'] ?: ($producer['categoria_principal'] ?? $producer['tipoArtesanato'] ?? '');
         $producer['fotoUrl'] = $producer['fotoUrl'] ?? $producer['lojaAvatar'] ?? $producer['avatar'] ?? '';
         $producer['lojaAvatar'] = $producer['fotoUrl'];
         $producer['bannerUrl'] = $producer['bannerUrl'] ?? $producer['banner'] ?? '';
+        $producer['fotosHistoria'] = $this->normalizeUrlList($producer['fotosHistoria'] ?? []);
         $producer['iniciais'] = $producer['iniciais'] ?? $this->initials($producer['nome']);
         $producer['produtos'] = (int) ($producer['produtos'] ?? $producer['total_produtos'] ?? 0);
         $producer['pedidos'] = is_array($producer['pedidos'] ?? null) ? $producer['pedidos'] : [];

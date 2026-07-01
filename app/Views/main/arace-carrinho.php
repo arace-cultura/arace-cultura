@@ -2,6 +2,7 @@
 <?php
 $usuario = $usuario ?? session()->get('arace_user') ?? [];
 $avatar = trim((string) ($usuario['fotoUrl'] ?? $usuario['avatar'] ?? ''));
+$isProdutor = in_array($usuario['isProdutor'] ?? false, [true, 1, '1', 'true'], true);
 $carrinho = $carrinho ?? [];
 $totais = $totais ?? ['subtotal' => 0, 'desconto' => 0, 'frete' => 0, 'total' => 0];
 $formatarMoeda = static fn (float $valor): string => 'R$' . number_format($valor, 2, ',', '.');
@@ -53,9 +54,11 @@ $formatarMoeda = static fn (float $valor): string => 'R$' . number_format($valor
     <a class="nav-item" href="<?= url_to('user_arace_perfil') ?>">
       <i data-lucide="user"></i> Perfil
     </a>
-    <a class="nav-item" href="<?= url_to('auth_cadastro_producer_arace') ?>">
-      <i data-lucide="box"></i> Quero ser produtor
-    </a>
+    <?php if (! $isProdutor): ?>
+      <a class="nav-item" href="<?= url_to('auth_cadastro_producer_arace') ?>">
+        <i data-lucide="box"></i> Quero ser produtor
+      </a>
+    <?php endif; ?>
   </aside>
 
   <main>

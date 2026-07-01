@@ -89,7 +89,7 @@ function araceStars(float $nota): string
   </div>
 </section>
 
-<<!-- PRODUTOS 
+<<!-- PRODUTOS -->
 <section class="section" id="produtos">
   <div class="wrap">
     <div class="section-head">
@@ -162,7 +162,7 @@ function araceStars(float $nota): string
   </div>
 </section>
 
--->
+
 
 <!-- PRODUTORES -->
 <section class="section produtores-bg">

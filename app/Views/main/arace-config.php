@@ -6,6 +6,7 @@ $nome = $nomeCompleto;
 $username = (string) ($usuario['username'] ?? '');
 $sexo = (string) ($usuario['sexo'] ?? $usuario['genero'] ?? '');
 $avatar = trim((string) ($usuario['fotoUrl'] ?? $usuario['avatar'] ?? ''));
+$isProdutor = in_array($usuario['isProdutor'] ?? false, [true, 1, '1', 'true'], true);
 ?>
 <html lang="pt-BR">
 <head>
@@ -56,9 +57,11 @@ $avatar = trim((string) ($usuario['fotoUrl'] ?? $usuario['avatar'] ?? ''));
     <a class="nav-item" href="<?= url_to('user_arace_perfil') ?>">
       <i data-lucide="user"></i> Perfil
     </a>
-    <a class="nav-item" href="<?= url_to('auth_cadastro_produtor') ?>">
-      <i data-lucide="box"></i> Quero ser produtor
-    </a>
+    <?php if (! $isProdutor): ?>
+      <a class="nav-item" href="<?= url_to('auth_cadastro_produtor') ?>">
+        <i data-lucide="box"></i> Quero ser produtor
+      </a>
+    <?php endif; ?>
    
   </aside>
 

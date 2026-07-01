@@ -14,6 +14,65 @@
   grid-template-columns: minmax(0, 1fr);
 }
 
+.store-config-layout {
+  max-width: 980px;
+  margin: 0;
+}
+
+main .config-header {
+  max-width: 980px;
+  margin: 0 0 1.25rem;
+  text-align: left;
+}
+
+.store-config-layout > div,
+.store-config-layout form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.store-config-layout .config-section {
+  display: flex;
+}
+
+.store-config-layout .config-card {
+  box-shadow: var(--sh-sm);
+}
+
+.store-config-layout .config-card-footer {
+  display: none;
+}
+
+.store-config-actions {
+  position: sticky;
+  bottom: 1rem;
+  display: flex;
+  justify-content: flex-end;
+  padding: 1rem;
+  border: .5px solid var(--border);
+  border-radius: var(--r-lg);
+  background: color-mix(in srgb, var(--branco) 92%, transparent);
+  box-shadow: var(--sh-md);
+  z-index: 5;
+}
+
+.store-config-actions .btn-primary {
+  min-width: 190px;
+  justify-content: center;
+}
+
+@media (max-width: 768px) {
+  .store-config-actions {
+    bottom: .75rem;
+    padding: .75rem;
+  }
+
+  .store-config-actions .btn-primary {
+    width: 100%;
+  }
+}
+
 .config-layout > *,
 .config-section,
 .config-section > form,

@@ -3,6 +3,7 @@ $produto      = $produto ?? [];
 $recomendados = array_slice($recomendados ?? [], 0, 4);
 $usuario      = $usuario ?? session()->get('arace_user') ?? [];
 $avatar       = trim((string) ($usuario['fotoUrl'] ?? $usuario['avatar'] ?? ''));
+$isProdutor   = in_array($usuario['isProdutor'] ?? false, [true, 1, '1', 'true'], true);
 
 if (! function_exists('araceStars')) {
     function araceStars(float $nota): string
@@ -72,7 +73,9 @@ if ($imagens === []) {
   <a class="nav-item" href="<?= url_to('main_arace_carrinho') ?>"><i data-lucide="shopping-cart"></i> Carrinho</a>
   <a class="nav-item" href="<?= url_to('main_arace_config') ?>"><i data-lucide="settings"></i> Configuracoes</a>
   <a class="nav-item" href="<?= url_to('user_arace_perfil') ?>"><i data-lucide="user"></i> Perfil</a>
-  <a class="nav-item" href="<?= url_to('auth_cadastro_produtor') ?>"><i data-lucide="box"></i> Quero ser produtor</a>
+  <?php if (! $isProdutor): ?>
+    <a class="nav-item" href="<?= url_to('auth_cadastro_produtor') ?>"><i data-lucide="box"></i> Quero ser produtor</a>
+  <?php endif; ?>
 </aside>
 
 <main id="main-content">
@@ -213,6 +216,8 @@ if ($imagens === []) {
   <?php endif; ?>
 </main>
 
+<script>window.ARACE_AUTH_USER = <?= json_encode($usuario, JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>;</script>
+<script src="/js/arace-state.js"></script>
 <script src="/js/produto.js"></script>
 </body>
 </html>

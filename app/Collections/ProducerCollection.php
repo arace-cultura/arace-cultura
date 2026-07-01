@@ -32,6 +32,9 @@ final class ProducerCollection extends Collection
     // Nota: Há algumas duplicações (ex: 'nomeLoja' e 'nome_loja'), o que indica suporte a diferentes padrões de nomenclatura antigos/novos.
     protected array $allowedFields = [
         'nome',
+        'uid',
+        'firebaseUid',
+        'produtorId',
         // Estrutura aninhada da coleção "Produtores": os dados de identificação
         // do artesão ficam dentro do mapa/lista "membros".
         'membros',
@@ -75,6 +78,7 @@ final class ProducerCollection extends Collection
         'cadastrado',
         'createdAt',
         'pedidos',
+        'fotosHistoria',
     ];
 
     // Regras de validação para garantir que os dados estejam corretos antes de irem para o banco.

@@ -10,6 +10,7 @@
 }
 
 .store-banner {
+  position: relative;
   height: 180px;
   width: 100%;
   background: var(--faint);
@@ -23,6 +24,44 @@
   filter: blur(2px) brightness(0.9); /* Efeito suave no fundo */
 }
 
+.banner-actions {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.banner-action-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 42px;
+  padding: 0 1.15rem;
+  border: 1px solid rgba(255,255,255,.72);
+  border-radius: var(--r);
+  background: var(--laranja);
+  color: #fff;
+  box-shadow: var(--sh-md);
+  font-family: var(--body);
+  font-size: .92rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform .15s, background .15s, box-shadow .15s;
+}
+
+.banner-action-btn:hover {
+  background: var(--laranja-d);
+  transform: translateY(-1px);
+}
+
+.banner-action-btn svg {
+  width: 18px;
+  height: 18px;
+}
+
 .store-profile-header {
   display: flex;
   flex-direction: column;
@@ -33,6 +72,8 @@
 }
 
 .store-avatar {
+  position: relative;
+  z-index: 1;
   width: 120px;
   height: 120px;
   border-radius: 50%;
@@ -147,6 +188,25 @@
 }
 
 /* ── SEÇÃO HISTÓRIA ── */
+.payment-info {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: .9rem 1rem;
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  background: var(--bg);
+  color: var(--muted);
+}
+
+.payment-info strong {
+  color: var(--text);
+  font-weight: 600;
+  word-break: break-word;
+  text-align: right;
+}
+
 .history-container {
   display: flex;
   gap: 1.5rem;
@@ -169,6 +229,21 @@
   object-fit: cover;
 }
 
+.history-images {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: .75rem;
+  flex: 1;
+}
+
+.history-images img {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  border-radius: var(--r-lg);
+  border: 1px solid var(--border);
+}
+
 .history-text {
   font-family: var(--body);
   font-size: 0.95rem;
@@ -178,14 +253,31 @@
 
 /* RESPONSIVIDADE (Para telas menores/Mobile) */
 @media (max-width: 768px) {
+  .banner-action-btn {
+    width: min(100%, 260px);
+  }
+
   .history-container {
     flex-direction: column;
     text-align: center;
+  }
+
+  .payment-info {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .payment-info strong {
+    text-align: left;
   }
   
   .history-image {
     width: 100%;
     max-width: 200px;
     height: 200px;
+  }
+
+  .history-images {
+    width: 100%;
   }
 }

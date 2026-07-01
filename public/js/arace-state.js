@@ -105,6 +105,11 @@
     return producer;
   }
 
+  function isProducerAccount() {
+    const user = getUser();
+    return user.isProdutor === true || user.isProdutor === 'true';
+  }
+
   function saveProducer(partial) {
     return write(KEYS.producer, { ...getProducer(), ...partial });
   }
@@ -203,15 +208,27 @@
   // Redireciona links de cadastro quando o usuario ja é produtor.
   function setupProducerTransition() {
     document.addEventListener('click', event => {
-      const link = event.target.closest('a[href*="cadastro/produtor"], a[href*="cadastro-produtor"], a[href*="cadastro-producer"]');
-      if (!link) return;
-
-      const producer = getProducer();
-      if (!producer.cadastrado) return;
+      const producerLink = event.target.closest('a[href*="cadastro/produtor"], a[href*="cadastro-produtor"], a[href*="cadastro-producer"]');
+      const profileLink = event.target.closest('a[href*="usuario/arace-perfil"], a[href*="produtor/perfil"]:not([href*="perfil-loja"]), .avatar-btn');
+      if (!producerLink && !profileLink) return;
+      if (!isProducerAccount()) return;
 
       event.preventDefault();
+      event.stopImmediatePropagation();
       setMode('produtor');
       go('produtor/perfil-loja');
+    }, true);
+  }
+
+  function applyProducerNavigation() {
+    if (!isProducerAccount()) return;
+
+    document.querySelectorAll('a[href*="cadastro/produtor"], a[href*="cadastro-produtor"], a[href*="cadastro-producer"]').forEach(item => {
+      item.remove();
+    });
+
+    document.querySelectorAll('a[href*="usuario/arace-perfil"], a[href*="produtor/perfil"]:not([href*="perfil-loja"])').forEach(item => {
+      item.setAttribute('href', url('produtor/perfil-loja'));
     });
   }
 
@@ -294,6 +311,7 @@
     setTheme,
     applyTheme,
     applyPageStyles,
+    applyProducerNavigation,
     initMap,
     renderAvatar,
     syncHeader,
@@ -301,6 +319,7 @@
 
   document.addEventListener('DOMContentLoaded', syncHeader);
   document.addEventListener('DOMContentLoaded', applyPageStyles);
+  document.addEventListener('DOMContentLoaded', applyProducerNavigation);
   document.addEventListener('DOMContentLoaded', setupProducerTransition);
   window.addEventListener('arace:state-change', syncHeader);
   window.matchMedia?.('(prefers-color-scheme: dark)').addEventListener?.('change', () => {

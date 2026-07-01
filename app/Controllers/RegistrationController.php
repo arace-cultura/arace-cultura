@@ -52,6 +52,11 @@ final class RegistrationController extends BaseController
 
     public function producerOwner()
     {
+        $sessionUser = session()->get('arace_user') ?? [];
+        if (! is_array($sessionUser) || (string) ($sessionUser['uid'] ?? $sessionUser['id'] ?? $sessionUser['firebaseUid'] ?? '') === '') {
+            return redirect()->route('auth_login')->with('erro', 'Entre na sua conta para cadastrar uma loja.');
+        }
+
         $payload = $this->request->getPost(['nome', 'cpf', 'email', 'telefone']);
         $brasilApi = new BrasilApiValidator();
 
@@ -72,9 +77,19 @@ final class RegistrationController extends BaseController
     public function producerStore()
     {
         $owner = session()->get('arace_producer_owner') ?? [];
+        $sessionUser = session()->get('arace_user') ?? [];
+        if (! is_array($sessionUser) || (string) ($sessionUser['uid'] ?? $sessionUser['id'] ?? $sessionUser['firebaseUid'] ?? '') === '') {
+            return redirect()->route('auth_login')->with('erro', 'Entre na sua conta para cadastrar uma loja.');
+        }
+
         $store = $this->request->getPost(['nomeLoja', 'cnpj', 'email', 'telefone', 'categoria', 'distritoId']);
         $store['nome']          = $store['nomeLoja'] ?? '';
         $payload = array_filter([...$owner, ...$store], static fn ($value): bool => $value !== null && $value !== '');
+        $uid = (string) ($sessionUser['uid'] ?? $sessionUser['id'] ?? $sessionUser['firebaseUid'] ?? '');
+        if ($uid !== '') {
+            $payload['uid'] = $uid;
+            $payload['firebaseUid'] = $uid;
+        }
 
         if (! $this->validateData($payload, [
             'nome'      => 'required|min_length[2]|max_length[120]',
@@ -87,8 +102,15 @@ final class RegistrationController extends BaseController
             return redirect()->back()->withInput()->with('erro', 'Confira os dados da loja.');
         }
         try {
-            (new AraceFirestore())->createProducer($payload);
+            $producer = (new AraceFirestore())->createProducer($payload);
             session()->remove('arace_producer_owner');
+            if (is_array($sessionUser)) {
+                session()->set('arace_user', [
+                    ...$sessionUser,
+                    'isProdutor' => true,
+                    'produtorId' => $producer['id'] ?? $uid,
+                ]);
+            }
 
             return redirect()->route('produtor_perfil_loja')->with('sucesso', 'Loja criada com sucesso.');
         } catch (\Throwable) {

@@ -19,7 +19,16 @@ final class AccountController extends BaseController
     public function profile()
     {
         // Retorna a view 'arace-perfil' injetando o array de dados do usuário logado
-        return view('user/arace-perfil', $this->accountData());
+        $data = $this->accountData();
+
+        if ((bool) ($data['usuario']['isProdutor'] ?? false)) {
+            $produtor = service('araceFirestore')->producerFromSession($data['usuario'] ?? []);
+            if ($produtor !== []) {
+                return redirect()->route('produtor_perfil_loja');
+            }
+        }
+
+        return view('user/arace-perfil', $data);
     }
 
     /**
@@ -158,7 +167,17 @@ final class AccountController extends BaseController
     public function producerStoreConfig()
     {
         $data = $this->accountData();
-        $data['produtor'] = service('araceFirestore')->producerFromSession($data['usuario'] ?? []);
+        $usuario = $data['usuario'] ?? [];
+        $produtor = service('araceFirestore')->producerFromSession($usuario);
+        $data['produtor'] = [
+            ...$produtor,
+            'nomeLoja' => $produtor['nomeLoja'] ?? $produtor['nome_loja'] ?? $produtor['nome'] ?? $usuario['nome'] ?? '',
+            'email' => $produtor['email'] ?? $produtor['email_comercial'] ?? $usuario['email'] ?? '',
+            'telefone' => $produtor['telefone'] ?? $produtor['telefone_comercial'] ?? $usuario['telefone'] ?? '',
+            'cidade' => $produtor['cidade'] ?? $usuario['cidade'] ?? '',
+            'estado' => $produtor['estado'] ?? $usuario['estado'] ?? '',
+            'fotoUrl' => $produtor['fotoUrl'] ?? $produtor['lojaAvatar'] ?? $produtor['avatar'] ?? $usuario['fotoUrl'] ?? $usuario['avatar'] ?? '',
+        ];
 
         return view('user-producter/arace-producer-config-loja', $data);
     }
@@ -287,25 +306,43 @@ final class AccountController extends BaseController
         }
 
         try {
+            $storage = new SupabaseStorage();
+            $producerKey = (string) ($sessionUser['uid'] ?? $sessionUser['id'] ?? $sessionUser['email'] ?? 'produtor');
+
             // Controla o upload do arquivo do Logo da Loja
             $logo = $this->uploadedFile('fotoUrl');
             if ($logo !== null) {
-                $payload['fotoUrl'] = (new SupabaseStorage())->uploadAvatar(
+                $payload['fotoUrl'] = $storage->uploadAvatar(
                     $logo,
-                    'loja-' . (string) ($sessionUser['id'] ?? $sessionUser['email'] ?? 'produtor')
+                    'loja-' . $producerKey
                 );
             }
 
             // Controla o upload do arquivo do Banner da Loja
             $banner = $this->uploadedFile('bannerUrl');
             if ($banner !== null) {
-                $payload['bannerUrl'] = (new SupabaseStorage())->uploadAvatar(
+                $payload['bannerUrl'] = $storage->uploadAvatar(
                     $banner,
-                    'banner-loja-' . (string) ($sessionUser['id'] ?? $sessionUser['email'] ?? 'produtor')
+                    'banner-loja-' . $producerKey
                 );
             }
 
             // Salva as alterações estruturais da loja no Firestore
+            $historyPhotos = $this->uploadedFiles('fotosHistoria');
+            if ($historyPhotos !== []) {
+                $produtorAtual = service('araceFirestore')->producerFromSession($sessionUser);
+                $payload['fotosHistoria'] = array_values(array_filter(array_map(
+                    'strval',
+                    is_array($produtorAtual['fotosHistoria'] ?? null) ? $produtorAtual['fotosHistoria'] : []
+                )));
+
+                foreach ($historyPhotos as $historyPhoto) {
+                    $payload['fotosHistoria'][] = $storage->uploadImage($historyPhoto, 'historias-loja/' . $producerKey);
+                }
+
+                $payload['fotosHistoria'] = array_values(array_unique($payload['fotosHistoria']));
+            }
+
             $produtor = service('araceFirestore')->updateProducerFromSession($sessionUser, $payload);
 
             return redirect()->back()->with('sucesso', 'Configuracoes da loja atualizadas.')->with('produtor', $produtor);
@@ -385,6 +422,32 @@ final class AccountController extends BaseController
         }
 
         return null;
+    }
+
+    /**
+     * @return \CodeIgniter\HTTP\Files\UploadedFile[]
+     */
+    private function uploadedFiles(string $fieldName): array
+    {
+        $files = $this->request->getFileMultiple($fieldName);
+        if (! is_array($files)) {
+            return [];
+        }
+
+        $validFiles = [];
+        foreach ($files as $file) {
+            if ($file === null || $file->getError() === UPLOAD_ERR_NO_FILE) {
+                continue;
+            }
+
+            if (! $file->isValid() || $file->hasMoved()) {
+                throw new \RuntimeException('Uma das imagens enviadas nao chegou valida ao servidor.');
+            }
+
+            $validFiles[] = $file;
+        }
+
+        return $validFiles;
     }
 
     /**

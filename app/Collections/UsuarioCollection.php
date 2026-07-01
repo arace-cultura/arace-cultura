@@ -30,6 +30,7 @@ final class UsuarioCollection extends Collection
         'firebaseUid',
         'emailVerified',
         'disabled',
+        'isProdutor',
         'createdAt',
         'carrinho',
     ];

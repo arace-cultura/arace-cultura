@@ -2,6 +2,7 @@
 <?php
 $usuario = $usuario ?? session()->get('arace_user') ?? [];
 $avatar = trim((string) ($usuario['fotoUrl'] ?? $usuario['avatar'] ?? ''));
+$isProdutor = in_array($usuario['isProdutor'] ?? false, [true, 1, '1', 'true'], true);
 $sexo = (string) ($usuario['sexo'] ?? $usuario['genero'] ?? '');
 $sexoLabel = ['f' => 'Feminino', 'm' => 'Masculino', 'nb' => 'Não-binário'][$sexo] ?? '';
 ?>
@@ -59,9 +60,11 @@ $sexoLabel = ['f' => 'Feminino', 'm' => 'Masculino', 'nb' => 'Não-binário'][$s
     <a class="nav-item active" href="<?= url_to('user_arace_perfil') ?>">
       <i data-lucide="user"></i> Perfil
     </a>
-    <a class="nav-item" href="<?= url_to('auth_cadastro_produtor') ?>">
-      <i data-lucide="box"></i> Quero ser produtor
-    </a>
+    <?php if (! $isProdutor): ?>
+      <a class="nav-item" href="<?= url_to('auth_cadastro_produtor') ?>">
+        <i data-lucide="box"></i> Quero ser produtor
+      </a>
+    <?php endif; ?>
     <div class="nav-divider"></div>
     <div class="nav-section">Reportar</div>
     <a class="nav-item" href="<?= url_to('main_arace_config') ?>#pagamento">
@@ -136,6 +139,7 @@ $sexoLabel = ['f' => 'Feminino', 'm' => 'Masculino', 'nb' => 'Não-binário'][$s
 
   </main>
   <script>window.ARACE_AUTH_USER = <?= json_encode($usuario, JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>;</script>
+  <script src="/js/arace-state.js"></script>
   <script src="/js/perfil.js"></script>
 </body>
 </html>

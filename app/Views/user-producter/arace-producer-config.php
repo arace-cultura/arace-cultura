@@ -63,9 +63,6 @@ $avatar = trim((string) ($usuario['fotoUrl'] ?? $usuario['avatar'] ?? ''));
     <a class="nav-item" href="<?= url_to('user_arace_perfil') ?>">
       <i data-lucide="user"></i> Perfil
     </a>
-    <a class="nav-item" href="<?= url_to('auth_cadastro_produtor') ?>">
-      <i data-lucide="box"></i> Quero ser produtor
-    </a>
     <div class="nav-divider"></div>
     <div class="nav-section">Reportar</div>
   </aside>
